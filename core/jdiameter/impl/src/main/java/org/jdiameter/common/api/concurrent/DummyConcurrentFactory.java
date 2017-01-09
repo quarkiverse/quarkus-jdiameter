@@ -40,81 +40,57 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
- package org.jdiameter.common.api.concurrent;
+package org.jdiameter.common.api.concurrent;
 
- import org.jdiameter.common.api.statistic.IStatistic;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
 
- import java.util.ArrayList;
- import java.util.Collection;
- import java.util.List;
- import java.util.concurrent.Executors;
- import java.util.concurrent.ScheduledExecutorService;
+import org.jdiameter.common.api.statistic.IStatistic;
 
- /**
-  * @author erick.svenson@yahoo.com
-  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
-  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
-  */
- @SuppressWarnings("all")//3rd party lib
- public class DummyConcurrentFactory implements IConcurrentFactory
- {
+/**
+ *
+ * @author erick.svenson@yahoo.com
+ * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+ * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+ */
+public class DummyConcurrentFactory implements IConcurrentFactory {
 
-	 @Override
-	 public Thread getThread(Runnable runnuble)
-	 {
-		 return new Thread(runnuble);
-	 }
+  
+  @Override
+  public ThreadPoolExecutor getThreadPool() {
+    return null;
+  }
 
-	 @Override
-	 public Thread getThread(String namePrefix, Runnable runnuble)
-	 {
-		 return new Thread(runnuble, namePrefix);
-	 }
+  @Override
+  public ScheduledExecutorService getScheduledExecutorService(String name) {
+    return Executors.newScheduledThreadPool(4);
+  }
 
-	 @Override
-	 public List<Thread> getThreads()
-	 {
-		 return new ArrayList<Thread>();
-	 }
+  @Override
+  public Collection<ScheduledExecutorService> getScheduledExecutorServices() {
+    return new ArrayList<ScheduledExecutorService>();
+  }
 
-	 @Override
-	 public ThreadGroup getThreadGroup()
-	 {
-		 return null;
-	 }
+  @Override
+  public void shutdownNow(ScheduledExecutorService service) {
+  }
 
-	 @Override
-	 public ScheduledExecutorService getScheduledExecutorService(String name)
-	 {
-		 return Executors.newScheduledThreadPool(4);
-	 }
+  @Override
+  public IStatistic getStatistic() {
+    return null;
+  }
 
-	 @Override
-	 public Collection<ScheduledExecutorService> getScheduledExecutorServices()
-	 {
-		 return new ArrayList<ScheduledExecutorService>();
-	 }
+  @Override
+  public List<IStatistic> getStatistics() {
+    // TODO Auto-generated method stub
+    return new ArrayList<IStatistic>();
+  }
 
-	 @Override
-	 public void shutdownNow(ScheduledExecutorService service)
-	 {
-	 }
-
-	 @Override
-	 public IStatistic getStatistic()
-	 {
-		 return null;
-	 }
-
-	 @Override
-	 public List<IStatistic> getStatistics()
-	 {
-		 // TODO Auto-generated method stub
-		 return new ArrayList<IStatistic>();
-	 }
-
-	 @Override
-	 public void shutdownAllNow()
-	 {
-	 }
- }
+  @Override
+  public void shutdownAllNow() {
+  }
+}

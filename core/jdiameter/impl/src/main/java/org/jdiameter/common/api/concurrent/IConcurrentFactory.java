@@ -40,54 +40,47 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
- package org.jdiameter.common.api.concurrent;
+package org.jdiameter.common.api.concurrent;
 
- import org.jdiameter.common.api.statistic.IStatistic;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
 
- import java.util.Collection;
- import java.util.List;
- import java.util.concurrent.ScheduledExecutorService;
+import org.jdiameter.common.api.statistic.IStatistic;
 
- /**
-  * @author erick.svenson@yahoo.com
-  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
-  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
-  */
- @SuppressWarnings("all")//3rd party lib
- public interface IConcurrentFactory
- {
+/**
+ *
+ * @author erick.svenson@yahoo.com
+ * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+ * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+ */
+public interface IConcurrentFactory {
 
-	 enum ScheduledExecServices
-	 {
-		 ProcessingMessageTimer,
-		 RedirectMessageTimer,
-		 DuplicationMessageTimer,
-		 PeerOverloadTimer,
-		 ConnectionTimer,
-		 StatisticTimer,
-		 ApplicationSession
-	 }
+  enum ScheduledExecServices {
+    ProcessingMessageTimer,
+    RedirectMessageTimer,
+    DuplicationMessageTimer,
+    PeerOverloadTimer,
+    ConnectionTimer,
+    StatisticTimer,
+    ApplicationSession
+  }
 
-	 // Thread
-	 Thread getThread(Runnable runnuble);
+  ExecutorService getThreadPool();
 
-	 Thread getThread(String namePrefix, Runnable runnuble);
+  // ScheduledExecutorService
+  ScheduledExecutorService getScheduledExecutorService(String name);
 
-	 List<Thread> getThreads();
+  Collection<ScheduledExecutorService> getScheduledExecutorServices();
 
-	 ThreadGroup getThreadGroup();
+  void shutdownNow(ScheduledExecutorService service);
 
-	 // ScheduledExecutorService
-	 ScheduledExecutorService getScheduledExecutorService(String name);
+  // Common
+  IStatistic getStatistic();
 
-	 Collection<ScheduledExecutorService> getScheduledExecutorServices();
+  List<IStatistic> getStatistics();
 
-	 void shutdownNow(ScheduledExecutorService service);
-
-	 // Common
-	 IStatistic getStatistic();
-
-	 List<IStatistic> getStatistics();
-
-	 void shutdownAllNow();
- }
+  void shutdownAllNow();
+}
