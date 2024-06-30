@@ -89,7 +89,7 @@
 		 this.port = port;
 		 this.parser = parser;
 		 this.concurrentFactory = concurrentFactory == null ? new DummyConcurrentFactory() : concurrentFactory;
-		 this.thread = this.concurrentFactory.getThread("NetworkGuard", this);
+		 // this.thread = this.concurrentFactory.getThread("NetworkGuard", this);
 		 // extract sec_ref from local peer;
 		 Configuration conf = data.getConfiguration();
 
@@ -115,7 +115,7 @@
 
 			 this.isWork = true;
 			 logger.info("Open server socket {} ", serverSocket);
-			 this.thread.start();
+			 this.concurrentFactory.getThreadPool().execute(this);
 		 }
 		 catch (Exception exc) {
 			 destroy();

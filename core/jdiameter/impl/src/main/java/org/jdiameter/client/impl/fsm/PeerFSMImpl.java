@@ -42,17 +42,12 @@
 
  package org.jdiameter.client.impl.fsm;
 
- import org.jdiameter.api.Configuration;
- import org.jdiameter.api.DisconnectCause;
- import org.jdiameter.api.Message;
- import org.jdiameter.api.OverloadException;
- import org.jdiameter.api.PeerState;
+ import org.jdiameter.api.*;
  import org.jdiameter.api.app.State;
  import org.jdiameter.api.app.StateChangeListener;
  import org.jdiameter.api.app.StateEvent;
  import org.jdiameter.api.validation.AvpNotAllowedException;
  import org.jdiameter.api.validation.Dictionary;
- import org.jdiameter.api.validation.ValidatorLevel;
  import org.jdiameter.client.api.IMessage;
  import org.jdiameter.client.api.fsm.EventTypes;
  import org.jdiameter.client.api.fsm.FsmEvent;
@@ -281,8 +276,7 @@
 			 //PCB added FSM multithread
 			 for (int i = 1; i <= FSM_THREAD_COUNT; i++) {
 				 logger.debug("Starting FSM Thread {} of {}", i, FSM_THREAD_COUNT);
-				 Thread executor = concurrentFactory.getThread("FSM-" + context.getPeerDescription() + "_" + i, fsmQueueProcessor);
-				 executor.start();
+				 concurrentFactory.getThreadPool().execute(fsmQueueProcessor);
 			 }
 		 }
 		 finally {
@@ -348,12 +342,9 @@
 			 logger.debug("No FSM threads are running so calling runQueueProcessing()");
 			 runQueueProcessing();
 		 }
-
-		 // check if validation is required
-		 if (event.getData() != null) {
+		 if (event.getData() != null && dictionary != null && dictionary.isEnabled()) {
 			 boolean incoming = event.getType() == EventTypes.RECEIVE_MSG_EVENT;
-			 ValidatorLevel incomingLevel = dictionary.getReceiveLevel();
-			 if (incoming && dictionary != null && dictionary.isEnabled() && incomingLevel != ValidatorLevel.OFF) {
+			 if (incoming) {
 				 logger.debug("Performing validation to INCOMING message since validator is ENABLED.");
 				 // outgoing are done elsewhere: see BaseSessionImpl
 				 try {
@@ -364,10 +355,9 @@
 					 return false;
 				 }
 			 }
-			 else {
-				 logger.debug("Not performing incoming validation on message. Validator Enabled [{}] Incoming [{}] Incoming Level [{}]",
-							  new Object[]{(dictionary != null && dictionary.isEnabled()), incoming, incomingLevel});
-			 }
+		 }
+		 else {
+			 logger.debug("Not performing validation to message since validator is DISABLED.");
 		 }
 
 		 boolean rc = false;
@@ -483,339 +473,339 @@
 	 {
 		 if (states == null) {
 			 states = new org.jdiameter.api.app.State[]{ // todo merge and redesign with server fsm
-														 new MyState()
-														 { // OKEY
-															 @Override
-															 public void entryAction()
-															 {
-																 setInActiveTimer();
-																 watchdogSent = false;
-															 }
+					 new MyState()
+					 { // OKEY
+						 @Override
+						 public void entryAction()
+						 {
+							 setInActiveTimer();
+							 watchdogSent = false;
+						 }
 
-															 @Override
-															 public boolean processEvent(StateEvent event)
-															 {
-																 switch (event.encodeType(EventTypes.class)) {
-																	 case DISCONNECT_EVENT:
-																		 timer = REC_TIMEOUT + System.currentTimeMillis();
-																		 switchToNextState(FsmState.REOPEN);
-																		 break;
-																	 case TIMEOUT_EVENT:
-																		 try {
-																			 context.sendDwrMessage();
-																			 setTimer(DWA_TIMEOUT);
-																			 if (watchdogSent) {
-																				 switchToNextState(FsmState.SUSPECT);
-																			 }
-																			 else {
-																				 watchdogSent = true;
-																			 }
-																		 }
-																		 catch (Throwable e) {
-																			 logger.debug("Can not send DWR", e);
-																			 doDisconnect();
-																			 setTimer(REC_TIMEOUT);
-																			 switchToNextState(FsmState.REOPEN);
-																		 }
-																		 break;
-																	 case STOP_EVENT:
-																		 try {
-																			 if (event.getData() == null) {
-																				 context.sendDprMessage(DisconnectCause.REBOOTING);
-																			 }
-																			 else {
-																				 Integer disconnectCause = (Integer) event.getData();
-																				 context.sendDprMessage(disconnectCause);
-																			 }
-																			 setTimer(DPA_TIMEOUT);
-																			 switchToNextState(FsmState.STOPPING);
-																		 }
-																		 catch (Throwable e) {
-																			 logger.debug("Can not send DPR", e);
-																			 doDisconnect();
-																			 switchToNextState(FsmState.DOWN);
-																		 }
-																		 break;
-																	 case RECEIVE_MSG_EVENT:
-																		 setInActiveTimer();
-																		 context.receiveMessage(message(event));
-																		 break;
-																	 case DPR_EVENT:
-																		 try {
-																			 int code = context.processDprMessage(message(event));
-																			 context.sendDpaMessage(message(event), code, null);
-																		 }
-																		 catch (Throwable e) {
-																			 logger.debug("Can not send DPA", e);
-																		 }
-																		 doDisconnect();
-																		 switchToNextState(FsmState.DOWN);
-																		 break;
-																	 case DWR_EVENT:
-																		 setInActiveTimer();
-																		 try {
-																			 int code = context.processDwrMessage(message(event));
-																			 context.sendDwaMessage(message(event), code, null);
-																		 }
-																		 catch (Throwable e) {
-																			 logger.debug("Can not send DWA", e);
-																			 doDisconnect();
-																			 switchToNextState(FsmState.DOWN);
-																		 }
-																		 break;
-																	 case DWA_EVENT:
-																		 setInActiveTimer();
-																		 watchdogSent = false;
-																		 break;
-																	 case SEND_MSG_EVENT:
-																		 try {
-																			 context.sendMessage(message(event));
-																		 }
-																		 catch (Throwable e) {
-																			 logger.debug("Can not send message", e);
-																			 doDisconnect();
-																			 setTimer(REC_TIMEOUT);
-																			 switchToNextState(FsmState.REOPEN);
-																		 }
-																		 break;
-																	 default:
-																		 logger.debug("Unknown event type: {} in state {}", event.encodeType(EventTypes.class), state);
-																		 return false;
-																 }
-																 return true;
-															 }
-														 },
-														 new MyState()
-														 { // SUSPECT
-															 @Override
-															 public boolean processEvent(StateEvent event)
-															 {
-																 switch (event.encodeType(EventTypes.class)) {
-																	 case DISCONNECT_EVENT:
-																		 setTimer(REC_TIMEOUT);
-																		 switchToNextState(FsmState.REOPEN);
-																		 break;
-																	 case TIMEOUT_EVENT:
-																		 doDisconnect();
-																		 setTimer(REC_TIMEOUT);
-																		 switchToNextState(FsmState.REOPEN);
-																		 break;
-																	 case STOP_EVENT:
-																		 try {
-																			 if (event.getData() == null) {
-																				 context.sendDprMessage(DisconnectCause.REBOOTING);
-																			 }
-																			 else {
-																				 Integer disconnectCause = (Integer) event.getData();
-																				 context.sendDprMessage(disconnectCause);
-																			 }
-																			 setInActiveTimer();
-																			 switchToNextState(FsmState.STOPPING);
-																		 }
-																		 catch (Throwable e) {
-																			 logger.debug("Can not send DPR", e);
-																			 doDisconnect();
-																			 switchToNextState(FsmState.DOWN);
-																		 }
-																		 break;
-																	 case DPR_EVENT:
-																		 try {
-																			 int code = context.processDprMessage(message(event));
-																			 context.sendDpaMessage(message(event), code, null);
-																		 }
-																		 catch (Throwable e) {
-																			 logger.debug("Can not send DPA", e);
-																		 }
-																		 doDisconnect();
-																		 switchToNextState(FsmState.DOWN);
-																		 break;
-																	 case DWA_EVENT:
-																		 switchToNextState(FsmState.OKAY);
-																		 break;
-																	 case DWR_EVENT:
-																		 try {
-																			 int code = context.processDwrMessage(message(event));
-																			 context.sendDwaMessage(message(event), code, null);
-																			 switchToNextState(FsmState.OKAY);
-																		 }
-																		 catch (Throwable e) {
-																			 logger.debug("Can not send DWA", e);
-																			 doDisconnect();
-																			 switchToNextState(FsmState.DOWN);
-																		 }
-																		 break;
-																	 case RECEIVE_MSG_EVENT:
-																		 context.receiveMessage(message(event));
-																		 switchToNextState(FsmState.OKAY);
-																		 break;
-																	 case SEND_MSG_EVENT:
-																		 throw new RuntimeException("Connection is down");
-																	 default:
-																		 logger.debug("Unknown event type: {} in state {}", event.encodeType(EventTypes.class), state);
-																		 return false;
-																 }
-																 return true;
-															 }
-														 },
-														 new MyState()
-														 { // DOWN
-															 @Override
-															 public void entryAction()
-															 {
-																 clearTimer();
-																 //PCB changed multithread FSM
-																 logger.debug("Setting mustRun to false @ Thread [{}]", Thread.currentThread().getName());
-																 mustRun = false;
-																 logger.debug("Finished Setting mustRun to false @ Thread [{}]", Thread.currentThread().getName());
-																 context.removeStatistics();
-															 }
+						 @Override
+						 public boolean processEvent(StateEvent event)
+						 {
+							 switch (event.encodeType(EventTypes.class)) {
+								 case DISCONNECT_EVENT:
+									 timer = REC_TIMEOUT + System.currentTimeMillis();
+									 switchToNextState(FsmState.REOPEN);
+									 break;
+								 case TIMEOUT_EVENT:
+									 try {
+										 context.sendDwrMessage();
+										 setTimer(DWA_TIMEOUT);
+										 if (watchdogSent) {
+											 switchToNextState(FsmState.SUSPECT);
+										 }
+										 else {
+											 watchdogSent = true;
+										 }
+									 }
+									 catch (Throwable e) {
+										 logger.debug("Can not send DWR", e);
+										 doDisconnect();
+										 setTimer(REC_TIMEOUT);
+										 switchToNextState(FsmState.REOPEN);
+									 }
+									 break;
+								 case STOP_EVENT:
+									 try {
+										 if (event.getData() == null) {
+											 context.sendDprMessage(DisconnectCause.REBOOTING);
+										 }
+										 else {
+											 Integer disconnectCause = (Integer) event.getData();
+											 context.sendDprMessage(disconnectCause);
+										 }
+										 setTimer(DPA_TIMEOUT);
+										 switchToNextState(FsmState.STOPPING);
+									 }
+									 catch (Throwable e) {
+										 logger.debug("Can not send DPR", e);
+										 doDisconnect();
+										 switchToNextState(FsmState.DOWN);
+									 }
+									 break;
+								 case RECEIVE_MSG_EVENT:
+									 setInActiveTimer();
+									 context.receiveMessage(message(event));
+									 break;
+								 case DPR_EVENT:
+									 try {
+										 int code = context.processDprMessage(message(event));
+										 context.sendDpaMessage(message(event), code, null);
+									 }
+									 catch (Throwable e) {
+										 logger.debug("Can not send DPA", e);
+									 }
+									 doDisconnect();
+									 switchToNextState(FsmState.DOWN);
+									 break;
+								 case DWR_EVENT:
+									 setInActiveTimer();
+									 try {
+										 int code = context.processDwrMessage(message(event));
+										 context.sendDwaMessage(message(event), code, null);
+									 }
+									 catch (Throwable e) {
+										 logger.debug("Can not send DWA", e);
+										 doDisconnect();
+										 switchToNextState(FsmState.DOWN);
+									 }
+									 break;
+								 case DWA_EVENT:
+									 setInActiveTimer();
+									 watchdogSent = false;
+									 break;
+								 case SEND_MSG_EVENT:
+									 try {
+										 context.sendMessage(message(event));
+									 }
+									 catch (Throwable e) {
+										 logger.debug("Can not send message", e);
+										 doDisconnect();
+										 setTimer(REC_TIMEOUT);
+										 switchToNextState(FsmState.REOPEN);
+									 }
+									 break;
+								 default:
+									 logger.debug("Unknown event type: {} in state {}", event.encodeType(EventTypes.class), state);
+									 return false;
+							 }
+							 return true;
+						 }
+					 },
+					 new MyState()
+					 { // SUSPECT
+						 @Override
+						 public boolean processEvent(StateEvent event)
+						 {
+							 switch (event.encodeType(EventTypes.class)) {
+								 case DISCONNECT_EVENT:
+									 setTimer(REC_TIMEOUT);
+									 switchToNextState(FsmState.REOPEN);
+									 break;
+								 case TIMEOUT_EVENT:
+									 doDisconnect();
+									 setTimer(REC_TIMEOUT);
+									 switchToNextState(FsmState.REOPEN);
+									 break;
+								 case STOP_EVENT:
+									 try {
+										 if (event.getData() == null) {
+											 context.sendDprMessage(DisconnectCause.REBOOTING);
+										 }
+										 else {
+											 Integer disconnectCause = (Integer) event.getData();
+											 context.sendDprMessage(disconnectCause);
+										 }
+										 setInActiveTimer();
+										 switchToNextState(FsmState.STOPPING);
+									 }
+									 catch (Throwable e) {
+										 logger.debug("Can not send DPR", e);
+										 doDisconnect();
+										 switchToNextState(FsmState.DOWN);
+									 }
+									 break;
+								 case DPR_EVENT:
+									 try {
+										 int code = context.processDprMessage(message(event));
+										 context.sendDpaMessage(message(event), code, null);
+									 }
+									 catch (Throwable e) {
+										 logger.debug("Can not send DPA", e);
+									 }
+									 doDisconnect();
+									 switchToNextState(FsmState.DOWN);
+									 break;
+								 case DWA_EVENT:
+									 switchToNextState(FsmState.OKAY);
+									 break;
+								 case DWR_EVENT:
+									 try {
+										 int code = context.processDwrMessage(message(event));
+										 context.sendDwaMessage(message(event), code, null);
+										 switchToNextState(FsmState.OKAY);
+									 }
+									 catch (Throwable e) {
+										 logger.debug("Can not send DWA", e);
+										 doDisconnect();
+										 switchToNextState(FsmState.DOWN);
+									 }
+									 break;
+								 case RECEIVE_MSG_EVENT:
+									 context.receiveMessage(message(event));
+									 switchToNextState(FsmState.OKAY);
+									 break;
+								 case SEND_MSG_EVENT:
+									 throw new RuntimeException("Connection is down");
+								 default:
+									 logger.debug("Unknown event type: {} in state {}", event.encodeType(EventTypes.class), state);
+									 return false;
+							 }
+							 return true;
+						 }
+					 },
+					 new MyState()
+					 { // DOWN
+						 @Override
+						 public void entryAction()
+						 {
+							 clearTimer();
+							 //PCB changed multithread FSM
+							 logger.debug("Setting mustRun to false @ Thread [{}]", Thread.currentThread().getName());
+							 mustRun = false;
+							 logger.debug("Finished Setting mustRun to false @ Thread [{}]", Thread.currentThread().getName());
+							 context.removeStatistics();
+						 }
 
-															 @Override
-															 public boolean processEvent(StateEvent event)
-															 {
-																 switch (event.encodeType(EventTypes.class)) {
-																	 case START_EVENT:
-																		 try {
-																			 context.createStatistics();
-																			 context.connect();
-																			 context.sendCerMessage();
-																			 setTimer(CEA_TIMEOUT);
-																			 switchToNextState(FsmState.INITIAL);
-																		 }
-																		 catch (Throwable e) {
-																			 logger.debug("Connect error", e);
-																			 setTimer(REC_TIMEOUT);
-																			 switchToNextState(FsmState.REOPEN);
-																		 }
-																		 break;
-																	 case SEND_MSG_EVENT:
-																		 throw new RuntimeException("Connection is down");
-																	 case STOP_EVENT:
-																	 case DISCONNECT_EVENT:
-																		 break;
-																	 default:
-																		 logger.debug("Unknown event type: {} in state {}", event.encodeType(EventTypes.class), state);
-																		 return false;
-																 }
-																 return true;
-															 }
-														 },
-														 new MyState()
-														 { // REOPEN
-															 @Override
-															 public boolean processEvent(StateEvent event)
-															 {
-																 switch (event.encodeType(EventTypes.class)) {
-																	 case CONNECT_EVENT:
-																		 try {
-																			 context.sendCerMessage();
-																			 setTimer(CEA_TIMEOUT);
-																			 switchToNextState(FsmState.INITIAL);
-																		 }
-																		 catch (Throwable e) {
-																			 logger.debug("Can not send CER", e);
-																			 setTimer(REC_TIMEOUT);
-																		 }
-																		 break;
-																	 case TIMEOUT_EVENT:
-																		 try {
-																			 context.connect();
-																		 }
-																		 catch (Exception e) {
-																			 logger.debug("Timeout processed. Can not connect to {}", context.getPeerDescription());
-																			 setTimer(REC_TIMEOUT);
-																		 }
-																		 break;
-																	 case STOP_EVENT:
-																		 clearTimer();
-																		 doDisconnect();
-																		 switchToNextState(FsmState.DOWN);
-																		 break;
-																	 case DISCONNECT_EVENT:
-																		 break;
-																	 case SEND_MSG_EVENT:
-																		 throw new IllegalStateException("Connection is down");
-																	 default:
-																		 logger.debug("Unknown event type: {} in state {}", event.encodeType(EventTypes.class), state);
-																		 return false;
-																 }
-																 return true;
-															 }
-														 },
-														 new MyState()
-														 { // INITIAL
-															 @Override
-															 public void entryAction()
-															 {
-																 setTimer(CEA_TIMEOUT);
-															 }
+						 @Override
+						 public boolean processEvent(StateEvent event)
+						 {
+							 switch (event.encodeType(EventTypes.class)) {
+								 case START_EVENT:
+									 try {
+										 context.createStatistics();
+										 context.connect();
+										 context.sendCerMessage();
+										 setTimer(CEA_TIMEOUT);
+										 switchToNextState(FsmState.INITIAL);
+									 }
+									 catch (Throwable e) {
+										 logger.debug("Connect error", e);
+										 setTimer(REC_TIMEOUT);
+										 switchToNextState(FsmState.REOPEN);
+									 }
+									 break;
+								 case SEND_MSG_EVENT:
+									 throw new RuntimeException("Connection is down");
+								 case STOP_EVENT:
+								 case DISCONNECT_EVENT:
+									 break;
+								 default:
+									 logger.debug("Unknown event type: {} in state {}", event.encodeType(EventTypes.class), state);
+									 return false;
+							 }
+							 return true;
+						 }
+					 },
+					 new MyState()
+					 { // REOPEN
+						 @Override
+						 public boolean processEvent(StateEvent event)
+						 {
+							 switch (event.encodeType(EventTypes.class)) {
+								 case CONNECT_EVENT:
+									 try {
+										 context.sendCerMessage();
+										 setTimer(CEA_TIMEOUT);
+										 switchToNextState(FsmState.INITIAL);
+									 }
+									 catch (Throwable e) {
+										 logger.debug("Can not send CER", e);
+										 setTimer(REC_TIMEOUT);
+									 }
+									 break;
+								 case TIMEOUT_EVENT:
+									 try {
+										 context.connect();
+									 }
+									 catch (Exception e) {
+										 logger.debug("Timeout processed. Can not connect to {}", context.getPeerDescription());
+										 setTimer(REC_TIMEOUT);
+									 }
+									 break;
+								 case STOP_EVENT:
+									 clearTimer();
+									 doDisconnect();
+									 switchToNextState(FsmState.DOWN);
+									 break;
+								 case DISCONNECT_EVENT:
+									 break;
+								 case SEND_MSG_EVENT:
+									 throw new IllegalStateException("Connection is down");
+								 default:
+									 logger.debug("Unknown event type: {} in state {}", event.encodeType(EventTypes.class), state);
+									 return false;
+							 }
+							 return true;
+						 }
+					 },
+					 new MyState()
+					 { // INITIAL
+						 @Override
+						 public void entryAction()
+						 {
+							 setTimer(CEA_TIMEOUT);
+						 }
 
-															 @Override
-															 public boolean processEvent(StateEvent event)
-															 {
-																 switch (event.encodeType(EventTypes.class)) {
-																	 case DISCONNECT_EVENT:
-																		 setTimer(REC_TIMEOUT);
-																		 switchToNextState(FsmState.REOPEN);
-																		 break;
-																	 case TIMEOUT_EVENT:
-																		 doDisconnect();
-																		 setTimer(REC_TIMEOUT);
-																		 switchToNextState(FsmState.REOPEN);
-																		 break;
-																	 case STOP_EVENT:
-																		 clearTimer();
-																		 doDisconnect();
-																		 switchToNextState(FsmState.DOWN);
-																		 break;
-																	 case CEA_EVENT:
-																		 clearTimer();
-																		 if (context.processCeaMessage(((FsmEvent) event).getKey(), ((FsmEvent) event).getMessage())) {
-																			 switchToNextState(FsmState.OKAY);
-																		 }
-																		 else {
-																			 doDisconnect();
-																			 setTimer(REC_TIMEOUT);
-																			 switchToNextState(FsmState.REOPEN);
-																		 }
-																		 break;
-																	 case SEND_MSG_EVENT:
-																		 throw new RuntimeException("Connection is down");
-																	 default:
-																		 logger.debug("Unknown event type: {} in state {}", event.encodeType(EventTypes.class), state);
-																		 return false;
-																 }
-																 return true;
-															 }
-														 },
-														 new MyState()
-														 { // STOPPING
-															 @Override
-															 public boolean processEvent(StateEvent event)
-															 {
-																 switch (event.encodeType(EventTypes.class)) {
-																	 case TIMEOUT_EVENT:
-																	 case DPA_EVENT:
-																		 doDisconnect();
-																		 switchToNextState(FsmState.DOWN);
-																		 break;
-																	 case RECEIVE_MSG_EVENT:
-																		 context.receiveMessage(message(event));
-																		 break;
-																	 case SEND_MSG_EVENT:
-																		 throw new RuntimeException("Stack now is stopping");
-																	 case STOP_EVENT:
-																	 case DISCONNECT_EVENT:
-																		 doDisconnect();
-																		 break;
-																	 default:
-																		 logger.debug("Unknown event type: {} in state {}", event.encodeType(EventTypes.class), state);
-																		 return false;
-																 }
-																 return true;
-															 }
-														 },
-														 };
+						 @Override
+						 public boolean processEvent(StateEvent event)
+						 {
+							 switch (event.encodeType(EventTypes.class)) {
+								 case DISCONNECT_EVENT:
+									 setTimer(REC_TIMEOUT);
+									 switchToNextState(FsmState.REOPEN);
+									 break;
+								 case TIMEOUT_EVENT:
+									 doDisconnect();
+									 setTimer(REC_TIMEOUT);
+									 switchToNextState(FsmState.REOPEN);
+									 break;
+								 case STOP_EVENT:
+									 clearTimer();
+									 doDisconnect();
+									 switchToNextState(FsmState.DOWN);
+									 break;
+								 case CEA_EVENT:
+									 clearTimer();
+									 if (context.processCeaMessage(((FsmEvent) event).getKey(), ((FsmEvent) event).getMessage())) {
+										 switchToNextState(FsmState.OKAY);
+									 }
+									 else {
+										 doDisconnect();
+										 setTimer(REC_TIMEOUT);
+										 switchToNextState(FsmState.REOPEN);
+									 }
+									 break;
+								 case SEND_MSG_EVENT:
+									 throw new RuntimeException("Connection is down");
+								 default:
+									 logger.debug("Unknown event type: {} in state {}", event.encodeType(EventTypes.class), state);
+									 return false;
+							 }
+							 return true;
+						 }
+					 },
+					 new MyState()
+					 { // STOPPING
+						 @Override
+						 public boolean processEvent(StateEvent event)
+						 {
+							 switch (event.encodeType(EventTypes.class)) {
+								 case TIMEOUT_EVENT:
+								 case DPA_EVENT:
+									 doDisconnect();
+									 switchToNextState(FsmState.DOWN);
+									 break;
+								 case RECEIVE_MSG_EVENT:
+									 context.receiveMessage(message(event));
+									 break;
+								 case SEND_MSG_EVENT:
+									 throw new RuntimeException("Stack now is stopping");
+								 case STOP_EVENT:
+								 case DISCONNECT_EVENT:
+									 doDisconnect();
+									 break;
+								 default:
+									 logger.debug("Unknown event type: {} in state {}", event.encodeType(EventTypes.class), state);
+									 return false;
+							 }
+							 return true;
+						 }
+					 },
+			 };
 		 }
 		 return states;
 	 }

@@ -51,13 +51,13 @@
  import org.jdiameter.common.api.statistic.IStatisticRecord;
 
  import java.util.ArrayList;
- import java.util.Arrays;
  import java.util.Collection;
  import java.util.List;
  import java.util.Map;
  import java.util.concurrent.ConcurrentHashMap;
  import java.util.concurrent.ExecutorService;
  import java.util.concurrent.ScheduledExecutorService;
+ import java.util.concurrent.ThreadPoolExecutor;
 
  /**
   * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
@@ -82,10 +82,10 @@
 		 this.entityFactory = entityFactory;
 		 Configuration dgConfig = getConfigByName(BaseThreadFactory.ENTITY_NAME);
 		 String defThreadGroupName = dgConfig != null ?
-									 dgConfig.getStringValue(Parameters.ConcurrentEntityDescription.ordinal(), (String) Parameters.ConcurrentEntityDescription.defValue()) :
-									 (String) Parameters.ConcurrentEntityDescription.defValue();
+				 dgConfig.getStringValue(Parameters.ConcurrentEntityDescription.ordinal(), (String) Parameters.ConcurrentEntityDescription.defValue()) :
+				 (String) Parameters.ConcurrentEntityDescription.defValue();
 
-		 threadFactory = (BaseThreadFactory) entityFactory.newThreadFactory(defThreadGroupName);
+		 threadFactory = (BaseThreadFactory) entityFactory.newThreadFactory();
 
 		 scheduledExecutorServices = new ConcurrentHashMap<String, CommonScheduledExecutorService>();
 		 IStatisticRecord threadCount = statisticFactory.newCounterRecord(
@@ -101,7 +101,7 @@
 					 @Override
 					 public int getValueAsInt()
 					 {
-						 return getThreadGroup().activeCount();
+						 return ((ThreadPoolExecutor) getThreadPool()).getActiveCount();
 					 }
 				 });
 
@@ -130,7 +130,6 @@
 	  * fetch configuration for executor
 	  *
 	  * @param name
-	  *
 	  * @return
 	  */
 	 private Configuration getConfigByName(String name)
@@ -146,29 +145,9 @@
 	 }
 
 	 @Override
-	 public Thread getThread(Runnable runnable)
+	 public ExecutorService getThreadPool()
 	 {
-		 return threadFactory.newThread(runnable);
-	 }
-
-	 @Override
-	 public Thread getThread(String namePrefix, Runnable runnuble)
-	 {
-		 return threadFactory.newThread(namePrefix, runnuble);
-	 }
-
-	 @Override
-	 public List<Thread> getThreads()
-	 {
-		 Thread[] threads = new Thread[threadFactory.getThreadGroup().activeCount()];
-		 threadFactory.getThreadGroup().enumerate(threads);
-		 return Arrays.asList(threads);
-	 }
-
-	 @Override
-	 public ThreadGroup getThreadGroup()
-	 {
-		 return threadFactory.getThreadGroup();
+		 return threadFactory.getThreadPool();
 	 }
 
 	 @Override
@@ -180,6 +159,7 @@
 			 synchronized (ConcurrentFactory.class) {
 				 if (!scheduledExecutorServices.containsKey(name)) {
 					 service = new CommonScheduledExecutorService(name, getConfigByName(name), this.entityFactory, statisticFactory);
+
 					 scheduledExecutorServices.put(name, service);
 				 }
 			 }

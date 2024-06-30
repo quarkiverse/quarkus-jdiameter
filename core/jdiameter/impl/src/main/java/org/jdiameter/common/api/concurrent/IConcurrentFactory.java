@@ -46,6 +46,7 @@
 
  import java.util.Collection;
  import java.util.List;
+ import java.util.concurrent.ExecutorService;
  import java.util.concurrent.ScheduledExecutorService;
 
  /**
@@ -68,14 +69,7 @@
 		 ApplicationSession
 	 }
 
-	 // Thread
-	 Thread getThread(Runnable runnuble);
-
-	 Thread getThread(String namePrefix, Runnable runnuble);
-
-	 List<Thread> getThreads();
-
-	 ThreadGroup getThreadGroup();
+	 ExecutorService getThreadPool();
 
 	 // ScheduledExecutorService
 	 ScheduledExecutorService getScheduledExecutorService(String name);

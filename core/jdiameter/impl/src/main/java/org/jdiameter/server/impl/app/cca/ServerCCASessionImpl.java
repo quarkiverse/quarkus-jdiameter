@@ -42,23 +42,8 @@
 
  package org.jdiameter.server.impl.app.cca;
 
- import org.jdiameter.api.Answer;
- import org.jdiameter.api.Avp;
- import org.jdiameter.api.AvpDataException;
- import org.jdiameter.api.EventListener;
- import org.jdiameter.api.IllegalDiameterStateException;
- import org.jdiameter.api.InternalException;
- import org.jdiameter.api.NetworkReqListener;
- import org.jdiameter.api.OverloadException;
- import org.jdiameter.api.Request;
- import org.jdiameter.api.ResultCode;
- import org.jdiameter.api.RouteException;
- import org.jdiameter.api.app.AppAnswerEvent;
- import org.jdiameter.api.app.AppEvent;
- import org.jdiameter.api.app.AppRequestEvent;
- import org.jdiameter.api.app.AppSession;
- import org.jdiameter.api.app.StateChangeListener;
- import org.jdiameter.api.app.StateEvent;
+ import org.jdiameter.api.*;
+ import org.jdiameter.api.app.*;
  import org.jdiameter.api.auth.events.ReAuthRequest;
  import org.jdiameter.api.cca.ServerCCASession;
  import org.jdiameter.api.cca.ServerCCASessionListener;
@@ -207,13 +192,8 @@
 								 // Event: CC initial request received and successfully processed
 								 // Action: Send CC initial answer, reserve units, start Tcc
 								 // New State: OPEN
-								 if (isSuccess(resultCode) || isTransient(resultCode)) {
-									 Avp vtAvp = answer.getValidityTimeAvp();
-									 if (vtAvp == null) {
-										 Avp mscc = answer.getMessage().getAvps().getAvp(Avp.MULTIPLE_SERVICES_CREDIT_CONTROL);
-										 vtAvp = mscc != null ? mscc.getGrouped().getAvp(Avp.VALIDITY_TIME) : null;
-									 }
-									 startTcc(vtAvp);
+								 if (isSuccess(resultCode)) {
+									 startTcc(answer.getValidityTimeAvp());
 									 newState = ServerCCASessionState.OPEN;
 								 }
 								 // Current State: IDLE
@@ -238,7 +218,7 @@
 							 // and let it throw exception anyway ...
 						 default:
 							 throw new InternalException("Wrong state: " + ServerCCASessionState.IDLE + " on event: " + eventType + " " + localEvent.getRequest() + " " +
-														 localEvent.getAnswer());
+																 localEvent.getAnswer());
 					 }
 
 				 case OPEN:
@@ -266,12 +246,7 @@
 									 // Event: CC update request received and successfully processed
 									 // Action: Send CC update answer, debit used units, reserve new units, restart Tcc
 									 // New State: OPEN
-									 Avp vtAvp = answer.getValidityTimeAvp();
-									 if (vtAvp == null) {
-										 Avp mscc = answer.getMessage().getAvps().getAvp(Avp.MULTIPLE_SERVICES_CREDIT_CONTROL);
-										 vtAvp = mscc != null ? mscc.getGrouped().getAvp(Avp.VALIDITY_TIME) : null;
-									 }
-									 startTcc(vtAvp);
+									 startTcc(answer.getValidityTimeAvp());
 								 }
 								 else {
 									 // Current State: OPEN
@@ -423,8 +398,6 @@
 			 tccTimeout = 2 * context.getDefaultValidityTime();
 		 }
 
-		 logger.debug("Starting TCC timer with Validity-Avp[{}] and tccTimeout[{}] seconds", validityAvp, tccTimeout);
-
 		 if (sessionData.getTccTimerId() != null) {
 			 stopTcc(true);
 			 //tccFuture = super.scheduler.schedule(new TccScheduledTask(this), defaultValue, TimeUnit.SECONDS);
@@ -448,14 +421,8 @@
 	 @Override
 	 public void onTimer(String timerName)
 	 {
-		 if (timerName.equals(IDLE_SESSION_TIMER_NAME)) {
-			 checkIdleAppSession();
-		 }
-		 else if (timerName.equals(TCC_TIMER_NAME)) {
+		 if (timerName.equals(TCC_TIMER_NAME)) {
 			 new TccScheduledTask(this).run();
-		 }
-		 else {
-			 logger.warn("Received an unknown timer '{}' for Session-ID '{}'", timerName, getSessionId());
 		 }
 	 }
 
@@ -471,11 +438,6 @@
 				 context.sessionSupervisionTimerStopped(this, null);
 			 }
 		 }
-	 }
-
-	 protected boolean isTransient(long resultCode)
-	 {
-		 return resultCode >= 4000 && resultCode < 5000;
 	 }
 
 	 protected boolean isProvisional(long resultCode)
@@ -567,6 +529,7 @@
 		 {
 			 try {
 				 switch (request.getCommandCode()) {
+
 					 case JCreditControlAnswer.code:
 						 handleEvent(new Event(true, factory.createCreditControlRequest(request), null));
 						 break;

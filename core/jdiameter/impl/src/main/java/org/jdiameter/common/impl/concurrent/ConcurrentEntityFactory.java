@@ -54,7 +54,7 @@
   * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
   * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
   */
- @SuppressWarnings("all")//3rd party lib
+ @SuppressWarnings("all")//3rd party libs
  public class ConcurrentEntityFactory implements IConcurrentEntityFactory
  {
 
@@ -64,9 +64,9 @@
 	 }
 
 	 @Override
-	 public ThreadFactory newThreadFactory(String threadPoolName)
+	 public ThreadFactory newThreadFactory()
 	 {
-		 return new BaseThreadFactory(threadPoolName);
+		 return new BaseThreadFactory();
 	 }
 
 	 @Override

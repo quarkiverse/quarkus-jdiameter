@@ -42,16 +42,7 @@
 
  package org.jdiameter.client.impl.controller;
 
- import org.jdiameter.api.Avp;
- import org.jdiameter.api.AvpDataException;
- import org.jdiameter.api.Configuration;
- import org.jdiameter.api.IllegalDiameterStateException;
- import org.jdiameter.api.InternalException;
- import org.jdiameter.api.MetaData;
- import org.jdiameter.api.NetworkReqListener;
- import org.jdiameter.api.Peer;
- import org.jdiameter.api.RouteException;
- import org.jdiameter.api.URI;
+ import org.jdiameter.api.*;
  import org.jdiameter.api.validation.AvpNotAllowedException;
  import org.jdiameter.api.validation.Dictionary;
  import org.jdiameter.client.api.IAssembler;
@@ -81,7 +72,9 @@
  import java.util.List;
  import java.util.Map;
  import java.util.concurrent.ConcurrentHashMap;
- import java.util.concurrent.ThreadFactory;
+ import java.util.concurrent.ExecutorService;
+ import java.util.concurrent.Executors;
+ import java.util.concurrent.ThreadPoolExecutor;
  import java.util.concurrent.atomic.AtomicLong;
 
  import static org.jdiameter.client.impl.helpers.Parameters.*;
@@ -164,7 +157,7 @@
 	 protected Peer createPeer(int rating, String uri, String ip, String portRange, MetaData metaData, Configuration config, Configuration peerConfig,
 							   IFsmFactory fsmFactory, ITransportLayerFactory transportFactory, IStatisticManager statisticFactory, IConcurrentFactory concurrentFactory,
 							   IMessageParser parser)
-	 throws InternalException, TransportException, URISyntaxException, UnknownServiceException
+			 throws InternalException, TransportException, URISyntaxException, UnknownServiceException
 	 {
 		 return new PeerImpl(this, rating, new URI(uri), ip, portRange, metaData.unwrap(IMetaData.class), config,
 							 peerConfig, fsmFactory, transportFactory, statisticFactory, concurrentFactory, parser, this.sessionDatasource);
@@ -218,8 +211,8 @@
 		 else {
 			 logger.debug("Message is an answer");
 			 peer = message.getPeer();
-			 if (peer == null || !peer.hasValidConnection()) {
-				 logger.debug("Peer is null [{}] or with invalid connection so we will use router.getPeer to find a peer", peer == null);
+			 if (peer == null) {
+				 logger.debug("Peer is null so we will use router.getPeer to find a peer");
 				 peer = router.getPeer(message, this);
 				 if (peer == null) {
 					 throw new RouteException("Cannot found remote context for sending message");
@@ -354,12 +347,12 @@
 				 // boolean interrupted = false;
 				 long remWaitTime = 2000;
 				 logger.debug("Stopping thread group and waiting a max of {}ms for all threads to finish", remWaitTime);
-				 while (concurrentFactory.getThreadGroup().activeCount() > 0 && remWaitTime > 0) {
+				 while (((ThreadPoolExecutor) concurrentFactory.getThreadPool()).getActiveCount() > 0 && remWaitTime > 0) {
 					 long waitTime = 250;
 					 Thread.sleep(waitTime);
 					 remWaitTime -= waitTime;
 					 logger.debug("Waited {}ms. Time remaining to wait: {}ms. {} Thread still active.",
-								  new Object[]{waitTime, remWaitTime, concurrentFactory.getThreadGroup().activeCount()});
+								  new Object[]{waitTime, remWaitTime, ((ThreadPoolExecutor) concurrentFactory.getThreadPool()).getActiveCount()});
 					 // it did not terminated, let's interrupt
 					 // FIXME: remove ASAP, this is very bad, it kills threads in middle of op,
 					 //        killing FSM of peer for instance, after that its not usable.
@@ -406,8 +399,13 @@
 			 catch (IllegalThreadStateException itse) {
 				 if (logger.isDebugEnabled()) {
 					 logger.debug("Failure trying to destroy ThreadGroup probably due to existing active threads. Use stop() before destroy(). (nr_threads={})",
-								  concurrentFactory.getThreadGroup().activeCount());
+								  ((ThreadPoolExecutor) concurrentFactory.getThreadPool()).getActiveCount());
 				 }
+			 }
+			 catch (ThreadDeath td) {
+				 // The class ThreadDeath is specifically a subclass of Error rather than Exception, even though it is a
+				 // "normal occurrence", because many applications catch all occurrences of Exception and then discard the
+				 // exception.  ....
 			 }
 		 }
 		 if (router != null) {
@@ -432,29 +430,17 @@
 		 return null;
 	 }
 
-	 protected class PeerTableThreadFactory implements ThreadFactory
+	 protected class PeerTableThreadFactory
 	 {
 
 		 public final AtomicLong sequence = new AtomicLong(0);
 		 private int priority = Thread.NORM_PRIORITY;
-		 private ThreadGroup factoryThreadGroup = new ThreadGroup("JDiameterThreadGroup[" + sequence.incrementAndGet() + "]");
+		 private ExecutorService threadPoolExecutor = Executors.newCachedThreadPool();
 
 		 public PeerTableThreadFactory(int priority)
 		 {
 			 super();
 			 this.priority = priority;
-		 }
-
-		 @Override
-		 public Thread newThread(Runnable r)
-		 {
-			 Thread t = new Thread(this.factoryThreadGroup, r);
-			 if (logger.isDebugEnabled()) {
-				 logger.debug("Creating new thread in thread group JDiameterThreadGroup. Thread name is [{}]", t.getName());
-			 }
-			 t.setPriority(this.priority);
-			 // TODO ? t.start();
-			 return t;
 		 }
 	 }
  }

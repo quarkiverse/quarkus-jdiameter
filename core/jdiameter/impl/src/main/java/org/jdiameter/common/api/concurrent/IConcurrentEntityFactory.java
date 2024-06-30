@@ -58,7 +58,7 @@
  public interface IConcurrentEntityFactory
  {
 
-	 ThreadFactory newThreadFactory(String threadPoolName);
+	 ThreadFactory newThreadFactory();
 
 	 RejectedExecutionHandler newRejectedExecutionHandler(IStatisticRecord rejectedCount);
 

@@ -42,8 +42,9 @@
 
  package org.jdiameter.common.impl.concurrent;
 
+ import java.util.concurrent.ExecutorService;
+ import java.util.concurrent.Executors;
  import java.util.concurrent.ThreadFactory;
- import java.util.concurrent.atomic.AtomicInteger;
 
  /**
   * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
@@ -53,33 +54,25 @@
  class BaseThreadFactory implements ThreadFactory
  {
 
-	 public static final String ENTITY_NAME = "ThreadGroup";
+	 public static final String ENTITY_NAME = "ThreadPool";
 
-	 private ThreadGroup threadGroup;
-	 private String threadPoolName;
-	 private AtomicInteger count = new AtomicInteger(0);
+	 private ExecutorService threadPoolExecutor;
 
-	 BaseThreadFactory(String threadPoolName)
+	 BaseThreadFactory()
 	 {
-		 this.threadPoolName = threadPoolName;
+		 this.threadPoolExecutor = Executors.newCachedThreadPool();
+	 }
 
-		 this.threadGroup = new ThreadGroup("jd " + threadPoolName + " group");
+	 public ExecutorService getThreadPool()
+	 {
+		 return this.threadPoolExecutor;
 	 }
 
 	 @Override
 	 public Thread newThread(Runnable runnable)
 	 {
-		 return new Thread(threadGroup, runnable, threadPoolName + "-" + count.getAndIncrement());
+		 return null;
 	 }
 
-	 public Thread newThread(String namePrefix, Runnable runnable)
-	 {
-		 return new Thread(threadGroup, runnable, namePrefix + "-" + count.getAndIncrement());
-	 }
-
-	 public ThreadGroup getThreadGroup()
-	 {
-		 return threadGroup;
-	 }
 
  }

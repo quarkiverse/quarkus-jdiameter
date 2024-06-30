@@ -44,7 +44,6 @@ package org.jdiameter.client.impl.transport.tcp;
 
 import org.jdiameter.api.AvpDataException;
 import org.jdiameter.client.api.io.NotInitializedException;
-import org.jdiameter.client.impl.parser.MessageParser;
 import org.jdiameter.common.api.concurrent.IConcurrentFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,11 +54,7 @@ import java.net.Socket;
 import java.nio.BufferOverflowException;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
-import java.nio.channels.AsynchronousCloseException;
-import java.nio.channels.ClosedByInterruptException;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.*;
 import java.nio.channels.spi.SelectorProvider;
 import java.util.Iterator;
 import java.util.concurrent.locks.Lock;
@@ -129,24 +124,13 @@ public class TCPTransportClient implements Runnable
 			throw new NotInitializedException("Destination address is not set");
 		}
 		socketChannel = SelectorProvider.provider().openSocketChannel();
-
-		try {
-			if (origAddress != null) {
-				socketChannel.socket().bind(origAddress);
-			}
-
-			socketChannel.connect(destAddress);
-			//PCB added logging
-			socketChannel.configureBlocking(BLOCKING_IO);
-			getParent().onConnected();
+		if (origAddress != null) {
+			socketChannel.socket().bind(origAddress);
 		}
-		catch (IOException e) {
-			if (origAddress != null) {
-				socketChannel.socket().close();
-			}
-			socketChannel.close();
-			throw e;
-		}
+		socketChannel.connect(destAddress);
+		//PCB added logging
+		socketChannel.configureBlocking(BLOCKING_IO);
+		getParent().onConnected();
 	}
 
 	public TCPClientConnection getParent()
@@ -181,12 +165,7 @@ public class TCPTransportClient implements Runnable
 			throw new NotInitializedException("No parent connection is set is set");
 		}
 		if (selfThread == null || !selfThread.isAlive()) {
-			selfThread = concurrentFactory.getThread("TCPReader", this);
-		}
-
-		if (!selfThread.isAlive()) {
-			selfThread.setDaemon(true);
-			selfThread.start();
+			concurrentFactory.getThreadPool().execute(this);
 		}
 	}
 
@@ -320,14 +299,7 @@ public class TCPTransportClient implements Runnable
 	public void sendMessage(ByteBuffer bytes) throws IOException
 	{
 		if (logger.isDebugEnabled()) {
-			if (logger.isTraceEnabled()) {
-				String hex = MessageParser.byteArrayToHexString(bytes.array());
-				logger.trace("About to send a byte buffer of size [{}] over the TCP nio socket [{}]\n{}",
-							 new Object[]{bytes.array().length, socketDescription, hex});
-			}
-			else {
-				logger.debug("About to send a byte buffer of size [{}] over the TCP nio socket [{}]", bytes.array().length, socketDescription);
-			}
+			logger.debug("About to send a byte buffer of size [{}] over the TCP nio socket [{}]", bytes.array().length, socketDescription);
 		}
 		int rc = 0;
 		// PCB - removed locking
@@ -347,9 +319,6 @@ public class TCPTransportClient implements Runnable
 		}
 		if (rc == -1) {
 			throw new IOException("Connection closed");
-		}
-		else if (rc == 0) {
-			logger.error("socketChannel.write(bytes) - returned zero indicating that perhaps the write buffer is full");
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug("Sent a byte buffer of size [{}] over the TCP nio socket [{}]", bytes.array().length, socketDescription);
@@ -434,7 +403,6 @@ public class TCPTransportClient implements Runnable
 				// ZhixiaoLuo: fix #28, if unlucky storage.limit < data.length(1024), then always failed to do storage.put(data)
 				// ZhixiaoLuo: and get BufferOverflowException in append(data)
 				storage.clear();
-				logger.error("Invalid message version detected [" + vers + "]");
 				return false;
 			}
 			// extract the message length, so we know how much to read

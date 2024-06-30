@@ -200,12 +200,7 @@
 			 throw new NotInitializedException("No parent connection is set is set");
 		 }
 		 if (this.readThread == null || !this.readThread.isAlive()) {
-			 this.readThread = this.concurrentFactory.getThread("TLSReader", this.readTash);
-		 }
-
-		 if (!this.readThread.isAlive()) {
-			 this.readThread.setDaemon(true);
-			 this.readThread.start();
+			 this.concurrentFactory.getThreadPool().execute(this.readTash);
 		 }
 	 }
 
@@ -280,6 +275,7 @@
 			 logger.debug("Sent a byte buffer of size [{}] over the TLS nio socket [{}]", messageBuffer.array().length, socketDescription);
 		 }
 	 }
+
 
 	 boolean isConnected()
 	 {
@@ -420,7 +416,6 @@
 
 	 /**
 	  * @param message
-	  *
 	  * @throws AvpDataException
 	  * @throws NotInitializedException
 	  */
@@ -475,7 +470,6 @@
 
 	 /**
 	  * @param message
-	  *
 	  * @throws AvpDataException
 	  * @throws NotInitializedException
 	  */
@@ -486,7 +480,7 @@
 		 // }
 
 		 if (this.shaken || this.client || this.plainSocket instanceof SSLSocket || message.isRequest()
-			 || message.getCommandCode() != Message.CAPABILITIES_EXCHANGE_ANSWER) {
+				 || message.getCommandCode() != Message.CAPABILITIES_EXCHANGE_ANSWER) {
 			 return;
 		 }
 
@@ -511,7 +505,7 @@
 			 // only clients start shake
 			 if (parentConnection.getSSLConfig().getStringValue(CipherSuites.ordinal(), null) != null) {
 				 sslSocket.setEnabledCipherSuites(parentConnection.getSSLConfig().getStringValue(CipherSuites.ordinal(), null)
-																  .split(","));
+														  .split(","));
 			 }
 
 			 this.inputStream = sslSocket.getInputStream();

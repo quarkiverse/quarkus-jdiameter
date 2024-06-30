@@ -42,6 +42,7 @@
 
 package org.jdiameter.server.impl.io.tcp;
 
+
 import org.jdiameter.client.api.parser.IMessageParser;
 import org.jdiameter.client.impl.transport.tcp.TCPClientConnection;
 import org.jdiameter.common.api.concurrent.DummyConcurrentFactory;
@@ -95,6 +96,7 @@ public class NetworkGuard implements INetworkGuard
 	//private Thread thread;
 	private List<GuardTask> tasks = new ArrayList<GuardTask>();
 
+
 	@Deprecated
 	public NetworkGuard(InetAddress inetAddress, int port, IMessageParser parser) throws Exception
 	{
@@ -107,6 +109,7 @@ public class NetworkGuard implements INetworkGuard
 	{
 		this(new InetAddress[]{inetAddress}, port, concurrentFactory, parser, data);
 	}
+
 
 	public NetworkGuard(InetAddress[] inetAddress, int port,
 						IConcurrentFactory concurrentFactory, IMessageParser parser,
@@ -121,15 +124,10 @@ public class NetworkGuard implements INetworkGuard
 		try {
 			for (int addrIdx = 0; addrIdx < inetAddress.length; addrIdx++) {
 				GuardTask guardTask = new GuardTask(new InetSocketAddress(inetAddress[addrIdx], port));
-				Thread t = this.concurrentFactory.getThread(guardTask);
-				guardTask.thread = t;
+				this.concurrentFactory.getThreadPool().execute(guardTask);
 				tasks.add(guardTask);
 			}
 			isWork = true;
-			for (GuardTask gt : this.tasks) {
-				gt.start();
-			}
-			//thread.start();
 		}
 		catch (Exception exc) {
 			destroy();
@@ -293,9 +291,6 @@ public class NetworkGuard implements INetworkGuard
 					// ignore
 				}
 				serverSocket = null;
-			}
-			if (binder != null) {
-				binder.shutdown();
 			}
 		}
 

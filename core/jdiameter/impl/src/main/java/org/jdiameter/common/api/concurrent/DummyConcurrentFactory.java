@@ -49,6 +49,7 @@
  import java.util.List;
  import java.util.concurrent.Executors;
  import java.util.concurrent.ScheduledExecutorService;
+ import java.util.concurrent.ThreadPoolExecutor;
 
  /**
   * @author erick.svenson@yahoo.com
@@ -59,26 +60,9 @@
  public class DummyConcurrentFactory implements IConcurrentFactory
  {
 
-	 @Override
-	 public Thread getThread(Runnable runnuble)
-	 {
-		 return new Thread(runnuble);
-	 }
 
 	 @Override
-	 public Thread getThread(String namePrefix, Runnable runnuble)
-	 {
-		 return new Thread(runnuble, namePrefix);
-	 }
-
-	 @Override
-	 public List<Thread> getThreads()
-	 {
-		 return new ArrayList<Thread>();
-	 }
-
-	 @Override
-	 public ThreadGroup getThreadGroup()
+	 public ThreadPoolExecutor getThreadPool()
 	 {
 		 return null;
 	 }
