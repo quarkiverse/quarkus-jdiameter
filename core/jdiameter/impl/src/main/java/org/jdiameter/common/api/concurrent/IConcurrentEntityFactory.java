@@ -40,30 +40,31 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.api.concurrent;
+ package org.jdiameter.common.api.concurrent;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.RejectedExecutionHandler;
-import java.util.concurrent.ThreadFactory;
+ import org.jdiameter.common.api.statistic.IStatistic;
+ import org.jdiameter.common.api.statistic.IStatisticRecord;
 
-import org.jdiameter.common.api.statistic.IStatistic;
-import org.jdiameter.common.api.statistic.IStatisticRecord;
+ import java.util.concurrent.Callable;
+ import java.util.concurrent.RejectedExecutionHandler;
+ import java.util.concurrent.ThreadFactory;
 
-/**
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public interface IConcurrentEntityFactory {
+ /**
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IConcurrentEntityFactory
+ {
 
-  ThreadFactory newThreadFactory();
+	 ThreadFactory newThreadFactory();
 
-  RejectedExecutionHandler newRejectedExecutionHandler(IStatisticRecord rejectedCount);
+	 RejectedExecutionHandler newRejectedExecutionHandler(IStatisticRecord rejectedCount);
 
-  //TODO: get rid of those.
-  <L> Callable<L> newDefaultCallable(Callable<L> runnable, IStatistic statistic , IStatisticRecord... statisticRecords);
+	 //TODO: get rid of those.
+	 <L> Callable<L> newDefaultCallable(Callable<L> runnable, IStatistic statistic, IStatisticRecord... statisticRecords);
 
-  Runnable newDefaultRunnable(Runnable runnable, IStatistic statistic, IStatisticRecord... statisticRecords);
+	 Runnable newDefaultRunnable(Runnable runnable, IStatistic statistic, IStatisticRecord... statisticRecords);
 
-}
+ }

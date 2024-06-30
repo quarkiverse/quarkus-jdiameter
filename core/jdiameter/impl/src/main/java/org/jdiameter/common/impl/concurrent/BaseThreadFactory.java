@@ -42,15 +42,9 @@
 
  package org.jdiameter.common.impl.concurrent;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
+ import java.util.concurrent.ExecutorService;
+ import java.util.concurrent.Executors;
+ import java.util.concurrent.ThreadFactory;
 
  /**
   * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
@@ -60,22 +54,25 @@ import java.util.concurrent.atomic.AtomicInteger;
  class BaseThreadFactory implements ThreadFactory
  {
 
-  public static final String ENTITY_NAME = "ThreadPool";
+	 public static final String ENTITY_NAME = "ThreadPool";
 
-  private ExecutorService threadPoolExecutor;
+	 private ExecutorService threadPoolExecutor;
 
-  BaseThreadFactory() {
-    this.threadPoolExecutor = Executors.newCachedThreadPool();
-  }
+	 BaseThreadFactory()
+	 {
+		 this.threadPoolExecutor = Executors.newCachedThreadPool();
+	 }
 
-  public ExecutorService getThreadPool() {
-    return this.threadPoolExecutor;
-  }
+	 public ExecutorService getThreadPool()
+	 {
+		 return this.threadPoolExecutor;
+	 }
 
-  @Override
-  public Thread newThread(Runnable runnable) {
-    return null;
-  }
+	 @Override
+	 public Thread newThread(Runnable runnable)
+	 {
+		 return null;
+	 }
 
 
-}
+ }

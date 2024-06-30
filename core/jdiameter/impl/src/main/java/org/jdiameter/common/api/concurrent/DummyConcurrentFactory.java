@@ -40,57 +40,65 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.api.concurrent;
+ package org.jdiameter.common.api.concurrent;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
+ import org.jdiameter.common.api.statistic.IStatistic;
 
-import org.jdiameter.common.api.statistic.IStatistic;
+ import java.util.ArrayList;
+ import java.util.Collection;
+ import java.util.List;
+ import java.util.concurrent.Executors;
+ import java.util.concurrent.ScheduledExecutorService;
+ import java.util.concurrent.ThreadPoolExecutor;
 
-/**
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public class DummyConcurrentFactory implements IConcurrentFactory {
+ /**
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public class DummyConcurrentFactory implements IConcurrentFactory
+ {
 
-  
-  @Override
-  public ThreadPoolExecutor getThreadPool() {
-    return null;
-  }
 
-  @Override
-  public ScheduledExecutorService getScheduledExecutorService(String name) {
-    return Executors.newScheduledThreadPool(4);
-  }
+	 @Override
+	 public ThreadPoolExecutor getThreadPool()
+	 {
+		 return null;
+	 }
 
-  @Override
-  public Collection<ScheduledExecutorService> getScheduledExecutorServices() {
-    return new ArrayList<ScheduledExecutorService>();
-  }
+	 @Override
+	 public ScheduledExecutorService getScheduledExecutorService(String name)
+	 {
+		 return Executors.newScheduledThreadPool(4);
+	 }
 
-  @Override
-  public void shutdownNow(ScheduledExecutorService service) {
-  }
+	 @Override
+	 public Collection<ScheduledExecutorService> getScheduledExecutorServices()
+	 {
+		 return new ArrayList<ScheduledExecutorService>();
+	 }
 
-  @Override
-  public IStatistic getStatistic() {
-    return null;
-  }
+	 @Override
+	 public void shutdownNow(ScheduledExecutorService service)
+	 {
+	 }
 
-  @Override
-  public List<IStatistic> getStatistics() {
-    // TODO Auto-generated method stub
-    return new ArrayList<IStatistic>();
-  }
+	 @Override
+	 public IStatistic getStatistic()
+	 {
+		 return null;
+	 }
 
-  @Override
-  public void shutdownAllNow() {
-  }
-}
+	 @Override
+	 public List<IStatistic> getStatistics()
+	 {
+		 // TODO Auto-generated method stub
+		 return new ArrayList<IStatistic>();
+	 }
+
+	 @Override
+	 public void shutdownAllNow()
+	 {
+	 }
+ }

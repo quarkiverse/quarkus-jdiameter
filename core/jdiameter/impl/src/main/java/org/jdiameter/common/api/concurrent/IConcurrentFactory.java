@@ -40,47 +40,48 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.api.concurrent;
+ package org.jdiameter.common.api.concurrent;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadPoolExecutor;
+ import org.jdiameter.common.api.statistic.IStatistic;
 
-import org.jdiameter.common.api.statistic.IStatistic;
+ import java.util.Collection;
+ import java.util.List;
+ import java.util.concurrent.ExecutorService;
+ import java.util.concurrent.ScheduledExecutorService;
 
-/**
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public interface IConcurrentFactory {
+ /**
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IConcurrentFactory
+ {
 
-  enum ScheduledExecServices {
-    ProcessingMessageTimer,
-    RedirectMessageTimer,
-    DuplicationMessageTimer,
-    PeerOverloadTimer,
-    ConnectionTimer,
-    StatisticTimer,
-    ApplicationSession
-  }
+	 enum ScheduledExecServices
+	 {
+		 ProcessingMessageTimer,
+		 RedirectMessageTimer,
+		 DuplicationMessageTimer,
+		 PeerOverloadTimer,
+		 ConnectionTimer,
+		 StatisticTimer,
+		 ApplicationSession
+	 }
 
-  ExecutorService getThreadPool();
+	 ExecutorService getThreadPool();
 
-  // ScheduledExecutorService
-  ScheduledExecutorService getScheduledExecutorService(String name);
+	 // ScheduledExecutorService
+	 ScheduledExecutorService getScheduledExecutorService(String name);
 
-  Collection<ScheduledExecutorService> getScheduledExecutorServices();
+	 Collection<ScheduledExecutorService> getScheduledExecutorServices();
 
-  void shutdownNow(ScheduledExecutorService service);
+	 void shutdownNow(ScheduledExecutorService service);
 
-  // Common
-  IStatistic getStatistic();
+	 // Common
+	 IStatistic getStatistic();
 
-  List<IStatistic> getStatistics();
+	 List<IStatistic> getStatistics();
 
-  void shutdownAllNow();
-}
+	 void shutdownAllNow();
+ }
