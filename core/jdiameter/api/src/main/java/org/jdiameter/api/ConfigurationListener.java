@@ -40,22 +40,26 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api;
+ package org.jdiameter.api;
 
-/**
- * The listener interface for receiving runtime configuration changes events.
- *
- * @author erick.svenson@yahoo.com
- * @version 1.5.1 Final
- */
-public interface ConfigurationListener {
+ /**
+  * The listener interface for receiving runtime configuration changes events.
+  *
+  * @author erick.svenson@yahoo.com
+  * @version 1.5.1 Final
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface ConfigurationListener
+ {
 
-  /**
-   * Invoked when an changes is occurs.
-   * @param key index of changed element
-   * @param newValue new value
-   * @return true if new value is applied
-   */
-  boolean elementChanged(int key, Object newValue);
+	 /**
+	  * Invoked when an changes is occurs.
+	  *
+	  * @param key      index of changed element
+	  * @param newValue new value
+	  *
+	  * @return true if new value is applied
+	  */
+	 boolean elementChanged(int key, Object newValue);
 
-}
+ }

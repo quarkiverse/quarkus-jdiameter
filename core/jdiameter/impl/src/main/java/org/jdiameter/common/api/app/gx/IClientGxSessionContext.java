@@ -40,40 +40,41 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.api.app.gx;
+ package org.jdiameter.common.api.app.gx;
 
-import org.jdiameter.api.Message;
-import org.jdiameter.api.gx.ClientGxSession;
+ import org.jdiameter.api.Message;
+ import org.jdiameter.api.gx.ClientGxSession;
 
-/**
- * Diameter Gx Application Client Additional listener.
- * Actions for FSM
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:carl-magnus.bjorkell@emblacom.com"> Carl-Magnus Björkell </a>
- */
-public interface IClientGxSessionContext {
+ /**
+  * Diameter Gx Application Client Additional listener. Actions for FSM
+  *
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:carl-magnus.bjorkell@emblacom.com"> Carl-Magnus Björkell </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IClientGxSessionContext
+ {
 
-  long getDefaultTxTimerValue();
+	 long getDefaultTxTimerValue();
 
-  void txTimerExpired(ClientGxSession session);
+	 void txTimerExpired(ClientGxSession session);
 
-  int getDefaultCCFHValue();
+	 int getDefaultCCFHValue();
 
-  int getDefaultDDFHValue();
+	 int getDefaultDDFHValue();
 
-  void grantAccessOnDeliverFailure(ClientGxSession clientGxSessionImpl, Message request);
+	 void grantAccessOnDeliverFailure(ClientGxSession clientGxSessionImpl, Message request);
 
-  void denyAccessOnDeliverFailure(ClientGxSession clientGxSessionImpl, Message request);
+	 void denyAccessOnDeliverFailure(ClientGxSession clientGxSessionImpl, Message request);
 
-  void grantAccessOnTxExpire(ClientGxSession clientGxSessionImpl);
+	 void grantAccessOnTxExpire(ClientGxSession clientGxSessionImpl);
 
-  void denyAccessOnTxExpire(ClientGxSession clientGxSessionImpl);
+	 void denyAccessOnTxExpire(ClientGxSession clientGxSessionImpl);
 
-  void grantAccessOnFailureMessage(ClientGxSession clientGxSessionImpl);
+	 void grantAccessOnFailureMessage(ClientGxSession clientGxSessionImpl);
 
-  void denyAccessOnFailureMessage(ClientGxSession clientGxSessionImpl);
+	 void denyAccessOnFailureMessage(ClientGxSession clientGxSessionImpl);
 
-  void indicateServiceError(ClientGxSession clientGxSessionImpl);
-}
+	 void indicateServiceError(ClientGxSession clientGxSessionImpl);
+ }

@@ -40,129 +40,142 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.api.statistic;
+ package org.jdiameter.common.api.statistic;
 
-import org.jdiameter.api.StatisticRecord;
+ import org.jdiameter.api.StatisticRecord;
 
-/**
- * This interface describe extends methods of base class
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface IStatisticRecord extends StatisticRecord {
+ /**
+  * This interface describe extends methods of base class
+  *
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IStatisticRecord extends StatisticRecord
+ {
 
-  enum Counters {
+	 enum Counters
+	 {
 
-    AppGenRequest("Count of app generated requests"),
-    AppGenRejectedRequest("Count of rejected app generated requests"),
-    AppGenResponse("Count of app generated responses"),
-    AppGenRejectedResponse("Count of rejected app generated responses"),
-    NetGenRequest("Count of network generated processed requests"),
-    NetGenRejectedRequest("Count of network generated rejected requests"),
-    NetGenResponse("Count of network generated processed responses"),
-    NetGenRejectedResponse("Count of network generated rejected responses"),
-    SysGenResponse("Count of platform generated responses"),
+		 AppGenRequest("Count of app generated requests"),
+		 AppGenRejectedRequest("Count of rejected app generated requests"),
+		 AppGenResponse("Count of app generated responses"),
+		 AppGenRejectedResponse("Count of rejected app generated responses"),
+		 NetGenRequest("Count of network generated processed requests"),
+		 NetGenRejectedRequest("Count of network generated rejected requests"),
+		 NetGenResponse("Count of network generated processed responses"),
+		 NetGenRejectedResponse("Count of network generated rejected responses"),
+		 SysGenResponse("Count of platform generated responses"),
 
-    AppGenRequestPerSecond("Count of app generated request per second"),
-    AppGenResponsePerSecond("Count of app generated responses per second"),
-    NetGenResponsePerSecond("Count of network generated responses per second"),
-    NetGenRequestPerSecond("Count of network generated request per second"),
+		 AppGenRequestPerSecond("Count of app generated request per second"),
+		 AppGenResponsePerSecond("Count of app generated responses per second"),
+		 NetGenResponsePerSecond("Count of network generated responses per second"),
+		 NetGenRequestPerSecond("Count of network generated request per second"),
 
-    RequestListenerCount("Count of network request appIdToNetListener"),
-    SelectorCount("Count of network request selectorToNetListener"),
+		 RequestListenerCount("Count of network request appIdToNetListener"),
+		 SelectorCount("Count of network request selectorToNetListener"),
 
-    HeapMemory("Heap memory usage"),
-    NoHeapMemory("No-heap memory usage"),
-    MessageProcessingTime("Average time of processing message"),
+		 HeapMemory("Heap memory usage"),
+		 NoHeapMemory("No-heap memory usage"),
+		 MessageProcessingTime("Average time of processing message"),
 
-    ConcurrentThread("Count thread in default thread group"),
-    ConcurrentScheduledExecutedServices("Count of ScheduledExecutorServices"),
+		 ConcurrentThread("Count thread in default thread group"),
+		 ConcurrentScheduledExecutedServices("Count of ScheduledExecutorServices"),
 
-    WorkingThread("Count of working thread"),
-    CanceledTasks("Count of canceled thread"),
-    ExecTimeTask("Average execution time of task"),
-    WaitTimeTask("Average waiting time for execution task"),
-    BrokenTasks("Count of broken thread"),
-    RejectedTasks("Count of rejected tasks"),
-    QueueSize("Peer FSM queue size");
+		 WorkingThread("Count of working thread"),
+		 CanceledTasks("Count of canceled thread"),
+		 ExecTimeTask("Average execution time of task"),
+		 WaitTimeTask("Average waiting time for execution task"),
+		 BrokenTasks("Count of broken thread"),
+		 RejectedTasks("Count of rejected tasks"),
+		 QueueSize("Peer FSM queue size");
 
-    private String description;
+		 private String description;
 
-    Counters(String description) {
-      this.description = description;
-    }
+		 Counters(String description)
+		 {
+			 this.description = description;
+		 }
 
-    public String getDescription() {
-      return description;
-    }
-  }
+		 public String getDescription()
+		 {
+			 return description;
+		 }
+	 }
 
-  /**
-   * Increment counter
-   */
-  void inc();
+	 /**
+	  * Increment counter
+	  */
+	 void inc();
 
-  /**
-   * Increment counter
-   */
-  void inc(long value);
+	 /**
+	  * Increment counter
+	  */
+	 void inc(long value);
 
-  /**
-   * Decrement counter
-   */
-  void dec();
+	 /**
+	  * Decrement counter
+	  */
+	 void dec();
 
-  /**
-   * Set value of statistic
-   *
-   * @param value new value of record
-   */
-  void setLongValue(long value);
+	 /**
+	  * Set value of statistic
+	  *
+	  * @param value new value of record
+	  */
+	 void setLongValue(long value);
 
+	 /**
+	  * Set value of statistic
+	  *
+	  * @param value new value of record
+	  */
+	 void setDoubleValue(double value);
 
-  /**
-   * Set value of statistic
-   *
-   * @param value new value of record
-   */
-  void setDoubleValue(double value);
-  /**
-   * ValueHolder for external statistics
-   */
-  public interface ValueHolder {
-    String getValueAsString();
-  }
+	 /**
+	  * ValueHolder for external statistics
+	  */
+	 @SuppressWarnings("all")//3rd party lib
+	 public interface ValueHolder
+	 {
+		 String getValueAsString();
+	 }
 
-  public interface IntegerValueHolder extends ValueHolder {
-    /**
-     * Return value of counter as integer
-     *
-     * @return value of counter
-     */
-    int getValueAsInt();
-  }
+	 @SuppressWarnings("all")//3rd party lib
+	 public interface IntegerValueHolder extends ValueHolder
+	 {
+		 /**
+		  * Return value of counter as integer
+		  *
+		  * @return value of counter
+		  */
+		 int getValueAsInt();
+	 }
 
-  public interface LongValueHolder extends ValueHolder {
-    /**
-     * Return value of counter as long
-     *
-     * @return value of counter
-     */
-    long getValueAsLong();
-  }
+	 @SuppressWarnings("all")//3rd party lib
+	 public interface LongValueHolder extends ValueHolder
+	 {
+		 /**
+		  * Return value of counter as long
+		  *
+		  * @return value of counter
+		  */
+		 long getValueAsLong();
+	 }
 
-  public interface DoubleValueHolder extends ValueHolder {
+	 @SuppressWarnings("all")//3rd party lib
+	 public interface DoubleValueHolder extends ValueHolder
+	 {
 
-    /**
-     * Return value of counter as double
-     *
-     * @return value of counter
-     */
-    double getValueAsDouble();
-  }
+		 /**
+		  * Return value of counter as double
+		  *
+		  * @return value of counter
+		  */
+		 double getValueAsDouble();
+	 }
 
-  //===========================
+	 //===========================
 
-}
+ }

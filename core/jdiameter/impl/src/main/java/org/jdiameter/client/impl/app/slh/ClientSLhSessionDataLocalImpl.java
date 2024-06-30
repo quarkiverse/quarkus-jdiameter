@@ -25,12 +25,14 @@ import org.jdiameter.common.impl.app.slh.SLhLocalSessionDataImpl;
 
 /**
  * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
- *
  */
 
-public class ClientSLhSessionDataLocalImpl extends SLhLocalSessionDataImpl implements IClientSLhSessionData {
+@SuppressWarnings("all")//3rd party lib
+public class ClientSLhSessionDataLocalImpl extends SLhLocalSessionDataImpl implements IClientSLhSessionData
+{
 
-  public ClientSLhSessionDataLocalImpl() {
-  }
+	public ClientSLhSessionDataLocalImpl()
+	{
+	}
 
 }

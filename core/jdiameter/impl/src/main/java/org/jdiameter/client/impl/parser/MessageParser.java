@@ -42,18 +42,6 @@
 
 package org.jdiameter.client.impl.parser;
 
-import static org.jdiameter.api.Avp.ACCT_APPLICATION_ID;
-import static org.jdiameter.api.Avp.AUTH_APPLICATION_ID;
-import static org.jdiameter.api.Avp.SESSION_ID;
-import static org.jdiameter.api.Avp.VENDOR_SPECIFIC_APPLICATION_ID;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.nio.ByteBuffer;
-import java.util.concurrent.TimeUnit;
-
 import org.jdiameter.api.Avp;
 import org.jdiameter.api.AvpDataException;
 import org.jdiameter.api.AvpSet;
@@ -66,281 +54,304 @@ import org.jdiameter.client.impl.helpers.UIDGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.nio.ByteBuffer;
+import java.util.concurrent.TimeUnit;
+
+import static org.jdiameter.api.Avp.*;
+
 /**
- *
  * @author erick.svenson@yahoo.com
  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
  */
-public class MessageParser extends ElementParser implements IMessageParser {
+@SuppressWarnings("all")//3rd party lib
+public class MessageParser extends ElementParser implements IMessageParser
+{
 
-  private static final Logger logger = LoggerFactory.getLogger(MessageParser.class);
+	private static final Logger logger = LoggerFactory.getLogger(MessageParser.class);
 
-  protected UIDGenerator endToEndGen = new UIDGenerator(
-      (int) (TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) & 0xFFF) << 20
-      );
+	protected UIDGenerator endToEndGen = new UIDGenerator(
+			(int) (TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) & 0xFFF) << 20
+	);
 
+	public MessageParser()
+	{
 
+	}
 
-  public MessageParser() {
+	@Override
+	public IMessage createMessage(byte[] message) throws AvpDataException
+	{
+		// Read header
+		try {
+			long tmp;
+			DataInputStream in = new DataInputStream(new ByteArrayInputStream(message));
+			tmp = in.readInt();
+			short version = (short) (tmp >> 24);
+			if (version != 1) {
+				throw new Exception("Illegal value of version " + version);
+			}
 
-  }
+			if (message.length != (tmp & 0x00FFFFFF)) {
+				//throw new ParseException("Wrong length of data: " + (tmp & 0x00FFFFFF));
+				throw new Exception("Wrong length of data: " + (tmp & 0x00FFFFFF));
+			}
 
-  @Override
-  public IMessage createMessage(byte[] message) throws AvpDataException {
-    // Read header
-    try {
-      long tmp;
-      DataInputStream in = new DataInputStream(new ByteArrayInputStream(message));
-      tmp = in.readInt();
-      short version = (short) (tmp >> 24);
-      if (version != 1) {
-        throw new Exception("Illegal value of version " + version);
-      }
+			tmp = in.readInt();
+			short flags = (short) ((tmp >> 24) & 0xFF);
+			int commandCode = (int) (tmp & 0xFFFFFF);
+			long applicationId = ((long) in.readInt() << 32) >>> 32;
+			long hopByHopId = ((long) in.readInt() << 32) >>> 32;
+			long endToEndId = ((long) in.readInt() << 32) >>> 32;
+			// Read body
+			// byte[] body = new byte[message.length - 20];
+			// System.arraycopy(message, 20, body, 0, body.length);
+			// AvpSetImpl avpSet = decodeAvpSet(body);
+			AvpSetImpl avpSet = decodeAvpSet(message, 20);
 
-      if (message.length != (tmp & 0x00FFFFFF)) {
-        //throw new ParseException("Wrong length of data: " + (tmp & 0x00FFFFFF));
-        throw new Exception("Wrong length of data: " + (tmp & 0x00FFFFFF));
-      }
+			return new MessageImpl(commandCode, applicationId, flags, hopByHopId, endToEndId, avpSet);
+		}
+		catch (Exception exc) {
+			throw new AvpDataException(exc);
+		}
+	}
 
-      tmp = in.readInt();
-      short flags        = (short) ((tmp >> 24) & 0xFF);
-      int commandCode    = (int) (tmp & 0xFFFFFF);
-      long applicationId = ((long) in.readInt() << 32) >>> 32;
-      long hopByHopId    = ((long) in.readInt() << 32) >>> 32;
-      long endToEndId    = ((long) in.readInt() << 32) >>> 32;
-      // Read body
-      // byte[] body = new byte[message.length - 20];
-      // System.arraycopy(message, 20, body, 0, body.length);
-      // AvpSetImpl avpSet = decodeAvpSet(body);
-      AvpSetImpl avpSet = decodeAvpSet(message, 20);
+	@Override
+	public IMessage createMessage(ByteBuffer data) throws AvpDataException
+	{
+		byte[] message = data.array();
+		return createMessage(message);
+	}
 
-      return new MessageImpl(commandCode, applicationId, flags, hopByHopId, endToEndId, avpSet);
-    }
-    catch (Exception exc) {
-      throw new AvpDataException(exc);
-    }
-  }
+	@Override
+	public <T> T createMessage(Class<?> iface, ByteBuffer data) throws AvpDataException
+	{
+		if (iface == IMessage.class) {
+			return (T) createMessage(data);
+		}
+		return null;
+	}
 
-  @Override
-  public IMessage createMessage(ByteBuffer data) throws AvpDataException {
-    byte[] message = data.array();
-    return createMessage(message);
-  }
+	@Override
+	public <T> T createEmptyMessage(Class<?> iface, IMessage parentMessage)
+	{
+		if (iface == Request.class) {
+			return (T) createEmptyMessage(parentMessage, parentMessage.getCommandCode());
+		}
+		else {
+			return null;
+		}
+	}
 
-  @Override
-  public <T> T createMessage(Class<?> iface, ByteBuffer data) throws AvpDataException {
-    if (iface == IMessage.class) {
-      return (T) createMessage(data);
-    }
-    return null;
-  }
+	@Override
+	public IMessage createEmptyMessage(IMessage prnMessage)
+	{
+		return createEmptyMessage(prnMessage, prnMessage.getCommandCode());
+	}
 
-  @Override
-  public <T> T createEmptyMessage(Class<?> iface, IMessage parentMessage) {
-    if (iface == Request.class) {
-      return (T) createEmptyMessage(parentMessage, parentMessage.getCommandCode());
-    }
-    else {
-      return null;
-    }
-  }
+	@Override
+	public IMessage createEmptyMessage(IMessage prnMessage, int commandCode)
+	{
+		//
+		MessageImpl newMessage = new MessageImpl(
+				commandCode,
+				prnMessage.getHeaderApplicationId(),
+				(short) prnMessage.getFlags(),
+				prnMessage.getHopByHopIdentifier(),
+				endToEndGen.nextLong(),
+				null
+		);
+		copyBasicAvps(newMessage, prnMessage, false);
 
-  @Override
-  public IMessage createEmptyMessage(IMessage prnMessage) {
-    return createEmptyMessage(prnMessage, prnMessage.getCommandCode());
-  }
+		return newMessage;
+	}
 
-  @Override
-  public IMessage createEmptyMessage(IMessage prnMessage, int commandCode) {
-    //
-    MessageImpl newMessage = new MessageImpl(
-        commandCode,
-        prnMessage.getHeaderApplicationId(),
-        (short) prnMessage.getFlags(),
-        prnMessage.getHopByHopIdentifier(),
-        endToEndGen.nextLong(),
-        null
-        );
-    copyBasicAvps(newMessage, prnMessage, false);
+	void copyBasicAvps(IMessage newMessage, IMessage prnMessage, boolean invertPoints)
+	{
+		//left it here, but
+		Avp avp;
+		// Copy session id's information
+		{
+			avp = prnMessage.getAvps().getAvp(SESSION_ID);
+			if (avp != null) {
+				newMessage.getAvps().addAvp(new AvpImpl(avp));
+			}
+			avp = prnMessage.getAvps().getAvp(Avp.ACC_SESSION_ID);
+			if (avp != null) {
+				newMessage.getAvps().addAvp(new AvpImpl(avp));
+			}
+			avp = prnMessage.getAvps().getAvp(Avp.ACC_SUB_SESSION_ID);
+			if (avp != null) {
+				newMessage.getAvps().addAvp(new AvpImpl(avp));
+			}
+			avp = prnMessage.getAvps().getAvp(Avp.ACC_MULTI_SESSION_ID);
+			if (avp != null) {
+				newMessage.getAvps().addAvp(new AvpImpl(avp));
+			}
+		}
+		// Copy Applicatio id's information
+		{
+			avp = prnMessage.getAvps().getAvp(VENDOR_SPECIFIC_APPLICATION_ID);
+			if (avp != null) {
+				newMessage.getAvps().addAvp(new AvpImpl(avp));
+			}
+			avp = prnMessage.getAvps().getAvp(ACCT_APPLICATION_ID);
+			if (avp != null) {
+				newMessage.getAvps().addAvp(new AvpImpl(avp));
+			}
+			avp = prnMessage.getAvps().getAvp(AUTH_APPLICATION_ID);
+			if (avp != null) {
+				newMessage.getAvps().addAvp(new AvpImpl(avp));
+			}
+		}
+		// Copy proxy information
+		{
+			AvpSet avps = prnMessage.getAvps().getAvps(Avp.PROXY_INFO);
+			for (Avp piAvp : avps) {
+				newMessage.getAvps().addAvp(new AvpImpl(piAvp));
+			}
+		}
+		// Copy route information
+		{
+			if (newMessage.isRequest()) {
+				if (invertPoints) {
+					// set Dest host
+					avp = prnMessage.getAvps().getAvp(Avp.ORIGIN_HOST);
+					if (avp != null) {
+						newMessage.getAvps().addAvp(new AvpImpl(Avp.DESTINATION_HOST, avp));
+					}
+					// set Dest realm
+					avp = prnMessage.getAvps().getAvp(Avp.ORIGIN_REALM);
+					if (avp != null) {
+						newMessage.getAvps().addAvp(new AvpImpl(Avp.DESTINATION_REALM, avp));
+					}
+				}
+				else {
+					// set Dest host
+					avp = prnMessage.getAvps().getAvp(Avp.DESTINATION_HOST);
+					if (avp != null) {
+						newMessage.getAvps().addAvp(avp);
+					}
+					// set Dest realm
+					avp = prnMessage.getAvps().getAvp(Avp.DESTINATION_REALM);
+					if (avp != null) {
+						newMessage.getAvps().addAvp(avp);
+					}
+				}
+			}
+			//      // set Orig host and realm
+			//      try {
+			//        newMessage.getAvps().addAvp(Avp.ORIGIN_HOST, metaData.getLocalPeer().getUri().getFQDN(), true, false, true);
+			//        newMessage.getAvps().addAvp(Avp.ORIGIN_REALM, metaData.getLocalPeer().getRealmName(), true, false, true);
+			//      }
+			//      catch (Exception e) {
+			//        logger.debug("Error copying Origin-Host/Realm AVPs", e);
+			//      }
+		}
+	}
 
-    return newMessage;
-  }
+	public static String byteArrayToHexString(byte[] in, boolean columnize)
+	{
+		if (in == null || in.length <= 0) {
+			return "";
+		}
+		String pseudo = "0123456789ABCDEF";
 
-  void copyBasicAvps(IMessage newMessage, IMessage prnMessage, boolean invertPoints) {
-    //left it here, but
-    Avp avp;
-    // Copy session id's information
-    {
-      avp = prnMessage.getAvps().getAvp(SESSION_ID);
-      if (avp != null) {
-        newMessage.getAvps().addAvp(new AvpImpl(avp));
-      }
-      avp = prnMessage.getAvps().getAvp(Avp.ACC_SESSION_ID);
-      if (avp != null) {
-        newMessage.getAvps().addAvp(new AvpImpl(avp));
-      }
-      avp = prnMessage.getAvps().getAvp(Avp.ACC_SUB_SESSION_ID);
-      if (avp != null) {
-        newMessage.getAvps().addAvp(new AvpImpl(avp));
-      }
-      avp = prnMessage.getAvps().getAvp(Avp.ACC_MULTI_SESSION_ID);
-      if (avp != null) {
-        newMessage.getAvps().addAvp(new AvpImpl(avp));
-      }
-    }
-    // Copy Applicatio id's information
-    {
-      avp = prnMessage.getAvps().getAvp(VENDOR_SPECIFIC_APPLICATION_ID);
-      if (avp != null) {
-        newMessage.getAvps().addAvp(new AvpImpl(avp));
-      }
-      avp = prnMessage.getAvps().getAvp(ACCT_APPLICATION_ID);
-      if (avp != null) {
-        newMessage.getAvps().addAvp(new AvpImpl(avp));
-      }
-      avp = prnMessage.getAvps().getAvp(AUTH_APPLICATION_ID);
-      if (avp != null) {
-        newMessage.getAvps().addAvp(new AvpImpl(avp));
-      }
-    }
-    // Copy proxy information
-    {
-      AvpSet avps = prnMessage.getAvps().getAvps(Avp.PROXY_INFO);
-      for (Avp piAvp : avps) {
-        newMessage.getAvps().addAvp(new AvpImpl(piAvp));
-      }
-    }
-    // Copy route information
-    {
-      if (newMessage.isRequest()) {
-        if (invertPoints) {
-          // set Dest host
-          avp = prnMessage.getAvps().getAvp(Avp.ORIGIN_HOST);
-          if (avp != null) {
-            newMessage.getAvps().addAvp(new AvpImpl(Avp.DESTINATION_HOST, avp));
-          }
-          // set Dest realm
-          avp = prnMessage.getAvps().getAvp(Avp.ORIGIN_REALM);
-          if (avp != null) {
-            newMessage.getAvps().addAvp(new AvpImpl(Avp.DESTINATION_REALM, avp));
-          }
-        }
-        else {
-          // set Dest host
-          avp = prnMessage.getAvps().getAvp(Avp.DESTINATION_HOST);
-          if (avp != null) {
-            newMessage.getAvps().addAvp(avp);
-          }
-          // set Dest realm
-          avp = prnMessage.getAvps().getAvp(Avp.DESTINATION_REALM);
-          if (avp != null) {
-            newMessage.getAvps().addAvp(avp);
-          }
-        }
-      }
-      //      // set Orig host and realm
-      //      try {
-      //        newMessage.getAvps().addAvp(Avp.ORIGIN_HOST, metaData.getLocalPeer().getUri().getFQDN(), true, false, true);
-      //        newMessage.getAvps().addAvp(Avp.ORIGIN_REALM, metaData.getLocalPeer().getRealmName(), true, false, true);
-      //      }
-      //      catch (Exception e) {
-      //        logger.debug("Error copying Origin-Host/Realm AVPs", e);
-      //      }
-    }
-  }
+		StringBuffer out = new StringBuffer(in.length * 3);
 
-  public static String byteArrayToHexString(byte[] in, boolean columnize) {
-    if (in == null || in.length <= 0) {
-      return "";
-    }
-    String pseudo = "0123456789ABCDEF";
+		for (int i = 0; i < in.length; i++) {
+			byte ch = in[i];
+			out.append(pseudo.charAt((int) ((ch & 0xF0) >> 4)));
+			out.append(pseudo.charAt((int) (ch & 0x0F)));
 
-    StringBuffer out = new StringBuffer(in.length * 3);
+			if (columnize) {
+				if ((i + 1) % 16 == 0) {
+					out.append("\n");
+				}
+				else if ((i + 1) % 4 == 0) {
+					out.append(" ");
+				}
+			}
+		}
 
-    for (int i = 0; i < in.length; i++) {
-      byte ch = in[i];
-      out.append(pseudo.charAt((int) ((ch & 0xF0) >> 4)));
-      out.append(pseudo.charAt((int) (ch & 0x0F)));
+		return out.toString();
+	}
 
-      if (columnize) {
-        if ((i + 1) % 16 == 0) {
-          out.append("\n");
-        }
-        else if ((i + 1) % 4 == 0) {
-          out.append(" ");
-        }
-      }
-    }
+	public static String byteArrayToHexStringLine(byte[] in)
+	{
+		return byteArrayToHexString(in, false);
+	}
 
-    return out.toString();
-  }
+	public static String byteArrayToHexString(byte[] in)
+	{
+		return byteArrayToHexString(in, true);
+	}
 
-  public static String byteArrayToHexStringLine(byte[] in) {
-    return byteArrayToHexString(in, false);
-  }
+	@Override
+	public ByteBuffer encodeMessage(IMessage message) throws ParseException
+	{
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try {
+			byte[] rawData = encodeAvpSet(message.getAvps());
+			DataOutputStream data = new DataOutputStream(out);
+			// Wasting processor time, are we ?
+			// int tmp = (1 << 24) & 0xFF000000;
+			int tmp = (1 << 24);
+			tmp += 20 + rawData.length;
+			data.writeInt(tmp);
+			// Again, unneeded operation ?
+			// tmp = (message.getFlags() << 24) & 0xFF000000;
+			tmp = (message.getFlags() << 24);
+			tmp += message.getCommandCode();
+			data.writeInt(tmp);
+			data.write(toBytes(message.getHeaderApplicationId()));
+			data.write(toBytes(message.getHopByHopIdentifier()));
+			data.write(toBytes(message.getEndToEndIdentifier()));
+			data.write(rawData);
+		}
+		catch (Exception e) {
+			//logger.debug("Error during encode message", e);
+			throw new ParseException("Failed to encode message.", e);
+		}
+		try {
+			return prepareBuffer(out.toByteArray(), out.size());
+		}
+		catch (AvpDataException ade) {
+			throw new ParseException(ade);
+		}
+	}
 
-  public static String byteArrayToHexString(byte[] in) {
-    return byteArrayToHexString(in, true);
-  }
+	private byte[] toBytes(long value)
+	{
+		byte[] data = new byte[4];
+		data[0] = (byte) ((value >> 24) & 0xFF);
+		data[1] = (byte) ((value >> 16) & 0xFF);
+		data[2] = (byte) ((value >> 8) & 0xFF);
+		data[3] = (byte) ((value) & 0xFF);
+		return data;
+	}
 
-  @Override
-  public ByteBuffer encodeMessage(IMessage message) throws ParseException {
-    ByteArrayOutputStream out = new ByteArrayOutputStream();
-    try {
-      byte[] rawData = encodeAvpSet(message.getAvps());
-      DataOutputStream data = new DataOutputStream(out);
-      // Wasting processor time, are we ?
-      // int tmp = (1 << 24) & 0xFF000000;
-      int tmp = (1 << 24);
-      tmp += 20 + rawData.length;
-      data.writeInt(tmp);
-      // Again, unneeded operation ?
-      // tmp = (message.getFlags() << 24) & 0xFF000000;
-      tmp = (message.getFlags() << 24);
-      tmp += message.getCommandCode();
-      data.writeInt(tmp);
-      data.write(toBytes(message.getHeaderApplicationId()));
-      data.write(toBytes(message.getHopByHopIdentifier()));
-      data.write(toBytes(message.getEndToEndIdentifier()));
-      data.write(rawData);
-    }
-    catch (Exception e) {
-      //logger.debug("Error during encode message", e);
-      throw new ParseException("Failed to encode message.", e);
-    }
-    try {
-      return prepareBuffer(out.toByteArray(), out.size());
-    }
-    catch (AvpDataException ade) {
-      throw new ParseException(ade);
-    }
-  }
+	@Override
+	public IMessage createEmptyMessage(int commandCode, long headerAppId)
+	{
+		return new MessageImpl(commandCode, headerAppId);
+	}
 
-  private byte[] toBytes(long value) {
-    byte[] data = new byte[4];
-    data[0] = (byte) ((value >> 24) & 0xFF);
-    data[1] = (byte) ((value >> 16) & 0xFF);
-    data[2] = (byte) ((value >> 8) & 0xFF);
-    data[3] = (byte) ((value) & 0xFF);
-    return data;
-  }
+	@Override
+	public <T> T createEmptyMessage(Class<?> iface, int commandCode, long headerAppId)
+	{
+		if (iface == IRequest.class) {
+			return (T) new MessageImpl(commandCode, headerAppId);
+		}
+		return null;
+	}
 
-  @Override
-  public IMessage createEmptyMessage(int commandCode, long headerAppId) {
-    return new MessageImpl(commandCode, headerAppId);
-  }
-
-  @Override
-  public <T> T createEmptyMessage(Class<?> iface, int commandCode, long headerAppId) {
-    if (iface == IRequest.class) {
-      return (T) new MessageImpl(commandCode, headerAppId);
-    }
-    return null;
-  }
-
-
-  public int getNextEndToEndId() {
-    return endToEndGen.nextInt();
-  }
+	public int getNextEndToEndId()
+	{
+		return endToEndGen.nextInt();
+	}
 }

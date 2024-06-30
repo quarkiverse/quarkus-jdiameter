@@ -40,29 +40,30 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.client.impl.app.rx;
+ package org.jdiameter.client.impl.app.rx;
 
-import org.jdiameter.common.api.app.rx.ClientRxSessionState;
-import org.jdiameter.common.api.app.rx.IRxSessionData;
+ import org.jdiameter.common.api.app.rx.ClientRxSessionState;
+ import org.jdiameter.common.api.app.rx.IRxSessionData;
 
-/**
- *
- * @author <a href="mailto:richard.good@smilecoms.com"> Richard Good </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public interface IClientRxSessionData extends IRxSessionData {
+ /**
+  * @author <a href="mailto:richard.good@smilecoms.com"> Richard Good </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IClientRxSessionData extends IRxSessionData
+ {
 
-  boolean isEventBased();
+	 boolean isEventBased();
 
-  void setEventBased(boolean b);
+	 void setEventBased(boolean b);
 
-  boolean isRequestTypeSet();
+	 boolean isRequestTypeSet();
 
-  void setRequestTypeSet(boolean b);
+	 void setRequestTypeSet(boolean b);
 
-  ClientRxSessionState getClientRxSessionState();
+	 ClientRxSessionState getClientRxSessionState();
 
-  void setClientRxSessionState(ClientRxSessionState state);
+	 void setClientRxSessionState(ClientRxSessionState state);
 
-}
+ }

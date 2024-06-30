@@ -40,28 +40,29 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.impl.app.cxdx;
+ package org.jdiameter.common.impl.app.cxdx;
 
-import org.jdiameter.api.Message;
-import org.jdiameter.api.cxdx.events.JPushProfileRequest;
-import org.jdiameter.common.impl.app.AppRequestEventImpl;
+ import org.jdiameter.api.Message;
+ import org.jdiameter.api.cxdx.events.JPushProfileRequest;
+ import org.jdiameter.common.impl.app.AppRequestEventImpl;
 
-/**
- *
- * @author <a href="mailto:baranowb@gmail.com">Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public class JPushProfileRequestImpl extends AppRequestEventImpl implements JPushProfileRequest {
+ /**
+  * @author <a href="mailto:baranowb@gmail.com">Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public class JPushProfileRequestImpl extends AppRequestEventImpl implements JPushProfileRequest
+ {
 
-  private static final long serialVersionUID = 1L;
+	 private static final long serialVersionUID = 1L;
 
-  /**
-   *
-   * @param message
-   */
-  public JPushProfileRequestImpl(Message message) {
-    super(message);
-    message.setRequest(true);
-  }
+	 /**
+	  * @param message
+	  */
+	 public JPushProfileRequestImpl(Message message)
+	 {
+		 super(message);
+		 message.setRequest(true);
+	 }
 
-}
+ }

@@ -40,38 +40,42 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.server.impl.helpers;
+ package org.jdiameter.server.impl.helpers;
 
-import org.jdiameter.api.ApplicationId;
-import org.jdiameter.api.Message;
-import org.jdiameter.api.Selector;
-import org.jdiameter.client.api.IMessage;
+ import org.jdiameter.api.ApplicationId;
+ import org.jdiameter.api.Message;
+ import org.jdiameter.api.Selector;
+ import org.jdiameter.client.api.IMessage;
 
-/**
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public class ApplicationIdSelector implements Selector<Message, ApplicationId> {
+ /**
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public class ApplicationIdSelector implements Selector<Message, ApplicationId>
+ {
 
-  private ApplicationId applicationId;
+	 private ApplicationId applicationId;
 
-  public ApplicationIdSelector(ApplicationId applicationId) {
-    if (applicationId == null) {
-      throw new IllegalArgumentException("Please set application id");
-    }
+	 public ApplicationIdSelector(ApplicationId applicationId)
+	 {
+		 if (applicationId == null) {
+			 throw new IllegalArgumentException("Please set application id");
+		 }
 
-    this.applicationId = applicationId;
-  }
+		 this.applicationId = applicationId;
+	 }
 
-  @Override
-  public boolean checkRule(Message message) {
-    return message != null && ((IMessage) message).getSingleApplicationId().equals(applicationId);
-  }
+	 @Override
+	 public boolean checkRule(Message message)
+	 {
+		 return message != null && ((IMessage) message).getSingleApplicationId().equals(applicationId);
+	 }
 
-  @Override
-  public ApplicationId getMetaData() {
-    return applicationId;
-  }
-}
+	 @Override
+	 public ApplicationId getMetaData()
+	 {
+		 return applicationId;
+	 }
+ }

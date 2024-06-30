@@ -40,15 +40,16 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.server.impl.app.sh;
+ package org.jdiameter.server.impl.app.sh;
 
-import org.jdiameter.common.api.app.sh.IShSessionData;
+ import org.jdiameter.common.api.app.sh.IShSessionData;
 
-/**
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface IShServerSessionData extends IShSessionData {
-  // stateless
-}
+ /**
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IShServerSessionData extends IShSessionData
+ {
+	 // stateless
+ }

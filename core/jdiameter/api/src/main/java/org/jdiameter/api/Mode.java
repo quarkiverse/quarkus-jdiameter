@@ -40,14 +40,15 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api;
+ package org.jdiameter.api;
 
-/**
- * This enumerated class define type of stack start condition
- *
- * @author erick.svenson@yahoo.com
- * @version 1.5.1 Final
- */
-public enum Mode {
-  ANY_PEER, ALL_PEERS
-}
+ /**
+  * This enumerated class define type of stack start condition
+  *
+  * @author erick.svenson@yahoo.com
+  * @version 1.5.1 Final
+  */
+ public enum Mode
+ {
+	 ANY_PEER, ALL_PEERS
+ }

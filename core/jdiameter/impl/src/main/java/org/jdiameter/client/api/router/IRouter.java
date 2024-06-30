@@ -40,94 +40,107 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.client.api.router;
+ package org.jdiameter.client.api.router;
 
-import org.jdiameter.api.AvpDataException;
-import org.jdiameter.api.InternalException;
-import org.jdiameter.api.RouteException;
-import org.jdiameter.client.api.IAnswer;
-import org.jdiameter.client.api.IMessage;
-import org.jdiameter.client.api.IRequest;
-import org.jdiameter.client.api.controller.IPeer;
-import org.jdiameter.client.api.controller.IPeerTable;
-import org.jdiameter.client.api.controller.IRealmTable;
+ import org.jdiameter.api.AvpDataException;
+ import org.jdiameter.api.InternalException;
+ import org.jdiameter.api.RouteException;
+ import org.jdiameter.client.api.IAnswer;
+ import org.jdiameter.client.api.IMessage;
+ import org.jdiameter.client.api.IRequest;
+ import org.jdiameter.client.api.controller.IPeer;
+ import org.jdiameter.client.api.controller.IPeerTable;
+ import org.jdiameter.client.api.controller.IRealmTable;
 
-/**
- * This class describe Router functionality
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public interface IRouter  {
+ /**
+  * This class describe Router functionality
+  *
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IRouter
+ {
 
-  /**
-   * Return peer from inner peer table by predefined parameters. Fetches peer based on message content, that is HBH or realm/host avp contents.
-   * Takes into consideration ApplicationId present in message to pick correct realm definition from RealmTable.
-   * This method should be called after {@link #updateRoute}.
-   * @param message message with routed avps
-   * @param manager instance of peer manager
-   * @return peer instance
-   * @throws RouteException
-   * @throws AvpDataException
-   */
-  IPeer getPeer(IMessage message, IPeerTable manager) throws RouteException, AvpDataException;
+	 /**
+	  * Return peer from inner peer table by predefined parameters. Fetches peer based on message content, that is HBH or
+	  * realm/host avp contents. Takes into consideration ApplicationId present in message to pick correct realm
+	  * definition from RealmTable. This method should be called after {@link #updateRoute}.
+	  *
+	  * @param message message with routed avps
+	  * @param manager instance of peer manager
+	  *
+	  * @return peer instance
+	  *
+	  * @throws RouteException
+	  * @throws AvpDataException
+	  */
+	 IPeer getPeer(IMessage message, IPeerTable manager) throws RouteException, AvpDataException;
 
-  /**
-   * Return realm table
-   *
-   * @return object representing realm table
-   */
-  IRealmTable getRealmTable();
+	 /**
+	  * Return realm table
+	  *
+	  * @return object representing realm table
+	  */
+	 IRealmTable getRealmTable();
 
-  /**
-   * Register route information by received request. This information will be used
-   * during answer routing.
-   * @param request request
-   */
-  void registerRequestRouteInfo(IRequest request);
+	 /**
+	  * Register route information by received request. This information will be used during answer routing.
+	  *
+	  * @param request request
+	  */
+	 void registerRequestRouteInfo(IRequest request);
 
-  // PCB - Changed to use a better routing mechanism as hopbyhop was not always unique and the table could also grow too big
-  /**
-   * Return Request route info
-   * @param hopByHopIndentifier Hop-by-Hop Identifier
-   * @return Array (host and realm)
-   */
-  String[] getRequestRouteInfo(IMessage message);
+	 // PCB - Changed to use a better routing mechanism as hopbyhop was not always unique and the table could also grow too big
 
-  //PCB added
-  void garbageCollectRequestRouteInfo(IMessage message);
+	 /**
+	  * Return Request route info
+	  *
+	  * @param hopByHopIndentifier Hop-by-Hop Identifier
+	  *
+	  * @return Array (host and realm)
+	  */
+	 String[] getRequestRouteInfo(IMessage message);
 
-  /**
-   * Start inner time facilities
-   */
-  void start();
+	 //PCB added
+	 void garbageCollectRequestRouteInfo(IMessage message);
 
-  /**
-   * Stop inner time facilities
-   */
-  void stop();
+	 /**
+	  * Start inner time facilities
+	  */
+	 void start();
 
-  /**
-   * Release all resources
-   */
-  void destroy();
+	 /**
+	  * Stop inner time facilities
+	  */
+	 void stop();
 
-  /**
-   * Called when redirect answer is received for request. This method update redirect host information and routes to new destination.
-   * @param request
-   * @param answer
-   * @param table
-   */
-  void processRedirectAnswer(IRequest request, IAnswer answer, IPeerTable table) throws InternalException, RouteException;
+	 /**
+	  * Release all resources
+	  */
+	 void destroy();
 
-  /**
-   * Based on Redirect entries or any other factors, this method changes route information.
-   * @param message
-   * @return
-   * @throws RouteException
-   * @throws AvpDataException
-   */
-  boolean updateRoute(IRequest message) throws RouteException, AvpDataException;
+	 /**
+	  * Called when redirect answer is received for request. This method update redirect host information and routes to
+	  * new destination.
+	  *
+	  * @param request
+	  * @param answer
+	  * @param table
+	  */
+	 void processRedirectAnswer(IRequest request, IAnswer answer, IPeerTable table) throws InternalException, RouteException;
 
-}
+	 /**
+	  * Based on Redirect entries or any other factors, this method changes route information.
+	  *
+	  * @param message
+	  *
+	  * @return
+	  *
+	  * @throws RouteException
+	  * @throws AvpDataException
+	  */
+	 boolean updateRoute(IRequest message) throws RouteException, AvpDataException;
+
+ }

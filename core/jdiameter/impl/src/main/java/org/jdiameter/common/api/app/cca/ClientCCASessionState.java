@@ -40,55 +40,58 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.api.app.cca;
+ package org.jdiameter.common.api.app.cca;
 
-import org.jdiameter.common.api.app.IAppSessionState;
+ import org.jdiameter.common.api.app.IAppSessionState;
 
-/**
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public enum ClientCCASessionState implements IAppSessionState<ClientCCASessionState> {
+ /**
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ public enum ClientCCASessionState implements IAppSessionState<ClientCCASessionState>
+ {
 
-  IDLE(0),
-  PENDING_EVENT(1),
-  PENDING_INITIAL(2),
-  PENDING_UPDATE(3),
-  PENDING_TERMINATION(4),
-  PENDING_BUFFERED(5),
-  OPEN(6);
+	 IDLE(0),
+	 PENDING_EVENT(1),
+	 PENDING_INITIAL(2),
+	 PENDING_UPDATE(3),
+	 PENDING_TERMINATION(4),
+	 PENDING_BUFFERED(5),
+	 OPEN(6);
 
-  private int stateValue = -1;
+	 private int stateValue = -1;
 
-  ClientCCASessionState(int stateV) {
-    this.stateValue = stateV;
-  }
+	 ClientCCASessionState(int stateV)
+	 {
+		 this.stateValue = stateV;
+	 }
 
-  @Override
-  public  ClientCCASessionState fromInt(int v) throws IllegalArgumentException {
-    switch (v) {
-      case 0:
-        return IDLE;
-      case 1:
-        return PENDING_EVENT;
-      case 2:
-        return PENDING_INITIAL;
-      case 3:
-        return PENDING_UPDATE;
-      case 4:
-        return PENDING_TERMINATION;
-      case 5:
-        return PENDING_BUFFERED;
-      case 6:
-        return OPEN;
-      default:
-        throw new IllegalArgumentException("Illegal value of int representation!!!!");
-    }
-  }
+	 @Override
+	 public ClientCCASessionState fromInt(int v) throws IllegalArgumentException
+	 {
+		 switch (v) {
+			 case 0:
+				 return IDLE;
+			 case 1:
+				 return PENDING_EVENT;
+			 case 2:
+				 return PENDING_INITIAL;
+			 case 3:
+				 return PENDING_UPDATE;
+			 case 4:
+				 return PENDING_TERMINATION;
+			 case 5:
+				 return PENDING_BUFFERED;
+			 case 6:
+				 return OPEN;
+			 default:
+				 throw new IllegalArgumentException("Illegal value of int representation!!!!");
+		 }
+	 }
 
-  @Override
-  public int getValue() {
-    return stateValue;
-  }
-}
+	 @Override
+	 public int getValue()
+	 {
+		 return stateValue;
+	 }
+ }

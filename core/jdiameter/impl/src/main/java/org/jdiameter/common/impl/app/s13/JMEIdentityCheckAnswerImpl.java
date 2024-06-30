@@ -28,35 +28,42 @@ import org.jdiameter.common.impl.app.AppAnswerEventImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class JMEIdentityCheckAnswerImpl extends AppAnswerEventImpl implements JMEIdentityCheckAnswer {
-  private static final long serialVersionUID = 1L;
+@SuppressWarnings("all")//3rd party lib
+public class JMEIdentityCheckAnswerImpl extends AppAnswerEventImpl implements JMEIdentityCheckAnswer
+{
+	private static final long serialVersionUID = 1L;
 
-  protected static final Logger logger = LoggerFactory.getLogger(JMEIdentityCheckAnswerImpl.class);
+	protected static final Logger logger = LoggerFactory.getLogger(JMEIdentityCheckAnswerImpl.class);
 
-  public JMEIdentityCheckAnswerImpl(Answer answer) {
-    super(answer);
-  }
+	public JMEIdentityCheckAnswerImpl(Answer answer)
+	{
+		super(answer);
+	}
 
-  public JMEIdentityCheckAnswerImpl(Request request, long resultCode) {
-    super(request.createAnswer(resultCode));
-  }
+	public JMEIdentityCheckAnswerImpl(Request request, long resultCode)
+	{
+		super(request.createAnswer(resultCode));
+	}
 
-  @Override
-  public boolean isEquipmentStatusAVPPresent() {
-    return super.message.getAvps().getAvp(Avp.EQUIPMENT_STATUS) != null;
-  }
+	@Override
+	public boolean isEquipmentStatusAVPPresent()
+	{
+		return super.message.getAvps().getAvp(Avp.EQUIPMENT_STATUS) != null;
+	}
 
-  @Override
-  public int getEquipmentStatus() {
+	@Override
+	public int getEquipmentStatus()
+	{
 
-    Avp equipmentStatusAvp = super.message.getAvps().getAvp(Avp.EQUIPMENT_STATUS);
-    if (equipmentStatusAvp != null) {
-      try {
-        return equipmentStatusAvp.getInteger32();
-      } catch (AvpDataException e) {
-        logger.debug("Failure trying to obtain Equipment-Status AVP value", e);
-      }
-    }
-    return -1;
-  }
+		Avp equipmentStatusAvp = super.message.getAvps().getAvp(Avp.EQUIPMENT_STATUS);
+		if (equipmentStatusAvp != null) {
+			try {
+				return equipmentStatusAvp.getInteger32();
+			}
+			catch (AvpDataException e) {
+				logger.debug("Failure trying to obtain Equipment-Status AVP value", e);
+			}
+		}
+		return -1;
+	}
 }

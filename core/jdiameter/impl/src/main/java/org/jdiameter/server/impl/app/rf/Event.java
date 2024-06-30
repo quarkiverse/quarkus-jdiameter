@@ -40,87 +40,99 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.server.impl.app.rf;
+ package org.jdiameter.server.impl.app.rf;
 
-import org.jdiameter.api.app.AppEvent;
-import org.jdiameter.api.app.StateEvent;
-import org.jdiameter.api.rf.events.RfAccountingRequest;
+ import org.jdiameter.api.app.AppEvent;
+ import org.jdiameter.api.app.StateEvent;
+ import org.jdiameter.api.rf.events.RfAccountingRequest;
 
-/**
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-class Event implements StateEvent {
+ /**
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
 
-  enum Type {
-    RECEIVED_EVENT_RECORD,
-    RECEIVED_START_RECORD,
-    RECEIVED_INTERIM_RECORD,
-    RECEIVED_STOP_RECORD
-  }
+ class Event implements StateEvent
+ {
 
-  Type type;
-  AppEvent data;
+	 enum Type
+	 {
+		 RECEIVED_EVENT_RECORD,
+		 RECEIVED_START_RECORD,
+		 RECEIVED_INTERIM_RECORD,
+		 RECEIVED_STOP_RECORD
+	 }
 
-  Event(Type type) {
-    this.type = type;
-  }
+	 Type type;
+	 AppEvent data;
 
-  Event(RfAccountingRequest accountRequest) throws Exception {
-    data = accountRequest;
-    int type = accountRequest.getAccountingRecordType();
-    switch (type) {
-      case 1:
-        this.type = Type.RECEIVED_EVENT_RECORD;
-        break;
-      case 2:
-        this.type = Type.RECEIVED_START_RECORD;
-        break;
-      case 3:
-        this.type = Type.RECEIVED_INTERIM_RECORD;
-        break;
-      case 4:
-        this.type = Type.RECEIVED_STOP_RECORD;
-        break;
-      default:
-        throw new Exception("Unknown type " + type);
-    }
-  }
+	 Event(Type type)
+	 {
+		 this.type = type;
+	 }
 
-  @Override
-  public <E> E encodeType(Class<E> eClass) {
-    return eClass == Type.class ? (E) type : null;
-  }
+	 Event(RfAccountingRequest accountRequest) throws Exception
+	 {
+		 data = accountRequest;
+		 int type = accountRequest.getAccountingRecordType();
+		 switch (type) {
+			 case 1:
+				 this.type = Type.RECEIVED_EVENT_RECORD;
+				 break;
+			 case 2:
+				 this.type = Type.RECEIVED_START_RECORD;
+				 break;
+			 case 3:
+				 this.type = Type.RECEIVED_INTERIM_RECORD;
+				 break;
+			 case 4:
+				 this.type = Type.RECEIVED_STOP_RECORD;
+				 break;
+			 default:
+				 throw new Exception("Unknown type " + type);
+		 }
+	 }
 
-  @Override
-  public Enum getType() {
-    return type;
-  }
+	 @Override
+	 public <E> E encodeType(Class<E> eClass)
+	 {
+		 return eClass == Type.class ? (E) type : null;
+	 }
 
-  @Override
-  public void setData(Object o) {
-    data = (AppEvent) o;
-  }
+	 @Override
+	 public Enum getType()
+	 {
+		 return type;
+	 }
 
-  @Override
-  public Object getData() {
-    return data;
-  }
+	 @Override
+	 public void setData(Object o)
+	 {
+		 data = (AppEvent) o;
+	 }
 
-  @Override
-  public int compareTo(Object other) {
-    return equals(other) ? 0 : -1;
-  }
+	 @Override
+	 public Object getData()
+	 {
+		 return data;
+	 }
 
-  @Override
-  public int hashCode() {
-    return super.hashCode();
-  }
+	 @Override
+	 public int compareTo(Object other)
+	 {
+		 return equals(other) ? 0 : -1;
+	 }
 
-  @Override
-  public boolean equals(Object other) {
-    return this == other;
-  }
-}
+	 @Override
+	 public int hashCode()
+	 {
+		 return super.hashCode();
+	 }
+
+	 @Override
+	 public boolean equals(Object other)
+	 {
+		 return this == other;
+	 }
+ }

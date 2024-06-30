@@ -40,22 +40,24 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api.cxdx.events;
+ package org.jdiameter.api.cxdx.events;
 
-import org.jdiameter.api.app.AppAnswerEvent;
+ import org.jdiameter.api.app.AppAnswerEvent;
 
-/**
- * The User-Authorization-Answer (UAA) command, indicated by the Command-Code field set to 300 and the bit cleared
- * in the Command Flags field, is sent by a server in response to the User-Authorization-Request command.
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface JUserAuthorizationAnswer extends AppAnswerEvent {
+ /**
+  * The User-Authorization-Answer (UAA) command, indicated by the Command-Code field set to 300 and the bit cleared in
+  * the Command Flags field, is sent by a server in response to the User-Authorization-Request command.
+  *
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface JUserAuthorizationAnswer extends AppAnswerEvent
+ {
 
-  String _SHORT_NAME = "UAA";
-  String _LONG_NAME = "User-Authorization-Answer";
+	 String _SHORT_NAME = "UAA";
+	 String _LONG_NAME = "User-Authorization-Answer";
 
-  int code = 300;
+	 int code = 300;
 
-}
+ }

@@ -40,17 +40,18 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.api.app;
+ package org.jdiameter.common.api.app;
 
-import org.jdiameter.api.app.AppSession;
+ import org.jdiameter.api.app.AppSession;
 
-/**
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface IAppSessionDataFactory<T extends IAppSessionData> {
+ /**
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IAppSessionDataFactory<T extends IAppSessionData>
+ {
 
-  T getAppSessionData(Class<? extends AppSession> clazz, String sessionId);
+	 T getAppSessionData(Class<? extends AppSession> clazz, String sessionId);
 
-}
+ }

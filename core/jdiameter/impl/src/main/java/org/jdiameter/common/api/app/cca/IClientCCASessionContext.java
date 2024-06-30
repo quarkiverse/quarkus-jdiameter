@@ -40,40 +40,41 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.api.app.cca;
+ package org.jdiameter.common.api.app.cca;
 
-import org.jdiameter.api.Message;
-import org.jdiameter.api.cca.ClientCCASession;
+ import org.jdiameter.api.Message;
+ import org.jdiameter.api.cca.ClientCCASession;
 
-/**
- * Diameter Credit Control Application Client Additional listener
- * Actions for FSM
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface IClientCCASessionContext {
+ /**
+  * Diameter Credit Control Application Client Additional listener Actions for FSM
+  *
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IClientCCASessionContext
+ {
 
-  long getDefaultTxTimerValue();
+	 long getDefaultTxTimerValue();
 
-  void txTimerExpired(ClientCCASession session);
+	 void txTimerExpired(ClientCCASession session);
 
-  int getDefaultCCFHValue();
+	 int getDefaultCCFHValue();
 
-  int getDefaultDDFHValue();
+	 int getDefaultDDFHValue();
 
-  void grantAccessOnDeliverFailure(ClientCCASession clientCCASessionImpl, Message request);
+	 void grantAccessOnDeliverFailure(ClientCCASession clientCCASessionImpl, Message request);
 
-  void denyAccessOnDeliverFailure(ClientCCASession clientCCASessionImpl, Message request);
+	 void denyAccessOnDeliverFailure(ClientCCASession clientCCASessionImpl, Message request);
 
-  void grantAccessOnTxExpire(ClientCCASession clientCCASessionImpl);
+	 void grantAccessOnTxExpire(ClientCCASession clientCCASessionImpl);
 
-  void denyAccessOnTxExpire(ClientCCASession clientCCASessionImpl);
+	 void denyAccessOnTxExpire(ClientCCASession clientCCASessionImpl);
 
-  void grantAccessOnFailureMessage(ClientCCASession clientCCASessionImpl);
+	 void grantAccessOnFailureMessage(ClientCCASession clientCCASessionImpl);
 
-  void denyAccessOnFailureMessage(ClientCCASession clientCCASessionImpl);
+	 void denyAccessOnFailureMessage(ClientCCASession clientCCASessionImpl);
 
-  void indicateServiceError(ClientCCASession clientCCASessionImpl);
+	 void indicateServiceError(ClientCCASession clientCCASessionImpl);
 
-}
+ }

@@ -40,54 +40,55 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.client.impl.app.gx;
+ package org.jdiameter.client.impl.app.gx;
 
-import java.io.Serializable;
+ import org.jdiameter.api.Request;
+ import org.jdiameter.common.api.app.gx.ClientGxSessionState;
+ import org.jdiameter.common.api.app.gx.IGxSessionData;
 
-import org.jdiameter.api.Request;
-import org.jdiameter.common.api.app.gx.ClientGxSessionState;
-import org.jdiameter.common.api.app.gx.IGxSessionData;
+ import java.io.Serializable;
 
-/**
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface IClientGxSessionData extends IGxSessionData {
+ /**
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IClientGxSessionData extends IGxSessionData
+ {
 
-  boolean isEventBased();
+	 boolean isEventBased();
 
-  void setEventBased(boolean b);
+	 void setEventBased(boolean b);
 
-  boolean isRequestTypeSet();
+	 boolean isRequestTypeSet();
 
-  void setRequestTypeSet(boolean b);
+	 void setRequestTypeSet(boolean b);
 
-  ClientGxSessionState getClientGxSessionState();
+	 ClientGxSessionState getClientGxSessionState();
 
-  void setClientGxSessionState(ClientGxSessionState state);
+	 void setClientGxSessionState(ClientGxSessionState state);
 
-  Serializable getTxTimerId();
+	 Serializable getTxTimerId();
 
-  void setTxTimerId(Serializable txTimerId);
+	 void setTxTimerId(Serializable txTimerId);
 
-  Request getTxTimerRequest();
+	 Request getTxTimerRequest();
 
-  void setTxTimerRequest(Request txTimerRequest);
+	 void setTxTimerRequest(Request txTimerRequest);
 
-  Request getBuffer();
+	 Request getBuffer();
 
-  void setBuffer(Request buffer);
+	 void setBuffer(Request buffer);
 
-  int getGatheredRequestedAction();
+	 int getGatheredRequestedAction();
 
-  void setGatheredRequestedAction(int gatheredRequestedAction);
+	 void setGatheredRequestedAction(int gatheredRequestedAction);
 
-  int getGatheredCCFH();
+	 int getGatheredCCFH();
 
-  void setGatheredCCFH(int gatheredCCFH);
+	 void setGatheredCCFH(int gatheredCCFH);
 
-  int getGatheredDDFH();
+	 int getGatheredDDFH();
 
-  void setGatheredDDFH(int gatheredDDFH);
-}
+	 void setGatheredDDFH(int gatheredDDFH);
+ }

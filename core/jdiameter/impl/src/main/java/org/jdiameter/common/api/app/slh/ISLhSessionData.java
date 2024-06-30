@@ -38,32 +38,33 @@
  *   License along with this software; if not, write to the Free
  *   Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
-*/
+ */
 
 package org.jdiameter.common.api.app.slh;
-
-import java.io.Serializable;
 
 import org.jdiameter.api.Request;
 import org.jdiameter.common.api.app.IAppSessionData;
 
+import java.io.Serializable;
+
 /**
  * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
- *
  */
 
-public interface ISLhSessionData extends IAppSessionData {
+@SuppressWarnings("all")//3rd party lib
+public interface ISLhSessionData extends IAppSessionData
+{
 
-  void setSLhSessionState(SLhSessionState state);
+	void setSLhSessionState(SLhSessionState state);
 
-  SLhSessionState getSLhSessionState();
+	SLhSessionState getSLhSessionState();
 
-  Serializable getTsTimerId();
+	Serializable getTsTimerId();
 
-  void setTsTimerId(Serializable tid);
+	void setTsTimerId(Serializable tid);
 
-  void setBuffer(Request buffer);
+	void setBuffer(Request buffer);
 
-  Request getBuffer();
+	Request getBuffer();
 
 }

@@ -40,17 +40,19 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.api.app.rx;
+ package org.jdiameter.common.api.app.rx;
 
-import org.jdiameter.common.api.app.IAppSessionData;
+ import org.jdiameter.common.api.app.IAppSessionData;
 
-/**
- * Diameter 3GPP IMS Rx Reference Point Session Data
- *
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:richard.good@smilecoms.com"> Richard Good </a>
- */
-public interface IRxSessionData extends IAppSessionData {
-  // marker interface
-}
+ /**
+  * Diameter 3GPP IMS Rx Reference Point Session Data
+  *
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:richard.good@smilecoms.com"> Richard Good </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IRxSessionData extends IAppSessionData
+ {
+	 // marker interface
+ }

@@ -40,27 +40,28 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.api.app.auth;
+ package org.jdiameter.common.api.app.auth;
 
-import org.jdiameter.api.Answer;
-import org.jdiameter.api.ApplicationId;
-import org.jdiameter.api.Request;
-import org.jdiameter.api.app.AppAnswerEvent;
-import org.jdiameter.api.app.AppRequestEvent;
+ import org.jdiameter.api.Answer;
+ import org.jdiameter.api.ApplicationId;
+ import org.jdiameter.api.Request;
+ import org.jdiameter.api.app.AppAnswerEvent;
+ import org.jdiameter.api.app.AppRequestEvent;
 
-/**
- *
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public interface IAuthMessageFactory {
+ /**
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IAuthMessageFactory
+ {
 
-  ApplicationId getApplicationId();
+	 ApplicationId getApplicationId();
 
-  int getAuthMessageCommandCode();
+	 int getAuthMessageCommandCode();
 
-  AppRequestEvent createAuthRequest(Request request);
+	 AppRequestEvent createAuthRequest(Request request);
 
-  AppAnswerEvent createAuthAnswer(Answer answer);
+	 AppAnswerEvent createAuthAnswer(Answer answer);
 
-}
+ }

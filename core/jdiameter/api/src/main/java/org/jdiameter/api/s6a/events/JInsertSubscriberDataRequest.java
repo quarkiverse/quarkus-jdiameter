@@ -40,19 +40,20 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api.s6a.events;
+ package org.jdiameter.api.s6a.events;
 
-import org.jdiameter.api.app.AppRequestEvent;
+ import org.jdiameter.api.app.AppRequestEvent;
 
-/**
- *
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface JInsertSubscriberDataRequest extends AppRequestEvent {
+ /**
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface JInsertSubscriberDataRequest extends AppRequestEvent
+ {
 
-  String _SHORT_NAME = "IDR";
-  String _LONG_NAME = "Insert-Subscriber-Data-Request";
+	 String _SHORT_NAME = "IDR";
+	 String _LONG_NAME = "Insert-Subscriber-Data-Request";
 
-  int code = 319;
+	 int code = 319;
 
-}
+ }

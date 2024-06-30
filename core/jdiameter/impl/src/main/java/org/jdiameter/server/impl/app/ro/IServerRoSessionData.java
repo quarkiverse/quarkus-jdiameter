@@ -40,30 +40,31 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.server.impl.app.ro;
+ package org.jdiameter.server.impl.app.ro;
 
-import java.io.Serializable;
+ import org.jdiameter.common.api.app.ro.IRoSessionData;
+ import org.jdiameter.common.api.app.ro.ServerRoSessionState;
 
-import org.jdiameter.common.api.app.ro.IRoSessionData;
-import org.jdiameter.common.api.app.ro.ServerRoSessionState;
+ import java.io.Serializable;
 
-/**
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface IServerRoSessionData extends IRoSessionData {
+ /**
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IServerRoSessionData extends IRoSessionData
+ {
 
-  boolean isStateless();
+	 boolean isStateless();
 
-  void setStateless(boolean stateless);
+	 void setStateless(boolean stateless);
 
-  ServerRoSessionState getServerRoSessionState();
+	 ServerRoSessionState getServerRoSessionState();
 
-  void setServerRoSessionState(ServerRoSessionState state);
+	 void setServerRoSessionState(ServerRoSessionState state);
 
-  void setTccTimerId(Serializable tccTimerId);
+	 void setTccTimerId(Serializable tccTimerId);
 
-  Serializable getTccTimerId();
+	 Serializable getTccTimerId();
 
-}
+ }

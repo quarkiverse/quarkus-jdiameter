@@ -40,36 +40,38 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.api.app.sh;
+ package org.jdiameter.common.api.app.sh;
 
-import org.jdiameter.api.app.AppSession;
-import org.jdiameter.api.app.StateChangeListener;
-import org.jdiameter.api.sh.ClientShSessionListener;
-import org.jdiameter.api.sh.ServerShSessionListener;
-import org.jdiameter.common.api.app.IAppSessionFactory;
+ import org.jdiameter.api.app.AppSession;
+ import org.jdiameter.api.app.StateChangeListener;
+ import org.jdiameter.api.sh.ClientShSessionListener;
+ import org.jdiameter.api.sh.ServerShSessionListener;
+ import org.jdiameter.common.api.app.IAppSessionFactory;
 
-/**
- * Diameter Sh Session Factory
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface IShSessionFactory extends IAppSessionFactory {
+ /**
+  * Diameter Sh Session Factory
+  *
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IShSessionFactory extends IAppSessionFactory
+ {
 
-  void setClientShSessionListener(ClientShSessionListener v);
+	 void setClientShSessionListener(ClientShSessionListener v);
 
-  ClientShSessionListener getClientShSessionListener();
+	 ClientShSessionListener getClientShSessionListener();
 
-  void setServerShSessionListener(ServerShSessionListener v);
+	 void setServerShSessionListener(ServerShSessionListener v);
 
-  ServerShSessionListener getServerShSessionListener();
+	 ServerShSessionListener getServerShSessionListener();
 
-  void setStateChangeListener(StateChangeListener<AppSession> v);
+	 void setStateChangeListener(StateChangeListener<AppSession> v);
 
-  StateChangeListener<AppSession> getStateChangeListener();
+	 StateChangeListener<AppSession> getStateChangeListener();
 
-  void setMessageFactory(IShMessageFactory factory);
+	 void setMessageFactory(IShMessageFactory factory);
 
-  IShMessageFactory getMessageFactory();
+	 IShMessageFactory getMessageFactory();
 
-}
+ }

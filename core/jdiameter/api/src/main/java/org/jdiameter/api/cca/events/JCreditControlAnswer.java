@@ -40,38 +40,40 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api.cca.events;
+ package org.jdiameter.api.cca.events;
 
-import org.jdiameter.api.Avp;
-import org.jdiameter.api.app.AppAnswerEvent;
+ import org.jdiameter.api.Avp;
+ import org.jdiameter.api.app.AppAnswerEvent;
 
-/**
- * The Credit-Control-Answer message (CCA) is indicated by the command-code field being set to 272
- * and the 'R' bit being cleared in the Command Flags field.  It is used between the credit-control
- * server and the Diameter credit-control client to acknowledge a Credit-Control-Request command.
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface JCreditControlAnswer extends AppAnswerEvent {
+ /**
+  * The Credit-Control-Answer message (CCA) is indicated by the command-code field being set to 272 and the 'R' bit being
+  * cleared in the Command Flags field.  It is used between the credit-control server and the Diameter credit-control
+  * client to acknowledge a Credit-Control-Request command.
+  *
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface JCreditControlAnswer extends AppAnswerEvent
+ {
 
-  String _SHORT_NAME = "CCA";
-  String _LONG_NAME = "Credit-Control-Answer";
+	 String _SHORT_NAME = "CCA";
+	 String _LONG_NAME = "Credit-Control-Answer";
 
-  int code = 272;
+	 int code = 272;
 
-  boolean isCreditControlFailureHandlingAVPPresent();
+	 boolean isCreditControlFailureHandlingAVPPresent();
 
-  int getCredidControlFailureHandlingAVPValue();
+	 int getCredidControlFailureHandlingAVPValue();
 
-  boolean isDirectDebitingFailureHandlingAVPPresent();
+	 boolean isDirectDebitingFailureHandlingAVPPresent();
 
-  int getDirectDebitingFailureHandlingAVPValue();
+	 int getDirectDebitingFailureHandlingAVPValue();
 
-  boolean isRequestTypeAVPPresent();
+	 boolean isRequestTypeAVPPresent();
 
-  int getRequestTypeAVPValue();
+	 int getRequestTypeAVPValue();
 
-  Avp getValidityTimeAvp();
+	 Avp getValidityTimeAvp();
 
-}
+ }

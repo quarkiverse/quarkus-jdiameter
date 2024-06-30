@@ -23,30 +23,33 @@ import org.jdiameter.api.Avp;
 import org.jdiameter.api.app.AppRequestEvent;
 
 /**
- * The ECR command, indicated by the Command-Code field set to 324 and the 'R'
- * bit set in the Command Flags field, is sent by MME or SGSN to EIR to check
- * the Mobile Equipment's identity status (e.g. to check that it has not been
+ * The ECR command, indicated by the Command-Code field set to 324 and the 'R' bit set in the Command Flags field, is
+ * sent by MME or SGSN to EIR to check the Mobile Equipment's identity status (e.g. to check that it has not been
  * stolen, or, to verify that it does not have faults).
- *
  */
-public interface JMEIdentityCheckRequest extends AppRequestEvent {
+@SuppressWarnings("all")//3rd party lib
+public interface JMEIdentityCheckRequest extends AppRequestEvent
+{
 
-  String _SHORT_NAME = "ECR";
-  String _LONG_NAME = "ME-Identity-Check-Request";
-  int code = 324;
+	String _SHORT_NAME = "ECR";
+	String _LONG_NAME = "ME-Identity-Check-Request";
+	int code = 324;
 
-  Avp getTerminalInformationAvp();
+	Avp getTerminalInformationAvp();
 
-  boolean hasIMEI();
-  String getIMEI();
+	boolean hasIMEI();
 
-  boolean hasTgpp2MEID();
-  byte[] getTgpp2MEID();
+	String getIMEI();
 
-  boolean hasSoftwareVersion();
-  String getSoftwareVersion();
+	boolean hasTgpp2MEID();
 
-  boolean isUserNameAVPPresent();
+	byte[] getTgpp2MEID();
 
-  String getUserName();
+	boolean hasSoftwareVersion();
+
+	String getSoftwareVersion();
+
+	boolean isUserNameAVPPresent();
+
+	String getUserName();
 }

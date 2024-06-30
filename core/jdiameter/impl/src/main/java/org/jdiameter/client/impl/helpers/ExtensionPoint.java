@@ -40,245 +40,254 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.client.impl.helpers;
+ package org.jdiameter.client.impl.helpers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+ import java.util.ArrayList;
+ import java.util.Arrays;
+ import java.util.List;
 
+ /**
+  * This class provide pluggable features
+  *
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public class ExtensionPoint extends Ordinal
+ {
 
-/**
- * This class provide pluggable features
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public class ExtensionPoint extends Ordinal {
+	 private static final long serialVersionUID = 1L;
 
-  private static final long serialVersionUID = 1L;
+	 protected static int index;
 
-  protected static int index;
+	 /**
+	  * MetaData implementation class name
+	  */
+	 public static final ExtensionPoint InternalMetaData = new ExtensionPoint("InternalMetaData", "org.jdiameter.client.impl.MetaDataImpl");
 
-  /**
-   * MetaData implementation class name
-   */
-  public static final ExtensionPoint InternalMetaData = new ExtensionPoint("InternalMetaData", "org.jdiameter.client.impl.MetaDataImpl");
+	 /**
+	  * Message parser implementation class name
+	  */
+	 public static final ExtensionPoint InternalMessageParser = new ExtensionPoint("InternalMessageParser", "org.jdiameter.client.impl.parser.MessageParser");
 
-  /**
-   * Message parser implementation class name
-   */
-  public static final ExtensionPoint InternalMessageParser = new ExtensionPoint("InternalMessageParser", "org.jdiameter.client.impl.parser.MessageParser");
+	 /**
+	  * Element message implementation class name
+	  */
+	 public static final ExtensionPoint InternalElementParser = new ExtensionPoint("InternalElementParser", "org.jdiameter.client.impl.parser.ElementParser");
 
-  /**
-   * Element message implementation class name
-   */
-  public static final ExtensionPoint InternalElementParser = new ExtensionPoint("InternalElementParser", "org.jdiameter.client.impl.parser.ElementParser");
+	 /**
+	  * Router enginr implementation class name
+	  */
+	 public static final ExtensionPoint InternalRouterEngine = new ExtensionPoint("InternalRouterEngine", "org.jdiameter.client.impl.router.RouterImpl");
 
-  /**
-   * Router enginr implementation class name
-   */
-  public static final ExtensionPoint InternalRouterEngine = new ExtensionPoint("InternalRouterEngine", "org.jdiameter.client.impl.router.RouterImpl");
+	 /**
+	  * Peer controller implementation class name
+	  */
+	 public static final ExtensionPoint InternalPeerController =
+			 new ExtensionPoint("InternalPeerController", "org.jdiameter.client.impl.controller.PeerTableImpl");
 
-  /**
-   * Peer controller implementation class name
-   */
-  public static final ExtensionPoint InternalPeerController =
-      new ExtensionPoint("InternalPeerController", "org.jdiameter.client.impl.controller.PeerTableImpl");
+	 /**
+	  * Realm controller implementation class name
+	  */
+	 public static final ExtensionPoint InternalRealmController =
+			 new ExtensionPoint("InternalRealmController", "org.jdiameter.client.impl.controller.RealmTableImpl");
 
-  /**
-   * Realm controller implementation class name
-   */
-  public static final ExtensionPoint InternalRealmController =
-      new ExtensionPoint("InternalRealmController", "org.jdiameter.client.impl.controller.RealmTableImpl");
+	 /**
+	  * Session factory implementation class name
+	  */
+	 public static final ExtensionPoint InternalSessionFactory = new ExtensionPoint("InternalSessionFactory", "org.jdiameter.client.impl.SessionFactoryImpl");
 
-  /**
-   * Session factory implementation class name
-   */
-  public static final ExtensionPoint InternalSessionFactory = new ExtensionPoint("InternalSessionFactory", "org.jdiameter.client.impl.SessionFactoryImpl");
+	 /**
+	  * Class name of connection interface implementation
+	  */
+	 public static final ExtensionPoint InternalConnectionClass =
+			 new ExtensionPoint("InternalConnection", "org.jdiameter.client.impl.transport.tcp.TCPClientConnection");
 
-  /**
-   * Class name of connection interface implementation
-   */
-  public static final ExtensionPoint InternalConnectionClass =
-      new ExtensionPoint("InternalConnection","org.jdiameter.client.impl.transport.tcp.TCPClientConnection");
+	 /**
+	  * Transport factory implementation class name
+	  */
+	 public static final ExtensionPoint InternalTransportFactory =
+			 new ExtensionPoint("InternalTransportFactory", "org.jdiameter.client.impl.transport.TransportLayerFactory");
 
-  /**
-   * Transport factory implementation class name
-   */
-  public static final ExtensionPoint InternalTransportFactory =
-      new ExtensionPoint("InternalTransportFactory", "org.jdiameter.client.impl.transport.TransportLayerFactory");
+	 /**
+	  * Peer FSM factory implementation class name
+	  */
+	 public static final ExtensionPoint InternalPeerFsmFactory = new ExtensionPoint("InternalPeerFsmFactory", "org.jdiameter.client.impl.fsm.FsmFactoryImpl");
 
-  /**
-   * Peer FSM factory implementation class name
-   */
-  public static final ExtensionPoint InternalPeerFsmFactory = new ExtensionPoint("InternalPeerFsmFactory", "org.jdiameter.client.impl.fsm.FsmFactoryImpl");
+	 /**
+	  * Statistic factory implementation class name
+	  */
+	 public static final ExtensionPoint InternalStatisticFactory =
+			 new ExtensionPoint("InternalStatisticFactory", "org.jdiameter.common.impl.statistic.StatisticManagerImpl");
 
-  /**
-   * Statistic factory implementation class name
-   */
-  public static final ExtensionPoint InternalStatisticFactory =
-      new ExtensionPoint("InternalStatisticFactory", "org.jdiameter.common.impl.statistic.StatisticManagerImpl");
+	 /**
+	  * Statistic factory implementation class name
+	  */
+	 public static final ExtensionPoint InternalStatisticProcessor =
+			 new ExtensionPoint("InternalStatisticProcessor", "org.jdiameter.common.impl.statistic.StatisticProcessorImpl");
 
-  /**
-   * Statistic factory implementation class name
-   */
-  public static final ExtensionPoint InternalStatisticProcessor =
-      new ExtensionPoint("InternalStatisticProcessor", "org.jdiameter.common.impl.statistic.StatisticProcessorImpl");
+	 /**
+	  * Concurrent factory implementation class name
+	  */
+	 public static final ExtensionPoint InternalConcurrentFactory =
+			 new ExtensionPoint("InternalConcurrentFactory", "org.jdiameter.common.impl.concurrent.ConcurrentFactory");
 
-  /**
-   * Concurrent factory implementation class name
-   */
-  public static final ExtensionPoint InternalConcurrentFactory =
-      new ExtensionPoint("InternalConcurrentFactory", "org.jdiameter.common.impl.concurrent.ConcurrentFactory");
+	 /**
+	  * Concurrent entity factory implementation class name
+	  */
+	 public static final ExtensionPoint InternalConcurrentEntityFactory =
+			 new ExtensionPoint("InternalConcurrentEntityFactory", "org.jdiameter.common.impl.concurrent.ConcurrentEntityFactory");
 
-  /**
-   * Concurrent entity factory implementation class name
-   */
-  public static final ExtensionPoint InternalConcurrentEntityFactory =
-      new ExtensionPoint("InternalConcurrentEntityFactory", "org.jdiameter.common.impl.concurrent.ConcurrentEntityFactory");
+	 /**
+	  * Redirect Agent implementation class name
+	  */
+	 public static final ExtensionPoint InternalAgentRedirect = new ExtensionPoint("InternalAgentRedirect", "org.jdiameter.server.impl.agent.RedirectAgentImpl");
 
-  /**
-   * Redirect Agent implementation class name
-   */
-  public static final ExtensionPoint InternalAgentRedirect = new ExtensionPoint("InternalAgentRedirect", "org.jdiameter.server.impl.agent.RedirectAgentImpl");
+	 /**
+	  * Proxy Agent implementation class name
+	  */
+	 public static final ExtensionPoint InternalAgentProxy = new ExtensionPoint("InternalAgentProxy", "org.jdiameter.server.impl.agent.ProxyAgentImpl");
 
-  /**
-   * Proxy Agent implementation class name
-   */
-  public static final ExtensionPoint InternalAgentProxy = new ExtensionPoint("InternalAgentProxy", "org.jdiameter.server.impl.agent.ProxyAgentImpl");
+	 /**
+	  * Agent Conf implementation class name
+	  */
+	 public static final ExtensionPoint InternalAgentConfiguration =
+			 new ExtensionPoint("InternalAgentConfiguration", "org.jdiameter.server.impl.agent.AgentConfigurationImpl");
 
-  /**
-   *  Agent Conf implementation class name
-   */
-  public static final ExtensionPoint InternalAgentConfiguration =
-      new ExtensionPoint("InternalAgentConfiguration", "org.jdiameter.server.impl.agent.AgentConfigurationImpl");
+	 /**
+	  * Session Datasource class name
+	  */
+	 public static final ExtensionPoint InternalSessionDatasource =
+			 new ExtensionPoint("InternalSessionDatasource", "org.jdiameter.common.impl.data.LocalDataSource");
 
-  /**
-   * Session Datasource class name
-   */
-  public static final ExtensionPoint InternalSessionDatasource =
-      new ExtensionPoint("InternalSessionDatasource", "org.jdiameter.common.impl.data.LocalDataSource");
+	 /**
+	  * Timer Facility class name
+	  */
+	 public static final ExtensionPoint InternalTimerFacility =
+			 new ExtensionPoint("InternalTimerFacility", "org.jdiameter.common.impl.timer.LocalTimerFacilityImpl");
 
-  /**
-   * Timer Facility class name
-   */
-  public static final ExtensionPoint InternalTimerFacility =
-      new ExtensionPoint("InternalTimerFacility", "org.jdiameter.common.impl.timer.LocalTimerFacilityImpl");
+	 /**
+	  * List of internal extension point
+	  */
+	 public static final ExtensionPoint Internal = new ExtensionPoint(
+			 "Internal", 0,
+			 InternalMetaData,
+			 InternalMessageParser,
+			 InternalElementParser,
+			 InternalRouterEngine,
+			 InternalPeerController,
+			 InternalRealmController,
+			 InternalSessionFactory,
+			 //DONT add this, this will make assembler to try to create instance and he will fail :)
+			 //InternalConnectionClass,
+			 InternalTransportFactory,
+			 InternalPeerFsmFactory,
+			 InternalStatisticFactory,
+			 InternalConcurrentFactory,
+			 InternalConcurrentEntityFactory,
+			 InternalTimerFacility,
+			 InternalSessionDatasource,
+			 InternalAgentRedirect,
+			 InternalAgentProxy,
+			 InternalAgentConfiguration,
+			 InternalStatisticProcessor
+	 );
 
-  /**
-   * List of internal extension point
-   */
-  public static final ExtensionPoint Internal = new ExtensionPoint(
-      "Internal", 0,
-      InternalMetaData,
-      InternalMessageParser,
-      InternalElementParser,
-      InternalRouterEngine,
-      InternalPeerController,
-      InternalRealmController,
-      InternalSessionFactory,
-      //DONT add this, this will make assembler to try to create instance and he will fail :)
-      //InternalConnectionClass,
-      InternalTransportFactory,
-      InternalPeerFsmFactory,
-      InternalStatisticFactory,
-      InternalConcurrentFactory,
-      InternalConcurrentEntityFactory,
-      InternalTimerFacility,
-      InternalSessionDatasource,
-      InternalAgentRedirect,
-      InternalAgentProxy,
-      InternalAgentConfiguration,
-      InternalStatisticProcessor
-      );
+	 /**
+	  * Stack layer
+	  */
+	 public static final ExtensionPoint StackLayer = new ExtensionPoint("StackLayer", 1);
 
-  /**
-   * Stack layer
-   */
-  public static final ExtensionPoint StackLayer = new ExtensionPoint("StackLayer", 1);
+	 /**
+	  * Controller layer
+	  */
+	 public static final ExtensionPoint ControllerLayer = new ExtensionPoint("ControllerLayer", 2);
 
-  /**
-   * Controller layer
-   */
-  public static final ExtensionPoint ControllerLayer = new ExtensionPoint("ControllerLayer", 2);
+	 /**
+	  * Transport layer
+	  */
+	 public static final ExtensionPoint TransportLayer = new ExtensionPoint("TransportLayer", 3);
 
-  /**
-   * Transport layer
-   */
-  public static final ExtensionPoint TransportLayer = new ExtensionPoint("TransportLayer", 3);
+	 private ExtensionPoint[] elements = new ExtensionPoint[0];
+	 private String defaultValue = "";
+	 private int id = -1;
 
-  private ExtensionPoint[] elements = new ExtensionPoint[0];
-  private String defaultValue = "";
-  private int id = -1;
+	 /**
+	  * Type's count of extension point
+	  */
+	 public static final int COUNT = 3;
 
-  /**
-   * Type's count of extension point
-   */
-  public static final int COUNT = 3;
+	 /**
+	  * Create instance of class
+	  */
+	 public ExtensionPoint()
+	 {
+		 this.ordinal = index++;
+	 }
 
-  /**
-   * Create instance of class
-   */
-  public ExtensionPoint() {
-    this.ordinal = index++;
-  }
+	 protected ExtensionPoint(String name, String defaultValue)
+	 {
+		 this();
+		 this.name = name;
+		 this.defaultValue = defaultValue;
+	 }
 
-  protected ExtensionPoint(String name, String defaultValue) {
-    this();
-    this.name = name;
-    this.defaultValue = defaultValue;
-  }
+	 protected ExtensionPoint(String name, ExtensionPoint... elements)
+	 {
+		 this();
+		 this.name = name;
+		 this.elements = elements;
+	 }
 
-  protected ExtensionPoint(String name, ExtensionPoint... elements) {
-    this();
-    this.name = name;
-    this.elements = elements;
-  }
+	 protected ExtensionPoint(String name, int id, ExtensionPoint... elements)
+	 {
+		 this();
+		 this.name = name;
+		 this.id = id;
+		 this.elements = elements;
+	 }
 
-  protected ExtensionPoint(String name, int id, ExtensionPoint... elements) {
-    this();
-    this.name = name;
-    this.id = id;
-    this.elements = elements;
-  }
+	 /**
+	  * Append extension point entries
+	  *
+	  * @param elements array of append extension point entries
+	  */
+	 public void appendElements(ExtensionPoint... elements)
+	 {
+		 List<ExtensionPoint> rc = new ArrayList<ExtensionPoint>();
+		 rc.addAll(Arrays.asList(this.elements));
+		 rc.addAll(Arrays.asList(elements));
+		 this.elements = rc.toArray(new ExtensionPoint[0]);
+	 }
 
-  /**
-   * Append extension point entries
-   *
-   * @param elements array of append extension point entries
-   */
-  public void appendElements(ExtensionPoint... elements) {
-    List<ExtensionPoint> rc = new ArrayList<ExtensionPoint>();
-    rc.addAll(Arrays.asList(this.elements));
-    rc.addAll(Arrays.asList(elements));
-    this.elements = rc.toArray(new ExtensionPoint[0]);
-  }
+	 /**
+	  * Return parameters of extension point
+	  *
+	  * @return array parameters of extension point
+	  */
+	 public ExtensionPoint[] getExtensionPoints()
+	 {
+		 return elements;
+	 }
 
-  /**
-   * Return parameters of extension point
-   *
-   * @return array parameters of extension point
-   */
-  public ExtensionPoint[] getExtensionPoints() {
-    return elements;
-  }
+	 /**
+	  * Return default value of extension point
+	  *
+	  * @return default value of extension point
+	  */
+	 public String defValue()
+	 {
+		 return defaultValue;
+	 }
 
-  /**
-   * Return default value of extension point
-   *
-   * @return default value of extension point
-   */
-  public String defValue() {
-    return defaultValue;
-  }
-
-  /**
-   * Return id of extension point
-   *
-   * @return id of extension point
-   */
-  public int id() {
-    return id;
-  }
-}
+	 /**
+	  * Return id of extension point
+	  *
+	  * @return id of extension point
+	  */
+	 public int id()
+	 {
+		 return id;
+	 }
+ }

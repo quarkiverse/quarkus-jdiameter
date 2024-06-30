@@ -40,33 +40,39 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.client.impl.app.auth;
+ package org.jdiameter.client.impl.app.auth;
 
-import java.io.Serializable;
+ import org.jdiameter.common.api.app.auth.ClientAuthSessionState;
+ import org.jdiameter.common.api.app.auth.IAuthSessionData;
 
-import org.jdiameter.common.api.app.auth.ClientAuthSessionState;
-import org.jdiameter.common.api.app.auth.IAuthSessionData;
+ import java.io.Serializable;
 
-/**
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface IClientAuthSessionData extends IAuthSessionData {
+ /**
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IClientAuthSessionData extends IAuthSessionData
+ {
 
-  void setClientAuthSessionState(ClientAuthSessionState state);
-  ClientAuthSessionState getClientAuthSessionState();
+	 void setClientAuthSessionState(ClientAuthSessionState state);
 
-  boolean isStateless();
-  void setStateless(boolean b);
+	 ClientAuthSessionState getClientAuthSessionState();
 
-  String getDestinationHost();
-  void setDestinationHost(String host);
+	 boolean isStateless();
 
-  String getDestinationRealm();
-  void setDestinationRealm(String realm);
+	 void setStateless(boolean b);
 
-  Serializable getTsTimerId();
-  void setTsTimerId(Serializable realm);
+	 String getDestinationHost();
 
-}
+	 void setDestinationHost(String host);
+
+	 String getDestinationRealm();
+
+	 void setDestinationRealm(String realm);
+
+	 Serializable getTsTimerId();
+
+	 void setTsTimerId(Serializable realm);
+
+ }

@@ -40,165 +40,239 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.client.impl.helpers;
+ package org.jdiameter.client.impl.helpers;
 
-import static org.jdiameter.client.impl.helpers.ExtensionPoint.ControllerLayer;
-import static org.jdiameter.client.impl.helpers.ExtensionPoint.Internal;
-import static org.jdiameter.client.impl.helpers.ExtensionPoint.InternalElementParser;
-import static org.jdiameter.client.impl.helpers.ExtensionPoint.InternalMessageParser;
-import static org.jdiameter.client.impl.helpers.ExtensionPoint.InternalMetaData;
-import static org.jdiameter.client.impl.helpers.ExtensionPoint.InternalPeerController;
-import static org.jdiameter.client.impl.helpers.ExtensionPoint.InternalPeerFsmFactory;
-import static org.jdiameter.client.impl.helpers.ExtensionPoint.InternalRouterEngine;
-import static org.jdiameter.client.impl.helpers.ExtensionPoint.InternalSessionFactory;
-import static org.jdiameter.client.impl.helpers.ExtensionPoint.InternalTransportFactory;
-import static org.jdiameter.client.impl.helpers.ExtensionPoint.StackLayer;
-import static org.jdiameter.client.impl.helpers.ExtensionPoint.TransportLayer;
-import static org.jdiameter.client.impl.helpers.Parameters.ExtensionName;
-import static org.jdiameter.client.impl.helpers.Parameters.Extensions;
+ import org.jdiameter.api.Configuration;
+ import org.jdiameter.client.api.IAssembler;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
 
-import org.jdiameter.api.Configuration;
-import org.jdiameter.client.api.IAssembler;
-import org.picocontainer.MutablePicoContainer;
-import org.picocontainer.PicoBuilder;
+ import java.lang.reflect.Constructor;
+ import java.lang.reflect.InvocationTargetException;
+ import java.lang.reflect.Parameter;
+ import java.util.ArrayList;
+ import java.util.Arrays;
+ import java.util.List;
+ import java.util.Map;
+ import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * IoC for stack
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public class AssemblerImpl implements IAssembler {
+ import static org.jdiameter.client.impl.helpers.ExtensionPoint.*;
+ import static org.jdiameter.client.impl.helpers.Parameters.ExtensionName;
+ import static org.jdiameter.client.impl.helpers.Parameters.Extensions;
 
-  AssemblerImpl parent;
-  final AssemblerImpl[] childs = new AssemblerImpl[ExtensionPoint.COUNT];
-  final MutablePicoContainer pico = new PicoBuilder().withCaching().build();
+ /**
+  * IoC for stack
+  *
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public class AssemblerImpl implements IAssembler
+ {
+	 private static final Logger logger = LoggerFactory.getLogger(AssemblerImpl.class);
+	 private final Map<Class<?>, Object> instances = new ConcurrentHashMap<>();
 
-  /**
-   * Create instance of class with predefined configuration
-   *
-   * @param config configuration of stack
-   * @throws Exception if generated internal exception
-   */
-  public AssemblerImpl(Configuration config) throws Exception {
-    Configuration[] ext = config.getChildren(Extensions.ordinal());
-    for (Configuration e : ext) {
-      String extName = e.getStringValue(ExtensionName.ordinal(), "");
-      // TODO: server?
-      // Create structure of containers
-      if (extName.equals(ExtensionPoint.Internal.name())) {
-        fill(ExtensionPoint.Internal.getExtensionPoints(), e, true);
-      }
-      else if (extName.equals(ExtensionPoint.StackLayer.name())) {
-        updatePicoContainer(config, StackLayer, InternalMetaData, InternalSessionFactory, InternalMessageParser, InternalElementParser);
-      }
-      else if (extName.equals(ExtensionPoint.ControllerLayer.name())) {
-        updatePicoContainer(config, ControllerLayer, InternalPeerController, InternalPeerFsmFactory, InternalRouterEngine);
-      }
-      else if (extName.equals(ExtensionPoint.TransportLayer.name())) {
-        updatePicoContainer(config, TransportLayer, InternalTransportFactory);
-      }
-    }
-  }
+	 AssemblerImpl parent;
+	 final AssemblerImpl[] childs = new AssemblerImpl[ExtensionPoint.COUNT];
 
-  private void updatePicoContainer(Configuration config, ExtensionPoint pointType, ExtensionPoint... updEntries) throws ClassNotFoundException {
-    for (ExtensionPoint e : updEntries) {
-      Configuration[] internalConf = config.getChildren(Extensions.ordinal());
-      String oldValue = internalConf[Internal.id()].getStringValue(e.ordinal(), null);
-      String newValue = internalConf[pointType.id()].getStringValue(e.ordinal(), null);
-      if (oldValue != null && newValue != null) {
-        pico.removeComponent(Class.forName(oldValue));
-        pico.addComponent(Class.forName(newValue));
-      }
-    }
-  }
+	 static private class LazyInstance extends Object
+	 {
 
-  /**
-   * Create child Assembler
-   *
-   * @param parent parent assembler
-   * @param e child configuration
-   * @param p extension poit
-   * @throws Exception
-   */
-  protected AssemblerImpl(AssemblerImpl parent, Configuration e, ExtensionPoint p) throws Exception {
-    this.parent = parent;
-    fill(p.getExtensionPoints(), e, false);
-  }
+	 }
 
-  private void fill(ExtensionPoint[] codes, Configuration e, boolean check) throws Exception {
-    //NOTE: this installs components, but no instances created!
-    for (ExtensionPoint c : codes) {
-      String value = e.getStringValue(c.ordinal(), c.defValue());
-      if (!check && (value == null || value.trim().length() == 0)) {
-        return;
-      }
+	 /**
+	  * Create instance of class with predefined configuration
+	  *
+	  * @param config configuration of stack
+	  *
+	  * @throws Exception if generated internal exception
+	  */
+	 public AssemblerImpl(Configuration config) throws Exception
+	 {
+		 Configuration[] ext = config.getChildren(Extensions.ordinal());
+		 for (Configuration e : ext) {
+			 String extName = e.getStringValue(ExtensionName.ordinal(), "");
 
-      try {
-        pico.addComponent(Class.forName(value));
-      }
-      catch (NoClassDefFoundError exc) {
-        throw new Exception(exc);
-      }
-    }
-  }
+			 // Create structure of containers
+			 if (extName.equals(ExtensionPoint.Internal.name())) {
+				 fill(ExtensionPoint.Internal.getExtensionPoints(), e, true);
+			 }
+			 else if (extName.equals(ExtensionPoint.StackLayer.name())) {
+				 updateContainer(config, StackLayer, InternalMetaData, InternalSessionFactory, InternalMessageParser, InternalElementParser);
+			 }
+			 else if (extName.equals(ExtensionPoint.ControllerLayer.name())) {
+				 updateContainer(config, ControllerLayer, InternalPeerController, InternalPeerFsmFactory, InternalRouterEngine);
+			 }
+			 else if (extName.equals(ExtensionPoint.TransportLayer.name())) {
+				 updateContainer(config, TransportLayer, InternalTransportFactory);
+			 }
+		 }
+	 }
 
-  /**
-   * @see org.picocontainer.MutablePicoContainer
-   */
-  @Override
-  public <T> T getComponentInstance(Class<T> aClass) {
-    return pico.getComponent(aClass);
-  }
+	 private void updateContainer(Configuration config, ExtensionPoint pointType, ExtensionPoint... updEntries) throws ClassNotFoundException
+	 {
+		 for (ExtensionPoint e : updEntries) {
+			 Configuration[] internalConf = config.getChildren(Extensions.ordinal());
+			 String oldValue = internalConf[Internal.id()].getStringValue(e.ordinal(), null);
+			 String newValue = internalConf[pointType.id()].getStringValue(e.ordinal(), null);
+			 if (oldValue != null && newValue != null) {
+				 unregister(Class.forName(oldValue));
+				 registerComponentImplementation(Class.forName(newValue));
+			 }
+		 }
+	 }
 
-  /**
-   * @see org.picocontainer.MutablePicoContainer
-   */
-  @Override
-  public void registerComponentInstance(Object object) {
-    pico.addComponent(object);
-  }
+	 /**
+	  * Create child Assembler
+	  *
+	  * @param parent parent assembler
+	  * @param e      child configuration
+	  * @param p      extension poit
+	  *
+	  * @throws Exception
+	  */
+	 protected AssemblerImpl(AssemblerImpl parent, Configuration e, ExtensionPoint p) throws Exception
+	 {
+		 this.parent = parent;
+		 fill(p.getExtensionPoints(), e, false);
+	 }
 
-  public void registerComponentImplementation(Class aClass) {
-    pico.addComponent(aClass);
-  }
+	 private void fill(ExtensionPoint[] codes, Configuration e, boolean check) throws Exception
+	 {
+		 //NOTE: this installs components, but no instances created!
+		 for (ExtensionPoint c : codes) {
+			 String value = e.getStringValue(c.ordinal(), c.defValue());
+			 if (!check && (value == null || value.trim().length() == 0)) {
+				 return;
+			 }
 
-  /**
-   * @see org.picocontainer.MutablePicoContainer
-   */
-  @Override
-  public void registerComponentImplementation(Class<?> aClass, Object object) {
-    pico.addComponent(object, aClass);
-  }
+			 try {
+				 registerComponentImplementation(Class.forName(value));
+			 }
+			 catch (NoClassDefFoundError exc) {
+				 throw new Exception(exc);
+			 }
+		 }
+	 }
 
-  public void unregister(Class aClass) {
-    pico.removeComponent(aClass);
-  }
+	 private Object[] buildArgs(Parameter[] parameters)
+	 {
+		 List<Object> params = new ArrayList<>();
+		 for (Parameter parameter : parameters) {
+			 Object arg = getComponentInstance(parameter.getType());
+			 if (arg == null) {
+				 return null;
+			 }
+			 params.add(arg);
+		 }
+		 return params.toArray();
+	 }
 
-  /**
-   * @see org.picocontainer.MutablePicoContainer
-   */
-  @Override
-  public void destroy() {
-    pico.dispose();
-  }
+	 private <T> T newInstance(Class<T> aClass)
+	 {
+		 List<Constructor> constructors = Arrays.asList(aClass.getConstructors());
+		 constructors.sort((t1, t2) -> Integer.compare(t2.getParameters().length, t1.getParameters().length));
+		 for (Constructor<?> constructor : constructors) {
+			 Object[] args = buildArgs(constructor.getParameters());
+			 if (args != null) {
+				 try {
+					 T instance = (T) constructor.newInstance(args);
+					 instances.put(aClass, instance);
+					 return instance;
+				 }
+				 catch (InvocationTargetException | InstantiationException | IllegalAccessException ex) {
+					 logger.debug("Error instantiating {}", aClass, ex);
+				 }
+			 }//if
+		 }
 
-  /**
-   * return parent IOC
-   */
-  @Override
-  public IAssembler getParent() {
-    return parent;
-  }
+		 return null;
+	 }
 
-  /**
-   * Get childs IOCs
-   *
-   * @return childs IOCs
-   */
-  @Override
-  public IAssembler[] getChilds() {
-    return childs;
-  }
-}
+	 private <T> T getInstance(Class<T> aClass)
+	 {
+		 T instance = (T) instances.get(aClass);
+		 if (instance instanceof LazyInstance) {
+			 instance = newInstance(aClass);
+			 instances.put(aClass, instance);
+		 }
+		 return instance;
+	 }
+
+	 /**
+	  * @see org.picocontainer.MutablePicoContainer
+	  */
+	 @Override
+	 public <T> T getComponentInstance(Class<T> aClass)
+	 {
+		 if (aClass.isInterface()) {
+			 for (Class<?> regClass : instances.keySet()) {
+				 if (aClass.isAssignableFrom(regClass)) {
+					 return (T) getInstance(regClass);
+				 }
+			 }
+		 }
+
+		 if (!instances.containsKey(aClass)) {
+			 logger.debug("No component instance found for {}", aClass);
+			 return null;
+		 }
+
+		 return getInstance(aClass);
+	 }
+
+	 /**
+	  * @see org.picocontainer.MutablePicoContainer
+	  */
+	 @Override
+	 public void registerComponentInstance(Object object)
+	 {
+		 instances.put(object.getClass(), object);
+	 }
+
+	 public void registerComponentImplementation(Class aClass)
+	 {
+		 instances.put(aClass, new LazyInstance());
+	 }
+
+	 /**
+	  * @see org.picocontainer.MutablePicoContainer
+	  */
+	 @Override
+	 public void registerComponentImplementation(Class<?> aClass, Object object)
+	 {
+		 instances.putIfAbsent(aClass, object);
+	 }
+
+	 public void unregister(Class aClass)
+	 {
+		 instances.remove(aClass);
+	 }
+
+	 @Override
+	 public void destroy()
+	 {
+		 instances.clear();
+	 }
+
+	 /**
+	  * return parent IOC
+	  */
+	 @Override
+	 public IAssembler getParent()
+	 {
+		 return parent;
+	 }
+
+	 /**
+	  * Get childs IOCs
+	  *
+	  * @return childs IOCs
+	  */
+	 @Override
+	 public IAssembler[] getChilds()
+	 {
+		 return childs;
+	 }
+ }

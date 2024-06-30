@@ -40,33 +40,35 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.api.app.rx;
+ package org.jdiameter.common.api.app.rx;
 
-import java.util.concurrent.ScheduledFuture;
+ import org.jdiameter.api.rx.ServerRxSession;
 
-import org.jdiameter.api.rx.ServerRxSession;
+ import java.util.concurrent.ScheduledFuture;
 
-/**
- * Diameter 3GPP IMS Rx Reference Point Server Additional listener
- * Actions for FSM
- *
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:richard.good@smilecoms.com"> Richard Good </a>
- */
-public interface IServerRxSessionContext {
+ /**
+  * Diameter 3GPP IMS Rx Reference Point Server Additional listener Actions for FSM
+  *
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:richard.good@smilecoms.com"> Richard Good </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IServerRxSessionContext
+ {
 
-  void sessionSupervisionTimerExpired(ServerRxSession session);
+	 void sessionSupervisionTimerExpired(ServerRxSession session);
 
-  /**
-   * This is called always when Tcc starts
-   * @param session
-   * @param future
-   */
-  void sessionSupervisionTimerStarted(ServerRxSession session, ScheduledFuture future);
+	 /**
+	  * This is called always when Tcc starts
+	  *
+	  * @param session
+	  * @param future
+	  */
+	 void sessionSupervisionTimerStarted(ServerRxSession session, ScheduledFuture future);
 
-  void sessionSupervisionTimerReStarted(ServerRxSession session, ScheduledFuture future);
+	 void sessionSupervisionTimerReStarted(ServerRxSession session, ScheduledFuture future);
 
-  void sessionSupervisionTimerStopped(ServerRxSession session, ScheduledFuture future);
+	 void sessionSupervisionTimerStopped(ServerRxSession session, ScheduledFuture future);
 
-}
+ }

@@ -40,28 +40,29 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.impl.app.cxdx;
+ package org.jdiameter.common.impl.app.cxdx;
 
-import org.jdiameter.api.Message;
-import org.jdiameter.api.cxdx.events.JMultimediaAuthRequest;
-import org.jdiameter.common.impl.app.AppRequestEventImpl;
+ import org.jdiameter.api.Message;
+ import org.jdiameter.api.cxdx.events.JMultimediaAuthRequest;
+ import org.jdiameter.common.impl.app.AppRequestEventImpl;
 
-/**
- *
- * @author <a href="mailto:baranowb@gmail.com">Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public class JMultimediaAuthRequestImpl extends AppRequestEventImpl implements  JMultimediaAuthRequest {
+ /**
+  * @author <a href="mailto:baranowb@gmail.com">Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public class JMultimediaAuthRequestImpl extends AppRequestEventImpl implements JMultimediaAuthRequest
+ {
 
-  private static final long serialVersionUID = 1L;
+	 private static final long serialVersionUID = 1L;
 
-  /**
-   *
-   * @param message
-   */
-  public JMultimediaAuthRequestImpl(Message message) {
-    super(message);
-    message.setRequest(true);
-  }
+	 /**
+	  * @param message
+	  */
+	 public JMultimediaAuthRequestImpl(Message message)
+	 {
+		 super(message);
+		 message.setRequest(true);
+	 }
 
-}
+ }

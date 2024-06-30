@@ -40,14 +40,15 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.client.impl.app.s6a;
+ package org.jdiameter.client.impl.app.s6a;
 
-import org.jdiameter.common.api.app.s6a.IS6aSessionData;
+ import org.jdiameter.common.api.app.s6a.IS6aSessionData;
 
-/**
- *
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface IClientS6aSessionData extends IS6aSessionData {
+ /**
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IClientS6aSessionData extends IS6aSessionData
+ {
 
-}
+ }

@@ -40,121 +40,132 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.impl.app.s6a;
-import java.io.Serializable;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+ package org.jdiameter.common.impl.app.s6a;
 
-import org.jdiameter.api.NetworkReqListener;
-import org.jdiameter.api.app.StateChangeListener;
-import org.jdiameter.api.app.StateMachine;
-import org.jdiameter.client.api.ISessionFactory;
-import org.jdiameter.common.api.app.s6a.IS6aMessageFactory;
-import org.jdiameter.common.api.app.s6a.IS6aSessionData;
-import org.jdiameter.common.impl.app.AppSessionImpl;
+ import org.jdiameter.api.NetworkReqListener;
+ import org.jdiameter.api.app.StateChangeListener;
+ import org.jdiameter.api.app.StateMachine;
+ import org.jdiameter.client.api.ISessionFactory;
+ import org.jdiameter.common.api.app.s6a.IS6aMessageFactory;
+ import org.jdiameter.common.api.app.s6a.IS6aSessionData;
+ import org.jdiameter.common.impl.app.AppSessionImpl;
 
-/**
- *
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:richard.good@smilecoms.com"> Richard Good </a>
- * @author <a href="mailto:paul.carter-brown@smilecoms.com"> Paul Carter-Brown </a>
- */
-public abstract class S6aSession extends AppSessionImpl implements NetworkReqListener, StateMachine {
+ import java.io.Serializable;
+ import java.util.List;
+ import java.util.concurrent.CopyOnWriteArrayList;
+ import java.util.concurrent.locks.Lock;
+ import java.util.concurrent.locks.ReentrantLock;
 
-  public static final int _TX_TIMEOUT = 30 * 1000;
+ /**
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:richard.good@smilecoms.com"> Richard Good </a>
+  * @author <a href="mailto:paul.carter-brown@smilecoms.com"> Paul Carter-Brown </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public abstract class S6aSession extends AppSessionImpl implements NetworkReqListener, StateMachine
+ {
 
-  protected Lock sendAndStateLock = new ReentrantLock();
+	 public static final int _TX_TIMEOUT = 30 * 1000;
 
-  protected transient List<StateChangeListener> stateListeners = new CopyOnWriteArrayList<StateChangeListener>();
-  protected transient IS6aMessageFactory messageFactory;
+	 protected Lock sendAndStateLock = new ReentrantLock();
 
-  protected static final String TIMER_NAME_MSG_TIMEOUT = "MSG_TIMEOUT";
-  protected IS6aSessionData sessionData;
+	 protected transient List<StateChangeListener> stateListeners = new CopyOnWriteArrayList<StateChangeListener>();
+	 protected transient IS6aMessageFactory messageFactory;
 
-  public S6aSession(ISessionFactory sf, IS6aSessionData sessionData) {
-    super(sf, sessionData);
-    this.sessionData = sessionData;
-  }
+	 protected static final String TIMER_NAME_MSG_TIMEOUT = "MSG_TIMEOUT";
+	 protected IS6aSessionData sessionData;
 
-  @Override
-  public void addStateChangeNotification(StateChangeListener listener) {
-    if (!stateListeners.contains(listener)) {
-      stateListeners.add(listener);
-    }
-  }
+	 public S6aSession(ISessionFactory sf, IS6aSessionData sessionData)
+	 {
+		 super(sf, sessionData);
+		 this.sessionData = sessionData;
+	 }
 
-  @Override
-  public void removeStateChangeNotification(StateChangeListener listener) {
-    stateListeners.remove(listener);
-  }
+	 @Override
+	 public void addStateChangeNotification(StateChangeListener listener)
+	 {
+		 if (!stateListeners.contains(listener)) {
+			 stateListeners.add(listener);
+		 }
+	 }
 
-  @Override
-  public boolean isStateless() {
-    return true;
-  }
+	 @Override
+	 public void removeStateChangeNotification(StateChangeListener listener)
+	 {
+		 stateListeners.remove(listener);
+	 }
 
-  @Override
-  public boolean isReplicable() {
-    return false;
-  }
+	 @Override
+	 public boolean isStateless()
+	 {
+		 return true;
+	 }
 
-  protected void startMsgTimer() {
-    try {
-      sendAndStateLock.lock();
-      sessionData.setTsTimerId(super.timerFacility.schedule(getSessionId(), TIMER_NAME_MSG_TIMEOUT, _TX_TIMEOUT));
-    }
-    finally {
-      sendAndStateLock.unlock();
-    }
-  }
+	 @Override
+	 public boolean isReplicable()
+	 {
+		 return false;
+	 }
 
-  protected void cancelMsgTimer() {
-    try {
-      sendAndStateLock.lock();
-      final Serializable timerId = this.sessionData.getTsTimerId();
-      if (timerId == null) {
-        return;
-      }
-      super.timerFacility.cancel(timerId);
-      this.sessionData.setTsTimerId(null);
-    }
-    finally {
-      sendAndStateLock.unlock();
-    }
-  }
+	 protected void startMsgTimer()
+	 {
+		 try {
+			 sendAndStateLock.lock();
+			 sessionData.setTsTimerId(super.timerFacility.schedule(getSessionId(), TIMER_NAME_MSG_TIMEOUT, _TX_TIMEOUT));
+		 }
+		 finally {
+			 sendAndStateLock.unlock();
+		 }
+	 }
 
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = super.hashCode();
-    result = prime * result + ((sessionData == null) ? 0 : sessionData.hashCode());
-    return result;
-  }
+	 protected void cancelMsgTimer()
+	 {
+		 try {
+			 sendAndStateLock.lock();
+			 final Serializable timerId = this.sessionData.getTsTimerId();
+			 if (timerId == null) {
+				 return;
+			 }
+			 super.timerFacility.cancel(timerId);
+			 this.sessionData.setTsTimerId(null);
+		 }
+		 finally {
+			 sendAndStateLock.unlock();
+		 }
+	 }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (!super.equals(obj)) {
-      return false;
-    }
-    if (getClass() != obj.getClass()) {
-      return false;
-    }
-    S6aSession other = (S6aSession) obj;
-    if (sessionData == null) {
-      if (other.sessionData != null) {
-        return false;
-      }
-    }
-    else if (!sessionData.equals(other.sessionData)) {
-      return false;
-    }
+	 @Override
+	 public int hashCode()
+	 {
+		 final int prime = 31;
+		 int result = super.hashCode();
+		 result = prime * result + ((sessionData == null) ? 0 : sessionData.hashCode());
+		 return result;
+	 }
 
-    return true;
-  }
+	 @Override
+	 public boolean equals(Object obj)
+	 {
+		 if (this == obj) {
+			 return true;
+		 }
+		 if (!super.equals(obj)) {
+			 return false;
+		 }
+		 if (getClass() != obj.getClass()) {
+			 return false;
+		 }
+		 S6aSession other = (S6aSession) obj;
+		 if (sessionData == null) {
+			 if (other.sessionData != null) {
+				 return false;
+			 }
+		 }
+		 else if (!sessionData.equals(other.sessionData)) {
+			 return false;
+		 }
 
-}
+		 return true;
+	 }
+
+ }

@@ -40,56 +40,61 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.impl.app.auth;
+ package org.jdiameter.common.impl.app.auth;
 
-import static org.jdiameter.api.Avp.AUTH_APPLICATION_ID;
-import static org.jdiameter.api.Avp.TERMINATION_CAUSE;
+ import org.jdiameter.api.Avp;
+ import org.jdiameter.api.AvpDataException;
+ import org.jdiameter.api.Message;
+ import org.jdiameter.api.app.AppSession;
+ import org.jdiameter.api.auth.events.SessionTermRequest;
+ import org.jdiameter.common.impl.app.AppRequestEventImpl;
 
-import org.jdiameter.api.Avp;
-import org.jdiameter.api.AvpDataException;
-import org.jdiameter.api.Message;
-import org.jdiameter.api.app.AppSession;
-import org.jdiameter.api.auth.events.SessionTermRequest;
-import org.jdiameter.common.impl.app.AppRequestEventImpl;
+ import static org.jdiameter.api.Avp.AUTH_APPLICATION_ID;
+ import static org.jdiameter.api.Avp.TERMINATION_CAUSE;
 
-/**
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public class SessionTermRequestImpl extends AppRequestEventImpl implements SessionTermRequest {
+ /**
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public class SessionTermRequestImpl extends AppRequestEventImpl implements SessionTermRequest
+ {
 
-  private static final long serialVersionUID = 1L;
+	 private static final long serialVersionUID = 1L;
 
-  public SessionTermRequestImpl(AppSession session, int terminationCause, String destRealm, String destHost) {
-    super(session.getSessions().get(0).createRequest(code, session.getSessionAppId(), destRealm, destHost));
-    message.getAvps().addAvp(Avp.TERMINATION_CAUSE, terminationCause, true, false);
-  }
+	 public SessionTermRequestImpl(AppSession session, int terminationCause, String destRealm, String destHost)
+	 {
+		 super(session.getSessions().get(0).createRequest(code, session.getSessionAppId(), destRealm, destHost));
+		 message.getAvps().addAvp(Avp.TERMINATION_CAUSE, terminationCause, true, false);
+	 }
 
-  public SessionTermRequestImpl(Message message) {
-    super(message);
-  }
+	 public SessionTermRequestImpl(Message message)
+	 {
+		 super(message);
+	 }
 
-  @Override
-  public long getAuthApplicationId() throws AvpDataException {
-    Avp authApplicationIdAvp = message.getAvps().getAvp(AUTH_APPLICATION_ID);
-    if (authApplicationIdAvp != null) {
-      return authApplicationIdAvp.getUnsigned32();
-    }
-    else {
-      throw new AvpDataException("Avp AUTH_APPLICATION_ID not found");
-    }
-  }
+	 @Override
+	 public long getAuthApplicationId() throws AvpDataException
+	 {
+		 Avp authApplicationIdAvp = message.getAvps().getAvp(AUTH_APPLICATION_ID);
+		 if (authApplicationIdAvp != null) {
+			 return authApplicationIdAvp.getUnsigned32();
+		 }
+		 else {
+			 throw new AvpDataException("Avp AUTH_APPLICATION_ID not found");
+		 }
+	 }
 
-  @Override
-  public int getTerminationCause() throws AvpDataException {
-    Avp terminationCauseAvp = message.getAvps().getAvp(TERMINATION_CAUSE);
-    if (terminationCauseAvp != null) {
-      return terminationCauseAvp.getInteger32();
-    }
-    else {
-      throw new AvpDataException("Avp TERMINATION_CAUSE not found");
-    }
-  }
-}
+	 @Override
+	 public int getTerminationCause() throws AvpDataException
+	 {
+		 Avp terminationCauseAvp = message.getAvps().getAvp(TERMINATION_CAUSE);
+		 if (terminationCauseAvp != null) {
+			 return terminationCauseAvp.getInteger32();
+		 }
+		 else {
+			 throw new AvpDataException("Avp TERMINATION_CAUSE not found");
+		 }
+	 }
+ }

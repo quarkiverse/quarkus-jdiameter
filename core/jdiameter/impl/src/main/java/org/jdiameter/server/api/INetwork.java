@@ -40,35 +40,39 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.server.api;
+ package org.jdiameter.server.api;
 
-import org.jdiameter.api.Network;
-import org.jdiameter.api.NetworkReqListener;
-import org.jdiameter.client.api.IMessage;
+ import org.jdiameter.api.Network;
+ import org.jdiameter.api.NetworkReqListener;
+ import org.jdiameter.client.api.IMessage;
 
-/**
- * This interface append to base interface some
- * special methods.
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public interface INetwork extends Network {
+ /**
+  * This interface append to base interface some special methods.
+  *
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface INetwork extends Network
+ {
 
+	 /**
+	  * Return NetworkListener instance for specified application-id
+	  *
+	  * @param message message
+	  *
+	  * @return NetworkListener instance for specified selector
+	  *
+	  * @see org.jdiameter.api.NetworkReqListener
+	  */
+	 NetworkReqListener getListener(IMessage message);
 
-  /**
-   * Return NetworkListener instance for specified application-id
-   * @param message message
-   * @return  NetworkListener instance for specified selector
-   * @see org.jdiameter.api.NetworkReqListener
-   */
-  NetworkReqListener getListener(IMessage message);
+	 /**
+	  * This method set peer manager for addPeer/remPeer methods
+	  *
+	  * @param manager PeerTable instance
+	  */
+	 void setPeerManager(IMutablePeerTable manager);
 
-  /**
-   * This method set peer manager for addPeer/remPeer methods
-   * @param manager PeerTable instance
-   */
-  void setPeerManager(IMutablePeerTable manager);
-
-}
+ }

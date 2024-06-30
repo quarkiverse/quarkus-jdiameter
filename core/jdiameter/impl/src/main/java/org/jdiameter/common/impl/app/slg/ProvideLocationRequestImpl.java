@@ -29,17 +29,19 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
- *
  */
-public class ProvideLocationRequestImpl extends AppRequestEventImpl implements ProvideLocationRequest {
+@SuppressWarnings("all")//3rd party lib
+public class ProvideLocationRequestImpl extends AppRequestEventImpl implements ProvideLocationRequest
+{
 
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-  protected static final Logger logger = LoggerFactory.getLogger(ProvideLocationRequestImpl.class);
+	protected static final Logger logger = LoggerFactory.getLogger(ProvideLocationRequestImpl.class);
 
-  public ProvideLocationRequestImpl(Message message) {
-    super(message);
-    message.setRequest(true);
-  }
+	public ProvideLocationRequestImpl(Message message)
+	{
+		super(message);
+		message.setRequest(true);
+	}
 
 }

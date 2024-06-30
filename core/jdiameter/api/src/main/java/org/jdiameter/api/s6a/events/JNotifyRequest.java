@@ -40,19 +40,20 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api.s6a.events;
+ package org.jdiameter.api.s6a.events;
 
-import org.jdiameter.api.app.AppRequestEvent;
+ import org.jdiameter.api.app.AppRequestEvent;
 
-/**
- *
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface JNotifyRequest extends AppRequestEvent {
+ /**
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface JNotifyRequest extends AppRequestEvent
+ {
 
-  String _SHORT_NAME = "NOR";
-  String _LONG_NAME = "Notify-Request";
+	 String _SHORT_NAME = "NOR";
+	 String _LONG_NAME = "Notify-Request";
 
-  int code = 323;
+	 int code = 323;
 
-}
+ }

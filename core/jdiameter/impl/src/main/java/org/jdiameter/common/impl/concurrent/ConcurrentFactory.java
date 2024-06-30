@@ -40,180 +40,203 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.impl.concurrent;
+ package org.jdiameter.common.impl.concurrent;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ScheduledExecutorService;
+ import org.jdiameter.api.Configuration;
+ import org.jdiameter.client.impl.helpers.Parameters;
+ import org.jdiameter.common.api.concurrent.IConcurrentEntityFactory;
+ import org.jdiameter.common.api.concurrent.IConcurrentFactory;
+ import org.jdiameter.common.api.statistic.IStatistic;
+ import org.jdiameter.common.api.statistic.IStatisticManager;
+ import org.jdiameter.common.api.statistic.IStatisticRecord;
 
-import org.jdiameter.api.Configuration;
-import org.jdiameter.client.impl.helpers.Parameters;
-import org.jdiameter.common.api.concurrent.IConcurrentEntityFactory;
-import org.jdiameter.common.api.concurrent.IConcurrentFactory;
-import org.jdiameter.common.api.statistic.IStatistic;
-import org.jdiameter.common.api.statistic.IStatisticManager;
-import org.jdiameter.common.api.statistic.IStatisticRecord;
+ import java.util.ArrayList;
+ import java.util.Arrays;
+ import java.util.Collection;
+ import java.util.List;
+ import java.util.Map;
+ import java.util.concurrent.ConcurrentHashMap;
+ import java.util.concurrent.ExecutorService;
+ import java.util.concurrent.ScheduledExecutorService;
 
-/**
- *
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public class ConcurrentFactory implements IConcurrentFactory {
+ /**
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public class ConcurrentFactory implements IConcurrentFactory
+ {
 
-  private BaseThreadFactory threadFactory;
+	 private BaseThreadFactory threadFactory;
 
-  private Map<String, CommonScheduledExecutorService> scheduledExecutorServices;
-  private Configuration[] config;
-  private IStatisticManager statisticFactory;
-  private IStatistic statistic;
-  private IConcurrentEntityFactory entityFactory;
-  public ConcurrentFactory(Configuration config, IStatisticManager statisticFactory, IConcurrentEntityFactory entityFactory) {
+	 private Map<String, CommonScheduledExecutorService> scheduledExecutorServices;
+	 private Configuration[] config;
+	 private IStatisticManager statisticFactory;
+	 private IStatistic statistic;
+	 private IConcurrentEntityFactory entityFactory;
 
-    this.config = config.getChildren(Parameters.Concurrent.ordinal());
-    this.entityFactory = entityFactory;
-    Configuration dgConfig = getConfigByName(BaseThreadFactory.ENTITY_NAME);
-    String defThreadGroupName = dgConfig != null ?
-        dgConfig.getStringValue(Parameters.ConcurrentEntityDescription.ordinal(), (String) Parameters.ConcurrentEntityDescription.defValue()) :
-          (String) Parameters.ConcurrentEntityDescription.defValue();
+	 public ConcurrentFactory(Configuration config, IStatisticManager statisticFactory, IConcurrentEntityFactory entityFactory)
+	 {
 
-    threadFactory = (BaseThreadFactory) entityFactory.newThreadFactory(defThreadGroupName);
+		 this.config = config.getChildren(Parameters.Concurrent.ordinal());
+		 this.entityFactory = entityFactory;
+		 Configuration dgConfig = getConfigByName(BaseThreadFactory.ENTITY_NAME);
+		 String defThreadGroupName = dgConfig != null ?
+									 dgConfig.getStringValue(Parameters.ConcurrentEntityDescription.ordinal(), (String) Parameters.ConcurrentEntityDescription.defValue()) :
+									 (String) Parameters.ConcurrentEntityDescription.defValue();
 
-    scheduledExecutorServices = new ConcurrentHashMap<String, CommonScheduledExecutorService>();
-    IStatisticRecord threadCount = statisticFactory.newCounterRecord(
-        IStatisticRecord.Counters.ConcurrentThread,
-        new IStatisticRecord.IntegerValueHolder() {
-          @Override
-          public String getValueAsString() {
-            return getValueAsInt() + "";
-          }
+		 threadFactory = (BaseThreadFactory) entityFactory.newThreadFactory(defThreadGroupName);
 
-          @Override
-          public int getValueAsInt() {
-            return getThreadGroup().activeCount();
-          }
-        });
+		 scheduledExecutorServices = new ConcurrentHashMap<String, CommonScheduledExecutorService>();
+		 IStatisticRecord threadCount = statisticFactory.newCounterRecord(
+				 IStatisticRecord.Counters.ConcurrentThread,
+				 new IStatisticRecord.IntegerValueHolder()
+				 {
+					 @Override
+					 public String getValueAsString()
+					 {
+						 return getValueAsInt() + "";
+					 }
 
-        //TODO: make use of this stat....
-    IStatisticRecord schedExeServiceCount = statisticFactory.newCounterRecord(
-        IStatisticRecord.Counters.ConcurrentScheduledExecutedServices,
-        new IStatisticRecord.IntegerValueHolder() {
-          @Override
-          public String getValueAsString() {
-            return getValueAsInt() + "";
-          }
+					 @Override
+					 public int getValueAsInt()
+					 {
+						 return getThreadGroup().activeCount();
+					 }
+				 });
 
-          @Override
-          public int getValueAsInt() {
-            return scheduledExecutorServices.size();
-          }
-        });
-    statistic = statisticFactory.newStatistic("scheduled", IStatistic.Groups.Concurrent, threadCount, schedExeServiceCount);
-    this.statisticFactory = statisticFactory;
-  }
-  /**
-   * fetch configuration for executor
-   * @param name
-   * @return
-   */
-  private Configuration getConfigByName(String name) {
-    if (config != null) {
-      for (Configuration c : config) {
-        if (c != null && c.getStringValue(Parameters.ConcurrentEntityName.ordinal(), "").equals(name)) {
-          return c;
-        }
-      }
-    }
-    return null;
-  }
+		 //TODO: make use of this stat....
+		 IStatisticRecord schedExeServiceCount = statisticFactory.newCounterRecord(
+				 IStatisticRecord.Counters.ConcurrentScheduledExecutedServices,
+				 new IStatisticRecord.IntegerValueHolder()
+				 {
+					 @Override
+					 public String getValueAsString()
+					 {
+						 return getValueAsInt() + "";
+					 }
 
-  @Override
-  public Thread getThread(Runnable runnable) {
-    return threadFactory.newThread(runnable);
-  }
+					 @Override
+					 public int getValueAsInt()
+					 {
+						 return scheduledExecutorServices.size();
+					 }
+				 });
+		 statistic = statisticFactory.newStatistic("scheduled", IStatistic.Groups.Concurrent, threadCount, schedExeServiceCount);
+		 this.statisticFactory = statisticFactory;
+	 }
 
-  @Override
-  public Thread getThread(String namePrefix, Runnable runnuble) {
-    return threadFactory.newThread(namePrefix, runnuble);
-  }
+	 /**
+	  * fetch configuration for executor
+	  *
+	  * @param name
+	  *
+	  * @return
+	  */
+	 private Configuration getConfigByName(String name)
+	 {
+		 if (config != null) {
+			 for (Configuration c : config) {
+				 if (c != null && c.getStringValue(Parameters.ConcurrentEntityName.ordinal(), "").equals(name)) {
+					 return c;
+				 }
+			 }
+		 }
+		 return null;
+	 }
 
-  @Override
-  public List<Thread> getThreads() {
-    Thread[] threads = new Thread[threadFactory.getThreadGroup().activeCount()];
-    threadFactory.getThreadGroup().enumerate(threads);
-    return Arrays.asList(threads);
-  }
+	 @Override
+	 public Thread getThread(Runnable runnable)
+	 {
+		 return threadFactory.newThread(runnable);
+	 }
 
-  @Override
-  public ThreadGroup getThreadGroup() {
-    return threadFactory.getThreadGroup();
-  }
+	 @Override
+	 public Thread getThread(String namePrefix, Runnable runnuble)
+	 {
+		 return threadFactory.newThread(namePrefix, runnuble);
+	 }
 
-  @Override
-  public ScheduledExecutorService getScheduledExecutorService(String name) {
-    CommonScheduledExecutorService service = null;
-    if (!scheduledExecutorServices.containsKey(name)) {
-      //ZhixiaoLuo: fix StatisticManagerImpl.IllegalArgumentException if 2 sessions try to get ApplicationSession service
-      synchronized (ConcurrentFactory.class) {
-        if (!scheduledExecutorServices.containsKey(name)) {
-          service = new CommonScheduledExecutorService(name, getConfigByName(name), this.entityFactory, statisticFactory);
-          scheduledExecutorServices.put(name, service);
-        }
-      }
-    }
-    else {
-      service = scheduledExecutorServices.get(name);
-    }
+	 @Override
+	 public List<Thread> getThreads()
+	 {
+		 Thread[] threads = new Thread[threadFactory.getThreadGroup().activeCount()];
+		 threadFactory.getThreadGroup().enumerate(threads);
+		 return Arrays.asList(threads);
+	 }
 
-    return service;
-  }
+	 @Override
+	 public ThreadGroup getThreadGroup()
+	 {
+		 return threadFactory.getThreadGroup();
+	 }
 
-  @Override
-  public Collection<ScheduledExecutorService> getScheduledExecutorServices() {
-    List<ScheduledExecutorService> external = new ArrayList<ScheduledExecutorService>(scheduledExecutorServices.values());
+	 @Override
+	 public ScheduledExecutorService getScheduledExecutorService(String name)
+	 {
+		 CommonScheduledExecutorService service = null;
+		 if (!scheduledExecutorServices.containsKey(name)) {
+			 //ZhixiaoLuo: fix StatisticManagerImpl.IllegalArgumentException if 2 sessions try to get ApplicationSession service
+			 synchronized (ConcurrentFactory.class) {
+				 if (!scheduledExecutorServices.containsKey(name)) {
+					 service = new CommonScheduledExecutorService(name, getConfigByName(name), this.entityFactory, statisticFactory);
+					 scheduledExecutorServices.put(name, service);
+				 }
+			 }
+		 }
+		 else {
+			 service = scheduledExecutorServices.get(name);
+		 }
 
-    return external;
-  }
+		 return service;
+	 }
 
-  @Override
-  public void shutdownNow(ScheduledExecutorService service) {
-    for (String name : scheduledExecutorServices.keySet()) {
-      ExecutorService e = scheduledExecutorServices.get(name);
-      if (e == service) {
-        e.shutdownNow();
-        scheduledExecutorServices.remove(name);
-        break;
-      }
+	 @Override
+	 public Collection<ScheduledExecutorService> getScheduledExecutorServices()
+	 {
+		 List<ScheduledExecutorService> external = new ArrayList<ScheduledExecutorService>(scheduledExecutorServices.values());
 
-    }
-  }
+		 return external;
+	 }
 
-  @Override
-  public IStatistic getStatistic() {
-    return statistic;
-  }
+	 @Override
+	 public void shutdownNow(ScheduledExecutorService service)
+	 {
+		 for (String name : scheduledExecutorServices.keySet()) {
+			 ExecutorService e = scheduledExecutorServices.get(name);
+			 if (e == service) {
+				 e.shutdownNow();
+				 scheduledExecutorServices.remove(name);
+				 break;
+			 }
 
-  @Override
-  public List<IStatistic> getStatistics() {
-    List<IStatistic> statistics = new ArrayList<IStatistic>();
+		 }
+	 }
 
-    for (CommonScheduledExecutorService e : scheduledExecutorServices.values()) {
-      statistics.add(e.getStatistic());
-    }
-    return statistics;
-  }
+	 @Override
+	 public IStatistic getStatistic()
+	 {
+		 return statistic;
+	 }
 
-  @Override
-  public void shutdownAllNow() {
-    for (String name : scheduledExecutorServices.keySet()) {
-      ExecutorService e = scheduledExecutorServices.remove(name);
-      e.shutdownNow();
-    }
+	 @Override
+	 public List<IStatistic> getStatistics()
+	 {
+		 List<IStatistic> statistics = new ArrayList<IStatistic>();
 
-  }
-}
+		 for (CommonScheduledExecutorService e : scheduledExecutorServices.values()) {
+			 statistics.add(e.getStatistic());
+		 }
+		 return statistics;
+	 }
+
+	 @Override
+	 public void shutdownAllNow()
+	 {
+		 for (String name : scheduledExecutorServices.keySet()) {
+			 ExecutorService e = scheduledExecutorServices.remove(name);
+			 e.shutdownNow();
+		 }
+
+	 }
+ }

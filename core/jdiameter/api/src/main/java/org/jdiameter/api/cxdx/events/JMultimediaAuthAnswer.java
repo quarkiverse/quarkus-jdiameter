@@ -40,22 +40,24 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api.cxdx.events;
+ package org.jdiameter.api.cxdx.events;
 
-import org.jdiameter.api.app.AppAnswerEvent;
+ import org.jdiameter.api.app.AppAnswerEvent;
 
-/**
- * The Multimedia-Auth-Answer (MAA) command, indicated by the Command-Code field set to 303 and the bit cleared in
- * the Command Flags field, is sent by a server in response to the Multimedia-Auth-Request command.
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface JMultimediaAuthAnswer extends AppAnswerEvent {
+ /**
+  * The Multimedia-Auth-Answer (MAA) command, indicated by the Command-Code field set to 303 and the bit cleared in the
+  * Command Flags field, is sent by a server in response to the Multimedia-Auth-Request command.
+  *
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface JMultimediaAuthAnswer extends AppAnswerEvent
+ {
 
-  String _SHORT_NAME = "MAA";
-  String _LONG_NAME = "Multimedia-Auth-Answer";
+	 String _SHORT_NAME = "MAA";
+	 String _LONG_NAME = "Multimedia-Auth-Answer";
 
-  int code = 303;
+	 int code = 303;
 
-}
+ }

@@ -40,51 +40,57 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api.annotation;
+ package org.jdiameter.api.annotation;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+ import java.lang.annotation.ElementType;
+ import java.lang.annotation.Retention;
+ import java.lang.annotation.RetentionPolicy;
+ import java.lang.annotation.Target;
 
-/**
- * This annotation allows describe Java POJO object as Diameter Command element
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface CommandDscr {
+ /**
+  * This annotation allows describe Java POJO object as Diameter Command element
+  *
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @Retention(RetentionPolicy.RUNTIME)
+ @Target(ElementType.TYPE)
+ public @interface CommandDscr
+ {
 
-  /**
-   * Return command code
-   * @return command code
-   */
-  int code();
+	 /**
+	  * Return command code
+	  *
+	  * @return command code
+	  */
+	 int code();
 
-  /**
-   * Return command name
-   * @return command name
-   */
-  String name() default "unknown";
+	 /**
+	  * Return command name
+	  *
+	  * @return command name
+	  */
+	 String name() default "unknown";
 
-  /**
-   * Return array of command flags
-   * @return array of command flags
-   */
-  CommandFlag[] flags() default{};
+	 /**
+	  * Return array of command flags
+	  *
+	  * @return array of command flags
+	  */
+	 CommandFlag[] flags() default {};
 
-  /**
-   * Return command application-id
-   * @return command application-id
-   */
-  long appId() default 0;
+	 /**
+	  * Return command application-id
+	  *
+	  * @return command application-id
+	  */
+	 long appId() default 0;
 
-  /**
-   * Return array of command child avp
-   * @return  array of command child avp
-   */
-  Child[] childs() default {};
-}
+	 /**
+	  * Return array of command child avp
+	  *
+	  * @return array of command child avp
+	  */
+	 Child[] childs() default {};
+ }

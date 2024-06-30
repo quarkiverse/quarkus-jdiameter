@@ -40,23 +40,23 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api.annotation;
+ package org.jdiameter.api.annotation;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+ import java.lang.annotation.ElementType;
+ import java.lang.annotation.Retention;
+ import java.lang.annotation.RetentionPolicy;
+ import java.lang.annotation.Target;
 
-/**
- * This annotation allows get child object from command / group avp and
- * get value for simple avp
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target( {ElementType.CONSTRUCTOR, ElementType.METHOD})
-public @interface Getter {
+ /**
+  * This annotation allows get child object from command / group avp and get value for simple avp
+  *
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @Retention(RetentionPolicy.RUNTIME)
+ @Target({ElementType.CONSTRUCTOR, ElementType.METHOD})
+ public @interface Getter
+ {
 
-}
+ }

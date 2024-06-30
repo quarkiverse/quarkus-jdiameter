@@ -40,23 +40,25 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api.cxdx.events;
+ package org.jdiameter.api.cxdx.events;
 
-import org.jdiameter.api.app.AppRequestEvent;
+ import org.jdiameter.api.app.AppRequestEvent;
 
-/**
- * The Registration-Termination-Request (RTR) command, indicated by the Command-Code field set to 304 and the bit
- * set in the Command Flags field, is sent by a Diameter Multimedia server to a Diameter Multimedia client in order to
- * request the de-registration of a user.
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface JRegistrationTerminationRequest extends AppRequestEvent {
+ /**
+  * The Registration-Termination-Request (RTR) command, indicated by the Command-Code field set to 304 and the bit set in
+  * the Command Flags field, is sent by a Diameter Multimedia server to a Diameter Multimedia client in order to request
+  * the de-registration of a user.
+  *
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface JRegistrationTerminationRequest extends AppRequestEvent
+ {
 
-  String _SHORT_NAME = "RTR";
-  String _LONG_NAME = "Registration-Termination-Request";
+	 String _SHORT_NAME = "RTR";
+	 String _LONG_NAME = "Registration-Termination-Request";
 
-  int code = 304;
+	 int code = 304;
 
-}
+ }

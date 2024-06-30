@@ -40,23 +40,25 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api.cxdx.events;
+ package org.jdiameter.api.cxdx.events;
 
-import org.jdiameter.api.app.AppRequestEvent;
+ import org.jdiameter.api.app.AppRequestEvent;
 
-/**
- * The Location-Info-Request (LIR) command, indicated by the Command-Code field set to 302 and the bit set in the
- * Command Flags field, is sent by a Diameter Multimedia client to a Diameter Multimedia server in order to request
- * name of the server that is currently serving the user.
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface JLocationInfoRequest extends AppRequestEvent {
+ /**
+  * The Location-Info-Request (LIR) command, indicated by the Command-Code field set to 302 and the bit set in the
+  * Command Flags field, is sent by a Diameter Multimedia client to a Diameter Multimedia server in order to request name
+  * of the server that is currently serving the user.
+  *
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface JLocationInfoRequest extends AppRequestEvent
+ {
 
-  String _SHORT_NAME = "LIR";
-  String _LONG_NAME = "Location-Info-Request";
+	 String _SHORT_NAME = "LIR";
+	 String _LONG_NAME = "Location-Info-Request";
 
-  int code = 302;
+	 int code = 302;
 
-}
+ }

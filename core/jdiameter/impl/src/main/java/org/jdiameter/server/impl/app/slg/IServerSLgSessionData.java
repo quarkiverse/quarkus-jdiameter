@@ -25,9 +25,10 @@ import org.jdiameter.common.api.app.slg.ISLgSessionData;
 
 /**
  * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
- *
  */
 
-public interface IServerSLgSessionData extends ISLgSessionData {
+@SuppressWarnings("all")//3rd party lib
+public interface IServerSLgSessionData extends ISLgSessionData
+{
 
 }

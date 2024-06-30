@@ -19,13 +19,6 @@
 
 package org.jdiameter.server.impl.io.sctp;
 
-import java.net.InetAddress;
-import java.nio.channels.Selector;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import org.jdiameter.client.api.parser.IMessageParser;
 import org.jdiameter.common.api.concurrent.DummyConcurrentFactory;
 import org.jdiameter.common.api.concurrent.IConcurrentFactory;
@@ -37,138 +30,148 @@ import org.mobicents.protocols.api.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.InetAddress;
+import java.nio.channels.Selector;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 /**
  * SCTP implementation of {@link org.jdiameter.server.api.io.INetworkGuard}.
  *
  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
  */
-public class NetworkGuard implements INetworkGuard {
+@SuppressWarnings("all")//3rd party lib
+public class NetworkGuard implements INetworkGuard
+{
 
-  private static final Logger logger = LoggerFactory.getLogger(NetworkGuard.class);
-  protected IMessageParser parser;
-  protected IConcurrentFactory concurrentFactory;
-  protected int port;
-  protected CopyOnWriteArrayList<INetworkConnectionListener> listeners = new CopyOnWriteArrayList<INetworkConnectionListener>();
-  protected boolean isWork = false;
-  protected Selector selector;
-  protected List<SCTPServerConnection> serverConnections;
+	private static final Logger logger = LoggerFactory.getLogger(NetworkGuard.class);
+	protected IMessageParser parser;
+	protected IConcurrentFactory concurrentFactory;
+	protected int port;
+	protected CopyOnWriteArrayList<INetworkConnectionListener> listeners = new CopyOnWriteArrayList<INetworkConnectionListener>();
+	protected boolean isWork = false;
+	protected Selector selector;
+	protected List<SCTPServerConnection> serverConnections;
 
-  protected InetAddress[] localAddresses;
+	protected InetAddress[] localAddresses;
 
-  @Deprecated
-  public NetworkGuard(InetAddress inetAddress, int port, IMessageParser parser) throws Exception {
-    this(inetAddress, port, null, parser, null);
-  }
+	@Deprecated
+	public NetworkGuard(InetAddress inetAddress, int port, IMessageParser parser) throws Exception
+	{
+		this(inetAddress, port, null, parser, null);
+	}
 
-  public NetworkGuard(InetAddress inetAddress, int port, IConcurrentFactory concurrentFactory, IMessageParser parser, IMetaData data) throws Exception {
-    this(new InetAddress[]{inetAddress}, port, concurrentFactory, parser, data);
-  }
+	public NetworkGuard(InetAddress inetAddress, int port, IConcurrentFactory concurrentFactory, IMessageParser parser, IMetaData data) throws Exception
+	{
+		this(new InetAddress[]{inetAddress}, port, concurrentFactory, parser, data);
+	}
 
-  public NetworkGuard(InetAddress[] inetAddresses, int port, IConcurrentFactory concurrentFactory, IMessageParser parser, IMetaData data) throws Exception {
-    this.port = port;
-    this.localAddresses = inetAddresses;
-    this.parser = parser;
-    this.concurrentFactory = concurrentFactory == null ? new DummyConcurrentFactory() : concurrentFactory;
-    this.serverConnections = new ArrayList<SCTPServerConnection>();
+	public NetworkGuard(InetAddress[] inetAddresses, int port, IConcurrentFactory concurrentFactory, IMessageParser parser, IMetaData data) throws Exception
+	{
+		this.port = port;
+		this.localAddresses = inetAddresses;
+		this.parser = parser;
+		this.concurrentFactory = concurrentFactory == null ? new DummyConcurrentFactory() : concurrentFactory;
+		this.serverConnections = new ArrayList<SCTPServerConnection>();
 
-    try {
-      if (localAddresses.length < 1) {
-        throw new Exception("Need at least one IP address configured");
-      } else if (localAddresses.length > 4) {
-        throw new IllegalArgumentException("Maximum of 4 IPAddress attributes allowed");
-      }
+		try {
+			for (InetAddress ia : inetAddresses) {
+				final SCTPServerConnection sctpServerConnection = new SCTPServerConnection(null, ia, port, parser, null, this);
+				this.serverConnections.add(sctpServerConnection);
+			}
+		}
+		catch (Exception exc) {
+			try {
+				destroy();
+			}
+			catch (Exception e) {
+				// ignore
+			}
+			throw new Exception(exc);
+		}
+	}
 
-      final InetAddress firstAddress = localAddresses[0];
-      final String[] extraHostAddresses = localAddresses.length > 1 ? new String[localAddresses.length - 1] : null;
-      for(int i = 1; i < localAddresses.length; i++) {
-        extraHostAddresses[i - 1] = localAddresses[i].getHostAddress();
-      }
-      final SCTPServerConnection sctpServerConnection = new SCTPServerConnection(null, firstAddress, port, parser, null, this, extraHostAddresses);
-      this.serverConnections.add(sctpServerConnection);
-    }
-    catch (Exception exc) {
-      try {
-        destroy();
-      }
-      catch (Exception e) {
-        // ignore
-      }
-      throw new Exception(exc);
-    }
-  }
+	public void run()
+	{
+		try {
+			while (isWork) {
+				Thread.sleep(10000);
+			}
+		}
+		catch (Exception exc) {
+			logger.warn("Server socket stopped", exc);
+		}
+	}
 
-  public void run() {
-    try {
-      while (isWork) {
-        Thread.sleep(10000);
-      }
-    }
-    catch (Exception exc) {
-      logger.warn("Server socket stopped", exc);
-    }
-  }
+	@Override
+	public void addListener(INetworkConnectionListener listener)
+	{
+		if (!listeners.contains(listener)) {
+			listeners.add(listener);
+		}
+	}
 
-  @Override
-  public void addListener(INetworkConnectionListener listener) {
-    if (!listeners.contains(listener)) {
-      listeners.add(listener);
-    }
-  }
+	@Override
+	public void remListener(INetworkConnectionListener listener)
+	{
+		listeners.remove(listener);
+	}
 
-  @Override
-  public void remListener(INetworkConnectionListener listener) {
-    listeners.remove(listener);
-  }
+	@Override
+	public String toString()
+	{
+		return "NetworkGuard:" + (this.serverConnections.size() != 0 ? this.serverConnections : "closed");
+	}
 
-  @Override
-  public String toString() {
-    return "NetworkGuard:" + (this.serverConnections.size() != 0 ? this.serverConnections : "closed");
-  }
+	public void onNewRemoteConnection(Server globalServer, Association association, SCTPServerConnection connection)
+	{
+		logger.debug("New remote connection");
+		try {
+			final String peerAddress = association.getPeerAddress();
+			final int peerPort = association.getPeerPort();
+			final String localAddress = association.getHostAddress();
+			final int localPort = association.getHostPort();
+			SCTPServerConnection remoteClientConnection = new SCTPServerConnection(null, InetAddress.getByName(peerAddress),
+																				   peerPort, InetAddress.getByName(localAddress), localPort, parser, null, this, globalServer, association, connection.getManagement());
+			notifyListeners(remoteClientConnection);
+		}
+		catch (Exception exc) {
+			logger.error("Error creating new remote connection");
+		}
+	}
 
-  public void onNewRemoteConnection(Server globalServer, Association association, SCTPServerConnection connection) {
-    logger.debug("New remote connection");
-    try {
-      final String peerAddress = association.getPeerAddress();
-      final int peerPort = association.getPeerPort();
-      final String localAddress = association.getHostAddress();
-      final int localPort = association.getHostPort();
-      SCTPServerConnection remoteClientConnection = new SCTPServerConnection(null, InetAddress.getByName(peerAddress),
-          peerPort, InetAddress.getByName(localAddress), localPort, parser, null, this, globalServer, association, connection.getManagement());
-      notifyListeners(remoteClientConnection);
-    }
-    catch (Exception exc) {
-      logger.error("Error creating new remote connection");
-    }
-  }
+	@Override
+	public void destroy()
+	{
+		logger.debug("Destroying");
+		Iterator<SCTPServerConnection> it = this.serverConnections.iterator();
+		while (it.hasNext()) {
+			try {
+				SCTPServerConnection server = it.next();
+				it.remove();
+				if (server != null && server.isConnected()) {
+					server.disconnect();
+					server.destroy();
+				}
+			}
+			catch (Exception e) {
+				logger.error("", e);
+			}
+		}
+	}
 
-  @Override
-  public void destroy() {
-    logger.debug("Destroying");
-    Iterator<SCTPServerConnection> it = this.serverConnections.iterator();
-    while (it.hasNext()) {
-      try {
-        SCTPServerConnection server = it.next();
-        it.remove();
-        if (server != null && server.isConnected()) {
-          server.disconnect();
-          server.destroy();
-        }
-      }
-      catch (Exception e) {
-        logger.error("", e);
-      }
-    }
-  }
-
-  private void notifyListeners(SCTPServerConnection server) {
-    for (INetworkConnectionListener listener : this.listeners) {
-      try {
-        listener.newNetworkConnection(server);
-      }
-      catch (Exception e) {
-        logger.debug("Connection listener threw exception!", e);
-      }
-    }
-  }
+	private void notifyListeners(SCTPServerConnection server)
+	{
+		for (INetworkConnectionListener listener : this.listeners) {
+			try {
+				listener.newNetworkConnection(server);
+			}
+			catch (Exception e) {
+				logger.debug("Connection listener threw exception!", e);
+			}
+		}
+	}
 }

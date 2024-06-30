@@ -40,40 +40,41 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.api.app.ro;
+ package org.jdiameter.common.api.app.ro;
 
-import org.jdiameter.api.Message;
-import org.jdiameter.api.ro.ClientRoSession;
+ import org.jdiameter.api.Message;
+ import org.jdiameter.api.ro.ClientRoSession;
 
-/**
- * Diameter Ro Application Client Additional listener
- * Actions for FSM
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface IClientRoSessionContext {
+ /**
+  * Diameter Ro Application Client Additional listener Actions for FSM
+  *
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IClientRoSessionContext
+ {
 
-  long getDefaultTxTimerValue();
+	 long getDefaultTxTimerValue();
 
-  void txTimerExpired(ClientRoSession session);
+	 void txTimerExpired(ClientRoSession session);
 
-  int getDefaultCCFHValue();
+	 int getDefaultCCFHValue();
 
-  int getDefaultDDFHValue();
+	 int getDefaultDDFHValue();
 
-  void grantAccessOnDeliverFailure(ClientRoSession clientCCASessionImpl, Message request);
+	 void grantAccessOnDeliverFailure(ClientRoSession clientCCASessionImpl, Message request);
 
-  void denyAccessOnDeliverFailure(ClientRoSession clientCCASessionImpl, Message request);
+	 void denyAccessOnDeliverFailure(ClientRoSession clientCCASessionImpl, Message request);
 
-  void grantAccessOnTxExpire(ClientRoSession clientCCASessionImpl);
+	 void grantAccessOnTxExpire(ClientRoSession clientCCASessionImpl);
 
-  void denyAccessOnTxExpire(ClientRoSession clientCCASessionImpl);
+	 void denyAccessOnTxExpire(ClientRoSession clientCCASessionImpl);
 
-  void grantAccessOnFailureMessage(ClientRoSession clientCCASessionImpl);
+	 void grantAccessOnFailureMessage(ClientRoSession clientCCASessionImpl);
 
-  void denyAccessOnFailureMessage(ClientRoSession clientCCASessionImpl);
+	 void denyAccessOnFailureMessage(ClientRoSession clientCCASessionImpl);
 
-  void indicateServiceError(ClientRoSession clientCCASessionImpl);
+	 void indicateServiceError(ClientRoSession clientCCASessionImpl);
 
-}
+ }

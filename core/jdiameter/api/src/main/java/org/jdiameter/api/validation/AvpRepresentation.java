@@ -40,170 +40,179 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api.validation;
+ package org.jdiameter.api.validation;
 
-import java.util.List;
+ import org.jdiameter.api.Avp;
+ import org.jdiameter.api.AvpSet;
 
-import org.jdiameter.api.Avp;
-import org.jdiameter.api.AvpSet;
+ import java.util.List;
 
-/**
- * Represents avp, it stores info about presence, multiplicity, avp
- * code, vendor.
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @since 1.5.4.0-build404
- */
-public interface AvpRepresentation {
+ /**
+  * Represents avp, it stores info about presence, multiplicity, avp code, vendor.
+  *
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @since 1.5.4.0-build404
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface AvpRepresentation
+ {
 
-  /**
-   * <pre>
-   * Represents multiplicity of AVP:
-   * 0     The AVP MUST NOT be present in the message.
-   * </pre>
-   */
-  String _MP_NOT_ALLOWED = "0";
+	 /**
+	  * <pre>
+	  * Represents multiplicity of AVP:
+	  * 0     The AVP MUST NOT be present in the message.
+	  * </pre>
+	  */
+	 String _MP_NOT_ALLOWED = "0";
 
-  /**
-   * <pre>
-   * Represents multiplicity of AVP:
-   * 0+    Zero or more instances of the AVP MAY be present in the message.
-   * </pre>
-   */
-  String _MP_ZERO_OR_MORE = "0+";
+	 /**
+	  * <pre>
+	  * Represents multiplicity of AVP:
+	  * 0+    Zero or more instances of the AVP MAY be present in the message.
+	  * </pre>
+	  */
+	 String _MP_ZERO_OR_MORE = "0+";
 
-  /**
-   * <pre>
-   * Represents multiplicity of AVP:
-   * 0-1   Zero or one instance of the AVP MAY be present in the message.
-   *       It is considered an error if there are more than one instance of the AVP.
-   * </pre>
-   */
-  String _MP_ZERO_OR_ONE = "0-1";
+	 /**
+	  * <pre>
+	  * Represents multiplicity of AVP:
+	  * 0-1   Zero or one instance of the AVP MAY be present in the message.
+	  *       It is considered an error if there are more than one instance of the AVP.
+	  * </pre>
+	  */
+	 String _MP_ZERO_OR_ONE = "0-1";
 
-  /**
-   * <pre>
-   * Represents multiplicity of AVP:
-   * 1     One instance of the AVP MUST be present in the message.
-   *       message.
-   * </pre>
-   */
-  String _MP_ONE = "1";
+	 /**
+	  * <pre>
+	  * Represents multiplicity of AVP:
+	  * 1     One instance of the AVP MUST be present in the message.
+	  *       message.
+	  * </pre>
+	  */
+	 String _MP_ONE = "1";
 
-  /**
-   * <pre>
-   * Represents multiplicity of AVP:
-   * 1+    At least one instance of the AVP MUST be present in the
-   *       message.
-   * </pre>
-   */
-  String _MP_ONE_AND_MORE = "1+";
+	 /**
+	  * <pre>
+	  * Represents multiplicity of AVP:
+	  * 1+    At least one instance of the AVP MUST be present in the
+	  *       message.
+	  * </pre>
+	  */
+	 String _MP_ONE_AND_MORE = "1+";
 
-  String _DEFAULT_MANDATORY = "may";
-  String _DEFAULT_PROTECTED = "may";
-  String _DEFAULT_VENDOR = "mustnot";
+	 String _DEFAULT_MANDATORY = "may";
+	 String _DEFAULT_PROTECTED = "may";
+	 String _DEFAULT_VENDOR = "mustnot";
 
-  int _FIX_POSITION_INDEX = -1;
+	 int _FIX_POSITION_INDEX = -1;
 
-  enum Rule {
-    must, may, mustnot, shouldnot
-  };
+	 enum Rule
+	 {
+		 must, may, mustnot, shouldnot
+	 }
 
-  enum Type {
-    OctetString, Integer32, Integer64, Unsigned32, Unsigned64, Float32, Float64, Grouped, Address,
-    Time, UTF8String, DiameterIdentity, DiameterURI, Enumerated, IPFilterRule, QoSFilterRule
-  };
+	 ;
 
-  boolean isPositionFixed();
+	 enum Type
+	 {
+		 OctetString, Integer32, Integer64, Unsigned32, Unsigned64, Float32, Float64, Grouped, Address,
+		 Time, UTF8String, DiameterIdentity, DiameterURI, Enumerated, IPFilterRule, QoSFilterRule
+	 }
 
-  //public void markFixPosition(int index);
+	 ;
 
-  boolean isCountValidForMultiplicity(int avpCount);
+	 boolean isPositionFixed();
 
-  boolean isCountValidForMultiplicity(AvpSet destination, int numberToAdd);
+	 //public void markFixPosition(int index);
 
-  boolean isAllowed(int avpCode, long vendorId);
+	 boolean isCountValidForMultiplicity(int avpCount);
 
-  boolean isAllowed(int avpCode);
+	 boolean isCountValidForMultiplicity(AvpSet destination, int numberToAdd);
 
-  int getPositionIndex();
+	 boolean isAllowed(int avpCode, long vendorId);
 
-  int getCode();
+	 boolean isAllowed(int avpCode);
 
-  long getVendorId();
+	 int getPositionIndex();
 
-  boolean isAllowed();
+	 int getCode();
 
-  String getMultiplicityIndicator();
+	 long getVendorId();
 
-  String getName();
+	 boolean isAllowed();
 
-  boolean isGrouped();
+	 String getMultiplicityIndicator();
 
-  //public void setGrouped(boolean grouped);
+	 String getName();
 
-  List<AvpRepresentation> getChildren();
+	 boolean isGrouped();
 
-  //public void setChildren(List<AvpRepresentation> children);
+	 //public void setGrouped(boolean grouped);
 
-  //public void setCode(int code);
+	 List<AvpRepresentation> getChildren();
 
-  //public void setVendorId(long vendor);
+	 //public void setChildren(List<AvpRepresentation> children);
 
-  //public void setMultiplicityIndicator(String multiplicityIndicator);
+	 //public void setCode(int code);
 
-  //public void setName(String name);
+	 //public void setVendorId(long vendor);
 
-  boolean isWeak();
+	 //public void setMultiplicityIndicator(String multiplicityIndicator);
 
-  //public void markWeak(boolean isWeak);
+	 //public void setName(String name);
 
-  String getDescription();
+	 boolean isWeak();
 
-  boolean isMayEncrypt();
+	 //public void markWeak(boolean isWeak);
 
-  String getRuleMandatory();
+	 String getDescription();
 
-  int getRuleMandatoryAsInt();
+	 boolean isMayEncrypt();
 
-  String getRuleProtected();
+	 String getRuleMandatory();
 
-  int getRuleProtectedAsInt();
+	 int getRuleMandatoryAsInt();
 
-  String getRuleVendorBit();
+	 String getRuleProtected();
 
-  int getRuleVendorBitAsInt();
+	 int getRuleProtectedAsInt();
 
-  String getOriginalType();
+	 String getRuleVendorBit();
 
-  String getType();
+	 int getRuleVendorBitAsInt();
 
-  boolean isProtected();
+	 String getOriginalType();
 
-  boolean isMandatory();
+	 String getType();
 
-  /**
-   * Validates passed avp.
-   * @param avp - simply avp which should be confronted vs definition
-   */
-  void validate(Avp avp) throws AvpNotAllowedException;
+	 boolean isProtected();
 
-  /**
-   * Validates passed avp.
-   * @param avpSet - AvpSet which represents internal content of this avp
-   */
-  void validate(AvpSet avpSet) throws AvpNotAllowedException;
+	 boolean isMandatory();
 
-  @Override
-  String toString();
+	 /**
+	  * Validates passed avp.
+	  *
+	  * @param avp - simply avp which should be confronted vs definition
+	  */
+	 void validate(Avp avp) throws AvpNotAllowedException;
 
-  @Override
-  int hashCode();
+	 /**
+	  * Validates passed avp.
+	  *
+	  * @param avpSet - AvpSet which represents internal content of this avp
+	  */
+	 void validate(AvpSet avpSet) throws AvpNotAllowedException;
 
-  @Override
-  boolean equals(Object obj);
+	 @Override
+	 String toString();
 
-  Object clone() throws CloneNotSupportedException;
+	 @Override
+	 int hashCode();
 
-}
+	 @Override
+	 boolean equals(Object obj);
+
+	 Object clone() throws CloneNotSupportedException;
+
+ }

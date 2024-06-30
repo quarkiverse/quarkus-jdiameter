@@ -40,60 +40,61 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.api.app.auth;
+ package org.jdiameter.common.api.app.auth;
 
-import org.jdiameter.api.app.AppSession;
-import org.jdiameter.api.app.StateChangeListener;
-import org.jdiameter.api.auth.ClientAuthSessionListener;
-import org.jdiameter.api.auth.ServerAuthSessionListener;
-import org.jdiameter.common.api.app.IAppSessionFactory;
+ import org.jdiameter.api.app.AppSession;
+ import org.jdiameter.api.app.StateChangeListener;
+ import org.jdiameter.api.auth.ClientAuthSessionListener;
+ import org.jdiameter.api.auth.ServerAuthSessionListener;
+ import org.jdiameter.common.api.app.IAppSessionFactory;
 
-/**
- * Interface for Diameter Authentication Session Factories
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface IAuthSessionFactory extends IAppSessionFactory {
+ /**
+  * Interface for Diameter Authentication Session Factories
+  *
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IAuthSessionFactory extends IAppSessionFactory
+ {
 
-  IAuthMessageFactory getMessageFactory();
+	 IAuthMessageFactory getMessageFactory();
 
-  void setMessageFactory(IAuthMessageFactory v);
+	 void setMessageFactory(IAuthMessageFactory v);
 
-  ServerAuthSessionListener getServerSessionListener();
+	 ServerAuthSessionListener getServerSessionListener();
 
-  void setServerSessionListener(ServerAuthSessionListener v);
+	 void setServerSessionListener(ServerAuthSessionListener v);
 
-  StateChangeListener<AppSession> getStateListener();
+	 StateChangeListener<AppSession> getStateListener();
 
-  void setStateListener(StateChangeListener<AppSession> v);
+	 void setStateListener(StateChangeListener<AppSession> v);
 
-  ClientAuthSessionListener getClientSessionListener();
+	 ClientAuthSessionListener getClientSessionListener();
 
-  void setClientSessionListener(ClientAuthSessionListener v);
+	 void setClientSessionListener(ClientAuthSessionListener v);
 
-  IServerAuthActionContext getServerSessionContext();
+	 IServerAuthActionContext getServerSessionContext();
 
-  void setServerSessionContext(IServerAuthActionContext v);
+	 void setServerSessionContext(IServerAuthActionContext v);
 
-  IClientAuthActionContext getClientSessionContext();
+	 IClientAuthActionContext getClientSessionContext();
 
-  void setClientSessionContext(IClientAuthActionContext v);
+	 void setClientSessionContext(IClientAuthActionContext v);
 
-  boolean isStateles();
+	 boolean isStateles();
 
-  void setStateles(boolean stateless);
+	 void setStateles(boolean stateless);
 
-  /**
-   * @return the messageTimeout
-   */
-  long getMessageTimeout();
+	 /**
+	  * @return the messageTimeout
+	  */
+	 long getMessageTimeout();
 
-  /**
-   * @param messageTimeout
-   *            the messageTimeout to set
-   */
-  void setMessageTimeout(long messageTimeout);
+	 /**
+	  * @param messageTimeout the messageTimeout to set
+	  */
+	 void setMessageTimeout(long messageTimeout);
 
-}
+ }

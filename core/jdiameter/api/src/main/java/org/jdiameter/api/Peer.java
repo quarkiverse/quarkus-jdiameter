@@ -40,85 +40,90 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api;
+ package org.jdiameter.api;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.util.Set;
+ import java.io.IOException;
+ import java.net.InetAddress;
+ import java.util.Set;
 
-/**
- * Peer contains everything that is worth knowing about a peer and
- * define some operation for working with this peer.
- *
- * @author erick.svenson@yahoo.com
- * @author artem.litvinov@gmail.com
- * @version 1.5.1 Final
- */
-public interface Peer {
+ /**
+  * Peer contains everything that is worth knowing about a peer and define some operation for working with this peer.
+  *
+  * @author erick.svenson@yahoo.com
+  * @author artem.litvinov@gmail.com
+  * @version 1.5.1 Final
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface Peer
+ {
 
-  /**
-   *  Establishes a connection towards a remote peer.
-   * @throws IllegalDiameterStateException
-   */
-  void connect() throws InternalException, IOException, IllegalDiameterStateException;
+	 /**
+	  * Establishes a connection towards a remote peer.
+	  *
+	  * @throws IllegalDiameterStateException
+	  */
+	 void connect() throws InternalException, IOException, IllegalDiameterStateException;
 
-  /**
-   * Close the connection to the peer.
-   * @throws IllegalDiameterStateException
-   */
-  void disconnect(int disconnectCause) throws InternalException, IllegalDiameterStateException;
+	 /**
+	  * Close the connection to the peer.
+	  *
+	  * @throws IllegalDiameterStateException
+	  */
+	 void disconnect(int disconnectCause) throws InternalException, IllegalDiameterStateException;
 
-  /**
-   * All implementations must support PeerState interface as argument
-   * @return state of peer
-   */
-  <E> E getState(Class<E> enumc);
+	 /**
+	  * All implementations must support PeerState interface as argument
+	  *
+	  * @return state of peer
+	  */
+	 <E> E getState(Class<E> enumc);
 
-  /**
-   * @return URI of peer
-   */
-  URI getUri();
+	 /**
+	  * @return URI of peer
+	  */
+	 URI getUri();
 
-  /**
-   * @return array of peer ip addresses
-   */
-  InetAddress[] getIPAddresses();
+	 /**
+	  * @return array of peer ip addresses
+	  */
+	 InetAddress[] getIPAddresses();
 
-  /**
-   * @return Realm name of peer
-   */
-  String getRealmName();
+	 /**
+	  * @return Realm name of peer
+	  */
+	 String getRealmName();
 
-  /**
-   * @return vendor id of peer stack implementation
-   */
-  long getVendorId();
+	 /**
+	  * @return vendor id of peer stack implementation
+	  */
+	 long getVendorId();
 
-  /**
-   * @return product name of peer stack implementation
-   */
-  String getProductName();
+	 /**
+	  * @return product name of peer stack implementation
+	  */
+	 String getProductName();
 
-  /**
-   * @return firmware version  of peer stack implementation
-   */
-  long getFirmware();
+	 /**
+	  * @return firmware version  of peer stack implementation
+	  */
+	 long getFirmware();
 
-  /**
-   * @return set of common Application-id of peer;
-   */
-  Set<ApplicationId> getCommonApplications();
+	 /**
+	  * @return set of common Application-id of peer;
+	  */
+	 Set<ApplicationId> getCommonApplications();
 
-  /**
-   * Append peer state change listener to the peer manager
+	 /**
+	  * Append peer state change listener to the peer manager
+	  *
+	  * @param listener listener instance
+	  */
+	 void addPeerStateListener(PeerStateListener listener);
 
-   * @param listener listener instance
-   */
-  void addPeerStateListener(PeerStateListener listener);
-
-  /**
-   * Remove peer state change listener from the peer manager
-   * @param listener listener instance
-   */
-  void removePeerStateListener(PeerStateListener listener);
-}
+	 /**
+	  * Remove peer state change listener from the peer manager
+	  *
+	  * @param listener listener instance
+	  */
+	 void removePeerStateListener(PeerStateListener listener);
+ }

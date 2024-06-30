@@ -19,6 +19,13 @@
 
 package org.jdiameter.client.impl.transport.tls.netty;
 
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.ChannelPipeline;
+import io.netty.util.ReferenceCountUtil;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 import org.jdiameter.api.Avp;
 import org.jdiameter.api.AvpSet;
 import org.jdiameter.api.Configuration;
@@ -27,71 +34,69 @@ import org.jdiameter.client.impl.transport.tls.netty.TLSTransportClient.TlsHands
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.ChannelPipeline;
-import io.netty.util.ReferenceCountUtil;
-import io.netty.util.concurrent.Future;
-import io.netty.util.concurrent.GenericFutureListener;
-
 /**
- *
  * @author <a href="mailto:jqayyum@gmail.com"> Jehanzeb Qayyum </a>
  */
-public class StartTlsInitiator extends ChannelInboundHandlerAdapter {
-  private static final Logger logger = LoggerFactory.getLogger(StartTlsInitiator.class);
-  private final Configuration config;
-  private final TLSTransportClient tlsTransportClient;
+@SuppressWarnings("all")//3rd party lib
+public class StartTlsInitiator extends ChannelInboundHandlerAdapter
+{
+	private static final Logger logger = LoggerFactory.getLogger(StartTlsInitiator.class);
+	private final Configuration config;
+	private final TLSTransportClient tlsTransportClient;
 
-  public StartTlsInitiator(Configuration config, TLSTransportClient tlsTransportClient) {
-    this.config = config;
-    this.tlsTransportClient = tlsTransportClient;
-  }
+	public StartTlsInitiator(Configuration config, TLSTransportClient tlsTransportClient)
+	{
+		this.config = config;
+		this.tlsTransportClient = tlsTransportClient;
+	}
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  @Override
-  public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-    if (msg instanceof IMessage) {
-      IMessage m = (IMessage) msg;
-      logger.debug("StartTlsInitiator");
-      if (m.getCommandCode() == IMessage.CAPABILITIES_EXCHANGE_ANSWER
-          && this.tlsTransportClient.getTlsHandshakingState() == TlsHandshakingState.INIT) {
-        AvpSet set = m.getAvps();
-        Avp inbandAvp = set.getAvp(Avp.INBAND_SECURITY_ID);
-        if (inbandAvp != null && inbandAvp.getUnsigned32() == 1) {
-          this.tlsTransportClient.setTlsHandshakingState(TlsHandshakingState.SHAKING);
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	@Override
+	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception
+	{
+		if (msg instanceof IMessage) {
+			IMessage m = (IMessage) msg;
+			logger.debug("StartTlsInitiator");
+			if (m.getCommandCode() == IMessage.CAPABILITIES_EXCHANGE_ANSWER
+				&& this.tlsTransportClient.getTlsHandshakingState() == TlsHandshakingState.INIT) {
+				AvpSet set = m.getAvps();
+				Avp inbandAvp = set.getAvp(Avp.INBAND_SECURITY_ID);
+				if (inbandAvp != null && inbandAvp.getUnsigned32() == 1) {
+					this.tlsTransportClient.setTlsHandshakingState(TlsHandshakingState.SHAKING);
 
-          final ChannelPipeline pipeline = ctx.pipeline();
-          pipeline.remove("decoder");
-          pipeline.remove("msgHandler");
-          pipeline.remove(this);
-          pipeline.remove("encoder");
-          pipeline.remove("inbandWriter");
+					final ChannelPipeline pipeline = ctx.pipeline();
+					pipeline.remove("decoder");
+					pipeline.remove("msgHandler");
+					pipeline.remove(this);
+					pipeline.remove("encoder");
+					pipeline.remove("inbandWriter");
 
-          pipeline.addLast("startTlsClientHandler", new StartTlsClientHandler(this.tlsTransportClient));
+					pipeline.addLast("startTlsClientHandler", new StartTlsClientHandler(this.tlsTransportClient));
 
-          logger.debug("Sending StartTlsRequest");
-          ctx.writeAndFlush(Unpooled.wrappedBuffer("StartTlsRequest".getBytes())).addListener(new GenericFutureListener() {
+					logger.debug("Sending StartTlsRequest");
+					ctx.writeAndFlush(Unpooled.wrappedBuffer("StartTlsRequest".getBytes())).addListener(new GenericFutureListener()
+					{
 
-            @Override
-            public void operationComplete(Future f) throws Exception {
-              if (!f.isSuccess()) {
-                logger.error(f.cause().getMessage(), f.cause());
-              }
-            }
-          });
+						@Override
+						public void operationComplete(Future f) throws Exception
+						{
+							if (!f.isSuccess()) {
+								logger.error(f.cause().getMessage(), f.cause());
+							}
+						}
+					});
 
-        }
-      }
-    }
+				}
+			}
+		}
 
-    ReferenceCountUtil.release(msg);
-  }
+		ReferenceCountUtil.release(msg);
+	}
 
-  @Override
-  public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-    logger.error(cause.getMessage(), cause);
-  }
+	@Override
+	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
+	{
+		logger.error(cause.getMessage(), cause);
+	}
 
 }

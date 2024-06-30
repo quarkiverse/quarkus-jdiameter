@@ -40,299 +40,329 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.server.impl;
+ package org.jdiameter.server.impl;
 
-import static org.jdiameter.client.impl.helpers.Parameters.AcctApplId;
-import static org.jdiameter.client.impl.helpers.Parameters.ApplicationId;
-import static org.jdiameter.client.impl.helpers.Parameters.AuthApplId;
-import static org.jdiameter.client.impl.helpers.Parameters.VendorId;
-import static org.jdiameter.server.impl.helpers.Parameters.OverloadEntryIndex;
-import static org.jdiameter.server.impl.helpers.Parameters.OverloadEntryhighThreshold;
-import static org.jdiameter.server.impl.helpers.Parameters.OverloadEntrylowThreshold;
-import static org.jdiameter.server.impl.helpers.Parameters.OverloadMonitor;
+ import org.jdiameter.api.ApplicationId;
+ import org.jdiameter.api.Configuration;
+ import org.jdiameter.api.OverloadListener;
+ import org.jdiameter.api.URI;
+ import org.jdiameter.server.api.IOverloadManager;
 
-import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+ import java.util.ArrayList;
+ import java.util.concurrent.ConcurrentHashMap;
+ import java.util.concurrent.ConcurrentLinkedQueue;
+ import java.util.concurrent.locks.Lock;
+ import java.util.concurrent.locks.ReentrantLock;
 
-import org.jdiameter.api.ApplicationId;
-import org.jdiameter.api.Configuration;
-import org.jdiameter.api.OverloadListener;
-import org.jdiameter.api.URI;
-import org.jdiameter.server.api.IOverloadManager;
+ import static org.jdiameter.client.impl.helpers.Parameters.*;
+ import static org.jdiameter.server.impl.helpers.Parameters.*;
 
-/**
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public class OverloadManagerImpl implements IOverloadManager {
+ /**
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public class OverloadManagerImpl implements IOverloadManager
+ {
 
-  private ConcurrentLinkedQueue<OverloadInfo> listeners = new ConcurrentLinkedQueue<OverloadInfo>();
-  private ConcurrentHashMap<Object, AppOverloadInfo> appInfo = new ConcurrentHashMap<Object, AppOverloadInfo>();
+	 private ConcurrentLinkedQueue<OverloadInfo> listeners = new ConcurrentLinkedQueue<OverloadInfo>();
+	 private ConcurrentHashMap<Object, AppOverloadInfo> appInfo = new ConcurrentHashMap<Object, AppOverloadInfo>();
 
-  public OverloadManagerImpl(Configuration config) {
-    Configuration[] entries = config.getChildren(OverloadMonitor.ordinal());
-    if (entries == null) {
-      return;
-    }
-    for (Configuration e : entries) {
-      ApplicationId appId = null;
-      Configuration[] cAppId = e.getChildren(ApplicationId.ordinal());
-      for (Configuration i : cAppId) {
-        if ( i.getLongValue(AuthApplId.ordinal(), 0) != 0 ) {
-          appId = org.jdiameter.api.ApplicationId.createByAuthAppId(
-              i.getLongValue(VendorId.ordinal(), 0),
-              i.getLongValue(AuthApplId.ordinal(), 0)
-              );
-        }
-        else {
-          appId = org.jdiameter.api.ApplicationId.createByAccAppId(
-              i.getLongValue(VendorId.ordinal(), 0),
-              i.getLongValue(AcctApplId.ordinal(), 0)
-              );
-        }
-        break;
-      }
-      if (appId == null) {
-        continue;
-      }
-      AppOverloadInfo info = new AppOverloadInfo(appId);
-      info.appendEntry(
-          e.getIntValue(OverloadEntryIndex.ordinal(), 0),
-          e.getDoubleValue(OverloadEntrylowThreshold.ordinal(), 0),
-          e.getDoubleValue(OverloadEntryhighThreshold.ordinal(), 0)
-      );
-      appInfo.put(appId, info);
-    }
-  }
+	 public OverloadManagerImpl(Configuration config)
+	 {
+		 Configuration[] entries = config.getChildren(OverloadMonitor.ordinal());
+		 if (entries == null) {
+			 return;
+		 }
+		 for (Configuration e : entries) {
+			 ApplicationId appId = null;
+			 Configuration[] cAppId = e.getChildren(ApplicationId.ordinal());
+			 for (Configuration i : cAppId) {
+				 if (i.getLongValue(AuthApplId.ordinal(), 0) != 0) {
+					 appId = org.jdiameter.api.ApplicationId.createByAuthAppId(
+							 i.getLongValue(VendorId.ordinal(), 0),
+							 i.getLongValue(AuthApplId.ordinal(), 0)
+																			  );
+				 }
+				 else {
+					 appId = org.jdiameter.api.ApplicationId.createByAccAppId(
+							 i.getLongValue(VendorId.ordinal(), 0),
+							 i.getLongValue(AcctApplId.ordinal(), 0)
+																			 );
+				 }
+				 break;
+			 }
+			 if (appId == null) {
+				 continue;
+			 }
+			 AppOverloadInfo info = new AppOverloadInfo(appId);
+			 info.appendEntry(
+					 e.getIntValue(OverloadEntryIndex.ordinal(), 0),
+					 e.getDoubleValue(OverloadEntrylowThreshold.ordinal(), 0),
+					 e.getDoubleValue(OverloadEntryhighThreshold.ordinal(), 0)
+							 );
+			 appInfo.put(appId, info);
+		 }
+	 }
 
-  @Override
-  public void parentAppOverloadDetected(ApplicationId applicationId, int type, double value) {
-    AppOverloadInfo app = appInfo.get(createKey(applicationId));
-    if (app != null) {
-      app.updateInformation(type, value);
-    }
-  }
+	 @Override
+	 public void parentAppOverloadDetected(ApplicationId applicationId, int type, double value)
+	 {
+		 AppOverloadInfo app = appInfo.get(createKey(applicationId));
+		 if (app != null) {
+			 app.updateInformation(type, value);
+		 }
+	 }
 
-  @Override
-  public void parentAppOverloadCeased(ApplicationId applicationId, int type) {
-    AppOverloadInfo app = appInfo.get(createKey(applicationId));
-    if (app != null) {
-      app.updateInformation(type, 0);
-    }
-  }
+	 @Override
+	 public void parentAppOverloadCeased(ApplicationId applicationId, int type)
+	 {
+		 AppOverloadInfo app = appInfo.get(createKey(applicationId));
+		 if (app != null) {
+			 app.updateInformation(type, 0);
+		 }
+	 }
 
-  private Object createKey(final ApplicationId appId) {
-    return new Object() {
-      @Override
-      public int hashCode() {
-        return appId.hashCode();
-      }
-      @Override
-      public boolean equals(Object obj) {
-        return appId.equals(obj);
-      }
-    };
-  }
+	 private Object createKey(final ApplicationId appId)
+	 {
+		 return new Object()
+		 {
+			 @Override
+			 public int hashCode()
+			 {
+				 return appId.hashCode();
+			 }
 
-  @Override
-  public boolean isParenAppOverload(final ApplicationId appId) {
-    if (appId == null) {
-      return false;
-    }
-    AppOverloadInfo app = appInfo.get( createKey(appId) );
-    return app != null && app.isOverload();
-  }
+			 @Override
+			 public boolean equals(Object obj)
+			 {
+				 return appId.equals(obj);
+			 }
+		 };
+	 }
 
-  @Override
-  public boolean isParenAppOverload(final ApplicationId appId, final int type) {
-    AppOverloadInfo app = appInfo.get( createKey(appId) );
-    return app != null && app.isOverload(type);
-  }
+	 @Override
+	 public boolean isParenAppOverload(final ApplicationId appId)
+	 {
+		 if (appId == null) {
+			 return false;
+		 }
+		 AppOverloadInfo app = appInfo.get(createKey(appId));
+		 return app != null && app.isOverload();
+	 }
 
-  @Override
-  public void addOverloadListener(OverloadListener overloadListener, double lowThreshold, double highThreshold, int qIndex) {
-    listeners.add(new OverloadInfo(overloadListener, lowThreshold, highThreshold, qIndex));
-  }
+	 @Override
+	 public boolean isParenAppOverload(final ApplicationId appId, final int type)
+	 {
+		 AppOverloadInfo app = appInfo.get(createKey(appId));
+		 return app != null && app.isOverload(type);
+	 }
 
-  @Override
-  public void removeOverloadListener(OverloadListener overloadListener, int qIndex) {
-    listeners.remove(new OverloadInfo(overloadListener, qIndex));
-  }
+	 @Override
+	 public void addOverloadListener(OverloadListener overloadListener, double lowThreshold, double highThreshold, int qIndex)
+	 {
+		 listeners.add(new OverloadInfo(overloadListener, lowThreshold, highThreshold, qIndex));
+	 }
 
-  @Override
-  public void changeNotification(int index, URI uri, double value) {
-    for (OverloadInfo e : listeners) {
-      if (e.getCode() == index) {
-        e.changeNotification(uri, value);
-      }
-    }
-  }
+	 @Override
+	 public void removeOverloadListener(OverloadListener overloadListener, int qIndex)
+	 {
+		 listeners.remove(new OverloadInfo(overloadListener, qIndex));
+	 }
 
-  public static class AppOverloadInfo {
-    private ApplicationId appId;
-    private ArrayList <AppOverloadInfoEntry> entries = new ArrayList<AppOverloadInfoEntry>();
-    private final Object lock = new Object();
+	 @Override
+	 public void changeNotification(int index, URI uri, double value)
+	 {
+		 for (OverloadInfo e : listeners) {
+			 if (e.getCode() == index) {
+				 e.changeNotification(uri, value);
+			 }
+		 }
+	 }
 
-    public ApplicationId getAppId() {
-      return appId;
-    }
+	 public static class AppOverloadInfo
+	 {
+		 private ApplicationId appId;
+		 private ArrayList<AppOverloadInfoEntry> entries = new ArrayList<AppOverloadInfoEntry>();
+		 private final Object lock = new Object();
 
-    public AppOverloadInfo(ApplicationId appId) {
-      this.appId = appId;
-    }
+		 public ApplicationId getAppId()
+		 {
+			 return appId;
+		 }
 
-    public void appendEntry(int type, double lowThreshold, double highThreshold) {
-      entries.add(new AppOverloadInfoEntry(type, lowThreshold, highThreshold));
-    }
+		 public AppOverloadInfo(ApplicationId appId)
+		 {
+			 this.appId = appId;
+		 }
 
-    public boolean isOverload() {
-      for (AppOverloadInfoEntry e : entries) {
-        if (e.isOverload()) {
-          return true;
-        }
-      }
-      return false;
-    }
+		 public void appendEntry(int type, double lowThreshold, double highThreshold)
+		 {
+			 entries.add(new AppOverloadInfoEntry(type, lowThreshold, highThreshold));
+		 }
 
-    public boolean isOverload(int type) {
-      for (AppOverloadInfoEntry e : entries) {
-        if (e.getType() == type) {
-          synchronized (lock) {
-            if (e.isOverload()) {
-              return true;
-            }
-          }
-        }
-      }
-      return false;
-    }
+		 public boolean isOverload()
+		 {
+			 for (AppOverloadInfoEntry e : entries) {
+				 if (e.isOverload()) {
+					 return true;
+				 }
+			 }
+			 return false;
+		 }
 
-    public void updateInformation(int type, double threshold) {
-      for (AppOverloadInfoEntry e : entries) {
-        if (e.getType() == type) {
-          synchronized (lock) {
-            e.updateInformation(threshold);
-          }
-        }
-      }
-    }
-  }
+		 public boolean isOverload(int type)
+		 {
+			 for (AppOverloadInfoEntry e : entries) {
+				 if (e.getType() == type) {
+					 synchronized (lock) {
+						 if (e.isOverload()) {
+							 return true;
+						 }
+					 }
+				 }
+			 }
+			 return false;
+		 }
 
-  public static class AppOverloadInfoEntry {
-    private int type;
-    private double lowThreshold, highThreshold;
-    private double currentValue;
-    private final Object lock = new Object();
+		 public void updateInformation(int type, double threshold)
+		 {
+			 for (AppOverloadInfoEntry e : entries) {
+				 if (e.getType() == type) {
+					 synchronized (lock) {
+						 e.updateInformation(threshold);
+					 }
+				 }
+			 }
+		 }
+	 }
 
-    public AppOverloadInfoEntry(int type, double lowThreshold, double highThreshold) {
-      this.type = type;
-      this.lowThreshold = lowThreshold;
-      this.highThreshold = highThreshold;
-    }
+	 public static class AppOverloadInfoEntry
+	 {
+		 private int type;
+		 private double lowThreshold, highThreshold;
+		 private double currentValue;
+		 private final Object lock = new Object();
 
+		 public AppOverloadInfoEntry(int type, double lowThreshold, double highThreshold)
+		 {
+			 this.type = type;
+			 this.lowThreshold = lowThreshold;
+			 this.highThreshold = highThreshold;
+		 }
 
-    public int getType() {
-      return type;
-    }
+		 public int getType()
+		 {
+			 return type;
+		 }
 
-    public double getLowThreshold() {
-      return lowThreshold;
-    }
+		 public double getLowThreshold()
+		 {
+			 return lowThreshold;
+		 }
 
-    public double getHighThreshold() {
-      return highThreshold;
-    }
+		 public double getHighThreshold()
+		 {
+			 return highThreshold;
+		 }
 
-    public double getCurrentValue() {
-      return currentValue;
-    }
+		 public double getCurrentValue()
+		 {
+			 return currentValue;
+		 }
 
-    public void updateInformation(double threshold) {
-      synchronized (lock) {
-        this.currentValue = threshold;
-      }
-    }
+		 public void updateInformation(double threshold)
+		 {
+			 synchronized (lock) {
+				 this.currentValue = threshold;
+			 }
+		 }
 
-    public boolean isOverload() {
-      synchronized (lock) {
-        return  (currentValue >= lowThreshold && currentValue <= highThreshold);
-      }
-    }
-  }
+		 public boolean isOverload()
+		 {
+			 synchronized (lock) {
+				 return (currentValue >= lowThreshold && currentValue <= highThreshold);
+			 }
+		 }
+	 }
 
-  public static class OverloadInfo {
+	 public static class OverloadInfo
+	 {
 
-    private OverloadListener overloadListener;
-    private double lowThreshold, highThreshold;
-    private int qIndex;
-    private boolean isOverload;
-    private Lock lock = new ReentrantLock();
+		 private OverloadListener overloadListener;
+		 private double lowThreshold, highThreshold;
+		 private int qIndex;
+		 private boolean isOverload;
+		 private Lock lock = new ReentrantLock();
 
-    public OverloadInfo(OverloadListener overloadListener, int qIndex) {
-      this.overloadListener = overloadListener;
-      this.qIndex = qIndex;
-    }
+		 public OverloadInfo(OverloadListener overloadListener, int qIndex)
+		 {
+			 this.overloadListener = overloadListener;
+			 this.qIndex = qIndex;
+		 }
 
-    public OverloadInfo(OverloadListener overloadListener, double lowThreshold, double highThreshold, int qIndex) {
-      this.overloadListener = overloadListener;
-      this.lowThreshold = lowThreshold;
-      this.highThreshold = highThreshold;
-      this.qIndex = qIndex;
-    }
+		 public OverloadInfo(OverloadListener overloadListener, double lowThreshold, double highThreshold, int qIndex)
+		 {
+			 this.overloadListener = overloadListener;
+			 this.lowThreshold = lowThreshold;
+			 this.highThreshold = highThreshold;
+			 this.qIndex = qIndex;
+		 }
 
-    public void changeNotification(URI uri, double value) {
-      if ( value >= lowThreshold && value <= highThreshold ) {
-        overloadListener.overloadDetected(uri, value);
-        lock.lock();
-        isOverload = true;
-        lock.unlock();
-      } else {
-        lock.lock();
-        if (isOverload) {
-          overloadListener.overloadCeased(uri);
-          isOverload = false;
-        }
-        lock.unlock();
-      }
-    }
+		 public void changeNotification(URI uri, double value)
+		 {
+			 if (value >= lowThreshold && value <= highThreshold) {
+				 overloadListener.overloadDetected(uri, value);
+				 lock.lock();
+				 isOverload = true;
+				 lock.unlock();
+			 }
+			 else {
+				 lock.lock();
+				 if (isOverload) {
+					 overloadListener.overloadCeased(uri);
+					 isOverload = false;
+				 }
+				 lock.unlock();
+			 }
+		 }
 
-    public int getCode() {
-      return qIndex;
-    }
+		 public int getCode()
+		 {
+			 return qIndex;
+		 }
 
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) {
-        return true;
-      }
-      if (o == null || getClass() != o.getClass()) {
-        return false;
-      }
+		 @Override
+		 public boolean equals(Object o)
+		 {
+			 if (this == o) {
+				 return true;
+			 }
+			 if (o == null || getClass() != o.getClass()) {
+				 return false;
+			 }
 
-      OverloadInfo that = (OverloadInfo) o;
+			 OverloadInfo that = (OverloadInfo) o;
 
-      if (qIndex != that.qIndex) {
-        return false;
-      }
-      if (overloadListener != null ? !overloadListener.equals(that.overloadListener) : that.overloadListener != null) {
-        return false;
-      }
+			 if (qIndex != that.qIndex) {
+				 return false;
+			 }
+			 if (overloadListener != null ? !overloadListener.equals(that.overloadListener) : that.overloadListener != null) {
+				 return false;
+			 }
 
-      return true;
-    }
+			 return true;
+		 }
 
-    @Override
-    public int hashCode() {
-      int result;
-      result = (overloadListener != null ? overloadListener.hashCode() : 0);
-      result = 31 * result + qIndex;
-      return result;
-    }
+		 @Override
+		 public int hashCode()
+		 {
+			 int result;
+			 result = (overloadListener != null ? overloadListener.hashCode() : 0);
+			 result = 31 * result + qIndex;
+			 return result;
+		 }
 
-  }
-}
+	 }
+ }

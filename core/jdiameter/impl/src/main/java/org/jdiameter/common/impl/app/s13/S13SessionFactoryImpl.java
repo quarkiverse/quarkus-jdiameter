@@ -50,214 +50,248 @@ import org.jdiameter.server.impl.app.s13.S13ServerSessionImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@SuppressWarnings("all")//3rd party lib
 public class S13SessionFactoryImpl implements IS13SessionFactory, ServerS13SessionListener, ClientS13SessionListener, IS13MessageFactory,
-    StateChangeListener<AppSession> {
+											  StateChangeListener<AppSession>
+{
 
-  private static final Logger logger = LoggerFactory.getLogger(S13SessionFactoryImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(S13SessionFactoryImpl.class);
 
-  protected ISessionFactory sessionFactory;
+	protected ISessionFactory sessionFactory;
 
-  protected ServerS13SessionListener serverSessionListener;
-  protected ClientS13SessionListener clientSessionListener;
+	protected ServerS13SessionListener serverSessionListener;
+	protected ClientS13SessionListener clientSessionListener;
 
-  protected IS13MessageFactory messageFactory;
-  protected StateChangeListener<AppSession> stateListener;
-  protected ISessionDatasource iss;
-  protected IAppSessionDataFactory<IS13SessionData> sessionDataFactory;
+	protected IS13MessageFactory messageFactory;
+	protected StateChangeListener<AppSession> stateListener;
+	protected ISessionDatasource iss;
+	protected IAppSessionDataFactory<IS13SessionData> sessionDataFactory;
 
-  public S13SessionFactoryImpl() {};
+	public S13SessionFactoryImpl()
+	{
+	}
 
-  public S13SessionFactoryImpl(SessionFactory sessionFactory) {
-    super();
-    init(sessionFactory);
-  }
+	;
 
-  public void init(SessionFactory sessionFactory) {
-    this.sessionFactory = (ISessionFactory) sessionFactory;
-    this.iss = this.sessionFactory.getContainer().getAssemblerFacility().getComponentInstance(ISessionDatasource.class);
-    this.sessionDataFactory = (IAppSessionDataFactory<IS13SessionData>) this.iss.getDataFactory(IS13SessionData.class);
-  }
+	public S13SessionFactoryImpl(SessionFactory sessionFactory)
+	{
+		super();
+		init(sessionFactory);
+	}
 
-  /**
-   * @return the serverSessionListener
-   */
-  @Override
-  public ServerS13SessionListener getServerSessionListener() {
-    return serverSessionListener != null ? serverSessionListener : this;
-  }
+	public void init(SessionFactory sessionFactory)
+	{
+		this.sessionFactory = (ISessionFactory) sessionFactory;
+		this.iss = this.sessionFactory.getContainer().getAssemblerFacility().getComponentInstance(ISessionDatasource.class);
+		this.sessionDataFactory = (IAppSessionDataFactory<IS13SessionData>) this.iss.getDataFactory(IS13SessionData.class);
+	}
 
-  /**
-   * @param serverSessionListener the serverSessionListener to set
-   */
-  @Override
-  public void setServerSessionListener(ServerS13SessionListener serverSessionListener) {
-    this.serverSessionListener = serverSessionListener;
-  }
+	/**
+	 * @return the serverSessionListener
+	 */
+	@Override
+	public ServerS13SessionListener getServerSessionListener()
+	{
+		return serverSessionListener != null ? serverSessionListener : this;
+	}
 
-  /**
-   * @return the serverSessionListener
-   */
-  @Override
-  public ClientS13SessionListener getClientSessionListener() {
-    return clientSessionListener != null ? clientSessionListener : this;
-  }
+	/**
+	 * @param serverSessionListener the serverSessionListener to set
+	 */
+	@Override
+	public void setServerSessionListener(ServerS13SessionListener serverSessionListener)
+	{
+		this.serverSessionListener = serverSessionListener;
+	}
 
-  /**
-   * @param serverSessionListener the serverSessionListener to set
-   */
-  @Override
-  public void setClientSessionListener(ClientS13SessionListener clientSessionListener) {
-    this.clientSessionListener = clientSessionListener;
-  }
+	/**
+	 * @return the serverSessionListener
+	 */
+	@Override
+	public ClientS13SessionListener getClientSessionListener()
+	{
+		return clientSessionListener != null ? clientSessionListener : this;
+	}
 
-  /**
-   * @return the messageFactory
-   */
-  @Override
-  public IS13MessageFactory getMessageFactory() {
-    return messageFactory != null ? messageFactory : this;
-  }
+	/**
+	 * @param serverSessionListener the serverSessionListener to set
+	 */
+	@Override
+	public void setClientSessionListener(ClientS13SessionListener clientSessionListener)
+	{
+		this.clientSessionListener = clientSessionListener;
+	}
 
-  /**
-   * @param messageFactory the messageFactory to set
-   */
-  @Override
-  public void setMessageFactory(IS13MessageFactory messageFactory) {
-    this.messageFactory = messageFactory;
-  }
+	/**
+	 * @return the messageFactory
+	 */
+	@Override
+	public IS13MessageFactory getMessageFactory()
+	{
+		return messageFactory != null ? messageFactory : this;
+	}
 
-  /**
-   * @return the stateListener
-   */
-  @Override
-  public StateChangeListener<AppSession> getStateListener() {
-    return stateListener != null ? stateListener : this;
-  }
+	/**
+	 * @param messageFactory the messageFactory to set
+	 */
+	@Override
+	public void setMessageFactory(IS13MessageFactory messageFactory)
+	{
+		this.messageFactory = messageFactory;
+	}
 
-  /**
-   * @param stateListener the stateListener to set
-   */
-  @Override
-  public void setStateListener(StateChangeListener<AppSession> stateListener) {
-    this.stateListener = stateListener;
-  }
+	/**
+	 * @return the stateListener
+	 */
+	@Override
+	public StateChangeListener<AppSession> getStateListener()
+	{
+		return stateListener != null ? stateListener : this;
+	}
 
-  @Override
-  public AppSession getSession(String sessionId, Class<? extends AppSession> aClass) {
-    if (sessionId == null) {
-      throw new IllegalArgumentException("SessionId must not be null");
-    }
-    if (!this.iss.exists(sessionId)) {
-      return null;
-    }
-    AppSession appSession = null;
-    try {
-      if (aClass == ServerS13Session.class) {
-        IServerS13SessionData sessionData = (IServerS13SessionData) this.sessionDataFactory.getAppSessionData(ServerS13Session.class, sessionId);
-        S13ServerSessionImpl serverSession = new S13ServerSessionImpl(sessionData, getMessageFactory(), sessionFactory, this.getServerSessionListener());
-        serverSession.getSessions().get(0).setRequestListener(serverSession);
-        appSession = serverSession;
-      } else if (aClass == ClientS13Session.class) {
-        IClientS13SessionData sessionData = (IClientS13SessionData) this.sessionDataFactory.getAppSessionData(ClientS13Session.class, sessionId);
-        S13ClientSessionImpl clientSession = new S13ClientSessionImpl(sessionData, getMessageFactory(), sessionFactory, this.getClientSessionListener());
-        clientSession.getSessions().get(0).setRequestListener(clientSession);
-        appSession = clientSession;
-      } else {
-        throw new IllegalArgumentException("Wrong session class: " + aClass + ". Supported[" + ServerS13Session.class + "]");
-      }
-    } catch (Exception e) {
-      logger.error("Failure to obtain new S13 Session.", e);
-    }
-    return appSession;
-  }
+	/**
+	 * @param stateListener the stateListener to set
+	 */
+	@Override
+	public void setStateListener(StateChangeListener<AppSession> stateListener)
+	{
+		this.stateListener = stateListener;
+	}
 
-  @Override
-  public AppSession getNewSession(String sessionId, Class<? extends AppSession> aClass, ApplicationId applicationId, Object[] args) {
-    AppSession appSession = null;
+	@Override
+	public AppSession getSession(String sessionId, Class<? extends AppSession> aClass)
+	{
+		if (sessionId == null) {
+			throw new IllegalArgumentException("SessionId must not be null");
+		}
+		if (!this.iss.exists(sessionId)) {
+			return null;
+		}
+		AppSession appSession = null;
+		try {
+			if (aClass == ServerS13Session.class) {
+				IServerS13SessionData sessionData = (IServerS13SessionData) this.sessionDataFactory.getAppSessionData(ServerS13Session.class, sessionId);
+				S13ServerSessionImpl serverSession = new S13ServerSessionImpl(sessionData, getMessageFactory(), sessionFactory, this.getServerSessionListener());
+				serverSession.getSessions().get(0).setRequestListener(serverSession);
+				appSession = serverSession;
+			}
+			else if (aClass == ClientS13Session.class) {
+				IClientS13SessionData sessionData = (IClientS13SessionData) this.sessionDataFactory.getAppSessionData(ClientS13Session.class, sessionId);
+				S13ClientSessionImpl clientSession = new S13ClientSessionImpl(sessionData, getMessageFactory(), sessionFactory, this.getClientSessionListener());
+				clientSession.getSessions().get(0).setRequestListener(clientSession);
+				appSession = clientSession;
+			}
+			else {
+				throw new IllegalArgumentException("Wrong session class: " + aClass + ". Supported[" + ServerS13Session.class + "]");
+			}
+		}
+		catch (Exception e) {
+			logger.error("Failure to obtain new S13 Session.", e);
+		}
+		return appSession;
+	}
 
-    try {
-      if (aClass == ServerS13Session.class) {
-        if (sessionId == null) {
-          if (args != null && args.length > 0 && args[0] instanceof Request) {
-            Request request = (Request) args[0];
-            sessionId = request.getSessionId();
-          } else {
-            sessionId = this.sessionFactory.getSessionId();
-          }
-        }
-        IServerS13SessionData sessionData = (IServerS13SessionData) this.sessionDataFactory.getAppSessionData(ServerS13Session.class, sessionId);
-        sessionData.setApplicationId(applicationId);
-        S13ServerSessionImpl serverSession = new S13ServerSessionImpl(sessionData, getMessageFactory(), sessionFactory, this.getServerSessionListener());
+	@Override
+	public AppSession getNewSession(String sessionId, Class<? extends AppSession> aClass, ApplicationId applicationId, Object[] args)
+	{
+		AppSession appSession = null;
 
-        iss.addSession(serverSession);
-        serverSession.getSessions().get(0).setRequestListener(serverSession);
-        appSession = serverSession;
-      } else if (aClass == ClientS13Session.class) {
-        if (sessionId == null) {
-          if (args != null && args.length > 0 && args[0] instanceof Request) {
-            Request request = (Request) args[0];
-            sessionId = request.getSessionId();
-          } else {
-            sessionId = this.sessionFactory.getSessionId();
-          }
-        }
-        IClientS13SessionData sessionData = (IClientS13SessionData) this.sessionDataFactory.getAppSessionData(ClientS13Session.class, sessionId);
-        sessionData.setApplicationId(applicationId);
-        S13ClientSessionImpl clientSession = new S13ClientSessionImpl(sessionData, getMessageFactory(), sessionFactory, this.getClientSessionListener());
+		try {
+			if (aClass == ServerS13Session.class) {
+				if (sessionId == null) {
+					if (args != null && args.length > 0 && args[0] instanceof Request) {
+						Request request = (Request) args[0];
+						sessionId = request.getSessionId();
+					}
+					else {
+						sessionId = this.sessionFactory.getSessionId();
+					}
+				}
+				IServerS13SessionData sessionData = (IServerS13SessionData) this.sessionDataFactory.getAppSessionData(ServerS13Session.class, sessionId);
+				sessionData.setApplicationId(applicationId);
+				S13ServerSessionImpl serverSession = new S13ServerSessionImpl(sessionData, getMessageFactory(), sessionFactory, this.getServerSessionListener());
 
-        iss.addSession(clientSession);
-        clientSession.getSessions().get(0).setRequestListener(clientSession);
-        appSession = clientSession;
-      } else {
-        throw new IllegalArgumentException("Wrong session class: " + aClass + ". Supported[" + ServerS13Session.class + "]");
-      }
-    } catch (Exception e) {
-      logger.error("Failure to obtain new S13 Session.", e);
-    }
-    return appSession;
-  }
+				iss.addSession(serverSession);
+				serverSession.getSessions().get(0).setRequestListener(serverSession);
+				appSession = serverSession;
+			}
+			else if (aClass == ClientS13Session.class) {
+				if (sessionId == null) {
+					if (args != null && args.length > 0 && args[0] instanceof Request) {
+						Request request = (Request) args[0];
+						sessionId = request.getSessionId();
+					}
+					else {
+						sessionId = this.sessionFactory.getSessionId();
+					}
+				}
+				IClientS13SessionData sessionData = (IClientS13SessionData) this.sessionDataFactory.getAppSessionData(ClientS13Session.class, sessionId);
+				sessionData.setApplicationId(applicationId);
+				S13ClientSessionImpl clientSession = new S13ClientSessionImpl(sessionData, getMessageFactory(), sessionFactory, this.getClientSessionListener());
 
-  @Override
-  public void stateChanged(Enum oldState, Enum newState) {
-    logger.info("Diameter S13 Session Factory :: stateChanged :: oldState[{}], newState[{}]", oldState, newState);
-  }
+				iss.addSession(clientSession);
+				clientSession.getSessions().get(0).setRequestListener(clientSession);
+				appSession = clientSession;
+			}
+			else {
+				throw new IllegalArgumentException("Wrong session class: " + aClass + ". Supported[" + ServerS13Session.class + "]");
+			}
+		}
+		catch (Exception e) {
+			logger.error("Failure to obtain new S13 Session.", e);
+		}
+		return appSession;
+	}
 
-  @Override
-  public long getApplicationId() {
-    return 16777252;
-  }
+	@Override
+	public void stateChanged(Enum oldState, Enum newState)
+	{
+		logger.info("Diameter S13 Session Factory :: stateChanged :: oldState[{}], newState[{}]", oldState, newState);
+	}
 
-  @Override
-  public void stateChanged(AppSession source, Enum oldState, Enum newState) {
-    logger.info("Diameter S13 Session Factory :: stateChanged :: Session, [{}], oldState[{}], newState[{}]", new Object[]{source, oldState, newState});
-  }
+	@Override
+	public long getApplicationId()
+	{
+		return 16777252;
+	}
 
-  @Override
-  public JMEIdentityCheckAnswer createMEIdentityCheckAnswer(Answer answer) {
-    return new JMEIdentityCheckAnswerImpl(answer);
-  }
+	@Override
+	public void stateChanged(AppSession source, Enum oldState, Enum newState)
+	{
+		logger.info("Diameter S13 Session Factory :: stateChanged :: Session, [{}], oldState[{}], newState[{}]", new Object[]{source, oldState, newState});
+	}
 
-  @Override
-  public JMEIdentityCheckRequest createMEIdentityCheckRequest(Request request) {
-    return new JMEIdentityCheckRequestImpl(request);
-  }
+	@Override
+	public JMEIdentityCheckAnswer createMEIdentityCheckAnswer(Answer answer)
+	{
+		return new JMEIdentityCheckAnswerImpl(answer);
+	}
 
-  @Override
-  public void doMEIdentityCheckRequestEvent(ServerS13Session appSession, JMEIdentityCheckRequest request)
-      throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
-    logger.info("Diameter S13 Session Factory :: doMEIdentityCheckRequestEvent :: appSession[{}], Request[{}]", appSession, request);
-  }
+	@Override
+	public JMEIdentityCheckRequest createMEIdentityCheckRequest(Request request)
+	{
+		return new JMEIdentityCheckRequestImpl(request);
+	}
 
-  @Override
-  public void doOtherEvent(AppSession appSession, AppRequestEvent request, AppAnswerEvent answer)
-      throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
-    logger.info("Diameter S13 Session Factory :: doOtherEvent :: appSession[{}], Request[{}], Answer[{}]", new Object[]{appSession, request, answer});
-  }
+	@Override
+	public void doMEIdentityCheckRequestEvent(ServerS13Session appSession, JMEIdentityCheckRequest request)
+	throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+	{
+		logger.info("Diameter S13 Session Factory :: doMEIdentityCheckRequestEvent :: appSession[{}], Request[{}]", appSession, request);
+	}
 
-  @Override
-  public void doMEIdentityCheckAnswerEvent(ClientS13Session appSession, JMEIdentityCheckRequest request, JMEIdentityCheckAnswer answer)
-      throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
-    logger.info("Diameter S13 Session Factory :: doMEIdentityCheckAnswerEvent :: appSession[{}], Request[{}], Answer[{}]",
-        new Object[]{appSession, request, answer});
-  }
+	@Override
+	public void doOtherEvent(AppSession appSession, AppRequestEvent request, AppAnswerEvent answer)
+	throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+	{
+		logger.info("Diameter S13 Session Factory :: doOtherEvent :: appSession[{}], Request[{}], Answer[{}]", new Object[]{appSession, request, answer});
+	}
+
+	@Override
+	public void doMEIdentityCheckAnswerEvent(ClientS13Session appSession, JMEIdentityCheckRequest request, JMEIdentityCheckAnswer answer)
+	throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+	{
+		logger.info("Diameter S13 Session Factory :: doMEIdentityCheckAnswerEvent :: appSession[{}], Request[{}], Answer[{}]",
+					new Object[]{appSession, request, answer});
+	}
 }

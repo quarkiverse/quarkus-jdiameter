@@ -40,21 +40,24 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api;
+ package org.jdiameter.api;
 
-/**
- * This interface is used to inform about changes in the state for a given peer.
- *
- * @author erick.svenson@yahoo.com
- * @version 1.5.1 Final
- */
-public interface PeerStateListener {
+ /**
+  * This interface is used to inform about changes in the state for a given peer.
+  *
+  * @author erick.svenson@yahoo.com
+  * @version 1.5.1 Final
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface PeerStateListener
+ {
 
-  /**
-   * A change of state has occurred for a peer.
-   * @param oldState old state of peer
-   * @param newState new state of peer
-   */
-  void stateChanged (PeerState oldState, PeerState newState);
+	 /**
+	  * A change of state has occurred for a peer.
+	  *
+	  * @param oldState old state of peer
+	  * @param newState new state of peer
+	  */
+	 void stateChanged(PeerState oldState, PeerState newState);
 
-}
+ }

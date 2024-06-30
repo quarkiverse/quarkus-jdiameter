@@ -40,30 +40,35 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.server.impl.app.rf;
+ package org.jdiameter.server.impl.app.rf;
 
-import java.io.Serializable;
+ import org.jdiameter.common.api.app.rf.IRfSessionData;
+ import org.jdiameter.common.api.app.rf.ServerRfSessionState;
 
-import org.jdiameter.common.api.app.rf.IRfSessionData;
-import org.jdiameter.common.api.app.rf.ServerRfSessionState;
+ import java.io.Serializable;
 
-/**
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface IServerRfSessionData extends IRfSessionData {
+ /**
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IServerRfSessionData extends IRfSessionData
+ {
 
-  ServerRfSessionState getServerRfSessionState();
-  void setServerRfSessionState(ServerRfSessionState state);
+	 ServerRfSessionState getServerRfSessionState();
 
-  void setTsTimerId(Serializable tsTimerId);
-  Serializable getTsTimerId();
+	 void setServerRfSessionState(ServerRfSessionState state);
 
-  long getTsTimeout();
-  void setTsTimeout(long tsTimeout);
+	 void setTsTimerId(Serializable tsTimerId);
 
-  boolean isStateless();
-  void setStateless(boolean stateless);
+	 Serializable getTsTimerId();
 
-}
+	 long getTsTimeout();
+
+	 void setTsTimeout(long tsTimeout);
+
+	 boolean isStateless();
+
+	 void setStateless(boolean stateless);
+
+ }

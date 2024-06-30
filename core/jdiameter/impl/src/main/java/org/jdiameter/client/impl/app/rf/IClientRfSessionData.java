@@ -40,40 +40,47 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.client.impl.app.rf;
+ package org.jdiameter.client.impl.app.rf;
 
-import java.io.Serializable;
+ import org.jdiameter.api.ApplicationId;
+ import org.jdiameter.api.Request;
+ import org.jdiameter.common.api.app.rf.ClientRfSessionState;
+ import org.jdiameter.common.api.app.rf.IRfSessionData;
 
-import org.jdiameter.api.ApplicationId;
-import org.jdiameter.api.Request;
-import org.jdiameter.common.api.app.rf.ClientRfSessionState;
-import org.jdiameter.common.api.app.rf.IRfSessionData;
+ import java.io.Serializable;
 
-/**
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface IClientRfSessionData extends IRfSessionData {
+ /**
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IClientRfSessionData extends IRfSessionData
+ {
 
-  void setClientRfSessionState(ClientRfSessionState state);
-  ClientRfSessionState getClientRfSessionState();
+	 void setClientRfSessionState(ClientRfSessionState state);
 
-  void setBuffer(Request event);
-  Request getBuffer();
+	 ClientRfSessionState getClientRfSessionState();
 
-  @Override
-  ApplicationId getApplicationId();
-  @Override
-  void setApplicationId(ApplicationId appId);
+	 void setBuffer(Request event);
 
-  Serializable getTsTimerId();
-  void setTsTimerId(Serializable tid);
+	 Request getBuffer();
 
-  String getDestinationHost();
-  void setDestinationHost(String destinationHost);
+	 @Override
+	 ApplicationId getApplicationId();
 
-  String getDestinationRealm();
-  void setDestinationRealm(String destinationRealm);
+	 @Override
+	 void setApplicationId(ApplicationId appId);
 
-}
+	 Serializable getTsTimerId();
+
+	 void setTsTimerId(Serializable tid);
+
+	 String getDestinationHost();
+
+	 void setDestinationHost(String destinationHost);
+
+	 String getDestinationRealm();
+
+	 void setDestinationRealm(String destinationRealm);
+
+ }

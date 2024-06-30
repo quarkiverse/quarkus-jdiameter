@@ -40,49 +40,53 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.server.impl.helpers;
+ package org.jdiameter.server.impl.helpers;
 
+ /**
+  * This class provide pluggable features
+  *
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public class ExtensionPoint extends org.jdiameter.client.impl.helpers.ExtensionPoint
+ {
 
-/**
- * This class provide pluggable features
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public class ExtensionPoint extends org.jdiameter.client.impl.helpers.ExtensionPoint {
+	 private static final long serialVersionUID = -8220684081025349561L;
 
-  private static final long serialVersionUID = -8220684081025349561L;
+	 /**
+	  * Network implementation class name
+	  */
+	 public static final ExtensionPoint InternalNetWork = new ExtensionPoint("InternalNetWork", "org.jdiameter.server.impl.NetworkImpl", true);
 
-  /**
-   * Network implementation class name
-   */
-  public static final ExtensionPoint InternalNetWork = new ExtensionPoint("InternalNetWork", "org.jdiameter.server.impl.NetworkImpl", true);
+	 //false - so its not added to extension point so Assembler does not try to create instance!
+	 /**
+	  * Class name of network guard
+	  */
+	 public static final ExtensionPoint InternalNetworkGuard = new ExtensionPoint("InternalNetworkGuard", "org.jdiameter.server.impl.io.tcp.NetworkGuard", false);
 
-  //false - so its not added to extension point so Assembler does not try to create instance!
-  /**
-   * Class name of network guard
-   */
-  public static final ExtensionPoint InternalNetworkGuard = new ExtensionPoint("InternalNetworkGuard", "org.jdiameter.server.impl.io.tcp.NetworkGuard", false);
+	 /**
+	  * Overload manager implementation class name
+	  */
+	 public static final ExtensionPoint InternalOverloadManager =
+			 new ExtensionPoint("InternalOverloadManager", "org.jdiameter.server.impl.OverloadManagerImpl", true);
 
-  /**
-   * Overload manager implementation class name
-   */
-  public static final ExtensionPoint InternalOverloadManager =
-      new ExtensionPoint("InternalOverloadManager", "org.jdiameter.server.impl.OverloadManagerImpl", true);
+	 protected ExtensionPoint(String name, String defaultValue, boolean appendToInternal)
+	 {
+		 super(name, defaultValue);
+		 if (appendToInternal) {
+			 Internal.appendElements(this);
+		 }
+	 }
 
-  protected ExtensionPoint(String name, String defaultValue, boolean appendToInternal) {
-    super(name, defaultValue);
-    if (appendToInternal) {
-      Internal.appendElements(this);
-    }
-  }
+	 protected ExtensionPoint(String name, org.jdiameter.client.impl.helpers.ExtensionPoint... parameters)
+	 {
+		 super(name, parameters);
+	 }
 
-  protected ExtensionPoint(String name, org.jdiameter.client.impl.helpers.ExtensionPoint... parameters) {
-    super(name, parameters);
-  }
-
-  protected ExtensionPoint(String name, int id, org.jdiameter.client.impl.helpers.ExtensionPoint... parameters) {
-    super(name, id, parameters);
-  }
-}
+	 protected ExtensionPoint(String name, int id, org.jdiameter.client.impl.helpers.ExtensionPoint... parameters)
+	 {
+		 super(name, id, parameters);
+	 }
+ }

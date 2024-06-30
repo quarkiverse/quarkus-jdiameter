@@ -40,41 +40,49 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api;
+ package org.jdiameter.api;
 
-/**
- * The ApplicationAlreadyUse signals that the application a user is reporting
- * support for is already in use by someone else.
- *
- * @author erick.svenson@yahoo.com
- * @version 1.5.1 Final
- */
-public class ApplicationAlreadyUseException extends Exception {
+ /**
+  * The ApplicationAlreadyUse signals that the application a user is reporting support for is already in use by someone
+  * else.
+  *
+  * @author erick.svenson@yahoo.com
+  * @version 1.5.1 Final
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public class ApplicationAlreadyUseException extends Exception
+ {
 
-  private static final long serialVersionUID = 1L;
+	 private static final long serialVersionUID = 1L;
 
-  /**
-   * Constructor with reason string
-   * @param message reason string
-   */
-  public ApplicationAlreadyUseException(String message) {
-    super(message);
-  }
+	 /**
+	  * Constructor with reason string
+	  *
+	  * @param message reason string
+	  */
+	 public ApplicationAlreadyUseException(String message)
+	 {
+		 super(message);
+	 }
 
-  /**
-   * Constructor with reason string and parent exception
-   * @param message message reason string
-   * @param cause parent exception
-   */
-  public ApplicationAlreadyUseException(String message, Throwable cause) {
-    super(message, cause);
-  }
+	 /**
+	  * Constructor with reason string and parent exception
+	  *
+	  * @param message message reason string
+	  * @param cause   parent exception
+	  */
+	 public ApplicationAlreadyUseException(String message, Throwable cause)
+	 {
+		 super(message, cause);
+	 }
 
-  /**
-   * Constructor with parent exception
-   * @param cause  parent exception
-   */
-  public ApplicationAlreadyUseException(Throwable cause) {
-    super(cause);
-  }
-}
+	 /**
+	  * Constructor with parent exception
+	  *
+	  * @param cause parent exception
+	  */
+	 public ApplicationAlreadyUseException(Throwable cause)
+	 {
+		 super(cause);
+	 }
+ }

@@ -25,9 +25,10 @@ import org.jdiameter.common.api.app.slh.ISLhSessionData;
 
 /**
  * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
- *
  */
 
-public interface IServerSLhSessionData extends ISLhSessionData {
+@SuppressWarnings("all")//3rd party lib
+public interface IServerSLhSessionData extends ISLhSessionData
+{
 
 }

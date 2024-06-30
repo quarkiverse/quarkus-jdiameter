@@ -40,44 +40,52 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api;
+ package org.jdiameter.api;
 
-/**
- * This interface extends PeerTable interface and
- * append some operation for controls peer and realm table
- *
- * @author erick.svenson@yahoo.com
- * @version 1.5.1 Final
- */
-public interface MutablePeerTable extends PeerTable {
+ /**
+  * This interface extends PeerTable interface and append some operation for controls peer and realm table
+  *
+  * @author erick.svenson@yahoo.com
+  * @version 1.5.1 Final
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface MutablePeerTable extends PeerTable
+ {
 
-  /**
-   * Return peer statistics
-   * @param peerHost host of peer
-   * @return peer statistics
-   */
-  Statistic getStatistic(String peerHost);
+	 /**
+	  * Return peer statistics
+	  *
+	  * @param peerHost host of peer
+	  *
+	  * @return peer statistics
+	  */
+	 Statistic getStatistic(String peerHost);
 
-  /**
-   * Append peer table listener
-   * @param listener listener instance
-   */
-  void setPeerTableListener(PeerTableListener listener);
+	 /**
+	  * Append peer table listener
+	  *
+	  * @param listener listener instance
+	  */
+	 void setPeerTableListener(PeerTableListener listener);
 
-  /**
-   * Add new peer to peer table
-   * @param peer URI of peer (host, port and other connection information)
-   * for example: aaa://host.example.com:6666;transport=tcp;protocol=diameter
-   * @param realmName name of realm
-   * @param connecting attempt connect
-   * @return peer instance
-   */
-  Peer addPeer(URI peer, String realmName, boolean connecting);
+	 /**
+	  * Add new peer to peer table
+	  *
+	  * @param peer       URI of peer (host, port and other connection information) for example:
+	  *                   aaa://host.example.com:6666;transport=tcp;protocol=diameter
+	  * @param realmName  name of realm
+	  * @param connecting attempt connect
+	  *
+	  * @return peer instance
+	  */
+	 Peer addPeer(URI peer, String realmName, boolean connecting);
 
-  /**
-   * Remove peer from peer table
-   * @param peerHost host of peer
-   * @return removed peer instance
-   */
-  Peer removePeer(String peerHost);
-}
+	 /**
+	  * Remove peer from peer table
+	  *
+	  * @param peerHost host of peer
+	  *
+	  * @return removed peer instance
+	  */
+	 Peer removePeer(String peerHost);
+ }

@@ -22,15 +22,6 @@
 
 package org.jdiameter.client.impl.transport.sctp;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 import org.jdiameter.api.AvpDataException;
 import org.jdiameter.api.Configuration;
 import org.jdiameter.api.InternalException;
@@ -45,321 +36,341 @@ import org.jdiameter.common.api.concurrent.IConcurrentFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
- *
  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
  */
-public class SCTPClientConnection implements IConnection {
+@SuppressWarnings("all")//3rd party lib
+public class SCTPClientConnection implements IConnection
+{
 
-  private static Logger logger = LoggerFactory.getLogger(SCTPClientConnection.class);
-  private final long createdTime;
-  private SCTPTransportClient client;
-  // FIXME : requires JDK6 : protected LinkedBlockingDeque<Event> buffer = new LinkedBlockingDeque<Event>(64);
-  private LinkedBlockingQueue<Event> buffer = new LinkedBlockingQueue<Event>(64);
-  private IMessageParser parser;
-  private Lock lock = new ReentrantLock();
-  private ConcurrentLinkedQueue<IConnectionListener> listeners = new ConcurrentLinkedQueue<IConnectionListener>();
-  // Cached value for connection key
-  private String cachedKey = null;
+	private static Logger logger = LoggerFactory.getLogger(SCTPClientConnection.class);
+	private final long createdTime;
+	private SCTPTransportClient client;
+	// FIXME : requires JDK6 : protected LinkedBlockingDeque<Event> buffer = new LinkedBlockingDeque<Event>(64);
+	private LinkedBlockingQueue<Event> buffer = new LinkedBlockingQueue<Event>(64);
+	private IMessageParser parser;
+	private Lock lock = new ReentrantLock();
+	private ConcurrentLinkedQueue<IConnectionListener> listeners = new ConcurrentLinkedQueue<IConnectionListener>();
+	// Cached value for connection key
+	private String cachedKey = null;
 
-  protected SCTPClientConnection(IMessageParser parser) {
-    this.createdTime = System.currentTimeMillis();
-    this.parser = parser;
-    client = new SCTPTransportClient(this);
-  }
+	protected SCTPClientConnection(IMessageParser parser)
+	{
+		this.createdTime = System.currentTimeMillis();
+		this.parser = parser;
+		client = new SCTPTransportClient(this);
+	}
 
-  public SCTPClientConnection(Configuration config, IConcurrentFactory concurrentFactory, InetAddress remoteAddress,
-      int remotePort, InetAddress localAddress, int localPort, IMessageParser parser, String ref) {
-    this(parser);
+	public SCTPClientConnection(Configuration config, IConcurrentFactory concurrentFactory, InetAddress remoteAddress,
+								int remotePort, InetAddress localAddress, int localPort, IMessageParser parser, String ref)
+	{
+		this(parser);
 
-    logger.debug("SCTP Client constructor. Remote [{}:{}] Local [{}:{}]", new Object[] { remoteAddress, remotePort,
-        localAddress, localPort });
-    client.setDestAddress(new InetSocketAddress(remoteAddress, remotePort));
-    client.setOrigAddress(new InetSocketAddress(localAddress, localPort));
-    client.setExtraHostAddresses(getExtraLocalIPAddresses(config));
-  }
+		logger.debug("SCTP Client constructor. Remote [{}:{}] Local [{}:{}]", new Object[]{
+				remoteAddress, remotePort,
+				localAddress, localPort
+		});
+		client.setDestAddress(new InetSocketAddress(remoteAddress, remotePort));
+		client.setOrigAddress(new InetSocketAddress(localAddress, localPort));
+	}
 
-  public SCTPClientConnection(Configuration config, IConcurrentFactory concurrentFactory, InetAddress remoteAddress,
-      int remotePort, InetAddress localAddress, int localPort, IConnectionListener listener, IMessageParser parser, String ref) {
-    this(parser);
+	public SCTPClientConnection(Configuration config, IConcurrentFactory concurrentFactory, InetAddress remoteAddress,
+								int remotePort, InetAddress localAddress, int localPort, IConnectionListener listener, IMessageParser parser, String ref)
+	{
+		this(parser);
 
-    logger.debug("SCTP Client constructor (with ref). Remote [{}:{}] Local [{}:{}]", new Object[] { remoteAddress, remotePort,
-        localAddress, localPort });
-    client.setDestAddress(new InetSocketAddress(remoteAddress, remotePort));
-    client.setOrigAddress(new InetSocketAddress(localAddress, localPort));
-    client.setExtraHostAddresses(getExtraLocalIPAddresses(config));
-    listeners.add(listener);
-  }
+		logger.debug("SCTP Client constructor (with ref). Remote [{}:{}] Local [{}:{}]", new Object[]{
+				remoteAddress, remotePort,
+				localAddress, localPort
+		});
+		client.setDestAddress(new InetSocketAddress(remoteAddress, remotePort));
+		client.setOrigAddress(new InetSocketAddress(localAddress, localPort));
+		listeners.add(listener);
+	}
 
-  private static String[] getExtraLocalIPAddresses(Configuration config) {
-    String[] extraLocalIPAddresses = null;
+	@Override
+	public long getCreatedTime()
+	{
+		return createdTime;
+	}
 
-    if (!config.isAttributeExist(org.jdiameter.server.impl.helpers.Parameters.OwnIPAddresses.ordinal())) {
-      throw new IllegalArgumentException("No IPAddresses attribute present in local peer!");
-    } else {
-      final Configuration[] ownIPAddresses = config.getChildren(org.jdiameter.server.impl.helpers.Parameters.OwnIPAddresses.ordinal());
-      if (ownIPAddresses.length > 4) {
-        throw new IllegalArgumentException("Maximum of 4 IPAddress attributes allowed");
-      }
+	@Override
+	public void connect() throws TransportException
+	{
+		try {
+			getClient().initialize();
+			getClient().start();
+		}
+		catch (IOException e) {
+			throw new TransportException("Cannot init transport: ", TransportError.NetWorkError, e);
+		}
+		catch (Exception e) {
+			throw new TransportException("Cannot init transport: ", TransportError.Internal, e);
+		}
+	}
 
-      extraLocalIPAddresses = new String[ownIPAddresses.length - 1];
+	@Override
+	public void disconnect() throws InternalError
+	{
+		try {
+			if (getClient() != null) {
+				getClient().stop();
+			}
+		}
+		catch (Exception e) {
+			throw new InternalError("Error while stopping transport: " + e.getMessage());
+		}
+	}
 
-      for(int i = 1; i < ownIPAddresses.length; i++) {
-        final String localIPAddress = ownIPAddresses[i].getStringValue(org.jdiameter.server.impl.helpers.Parameters.OwnIPAddress.ordinal(), "");
-        extraLocalIPAddresses[i - 1] = localIPAddress;
-        logger.debug("Adding extra local IP address [{}]", localIPAddress);
-      }
-    }
-    return extraLocalIPAddresses;
-  }
+	@Override
+	public void release() throws IOException
+	{
+		try {
+			if (getClient() != null) {
+				getClient().release();
+			}
+		}
+		catch (Exception e) {
+			throw new IOException(e.getMessage());
+		}
+		finally {
+			parser = null;
+			buffer.clear();
+			remAllConnectionListener();
+		}
+	}
 
-  @Override
-  public long getCreatedTime() {
-    return createdTime;
-  }
+	@Override
+	public void sendMessage(IMessage message) throws TransportException, OverloadException
+	{
+		try {
+			if (getClient() != null) {
+				getClient().sendMessage(parser.encodeMessage(message));
+			}
+		}
+		catch (Exception e) {
+			throw new TransportException("Cannot send message: ", TransportError.FailedSendMessage, e);
+		}
+	}
 
-  @Override
-  public void connect() throws TransportException {
-    try {
-      getClient().initialize();
-      getClient().start();
-    }
-    catch (IOException e) {
-      throw new TransportException("Cannot init transport: ", TransportError.NetWorkError, e);
-    }
-    catch (Exception e) {
-      throw new TransportException("Cannot init transport: ", TransportError.Internal, e);
-    }
-  }
+	protected SCTPTransportClient getClient()
+	{
+		return client;
+	}
 
-  @Override
-  public void disconnect() throws InternalError {
-    try {
-      if (getClient() != null) {
-        getClient().stop();
-      }
-    }
-    catch (Exception e) {
-      throw new InternalError("Error while stopping transport: " + e.getMessage());
-    }
-  }
+	@Override
+	public boolean isNetworkInitiated()
+	{
+		return false;
+	}
 
-  @Override
-  public void release() throws IOException {
-    try {
-      if (getClient() != null) {
-        getClient().release();
-      }
-    }
-    catch (Exception e) {
-      throw new IOException(e.getMessage());
-    }
-    finally {
-      parser = null;
-      buffer.clear();
-      remAllConnectionListener();
-    }
-  }
+	@Override
+	public boolean isConnected()
+	{
+		return getClient() != null && getClient().isConnected();
+	}
 
-  @Override
-  public void sendMessage(IMessage message) throws TransportException, OverloadException {
-    try {
-      if (getClient() != null) {
-        getClient().sendMessage(parser.encodeMessage(message));
-      }
-    }
-    catch (Exception e) {
-      throw new TransportException("Cannot send message: ", TransportError.FailedSendMessage, e);
-    }
-  }
+	@Override
+	public InetAddress getRemoteAddress()
+	{
+		return getClient().getDestAddress().getAddress();
+	}
 
-  protected SCTPTransportClient getClient() {
-    return client;
-  }
+	@Override
+	public int getRemotePort()
+	{
+		return getClient().getDestAddress().getPort();
+	}
 
-  @Override
-  public boolean isNetworkInitiated() {
-    return false;
-  }
+	@Override
+	public void addConnectionListener(IConnectionListener listener)
+	{
+		lock.lock();
+		try {
+			listeners.add(listener);
+			if (buffer.size() != 0) {
+				for (Event e : buffer) {
+					try {
+						onEvent(e);
+					}
+					catch (AvpDataException e1) {
+						// ignore
+					}
+				}
+				buffer.clear();
+			}
+		}
+		finally {
+			lock.unlock();
+		}
+	}
 
-  @Override
-  public boolean isConnected() {
-    return getClient() != null && getClient().isConnected();
-  }
+	@Override
+	public void remAllConnectionListener()
+	{
+		lock.lock();
+		try {
+			listeners.clear();
+		}
+		finally {
+			lock.unlock();
+		}
+	}
 
-  @Override
-  public InetAddress getRemoteAddress() {
-    return getClient().getDestAddress().getAddress();
-  }
+	@Override
+	public void remConnectionListener(IConnectionListener listener)
+	{
+		lock.lock();
+		try {
+			listeners.remove(listener);
+		}
+		finally {
+			lock.unlock();
+		}
+	}
 
-  @Override
-  public int getRemotePort() {
-    return getClient().getDestAddress().getPort();
-  }
+	@Override
+	public boolean isWrapperFor(Class<?> aClass) throws InternalException
+	{
+		return false;
+	}
 
-  @Override
-  public void addConnectionListener(IConnectionListener listener) {
-    lock.lock();
-    try {
-      listeners.add(listener);
-      if (buffer.size() != 0) {
-        for (Event e : buffer) {
-          try {
-            onEvent(e);
-          }
-          catch (AvpDataException e1) {
-            // ignore
-          }
-        }
-        buffer.clear();
-      }
-    }
-    finally {
-      lock.unlock();
-    }
-  }
+	@Override
+	public <T> T unwrap(Class<T> aClass) throws InternalException
+	{
+		return null;
+	}
 
-  @Override
-  public void remAllConnectionListener() {
-    lock.lock();
-    try {
-      listeners.clear();
-    }
-    finally {
-      lock.unlock();
-    }
-  }
+	@Override
+	public String getKey()
+	{
+		if (this.cachedKey == null) {
+			this.cachedKey = new StringBuffer("aaa://").append(getRemoteAddress().getHostName()).append(":").append(getRemotePort())
+													   .toString();
+		}
 
-  @Override
-  public void remConnectionListener(IConnectionListener listener) {
-    lock.lock();
-    try {
-      listeners.remove(listener);
-    }
-    finally {
-      lock.unlock();
-    }
-  }
+		return this.cachedKey;
+	}
 
-  @Override
-  public boolean isWrapperFor(Class<?> aClass) throws InternalException {
-    return false;
-  }
+	protected void onDisconnect() throws AvpDataException
+	{
+		onEvent(new Event(EventType.DISCONNECTED));
+	}
 
-  @Override
-  public <T> T unwrap(Class<T> aClass) throws InternalException {
-    return null;
-  }
+	protected void onMessageReceived(ByteBuffer message) throws AvpDataException
+	{
+		if (logger.isDebugEnabled()) {
+			logger.debug("Received message of size [{}]", message.array().length);
+		}
+		onEvent(new Event(EventType.MESSAGE_RECEIVED, message));
+	}
 
-  @Override
-  public String getKey() {
-    if (this.cachedKey == null) {
-      this.cachedKey = new StringBuffer("aaa://").append(getRemoteAddress().getHostName()).append(":").append(getRemotePort())
-          .toString();
-    }
+	protected void onAvpDataException(AvpDataException e)
+	{
+		try {
+			onEvent(new Event(EventType.DATA_EXCEPTION, e));
+		}
+		catch (AvpDataException e1) {
+			// ignore
+		}
+	}
 
-    return this.cachedKey;
-  }
+	protected void onConnected()
+	{
+		try {
+			onEvent(new Event(EventType.CONNECTED));
+		}
+		catch (AvpDataException e1) {
+			// ignore
+		}
+	}
 
-  protected void onDisconnect() throws AvpDataException {
-    onEvent(new Event(EventType.DISCONNECTED));
-  }
+	protected void onEvent(Event event) throws AvpDataException
+	{
+		lock.lock();
+		try {
+			if (processBufferedMessages(event)) {
+				for (IConnectionListener listener : listeners) {
+					switch (event.type) {
+						case CONNECTED:
+							listener.connectionOpened(getKey());
+							break;
+						case DISCONNECTED:
+							listener.connectionClosed(getKey(), null);
+							break;
+						case MESSAGE_RECEIVED:
+							listener.messageReceived(getKey(), parser.createMessage(event.message));
+							break;
+						case DATA_EXCEPTION:
+							listener.internalError(getKey(), null, new TransportException("Avp Data Exception:",
+																						  TransportError.ReceivedBrokenMessage, event.exception));
+							break;
+					}
+				}
+			}
+		}
+		finally {
+			lock.unlock();
+		}
+	}
 
-  protected void onMessageReceived(ByteBuffer message) throws AvpDataException {
-    if (logger.isDebugEnabled()) {
-      logger.debug("Received message of size [{}]", message.array().length);
-    }
-    onEvent(new Event(EventType.MESSAGE_RECEIVED, message));
-  }
+	protected boolean processBufferedMessages(Event event) throws AvpDataException
+	{
+		if (listeners.size() == 0) {
+			try {
+				buffer.add(event);
+			}
+			catch (IllegalStateException e) {
+				// FIXME : requires JDK6 : buffer.removeLast();
+				Event[] tempBuffer = buffer.toArray(new Event[buffer.size()]);
+				buffer.remove(tempBuffer[tempBuffer.length - 1]);
+				buffer.add(event);
+			}
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
 
-  protected void onAvpDataException(AvpDataException e) {
-    try {
-      onEvent(new Event(EventType.DATA_EXCEPTION, e));
-    }
-    catch (AvpDataException e1) {
-      // ignore
-    }
-  }
+	// ------------------ helper classes ------------------------
+	private enum EventType
+	{
+		CONNECTED, DISCONNECTED, MESSAGE_RECEIVED, DATA_EXCEPTION
+	}
 
-  protected void onConnected() {
-    try {
-      onEvent(new Event(EventType.CONNECTED));
-    }
-    catch (AvpDataException e1) {
-      // ignore
-    }
-  }
+	private static class Event
+	{
 
-  protected void onEvent(Event event) throws AvpDataException {
-    lock.lock();
-    try {
-      if (processBufferedMessages(event)) {
-        for (IConnectionListener listener : listeners) {
-          switch (event.type) {
-            case CONNECTED:
-              listener.connectionOpened(getKey());
-              break;
-            case DISCONNECTED:
-              listener.connectionClosed(getKey(), null);
-              break;
-            case MESSAGE_RECEIVED:
-              listener.messageReceived(getKey(), parser.createMessage(event.message));
-              break;
-            case DATA_EXCEPTION:
-              listener.internalError(getKey(), null, new TransportException("Avp Data Exception:",
-                  TransportError.ReceivedBrokenMessage, event.exception));
-              break;
-          }
-        }
-      }
-    }
-    finally {
-      lock.unlock();
-    }
-  }
+		EventType type;
+		ByteBuffer message;
+		Exception exception;
 
-  protected boolean processBufferedMessages(Event event) throws AvpDataException {
-    if (listeners.size() == 0) {
-      try {
-        buffer.add(event);
-      }
-      catch (IllegalStateException e) {
-        // FIXME : requires JDK6 : buffer.removeLast();
-        Event[] tempBuffer = buffer.toArray(new Event[buffer.size()]);
-        buffer.remove(tempBuffer[tempBuffer.length - 1]);
-        buffer.add(event);
-      }
-      return false;
-    }
-    else {
-      return true;
-    }
-  }
+		Event(EventType type)
+		{
+			this.type = type;
+		}
 
-  // ------------------ helper classes ------------------------
-  private enum EventType {
-    CONNECTED, DISCONNECTED, MESSAGE_RECEIVED, DATA_EXCEPTION
-  }
+		Event(EventType type, Exception exception)
+		{
+			this(type);
+			this.exception = exception;
+		}
 
-  private static class Event {
-
-    EventType type;
-    ByteBuffer message;
-    Exception exception;
-
-    Event(EventType type) {
-      this.type = type;
-    }
-
-    Event(EventType type, Exception exception) {
-      this(type);
-      this.exception = exception;
-    }
-
-    Event(EventType type, ByteBuffer message) {
-      this(type);
-      this.message = message;
-    }
-  }
+		Event(EventType type, ByteBuffer message)
+		{
+			this(type);
+			this.message = message;
+		}
+	}
 }

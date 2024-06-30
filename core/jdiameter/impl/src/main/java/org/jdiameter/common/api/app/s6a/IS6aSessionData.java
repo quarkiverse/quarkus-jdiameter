@@ -40,28 +40,32 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.api.app.s6a;
+ package org.jdiameter.common.api.app.s6a;
 
-import java.io.Serializable;
+ import org.jdiameter.api.Request;
+ import org.jdiameter.common.api.app.IAppSessionData;
 
-import org.jdiameter.api.Request;
-import org.jdiameter.common.api.app.IAppSessionData;
+ import java.io.Serializable;
 
-/**
- *
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:richard.good@smilecoms.com"> Richard Good </a>
- * @author <a href="mailto:paul.carter-brown@smilecoms.com"> Paul Carter-Brown </a>
- */
-public interface IS6aSessionData extends IAppSessionData {
+ /**
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:richard.good@smilecoms.com"> Richard Good </a>
+  * @author <a href="mailto:paul.carter-brown@smilecoms.com"> Paul Carter-Brown </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IS6aSessionData extends IAppSessionData
+ {
 
-  void setS6aSessionState(S6aSessionState state);
-  S6aSessionState getS6aSessionState();
+	 void setS6aSessionState(S6aSessionState state);
 
-  Serializable getTsTimerId();
-  void setTsTimerId(Serializable tid);
+	 S6aSessionState getS6aSessionState();
 
-  void setBuffer(Request buffer);
-  Request getBuffer();
+	 Serializable getTsTimerId();
 
-}
+	 void setTsTimerId(Serializable tid);
+
+	 void setBuffer(Request buffer);
+
+	 Request getBuffer();
+
+ }

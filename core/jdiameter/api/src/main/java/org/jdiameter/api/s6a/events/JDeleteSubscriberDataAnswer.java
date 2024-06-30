@@ -40,19 +40,20 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api.s6a.events;
+ package org.jdiameter.api.s6a.events;
 
-import org.jdiameter.api.app.AppAnswerEvent;
+ import org.jdiameter.api.app.AppAnswerEvent;
 
-/**
- *
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface JDeleteSubscriberDataAnswer extends AppAnswerEvent {
+ /**
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface JDeleteSubscriberDataAnswer extends AppAnswerEvent
+ {
 
-  String _SHORT_NAME = "DSA";
-  String _LONG_NAME = "Delete-Subscriber-Data-Answer";
+	 String _SHORT_NAME = "DSA";
+	 String _LONG_NAME = "Delete-Subscriber-Data-Answer";
 
-  int code = 320;
+	 int code = 320;
 
-}
+ }

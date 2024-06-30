@@ -40,36 +40,39 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api.acc;
+ package org.jdiameter.api.acc;
 
-import org.jdiameter.api.InternalException;
-import org.jdiameter.api.OverloadException;
-import org.jdiameter.api.RouteException;
-import org.jdiameter.api.acc.events.AccountRequest;
-import org.jdiameter.api.app.AppSession;
-import org.jdiameter.api.app.StateMachine;
+ import org.jdiameter.api.InternalException;
+ import org.jdiameter.api.OverloadException;
+ import org.jdiameter.api.RouteException;
+ import org.jdiameter.api.acc.events.AccountRequest;
+ import org.jdiameter.api.app.AppSession;
+ import org.jdiameter.api.app.StateMachine;
 
-/**
- * Basic class for accounting application specific session
- * Listener must injection from constructor of implementation class
- *
- * @version 1.5.1 Final
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public interface ClientAccSession extends AppSession, StateMachine {
+ /**
+  * Basic class for accounting application specific session Listener must injection from constructor of implementation
+  * class
+  *
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @version 1.5.1 Final
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface ClientAccSession extends AppSession, StateMachine
+ {
 
-  /**
-   * Send Account Request to Server
-   * @param request request object
-   * @throws InternalException The InternalException signals that internal error is occurred.
-   * @throws IllegalStateException The IllegalStateException signals that session has incorrect state (invalid).
-   * @throws RouteException The NoRouteException signals that no route exist for a given realm.
-   * @throws OverloadException The OverloadException signals that destination host is overloaded.
-   */
-  void sendAccountRequest(AccountRequest request)
-      throws InternalException, IllegalStateException, RouteException, OverloadException;
+	 /**
+	  * Send Account Request to Server
+	  *
+	  * @param request request object
+	  *
+	  * @throws InternalException     The InternalException signals that internal error is occurred.
+	  * @throws IllegalStateException The IllegalStateException signals that session has incorrect state (invalid).
+	  * @throws RouteException        The NoRouteException signals that no route exist for a given realm.
+	  * @throws OverloadException     The OverloadException signals that destination host is overloaded.
+	  */
+	 void sendAccountRequest(AccountRequest request)
+	 throws InternalException, IllegalStateException, RouteException, OverloadException;
 
-}
+ }

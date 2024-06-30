@@ -31,18 +31,18 @@ import org.jdiameter.api.app.AppSession;
 import org.jdiameter.api.slh.events.LCSRoutingInfoAnswer;
 import org.jdiameter.api.slh.events.LCSRoutingInfoRequest;
 
-
 /**
  * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
- *
  */
 
-public interface ClientSLhSessionListener {
+@SuppressWarnings("all")//3rd party lib
+public interface ClientSLhSessionListener
+{
 
-  void doOtherEvent(AppSession session, AppRequestEvent request, AppAnswerEvent answer)
-      throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
+	void doOtherEvent(AppSession session, AppRequestEvent request, AppAnswerEvent answer)
+	throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
 
-  void doLCSRoutingInfoAnswerEvent(ClientSLhSession session, LCSRoutingInfoRequest request, LCSRoutingInfoAnswer answer)
-      throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
+	void doLCSRoutingInfoAnswerEvent(ClientSLhSession session, LCSRoutingInfoRequest request, LCSRoutingInfoAnswer answer)
+	throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
 
 }

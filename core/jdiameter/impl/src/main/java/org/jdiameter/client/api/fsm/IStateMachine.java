@@ -40,28 +40,31 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.client.api.fsm;
+ package org.jdiameter.client.api.fsm;
 
-import org.jdiameter.api.app.StateChangeListener;
-import org.jdiameter.api.app.StateMachine;
-import org.jdiameter.common.api.statistic.IStatistic;
+ import org.jdiameter.api.app.StateChangeListener;
+ import org.jdiameter.api.app.StateMachine;
+ import org.jdiameter.common.api.statistic.IStatistic;
 
-/**
- * This interface extends StateMachine interface
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public interface IStateMachine extends StateMachine {
+ /**
+  * This interface extends StateMachine interface
+  *
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IStateMachine extends StateMachine
+ {
 
-  /**
-   * This method returns occupancy of event queue
-   * @return occupancy of event queue
-   */
-  double getQueueInfo();
+	 /**
+	  * This method returns occupancy of event queue
+	  *
+	  * @return occupancy of event queue
+	  */
+	 double getQueueInfo();
 
-  void remStateChangeNotification(StateChangeListener listener);
+	 void remStateChangeNotification(StateChangeListener listener);
 
-  IStatistic getStatistic();
-}
+	 IStatistic getStatistic();
+ }

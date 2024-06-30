@@ -24,13 +24,17 @@ import org.jdiameter.api.Request;
 import org.jdiameter.api.s13.events.JMEIdentityCheckAnswer;
 import org.jdiameter.api.s13.events.JMEIdentityCheckRequest;
 
-public interface IS13MessageFactory {
-  JMEIdentityCheckRequest  createMEIdentityCheckRequest(Request request);
-  JMEIdentityCheckAnswer  createMEIdentityCheckAnswer(Answer answer);
+@SuppressWarnings("all")//3rd party lib
+public interface IS13MessageFactory
+{
+	JMEIdentityCheckRequest createMEIdentityCheckRequest(Request request);
 
-  /**
-   * Returns the Application-Id that this message factory is related to
-   * @return the Application-Id value
-   */
-  long getApplicationId();
+	JMEIdentityCheckAnswer createMEIdentityCheckAnswer(Answer answer);
+
+	/**
+	 * Returns the Application-Id that this message factory is related to
+	 *
+	 * @return the Application-Id value
+	 */
+	long getApplicationId();
 }

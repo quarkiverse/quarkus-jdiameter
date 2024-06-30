@@ -40,153 +40,143 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api.validation;
+ package org.jdiameter.api.validation;
 
-import java.io.InputStream;
+ import org.jdiameter.api.Message;
 
-import org.jdiameter.api.Message;
+ import java.io.InputStream;
 
-/**
- * Second generation Dictionary/Validator. This interface is exposed directly.
- *
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @version 1.1
- */
-public interface Dictionary {
+ /**
+  * Second generation Dictionary/Validator. This interface is exposed directly.
+  *
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @version 1.1
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface Dictionary
+ {
 
-  /**
-   * Fetches Avp representation for given code. If no such AVP is found,
-   * <b>null</b> value is returned.
-   *
-   * @param code
-   *            - positive integer, equal to AVP code.
-   * @return AvpRepresentation for given code or <b>null</b>
-   */
-  AvpRepresentation getAvp(int code);
+	 /**
+	  * Fetches Avp representation for given code. If no such AVP is found,
+	  * <b>null</b> value is returned.
+	  *
+	  * @param code - positive integer, equal to AVP code.
+	  *
+	  * @return AvpRepresentation for given code or <b>null</b>
+	  */
+	 AvpRepresentation getAvp(int code);
 
-  /**
-   * Fetches Avp representation for given code and vendorId. If no such AVP is
-   * found, <b>null</b> value is returned.
-   *
-   * @param code
-   *            - positive integer, equal to AVP code.
-   * @param vendorId
-   *            - positive long representing vendor code.
-   * @return AvpRepresentation for given code/vendor pair or <b>null</b>
-   */
-  AvpRepresentation getAvp(int code, long vendorId);
+	 /**
+	  * Fetches Avp representation for given code and vendorId. If no such AVP is found, <b>null</b> value is returned.
+	  *
+	  * @param code     - positive integer, equal to AVP code.
+	  * @param vendorId - positive long representing vendor code.
+	  *
+	  * @return AvpRepresentation for given code/vendor pair or <b>null</b>
+	  */
+	 AvpRepresentation getAvp(int code, long vendorId);
 
-  /**
-   * Fetches Avp representation for given name. If no such AVP is found,
-   * <b>null</b> value is returned.
-   *
-   * @param name
-   *            - name of AVP, like Session-Id.
-   * @return AvpRepresentation for given name or <b>null</b>
-   */
-  AvpRepresentation getAvp(String avpName);
+	 /**
+	  * Fetches Avp representation for given name. If no such AVP is found,
+	  * <b>null</b> value is returned.
+	  *
+	  * @param name - name of AVP, like Session-Id.
+	  *
+	  * @return AvpRepresentation for given name or <b>null</b>
+	  */
+	 AvpRepresentation getAvp(String avpName);
 
-  /**
-   *
-   * @param commandCode
-   *            - command code of message
-   * @param isRequest
-   *            - switches if lookup searches for request or answer
-   * @return message representation for given code and flag value or
-   *         <b>null</b>
-   */
-  MessageRepresentation getMessage(int commandCode, boolean isRequest);
+	 /**
+	  * @param commandCode - command code of message
+	  * @param isRequest   - switches if lookup searches for request or answer
+	  *
+	  * @return message representation for given code and flag value or
+	  * 		<b>null</b>
+	  */
+	 MessageRepresentation getMessage(int commandCode, boolean isRequest);
 
-  /**
-   *
-   * @param commandCode
-   *            - command code of message
-   * @param applicationId
-   *            - application id present in message header
-   * @param isRequest
-   *            - switches if lookup searches for request or answer
-   *
-   * @return message representation for given code, application and flag value
-   *         or <b>null</b>
-   */
-  MessageRepresentation getMessage(int commandCode, long applicationId, boolean isRequest);
+	 /**
+	  * @param commandCode   - command code of message
+	  * @param applicationId - application id present in message header
+	  * @param isRequest     - switches if lookup searches for request or answer
+	  *
+	  * @return message representation for given code, application and flag value or <b>null</b>
+	  */
+	 MessageRepresentation getMessage(int commandCode, long applicationId, boolean isRequest);
 
-  /**
-   * Configures dictionary. It can be called multiple times, each call
-   * reconfigures dictionary.
-   *
-   * @param is
-   */
-  void configure(InputStream is);
+	 /**
+	  * Configures dictionary. It can be called multiple times, each call reconfigures dictionary.
+	  *
+	  * @param is
+	  */
+	 void configure(InputStream is);
 
-  // Validator ----------------------------------------------------------------
+	 // Validator ----------------------------------------------------------------
 
-  /**
-   * Gets whether validator is enabled.
-   *
-   * @return <ul>
-   *         <li><b>true</b> if validator is enabled</li>
-   *         <li><b>false</b> if validator is disabled</li>
-   *         </ul>
-   */
-  boolean isEnabled();
+	 /**
+	  * Gets whether validator is enabled.
+	  *
+	  * @return <ul>
+	  * 		<li><b>true</b> if validator is enabled</li>
+	  * 		<li><b>false</b> if validator is disabled</li>
+	  * 		</ul>
+	  */
+	 boolean isEnabled();
 
-  /**
-   * Sets whether validator is enabled.
-   *
-   * @param enabled true to enable the validator, false to disable it
-   */
-  void setEnabled(boolean enabled);
+	 /**
+	  * Sets whether validator is enabled.
+	  *
+	  * @param enabled true to enable the validator, false to disable it
+	  */
+	 void setEnabled(boolean enabled);
 
-  /**
-   * Gets whether validator is configured.
-   *
-   * @return <ul>
-   *         <li><b>true</b> if validator has been initialized</li>
-   *         <li><b>false</b> if validator has not yet been initialized</li>
-   *         </ul>
-   */
-  boolean isConfigured();
+	 /**
+	  * Gets whether validator is configured.
+	  *
+	  * @return <ul>
+	  * 		<li><b>true</b> if validator has been initialized</li>
+	  * 		<li><b>false</b> if validator has not yet been initialized</li>
+	  * 		</ul>
+	  */
+	 boolean isConfigured();
 
-  /**
-   * Gets validator level for OUTGOING messages.
-   * Possible values are defined at {@link ValidatorLevel}
-   *
-   * @return an instance of {@link ValidatorLevel} representing the current level
-   */
-  ValidatorLevel getSendLevel();
+	 /**
+	  * Gets validator level for OUTGOING messages. Possible values are defined at {@link ValidatorLevel}
+	  *
+	  * @return an instance of {@link ValidatorLevel} representing the current level
+	  */
+	 ValidatorLevel getSendLevel();
 
-  /**
-   * Gets validator level for OUTGOING messages.
-   * Possible values are defined at {@link ValidatorLevel}
-   *
-   * @param sendLevel an instance of {@link ValidatorLevel} representing the new level
-   */
-  void setSendLevel(ValidatorLevel sendLevel);
+	 /**
+	  * Gets validator level for OUTGOING messages. Possible values are defined at {@link ValidatorLevel}
+	  *
+	  * @param sendLevel an instance of {@link ValidatorLevel} representing the new level
+	  */
+	 void setSendLevel(ValidatorLevel sendLevel);
 
-  /**
-   * Gets validator level for INCOMING messages.
-   * Possible values are defined at {@link ValidatorLevel}
-   *
-   * @return an instance of {@link ValidatorLevel} representing the current level
-   */
-  ValidatorLevel getReceiveLevel();
+	 /**
+	  * Gets validator level for INCOMING messages. Possible values are defined at {@link ValidatorLevel}
+	  *
+	  * @return an instance of {@link ValidatorLevel} representing the current level
+	  */
+	 ValidatorLevel getReceiveLevel();
 
-  /**
-   * Sets validator level for INCOMING messages.
-   * Possible values are defined at {@link ValidatorLevel}
-   *
-   * @param receiveLevel an instance of {@link ValidatorLevel} representing the new level
-   */
-  void setReceiveLevel(ValidatorLevel receiveLevel);
+	 /**
+	  * Sets validator level for INCOMING messages. Possible values are defined at {@link ValidatorLevel}
+	  *
+	  * @param receiveLevel an instance of {@link ValidatorLevel} representing the new level
+	  */
+	 void setReceiveLevel(ValidatorLevel receiveLevel);
 
-  /**
-   * Performs validation according to configured levels
-   *
-   * @param message - message we want to validate
-   * @param incoming - flag indicating if {@link #message} is incoming message or outgoing.
-   * @throws AvpNotAllowedException - in case validation fails. Exception has details(avp code and similar) about failure.
-   */
-  void validate(Message message, boolean incoming) throws AvpNotAllowedException;
-}
+	 /**
+	  * Performs validation according to configured levels
+	  *
+	  * @param message  - message we want to validate
+	  * @param incoming - flag indicating if {@link #message} is incoming message or outgoing.
+	  *
+	  * @throws AvpNotAllowedException - in case validation fails. Exception has details(avp code and similar) about
+	  *                                failure.
+	  */
+	 void validate(Message message, boolean incoming) throws AvpNotAllowedException;
+ }

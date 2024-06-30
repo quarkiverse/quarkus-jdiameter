@@ -40,16 +40,17 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api.cca;
+ package org.jdiameter.api.cca;
 
-import org.jdiameter.api.app.AppSession;
-import org.jdiameter.api.app.StateMachine;
+ import org.jdiameter.api.app.AppSession;
+ import org.jdiameter.api.app.StateMachine;
 
-/**
- *
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public interface CCASession extends  AppSession, StateMachine{
-  // simple marker interface.
-}
+ /**
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface CCASession extends AppSession, StateMachine
+ {
+	 // simple marker interface.
+ }

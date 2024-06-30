@@ -40,22 +40,24 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api.rx.events;
+ package org.jdiameter.api.rx.events;
 
-import org.jdiameter.api.app.AppAnswerEvent;
+ import org.jdiameter.api.app.AppAnswerEvent;
 
-/**
- * The ASA command, indicated by the Command-Code field set to 274 and the 'R' bit cleared
- * in the Command Flags field, is sent by the AF to the PCRF in response to the ASR command.
- *
- * @author <a href="mailto:richard.good@smilecoms.com"> Richard Good </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public interface RxAbortSessionAnswer extends AppAnswerEvent {
+ /**
+  * The ASA command, indicated by the Command-Code field set to 274 and the 'R' bit cleared in the Command Flags field,
+  * is sent by the AF to the PCRF in response to the ASR command.
+  *
+  * @author <a href="mailto:richard.good@smilecoms.com"> Richard Good </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface RxAbortSessionAnswer extends AppAnswerEvent
+ {
 
-  String _SHORT_NAME = "ASA";
-  String _LONG_NAME = "Abort-Session-Answer";
+	 String _SHORT_NAME = "ASA";
+	 String _LONG_NAME = "Abort-Session-Answer";
 
-  int code = 274;
-}
+	 int code = 274;
+ }

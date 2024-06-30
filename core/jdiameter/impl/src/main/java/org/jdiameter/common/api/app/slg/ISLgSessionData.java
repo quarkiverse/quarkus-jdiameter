@@ -21,27 +21,28 @@
 
 package org.jdiameter.common.api.app.slg;
 
-import java.io.Serializable;
-
 import org.jdiameter.api.Request;
 import org.jdiameter.common.api.app.IAppSessionData;
 
+import java.io.Serializable;
+
 /**
  * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
- *
  */
-public interface ISLgSessionData extends IAppSessionData {
+@SuppressWarnings("all")//3rd party lib
+public interface ISLgSessionData extends IAppSessionData
+{
 
-  void setSLgSessionState(SLgSessionState state);
+	void setSLgSessionState(SLgSessionState state);
 
-  SLgSessionState getSLgSessionState();
+	SLgSessionState getSLgSessionState();
 
-  Serializable getTsTimerId();
+	Serializable getTsTimerId();
 
-  void setTsTimerId(Serializable tid);
+	void setTsTimerId(Serializable tid);
 
-  void setBuffer(Request buffer);
+	void setBuffer(Request buffer);
 
-  Request getBuffer();
+	Request getBuffer();
 
 }

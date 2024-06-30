@@ -40,59 +40,61 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.server.api;
+ package org.jdiameter.server.api;
 
-import org.jdiameter.client.api.fsm.IContext;
-import org.jdiameter.client.api.io.IConnection;
+ import org.jdiameter.client.api.fsm.IContext;
+ import org.jdiameter.client.api.io.IConnection;
 
-/**
- * This interface describe extends methods of base class
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public interface IPeer extends org.jdiameter.client.api.controller.IPeer {
+ /**
+  * This interface describe extends methods of base class
+  *
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IPeer extends org.jdiameter.client.api.controller.IPeer
+ {
 
-  /**
-   * Return true if peer must start reconnect procedure
-   *
-   * @return true if peer must start reconnect procedure
-   */
-  boolean isAttemptConnection();
+	 /**
+	  * Return true if peer must start reconnect procedure
+	  *
+	  * @return true if peer must start reconnect procedure
+	  */
+	 boolean isAttemptConnection();
 
-  /**
-   * Return action context
-   *
-   * @return action context
-   */
-  IContext getContext();
+	 /**
+	  * Return action context
+	  *
+	  * @return action context
+	  */
+	 IContext getContext();
 
-  /**
-   * Return peer connection
-   *
-   * @return peer connection
-   */
-  IConnection getConnection();
+	 /**
+	  * Return peer connection
+	  *
+	  * @return peer connection
+	  */
+	 IConnection getConnection();
 
-  /**
-   * Add new network connection (wait CER/CEA)
-   *
-   * @param conn new network connection
-   */
-  void addIncomingConnection(IConnection conn);
+	 /**
+	  * Add new network connection (wait CER/CEA)
+	  *
+	  * @param conn new network connection
+	  */
+	 void addIncomingConnection(IConnection conn);
 
-  /**
-   * Set result of election
-   *
-   * @param isElection result of election
-   */
-  void setElection(boolean isElection);
+	 /**
+	  * Set result of election
+	  *
+	  * @param isElection result of election
+	  */
+	 void setElection(boolean isElection);
 
-  /**
-   * Set overload manager
-   *
-   * @param ovrManager overload manager
-   */
-  void notifyOvrManager(IOverloadManager ovrManager);
-}
+	 /**
+	  * Set overload manager
+	  *
+	  * @param ovrManager overload manager
+	  */
+	 void notifyOvrManager(IOverloadManager ovrManager);
+ }

@@ -40,19 +40,20 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.api.app;
+ package org.jdiameter.common.api.app;
 
-import org.jdiameter.api.ApplicationId;
-import org.jdiameter.api.app.AppSession;
+ import org.jdiameter.api.ApplicationId;
+ import org.jdiameter.api.app.AppSession;
 
-/**
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface IAppSessionFactory {
+ /**
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IAppSessionFactory
+ {
 
-  AppSession getNewSession(String sessionId, Class<? extends AppSession> aClass, ApplicationId applicationId, Object[] args);
+	 AppSession getNewSession(String sessionId, Class<? extends AppSession> aClass, ApplicationId applicationId, Object[] args);
 
-  AppSession getSession(String sessionId, Class<? extends AppSession> aClass);
-}
+	 AppSession getSession(String sessionId, Class<? extends AppSession> aClass);
+ }

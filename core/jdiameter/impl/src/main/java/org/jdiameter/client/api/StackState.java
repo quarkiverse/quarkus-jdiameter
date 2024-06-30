@@ -40,18 +40,17 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.client.api;
+ package org.jdiameter.client.api;
 
-/**
- * This enumeration describe avaliable states of stack
- * Data: $Date: 2008/07/03 19:43:10 $
- * Revision: $Revision: 1.1 $
- * @version 1.5.0.1
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public enum StackState {
-  IDLE, CONFIGURED, STARTED, STOPPED
-}
+ /**
+  * This enumeration describe avaliable states of stack Data: $Date: 2008/07/03 19:43:10 $ Revision: $Revision: 1.1 $
+  *
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @version 1.5.0.1
+  */
+ public enum StackState
+ {
+	 IDLE, CONFIGURED, STARTED, STOPPED
+ }

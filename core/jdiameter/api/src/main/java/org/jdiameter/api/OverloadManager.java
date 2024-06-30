@@ -40,44 +40,50 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api;
+ package org.jdiameter.api;
 
-/**
- * This interface allows to control the stack at overload moment
- *
- * @author erick.svenson@yahoo.com
- * @version 1.5.1 Final
- */
-public interface OverloadManager {
+ /**
+  * This interface allows to control the stack at overload moment
+  *
+  * @author erick.svenson@yahoo.com
+  * @version 1.5.1 Final
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface OverloadManager
+ {
 
-  /**
-   * Notify stack that parent application has overload
-   * @param id Overloaded application id (null for stack owner)
-   * @param type type of overload (CPU, Memory..)
-   * @param value value of overload
-   */
-  void parentAppOverloadDetected(ApplicationId id, int type, double value);
+	 /**
+	  * Notify stack that parent application has overload
+	  *
+	  * @param id    Overloaded application id (null for stack owner)
+	  * @param type  type of overload (CPU, Memory..)
+	  * @param value value of overload
+	  */
+	 void parentAppOverloadDetected(ApplicationId id, int type, double value);
 
-  /**
-   * Notifies stack that parent application has overload cased
-   * @param id Overloaded application id (null for stack owner)
-   * @param type type of overload (CPU, Memory..)
-   */
-  void parentAppOverloadCeased(ApplicationId id, int type);
+	 /**
+	  * Notifies stack that parent application has overload cased
+	  *
+	  * @param id   Overloaded application id (null for stack owner)
+	  * @param type type of overload (CPU, Memory..)
+	  */
+	 void parentAppOverloadCeased(ApplicationId id, int type);
 
-  /**
-   * Append overload listener
-   * @param listener overload listener instance
-   * @param lowThreshold low value of overload threshold (for example 0.8 - 1.0 is overload Range)
-   * @param highThreshold high value of overload threshold (for example 0.8 - 1.0 is overload Range)
-   * @param qIndex overload element index
-   */
-  void addOverloadListener(OverloadListener listener, double lowThreshold, double highThreshold, int qIndex);
+	 /**
+	  * Append overload listener
+	  *
+	  * @param listener      overload listener instance
+	  * @param lowThreshold  low value of overload threshold (for example 0.8 - 1.0 is overload Range)
+	  * @param highThreshold high value of overload threshold (for example 0.8 - 1.0 is overload Range)
+	  * @param qIndex        overload element index
+	  */
+	 void addOverloadListener(OverloadListener listener, double lowThreshold, double highThreshold, int qIndex);
 
-  /**
-   * Remove overload listener
-   * @param listener overload listener instance
-   * @param qIndex overload element index
-   */
-  void removeOverloadListener(OverloadListener listener, int qIndex);
-}
+	 /**
+	  * Remove overload listener
+	  *
+	  * @param listener overload listener instance
+	  * @param qIndex   overload element index
+	  */
+	 void removeOverloadListener(OverloadListener listener, int qIndex);
+ }

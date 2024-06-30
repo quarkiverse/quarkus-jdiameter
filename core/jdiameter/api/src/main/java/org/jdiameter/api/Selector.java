@@ -40,24 +40,28 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api;
+ package org.jdiameter.api;
 
-/**
- *
- * @author erick.svenson@yahoo.com
- */
-public interface Selector<T, A> {
+ /**
+  * @author erick.svenson@yahoo.com
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface Selector<T, A>
+ {
 
-  /**
-   * Return true if rule is true
-   * @param object check object
-   * @return true if rule is true
-   */
-  boolean checkRule(T object);
+	 /**
+	  * Return true if rule is true
+	  *
+	  * @param object check object
+	  *
+	  * @return true if rule is true
+	  */
+	 boolean checkRule(T object);
 
-  /**
-   * Return metainformation object
-   * @return  metainformation object
-   */
-  A getMetaData();
-}
+	 /**
+	  * Return metainformation object
+	  *
+	  * @return metainformation object
+	  */
+	 A getMetaData();
+ }

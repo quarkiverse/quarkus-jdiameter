@@ -40,17 +40,19 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.client.impl.app.s6a;
+ package org.jdiameter.client.impl.app.s6a;
 
-import org.jdiameter.common.impl.app.s6a.S6aLocalSessionDataImpl;
+ import org.jdiameter.common.impl.app.s6a.S6aLocalSessionDataImpl;
 
-/**
- *
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public class ClientS6aSessionDataLocalImpl extends S6aLocalSessionDataImpl implements IClientS6aSessionData {
+ /**
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public class ClientS6aSessionDataLocalImpl extends S6aLocalSessionDataImpl implements IClientS6aSessionData
+ {
 
-  public ClientS6aSessionDataLocalImpl() {
-  }
+	 public ClientS6aSessionDataLocalImpl()
+	 {
+	 }
 
-}
+ }

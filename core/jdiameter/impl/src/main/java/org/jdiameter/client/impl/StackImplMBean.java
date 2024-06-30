@@ -40,60 +40,69 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.client.impl;
+ package org.jdiameter.client.impl;
 
-import org.jdiameter.api.InternalException;
+ import org.jdiameter.api.InternalException;
 
-/**
- * Stack MBean interface.
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public interface StackImplMBean {
+ /**
+  * Stack MBean interface.
+  *
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface StackImplMBean
+ {
 
-  /**
-   * Return string representation of stack instanceconfiguration
-   * @return string representation of stack instance configuration
-   */
-  String configuration();
+	 /**
+	  * Return string representation of stack instanceconfiguration
+	  *
+	  * @return string representation of stack instance configuration
+	  */
+	 String configuration();
 
-  /**
-   * Return string representation of stack instance metadata
-   * @return string representation of stack instance metadata
-   */
-  String metaData();
+	 /**
+	  * Return string representation of stack instance metadata
+	  *
+	  * @return string representation of stack instance metadata
+	  */
+	 String metaData();
 
-  /**
-   * Reurn description (include state) of defined peer
-   * @param name peer host name
-   * @return description of defined peer
-   */
-  String peerDescription(String name);
+	 /**
+	  * Reurn description (include state) of defined peer
+	  *
+	  * @param name peer host name
+	  *
+	  * @return description of defined peer
+	  */
+	 String peerDescription(String name);
 
-  /**
-   * Return list of peer
-   * @return list of peer
-   */
-  String peerList();
+	 /**
+	  * Return list of peer
+	  *
+	  * @return list of peer
+	  */
+	 String peerList();
 
-  /**
-   * Return true if stack is started
-   * @return true if stack is started
-   */
-  boolean isActive();
+	 /**
+	  * Return true if stack is started
+	  *
+	  * @return true if stack is started
+	  */
+	 boolean isActive();
 
-  /**
-   * Run stop procedure
-   */
-  void stop(int disconnectCause);
+	 /**
+	  * Run stop procedure
+	  */
+	 void stop(int disconnectCause);
 
-  /**
-   * Run startd procedure
-   * @throws org.jdiameter.api.IllegalDiameterStateException
-   * @throws InternalException
-   */
-  void start()  throws org.jdiameter.api.IllegalDiameterStateException, InternalException;
+	 /**
+	  * Run startd procedure
+	  *
+	  * @throws org.jdiameter.api.IllegalDiameterStateException
+	  * @throws InternalException
+	  */
+	 void start() throws org.jdiameter.api.IllegalDiameterStateException, InternalException;
 
-}
+ }

@@ -40,24 +40,26 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.server.api.io;
+ package org.jdiameter.server.api.io;
 
-import org.jdiameter.client.api.io.IConnection;
+ import org.jdiameter.client.api.io.IConnection;
 
-/**
- * This interface allow notifies consumers about created connections
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public interface INetworkConnectionListener {
+ /**
+  * This interface allow notifies consumers about created connections
+  *
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface INetworkConnectionListener
+ {
 
-  /**
-   * Invoked when an new connection created.
-   *
-   * @param connection created connections
-   */
-  void newNetworkConnection(IConnection connection);
+	 /**
+	  * Invoked when an new connection created.
+	  *
+	  * @param connection created connections
+	  */
+	 void newNetworkConnection(IConnection connection);
 
-}
+ }

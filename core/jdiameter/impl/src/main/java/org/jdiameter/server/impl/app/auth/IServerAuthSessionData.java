@@ -40,30 +40,35 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.server.impl.app.auth;
+ package org.jdiameter.server.impl.app.auth;
 
-import java.io.Serializable;
+ import org.jdiameter.common.api.app.auth.IAuthSessionData;
+ import org.jdiameter.common.api.app.auth.ServerAuthSessionState;
 
-import org.jdiameter.common.api.app.auth.IAuthSessionData;
-import org.jdiameter.common.api.app.auth.ServerAuthSessionState;
+ import java.io.Serializable;
 
-/**
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface IServerAuthSessionData extends IAuthSessionData {
+ /**
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IServerAuthSessionData extends IAuthSessionData
+ {
 
-  ServerAuthSessionState getServerAuthSessionState();
-  void setServerAuthSessionState(ServerAuthSessionState state);
+	 ServerAuthSessionState getServerAuthSessionState();
 
-  boolean isStateless();
-  void setStateless(boolean b);
+	 void setServerAuthSessionState(ServerAuthSessionState state);
 
-  void setTsTimeout(long l);
-  long getTsTimeout();
+	 boolean isStateless();
 
-  void setTsTimerId(Serializable tid);
-  Serializable getTsTimerId();
+	 void setStateless(boolean b);
 
-}
+	 void setTsTimeout(long l);
+
+	 long getTsTimeout();
+
+	 void setTsTimerId(Serializable tid);
+
+	 Serializable getTsTimerId();
+
+ }

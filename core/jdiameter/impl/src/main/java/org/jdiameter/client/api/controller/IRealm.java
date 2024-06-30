@@ -40,61 +40,62 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.client.api.controller;
+ package org.jdiameter.client.api.controller;
 
-import org.jdiameter.api.Realm;
-import org.jdiameter.server.api.agent.IAgent;
-import org.jdiameter.server.api.agent.IAgentConfiguration;
+ import org.jdiameter.api.Realm;
+ import org.jdiameter.server.api.agent.IAgent;
+ import org.jdiameter.server.api.agent.IAgentConfiguration;
 
-/**
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface IRealm extends Realm {
+ /**
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IRealm extends Realm
+ {
 
-  /**
-   * Return list of real peers
-   *
-   * @return array of realm peers
-   */
-  String[] getPeerNames();
+	 /**
+	  * Return list of real peers
+	  *
+	  * @return array of realm peers
+	  */
+	 String[] getPeerNames();
 
-  /**
-   * Append new host (peer) to this realm
-   *
-   * @param host
-   *            name of peer host
-   */
-  void addPeerName(String name);
+	 /**
+	  * Append new host (peer) to this realm
+	  *
+	  * @param host name of peer host
+	  */
+	 void addPeerName(String name);
 
-  /**
-   * Remove peer from this realm
-   *
-   * @param host
-   *            name of peer host
-   */
-  void removePeerName(String name);
+	 /**
+	  * Remove peer from this realm
+	  *
+	  * @param host name of peer host
+	  */
+	 void removePeerName(String name);
 
-  /**
-   * Checks if a peer name belongs to this realm
-   *
-   * @param name name of peer host
-   * @return true if the the peer belongs to this realm, false otherwise
-   */
-  boolean hasPeerName(String name);
+	 /**
+	  * Checks if a peer name belongs to this realm
+	  *
+	  * @param name name of peer host
+	  *
+	  * @return true if the the peer belongs to this realm, false otherwise
+	  */
+	 boolean hasPeerName(String name);
 
-  /**
-   * Get the processing agent for this realm
-   *
-   * @return the agent for this realm, if any
-   */
-  IAgent getAgent();
+	 /**
+	  * Get the processing agent for this realm
+	  *
+	  * @return the agent for this realm, if any
+	  */
+	 IAgent getAgent();
 
-  /**
-   * Get agent configuration values for this realm.
-   * @return
-   */
-  IAgentConfiguration getAgentConfiguration();
+	 /**
+	  * Get agent configuration values for this realm.
+	  *
+	  * @return
+	  */
+	 IAgentConfiguration getAgentConfiguration();
 
-}
+ }

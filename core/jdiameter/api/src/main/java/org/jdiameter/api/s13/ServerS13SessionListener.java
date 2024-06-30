@@ -28,10 +28,12 @@ import org.jdiameter.api.app.AppRequestEvent;
 import org.jdiameter.api.app.AppSession;
 import org.jdiameter.api.s13.events.JMEIdentityCheckRequest;
 
-public interface ServerS13SessionListener {
-  void doOtherEvent(AppSession session, AppRequestEvent request, AppAnswerEvent answer)
-      throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
+@SuppressWarnings("all")//3rd party lib
+public interface ServerS13SessionListener
+{
+	void doOtherEvent(AppSession session, AppRequestEvent request, AppAnswerEvent answer)
+	throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
 
-  void doMEIdentityCheckRequestEvent(ServerS13Session session, JMEIdentityCheckRequest request)
-      throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
+	void doMEIdentityCheckRequestEvent(ServerS13Session session, JMEIdentityCheckRequest request)
+	throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
 }

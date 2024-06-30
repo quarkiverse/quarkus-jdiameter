@@ -40,16 +40,17 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api;
+ package org.jdiameter.api;
 
-/**
- * This Enum class defines commCode of realm local actions
- *
- * @author erick.svenson@yahoo.com
- * @version 1.5.1 Final
- */
-public enum LocalAction {
+ /**
+  * This Enum class defines commCode of realm local actions
+  *
+  * @author erick.svenson@yahoo.com
+  * @version 1.5.1 Final
+  */
+ public enum LocalAction
+ {
 
-  LOCAL, RELAY, PROXY, REDIRECT
+	 LOCAL, RELAY, PROXY, REDIRECT
 
-}
+ }

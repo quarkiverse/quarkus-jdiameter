@@ -40,27 +40,31 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.api.app.cxdx;
+ package org.jdiameter.common.api.app.cxdx;
 
-import java.io.Serializable;
+ import org.jdiameter.api.Request;
+ import org.jdiameter.common.api.app.IAppSessionData;
 
-import org.jdiameter.api.Request;
-import org.jdiameter.common.api.app.IAppSessionData;
+ import java.io.Serializable;
 
-/**
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface ICxDxSessionData extends IAppSessionData {
+ /**
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface ICxDxSessionData extends IAppSessionData
+ {
 
-  void setCxDxSessionState(CxDxSessionState state);
-  CxDxSessionState getCxDxSessionState();
+	 void setCxDxSessionState(CxDxSessionState state);
 
-  Serializable getTsTimerId();
-  void setTsTimerId(Serializable tid);
+	 CxDxSessionState getCxDxSessionState();
 
-  void setBuffer(Request buffer);
-  Request getBuffer();
+	 Serializable getTsTimerId();
 
-}
+	 void setTsTimerId(Serializable tid);
+
+	 void setBuffer(Request buffer);
+
+	 Request getBuffer();
+
+ }

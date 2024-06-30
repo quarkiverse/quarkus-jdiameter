@@ -40,92 +40,96 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.client.api.fsm;
+ package org.jdiameter.client.api.fsm;
 
-/**
- * This enumeration describe all fsm events
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public enum EventTypes {
+ /**
+  * This enumeration describe all fsm events
+  *
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ public enum EventTypes
+ {
 
-  /**
-   * Connect event
-   */
-  CONNECT_EVENT (true),
-  /**
-   * Disconnect event
-   */
-  DISCONNECT_EVENT (true),
+	 /**
+	  * Connect event
+	  */
+	 CONNECT_EVENT(true),
+	 /**
+	  * Disconnect event
+	  */
+	 DISCONNECT_EVENT(true),
 
-  /**
-   * Operation timeout event
-   */
-  TIMEOUT_EVENT (true),
-  /**
-   * Start fsm event
-   */
-  START_EVENT(true),
-  /**
-   * Stop fsm event
-   */
-  STOP_EVENT (true),
+	 /**
+	  * Operation timeout event
+	  */
+	 TIMEOUT_EVENT(true),
+	 /**
+	  * Start fsm event
+	  */
+	 START_EVENT(true),
+	 /**
+	  * Stop fsm event
+	  */
+	 STOP_EVENT(true),
 
-  /**
-   * Internal error during processing event
-   */
-  INTERNAL_ERROR(true),
+	 /**
+	  * Internal error during processing event
+	  */
+	 INTERNAL_ERROR(true),
 
-  /**
-   * Stack received CER message
-   */
-  CER_EVENT,
-  /**
-   * Stack received CEA message
-   */
-  CEA_EVENT,
+	 /**
+	  * Stack received CER message
+	  */
+	 CER_EVENT,
+	 /**
+	  * Stack received CEA message
+	  */
+	 CEA_EVENT,
 
-  /**
-   * Stack received DPR message
-   */
-  DPR_EVENT,
-  /**
-   * Stack received DPA message
-   */
-  DPA_EVENT,
+	 /**
+	  * Stack received DPR message
+	  */
+	 DPR_EVENT,
+	 /**
+	  * Stack received DPA message
+	  */
+	 DPA_EVENT,
 
-  /**
-   * Stack received DWR message
-   */
-  DWR_EVENT,
-  /**
-   * Stack received DWA message
-   */
-  DWA_EVENT,
+	 /**
+	  * Stack received DWR message
+	  */
+	 DWR_EVENT,
+	 /**
+	  * Stack received DWA message
+	  */
+	 DWA_EVENT,
 
-  /**
-   * App send message to network
-   */
-  SEND_MSG_EVENT,
+	 /**
+	  * App send message to network
+	  */
+	 SEND_MSG_EVENT,
 
-  /**
-   * Stack received Application message
-   */
-  RECEIVE_MSG_EVENT;
+	 /**
+	  * Stack received Application message
+	  */
+	 RECEIVE_MSG_EVENT;
 
-  boolean highPriority = false;
+	 boolean highPriority = false;
 
-  EventTypes() {
-    highPriority = false;
-  }
+	 EventTypes()
+	 {
+		 highPriority = false;
+	 }
 
-  EventTypes(boolean highPriority) {
-    this.highPriority = highPriority;
-  }
+	 EventTypes(boolean highPriority)
+	 {
+		 this.highPriority = highPriority;
+	 }
 
-  public boolean isHighPriority() {
-    return highPriority;
-  }
-}
+	 public boolean isHighPriority()
+	 {
+		 return highPriority;
+	 }
+ }

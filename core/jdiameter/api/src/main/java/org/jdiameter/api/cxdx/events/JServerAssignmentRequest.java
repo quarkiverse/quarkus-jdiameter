@@ -40,23 +40,25 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api.cxdx.events;
+ package org.jdiameter.api.cxdx.events;
 
-import org.jdiameter.api.app.AppRequestEvent;
+ import org.jdiameter.api.app.AppRequestEvent;
 
-/**
- * The Server-Assignment-Request (SAR) command, indicated by the Command-Code field set to 301 and the bit set in
- * the Command Flags field, is sent by a Diameter Multimedia client to a Diameter Multimedia server in order to request
- * it to store the name of the server that is currently serving the user.
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface JServerAssignmentRequest extends AppRequestEvent {
+ /**
+  * The Server-Assignment-Request (SAR) command, indicated by the Command-Code field set to 301 and the bit set in the
+  * Command Flags field, is sent by a Diameter Multimedia client to a Diameter Multimedia server in order to request it
+  * to store the name of the server that is currently serving the user.
+  *
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface JServerAssignmentRequest extends AppRequestEvent
+ {
 
-  String _SHORT_NAME = "SAR";
-  String _LONG_NAME = "Server-Assignment-Request";
+	 String _SHORT_NAME = "SAR";
+	 String _LONG_NAME = "Server-Assignment-Request";
 
-  int code = 301;
+	 int code = 301;
 
-}
+ }

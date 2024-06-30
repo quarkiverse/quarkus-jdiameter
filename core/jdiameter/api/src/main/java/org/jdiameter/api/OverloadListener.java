@@ -40,26 +40,30 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api;
+ package org.jdiameter.api;
 
-/**
- * This class allows processed stack overloaded notification
- *
- * @author erick.svenson@yahoo.com
- * @version 1.5.1 Final
- */
-public interface OverloadListener {
+ /**
+  * This class allows processed stack overloaded notification
+  *
+  * @author erick.svenson@yahoo.com
+  * @version 1.5.1 Final
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface OverloadListener
+ {
 
-  /**
-   * Notifies this OverloadListener that the stack has overload.
-   * @param peer listening peer
-   * @param value value of overload
-   */
-  void overloadDetected(URI peer, double value);
+	 /**
+	  * Notifies this OverloadListener that the stack has overload.
+	  *
+	  * @param peer  listening peer
+	  * @param value value of overload
+	  */
+	 void overloadDetected(URI peer, double value);
 
-  /**
-   * Notifies this OverloadListener that the stack has overload cased
-   * @param peer listening peer
-   */
-  void overloadCeased(URI peer);
-}
+	 /**
+	  * Notifies this OverloadListener that the stack has overload cased
+	  *
+	  * @param peer listening peer
+	  */
+	 void overloadCeased(URI peer);
+ }

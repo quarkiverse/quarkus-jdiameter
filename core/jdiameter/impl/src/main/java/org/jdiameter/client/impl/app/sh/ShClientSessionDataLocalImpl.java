@@ -40,21 +40,23 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.client.impl.app.sh;
+ package org.jdiameter.client.impl.app.sh;
 
-import org.jdiameter.common.api.app.AppSessionDataLocalImpl;
+ import org.jdiameter.common.api.app.AppSessionDataLocalImpl;
 
-/**
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public class ShClientSessionDataLocalImpl extends AppSessionDataLocalImpl implements IShClientSessionData {
+ /**
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public class ShClientSessionDataLocalImpl extends AppSessionDataLocalImpl implements IShClientSessionData
+ {
 
-  /**
-   *
-   */
-  public ShClientSessionDataLocalImpl() {
-  }
+	 /**
+	  *
+	  */
+	 public ShClientSessionDataLocalImpl()
+	 {
+	 }
 
-}
+ }

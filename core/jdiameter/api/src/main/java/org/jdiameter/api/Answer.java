@@ -40,21 +40,22 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api;
+ package org.jdiameter.api;
 
-/**
- * An Answer message is sent by a recipient of Request once it has received and
- * interpreted the Request.
- * Answers contain a Result-Code AVP and other AVPs in message body.
- *
- * @author erick.svenson@yahoo.com
- * @version 1.5.1 Final
- */
-public interface Answer extends Message {
+ /**
+  * An Answer message is sent by a recipient of Request once it has received and interpreted the Request. Answers contain
+  * a Result-Code AVP and other AVPs in message body.
+  *
+  * @author erick.svenson@yahoo.com
+  * @version 1.5.1 Final
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface Answer extends Message
+ {
 
-  /**
-   * @return ResultCode Avp from message
-   */
-  Avp getResultCode();
+	 /**
+	  * @return ResultCode Avp from message
+	  */
+	 Avp getResultCode();
 
-}
+ }

@@ -27,21 +27,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author <a href="mailto:richard.good@smilecoms.com"> Richard Good </a>
  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
  */
-public class RxSessionTermRequestImpl extends AppRequestEventImpl implements RxSessionTermRequest {
+@SuppressWarnings("all")//3rd party lib
+public class RxSessionTermRequestImpl extends AppRequestEventImpl implements RxSessionTermRequest
+{
 
-  private static final long serialVersionUID = 1L;
-  protected static final Logger logger = LoggerFactory.getLogger(RxSessionTermRequestImpl.class);
+	private static final long serialVersionUID = 1L;
+	protected static final Logger logger = LoggerFactory.getLogger(RxSessionTermRequestImpl.class);
 
-  public RxSessionTermRequestImpl(AppSession session, String destRealm, String destHost) {
-    super(session.getSessions().get(0).createRequest(code, session.getSessionAppId(), destRealm, destHost));
-  }
+	public RxSessionTermRequestImpl(AppSession session, String destRealm, String destHost)
+	{
+		super(session.getSessions().get(0).createRequest(code, session.getSessionAppId(), destRealm, destHost));
+	}
 
-  public RxSessionTermRequestImpl(Request request) {
-    super(request);
-  }
+	public RxSessionTermRequestImpl(Request request)
+	{
+		super(request);
+	}
 }

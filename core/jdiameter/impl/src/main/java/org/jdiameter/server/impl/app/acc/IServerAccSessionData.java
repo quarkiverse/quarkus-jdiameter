@@ -40,34 +40,40 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.server.impl.app.acc;
+ package org.jdiameter.server.impl.app.acc;
 
-import java.io.Serializable;
+ import org.jdiameter.common.api.app.acc.IAccSessionData;
+ import org.jdiameter.common.api.app.acc.ServerAccSessionState;
 
-import org.jdiameter.common.api.app.acc.IAccSessionData;
-import org.jdiameter.common.api.app.acc.ServerAccSessionState;
+ import java.io.Serializable;
 
-/**
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface IServerAccSessionData extends IAccSessionData {
+ /**
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IServerAccSessionData extends IAccSessionData
+ {
 
-  void setServerAccSessionState(ServerAccSessionState value);
-  ServerAccSessionState getServerAccSessionState();
+	 void setServerAccSessionState(ServerAccSessionState value);
 
-  void setStateless(boolean value);
-  boolean isStateless();
+	 ServerAccSessionState getServerAccSessionState();
 
-  /**
-   * Seconds value, its taken from either request or answer. Contained in Acct-Interim-Interval AVP
-   * @param value
-   */
-  void setTsTimeout(long value);
-  long getTsTimeout();
+	 void setStateless(boolean value);
 
-  void setTsTimerId(Serializable value);
-  Serializable getTsTimerId();
+	 boolean isStateless();
 
-}
+	 /**
+	  * Seconds value, its taken from either request or answer. Contained in Acct-Interim-Interval AVP
+	  *
+	  * @param value
+	  */
+	 void setTsTimeout(long value);
+
+	 long getTsTimeout();
+
+	 void setTsTimerId(Serializable value);
+
+	 Serializable getTsTimerId();
+
+ }

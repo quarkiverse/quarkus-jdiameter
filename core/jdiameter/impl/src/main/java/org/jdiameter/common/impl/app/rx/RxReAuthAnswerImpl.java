@@ -27,21 +27,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author <a href="mailto:richard.good@smilecoms.com"> Richard Good </a>
  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
  */
-public class RxReAuthAnswerImpl extends AppAnswerEventImpl implements RxReAuthAnswer {
+@SuppressWarnings("all")//3rd party lib
+public class RxReAuthAnswerImpl extends AppAnswerEventImpl implements RxReAuthAnswer
+{
 
-  private static final long serialVersionUID = 1L;
-  protected static final Logger logger = LoggerFactory.getLogger(RxReAuthAnswerImpl.class);
+	private static final long serialVersionUID = 1L;
+	protected static final Logger logger = LoggerFactory.getLogger(RxReAuthAnswerImpl.class);
 
-  public RxReAuthAnswerImpl(Request message, long resultCode) {
-    super(message.createAnswer(resultCode));
-  }
+	public RxReAuthAnswerImpl(Request message, long resultCode)
+	{
+		super(message.createAnswer(resultCode));
+	}
 
-  public RxReAuthAnswerImpl(Answer message) {
-    super(message);
-  }
+	public RxReAuthAnswerImpl(Answer message)
+	{
+		super(message);
+	}
 }

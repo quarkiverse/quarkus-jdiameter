@@ -40,46 +40,53 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.client.impl.annotation;
+ package org.jdiameter.client.impl.annotation;
 
-/**
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public class UnknownAvp extends Value<byte[]> {
+ /**
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public class UnknownAvp extends Value<byte[]>
+ {
 
-  private int code;
-  boolean m, v, p;
-  private long vendorId;
+	 private int code;
+	 boolean m, v, p;
+	 private long vendorId;
 
-  public UnknownAvp(int code, boolean m, boolean v, boolean p, long vendorId, byte[] value) {
-    super(value);
-    this.code = code;
-    this.m = m;
-    this.v = v;
-    this.p = p;
-    this.vendorId = vendorId;
-  }
+	 public UnknownAvp(int code, boolean m, boolean v, boolean p, long vendorId, byte[] value)
+	 {
+		 super(value);
+		 this.code = code;
+		 this.m = m;
+		 this.v = v;
+		 this.p = p;
+		 this.vendorId = vendorId;
+	 }
 
-  public int getCode() {
-    return code;
-  }
+	 public int getCode()
+	 {
+		 return code;
+	 }
 
-  public boolean isMandatory() {
-    return m;
-  }
+	 public boolean isMandatory()
+	 {
+		 return m;
+	 }
 
-  public boolean isVendorSpecific() {
-    return v;
-  }
+	 public boolean isVendorSpecific()
+	 {
+		 return v;
+	 }
 
-  public long getVendorId() {
-    return vendorId;
-  }
+	 public long getVendorId()
+	 {
+		 return vendorId;
+	 }
 
-  public boolean isProxiable() {
-    return p;
-  }
-}
+	 public boolean isProxiable()
+	 {
+		 return p;
+	 }
+ }

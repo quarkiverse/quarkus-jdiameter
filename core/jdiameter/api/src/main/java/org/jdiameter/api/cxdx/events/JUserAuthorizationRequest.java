@@ -40,23 +40,25 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api.cxdx.events;
+ package org.jdiameter.api.cxdx.events;
 
-import org.jdiameter.api.app.AppRequestEvent;
+ import org.jdiameter.api.app.AppRequestEvent;
 
-/**
- * The User-Authorization-Request (UAR) command, indicated by the Command-Code field set to 300 and the bit set in
- * the Command Flags field, is sent by a Diameter Multimedia client to a Diameter Multimedia server in order to request
- * the authorization of the registration of a multimedia user.
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface JUserAuthorizationRequest extends AppRequestEvent {
+ /**
+  * The User-Authorization-Request (UAR) command, indicated by the Command-Code field set to 300 and the bit set in the
+  * Command Flags field, is sent by a Diameter Multimedia client to a Diameter Multimedia server in order to request the
+  * authorization of the registration of a multimedia user.
+  *
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface JUserAuthorizationRequest extends AppRequestEvent
+ {
 
-  String _SHORT_NAME = "UAR";
-  String _LONG_NAME = "User-Authorization-Request";
+	 String _SHORT_NAME = "UAR";
+	 String _LONG_NAME = "User-Authorization-Request";
 
-  int code = 300;
+	 int code = 300;
 
-}
+ }

@@ -40,77 +40,87 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.client.impl.helpers;
+ package org.jdiameter.client.impl.helpers;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+ import java.util.concurrent.locks.Lock;
+ import java.util.concurrent.locks.ReentrantLock;
 
-/**
- * This class provide uid range generator functionality
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public class UIDGenerator {  // todo remove or redesign
+ /**
+  * This class provide uid range generator functionality
+  *
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public class UIDGenerator
+ {  // todo remove or redesign
 
-  private /*static*/ long value; // static causes repetitions
-  private static final Lock mutex = new ReentrantLock();
-  private static final ThreadLocal<Delta> ranges = new ThreadLocal<Delta>() {
-    @Override
-    protected synchronized Delta initialValue() {
-      return new Delta();
-    }
-  };
+	 private /*static*/ long value; // static causes repetitions
+	 private static final Lock mutex = new ReentrantLock();
+	 private static final ThreadLocal<Delta> ranges = new ThreadLocal<Delta>()
+	 {
+		 @Override
+		 protected synchronized Delta initialValue()
+		 {
+			 return new Delta();
+		 }
+	 };
 
-  private static class Delta {
-    long start;
-    long stop;
+	 private static class Delta
+	 {
+		 long start;
+		 long stop;
 
-    public long update(long value) {
-      start = value;
-      stop  = value + 1;
-      return stop;
-    }
-  }
+		 public long update(long value)
+		 {
+			 start = value;
+			 stop = value + 1;
+			 return stop;
+		 }
+	 }
 
-  /**
-   * Create instance of class
-   */
-  public UIDGenerator() {
-    value = System.currentTimeMillis();
-  }
+	 /**
+	  * Create instance of class
+	  */
+	 public UIDGenerator()
+	 {
+		 value = System.currentTimeMillis();
+	 }
 
-  /**
-   * Create instance of class with predefined start value
-   *
-   * @param startValue start value of counter
-   */
-  public UIDGenerator(long startValue) {
-    value = startValue;
-  }
+	 /**
+	  * Create instance of class with predefined start value
+	  *
+	  * @param startValue start value of counter
+	  */
+	 public UIDGenerator(long startValue)
+	 {
+		 value = startValue;
+	 }
 
-  /**
-   * Return next uid as int
-   *
-   * @return  uid
-   */
-  public int nextInt() {
-    return (int) (0x7FFFFFFF & nextLong());
-  }
+	 /**
+	  * Return next uid as int
+	  *
+	  * @return uid
+	  */
+	 public int nextInt()
+	 {
+		 return (int) (0x7FFFFFFF & nextLong());
+	 }
 
-  /**
-   * Return next uid as long
-   *
-   * @return uid as long
-   */
-  public long nextLong() {
-    Delta d = ranges.get();
-    if (d.start <= d.stop) {
-      mutex.lock();
-      value = d.update(value);
-      mutex.unlock();
-    }
-    return d.start++;
-  }
-}
+	 /**
+	  * Return next uid as long
+	  *
+	  * @return uid as long
+	  */
+	 public long nextLong()
+	 {
+		 Delta d = ranges.get();
+		 if (d.start <= d.stop) {
+			 mutex.lock();
+			 value = d.update(value);
+			 mutex.unlock();
+		 }
+		 return d.start++;
+	 }
+ }

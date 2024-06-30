@@ -40,132 +40,146 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.api.app.cxdx;
+ package org.jdiameter.common.api.app.cxdx;
 
-import org.jdiameter.api.Answer;
-import org.jdiameter.api.Request;
-import org.jdiameter.api.cxdx.events.JLocationInfoAnswer;
-import org.jdiameter.api.cxdx.events.JLocationInfoRequest;
-import org.jdiameter.api.cxdx.events.JMultimediaAuthAnswer;
-import org.jdiameter.api.cxdx.events.JMultimediaAuthRequest;
-import org.jdiameter.api.cxdx.events.JPushProfileAnswer;
-import org.jdiameter.api.cxdx.events.JPushProfileRequest;
-import org.jdiameter.api.cxdx.events.JRegistrationTerminationAnswer;
-import org.jdiameter.api.cxdx.events.JRegistrationTerminationRequest;
-import org.jdiameter.api.cxdx.events.JServerAssignmentAnswer;
-import org.jdiameter.api.cxdx.events.JServerAssignmentRequest;
-import org.jdiameter.api.cxdx.events.JUserAuthorizationAnswer;
-import org.jdiameter.api.cxdx.events.JUserAuthorizationRequest;
+ import org.jdiameter.api.Answer;
+ import org.jdiameter.api.Request;
+ import org.jdiameter.api.cxdx.events.JLocationInfoAnswer;
+ import org.jdiameter.api.cxdx.events.JLocationInfoRequest;
+ import org.jdiameter.api.cxdx.events.JMultimediaAuthAnswer;
+ import org.jdiameter.api.cxdx.events.JMultimediaAuthRequest;
+ import org.jdiameter.api.cxdx.events.JPushProfileAnswer;
+ import org.jdiameter.api.cxdx.events.JPushProfileRequest;
+ import org.jdiameter.api.cxdx.events.JRegistrationTerminationAnswer;
+ import org.jdiameter.api.cxdx.events.JRegistrationTerminationRequest;
+ import org.jdiameter.api.cxdx.events.JServerAssignmentAnswer;
+ import org.jdiameter.api.cxdx.events.JServerAssignmentRequest;
+ import org.jdiameter.api.cxdx.events.JUserAuthorizationAnswer;
+ import org.jdiameter.api.cxdx.events.JUserAuthorizationRequest;
 
-/**
- * Message Factory for Diameter Cx/Dx application.
- *
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public interface ICxDxMessageFactory {
+ /**
+  * Message Factory for Diameter Cx/Dx application.
+  *
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface ICxDxMessageFactory
+ {
 
-  /**
-   * Creates a Location-Info-Request event.
-   *
-   * @param request the request to create the LIR from
-   * @return an AppRequestEvent wrapping the LIR
-   */
-  JLocationInfoRequest createLocationInfoRequest(Request request);
+	 /**
+	  * Creates a Location-Info-Request event.
+	  *
+	  * @param request the request to create the LIR from
+	  *
+	  * @return an AppRequestEvent wrapping the LIR
+	  */
+	 JLocationInfoRequest createLocationInfoRequest(Request request);
 
-  /**
-   * Creates a User-Authorization-Request event.
-   *
-   * @param request the request to create the UAR from
-   * @return an AppRequestEvent wrapping the UAR
-   */
-  JUserAuthorizationRequest createUserAuthorizationRequest(Request request);
+	 /**
+	  * Creates a User-Authorization-Request event.
+	  *
+	  * @param request the request to create the UAR from
+	  *
+	  * @return an AppRequestEvent wrapping the UAR
+	  */
+	 JUserAuthorizationRequest createUserAuthorizationRequest(Request request);
 
-  /**
-   * Creates a Server-Assignment-Request event.
-   *
-   * @param request the request to create the SAR from
-   * @return an AppRequestEvent wrapping the SAR
-   */
-  JServerAssignmentRequest createServerAssignmentRequest(Request request);
+	 /**
+	  * Creates a Server-Assignment-Request event.
+	  *
+	  * @param request the request to create the SAR from
+	  *
+	  * @return an AppRequestEvent wrapping the SAR
+	  */
+	 JServerAssignmentRequest createServerAssignmentRequest(Request request);
 
-  /**
-   * Creates a Registration-Termination-Request event.
-   *
-   * @param request the request to create the RTR from
-   * @return an AppRequestEvent wrapping the RTR
-   */
-  JRegistrationTerminationRequest createRegistrationTerminationRequest(Request request);
+	 /**
+	  * Creates a Registration-Termination-Request event.
+	  *
+	  * @param request the request to create the RTR from
+	  *
+	  * @return an AppRequestEvent wrapping the RTR
+	  */
+	 JRegistrationTerminationRequest createRegistrationTerminationRequest(Request request);
 
-  /**
-   * Creates a Multimedia-Auth-Request event.
-   *
-   * @param request the request to create the MAR from
-   * @return an AppRequestEvent wrapping the MAR
-   */
-  JMultimediaAuthRequest createMultimediaAuthRequest(Request request);
+	 /**
+	  * Creates a Multimedia-Auth-Request event.
+	  *
+	  * @param request the request to create the MAR from
+	  *
+	  * @return an AppRequestEvent wrapping the MAR
+	  */
+	 JMultimediaAuthRequest createMultimediaAuthRequest(Request request);
 
-  /**
-   * Creates a Push-Profile-Request event.
-   *
-   * @param request the request to create the PPR from
-   * @return an AppRequestEvent wrapping the PPR
-   */
-  JPushProfileRequest createPushProfileRequest(Request request);
+	 /**
+	  * Creates a Push-Profile-Request event.
+	  *
+	  * @param request the request to create the PPR from
+	  *
+	  * @return an AppRequestEvent wrapping the PPR
+	  */
+	 JPushProfileRequest createPushProfileRequest(Request request);
 
-  /**
-   * Creates a Push-Profile-Answer event.
-   *
-   * @param answer the answer to create the PPA from
-   * @return an AppAnswerEvent wrapping the PPA
-   */
-  JPushProfileAnswer createPushProfileAnswer(Answer answer);
+	 /**
+	  * Creates a Push-Profile-Answer event.
+	  *
+	  * @param answer the answer to create the PPA from
+	  *
+	  * @return an AppAnswerEvent wrapping the PPA
+	  */
+	 JPushProfileAnswer createPushProfileAnswer(Answer answer);
 
-  /**
-   * Creates a Location-Info-Answer event.
-   *
-   * @param answer the answer to create the LIA from
-   * @return an AppAnswerEvent wrapping the LIA
-   */
-  JLocationInfoAnswer createLocationInfoAnswer(Answer answer);
+	 /**
+	  * Creates a Location-Info-Answer event.
+	  *
+	  * @param answer the answer to create the LIA from
+	  *
+	  * @return an AppAnswerEvent wrapping the LIA
+	  */
+	 JLocationInfoAnswer createLocationInfoAnswer(Answer answer);
 
-  /**
-   * Creates a User-Authorization-Answer event.
-   *
-   * @param answer the answer to create the UAA from
-   * @return an AppAnswerEvent wrapping the UAA
-   */
-  JUserAuthorizationAnswer createUserAuthorizationAnswer(Answer answer);
+	 /**
+	  * Creates a User-Authorization-Answer event.
+	  *
+	  * @param answer the answer to create the UAA from
+	  *
+	  * @return an AppAnswerEvent wrapping the UAA
+	  */
+	 JUserAuthorizationAnswer createUserAuthorizationAnswer(Answer answer);
 
-  /**
-   * Creates a Server-Assignment-Answer event.
-   *
-   * @param answer the answer to create the SAA from
-   * @return an AppAnswerEvent wrapping the SAA
-   */
-  JServerAssignmentAnswer createServerAssignmentAnswer(Answer answer);
+	 /**
+	  * Creates a Server-Assignment-Answer event.
+	  *
+	  * @param answer the answer to create the SAA from
+	  *
+	  * @return an AppAnswerEvent wrapping the SAA
+	  */
+	 JServerAssignmentAnswer createServerAssignmentAnswer(Answer answer);
 
-  /**
-   * Creates a Registration-Termination-Answer event.
-   *
-   * @param answer the answer to create the RTA from
-   * @return an AppAnswerEvent wrapping the RTA
-   */
-  JRegistrationTerminationAnswer createRegistrationTerminationAnswer(Answer answer);
+	 /**
+	  * Creates a Registration-Termination-Answer event.
+	  *
+	  * @param answer the answer to create the RTA from
+	  *
+	  * @return an AppAnswerEvent wrapping the RTA
+	  */
+	 JRegistrationTerminationAnswer createRegistrationTerminationAnswer(Answer answer);
 
-  /**
-   * Creates a Multimedia-Auth-Answer event.
-   *
-   * @param answer the answer to create the MAA from
-   * @return an AppAnswerEvent wrapping the MAA
-   */
-  JMultimediaAuthAnswer createMultimediaAuthAnswer(Answer answer);
+	 /**
+	  * Creates a Multimedia-Auth-Answer event.
+	  *
+	  * @param answer the answer to create the MAA from
+	  *
+	  * @return an AppAnswerEvent wrapping the MAA
+	  */
+	 JMultimediaAuthAnswer createMultimediaAuthAnswer(Answer answer);
 
-  /**
-   * Returns the Application-Id that this message factory is related to
-   *
-   * @return the Application-Id value
-   */
-  long getApplicationId();
+	 /**
+	  * Returns the Application-Id that this message factory is related to
+	  *
+	  * @return the Application-Id value
+	  */
+	 long getApplicationId();
 
-}
+ }

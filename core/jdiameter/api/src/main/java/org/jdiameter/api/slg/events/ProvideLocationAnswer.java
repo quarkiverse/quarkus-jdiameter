@@ -25,7 +25,6 @@ import org.jdiameter.api.app.AppAnswerEvent;
 
 /**
  * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
- *
  */
 
 /*
@@ -41,11 +40,13 @@ import org.jdiameter.api.app.AppAnswerEvent;
  * Subscriber Location operation answer)
  */
 
-public interface ProvideLocationAnswer extends AppAnswerEvent{
+@SuppressWarnings("all")//3rd party lib
+public interface ProvideLocationAnswer extends AppAnswerEvent
+{
 
-  String _SHORT_NAME = "PLA";
-  String _LONG_NAME = "Provide-Location-Answer";
+	String _SHORT_NAME = "PLA";
+	String _LONG_NAME = "Provide-Location-Answer";
 
-  int code = 8388620;
+	int code = 8388620;
 
 }

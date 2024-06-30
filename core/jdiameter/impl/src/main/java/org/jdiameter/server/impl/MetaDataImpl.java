@@ -40,290 +40,305 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.server.impl;
+ package org.jdiameter.server.impl;
 
-import static org.jdiameter.client.impl.helpers.Parameters.OwnIPAddress;
-import static org.jdiameter.server.impl.helpers.Parameters.OwnIPAddresses;
+ import org.jdiameter.api.ApplicationId;
+ import org.jdiameter.api.Avp;
+ import org.jdiameter.api.Configuration;
+ import org.jdiameter.api.Network;
+ import org.jdiameter.api.NetworkReqListener;
+ import org.jdiameter.api.OverloadException;
+ import org.jdiameter.api.PeerTable;
+ import org.jdiameter.api.StackType;
+ import org.jdiameter.client.api.IContainer;
+ import org.jdiameter.client.api.IMessage;
+ import org.jdiameter.client.api.ISessionFactory;
+ import org.jdiameter.client.api.controller.IPeer;
+ import org.jdiameter.client.api.io.TransportException;
+ import org.jdiameter.client.impl.helpers.IPConverter;
+ import org.jdiameter.common.api.statistic.IStatisticManager;
+ import org.jdiameter.server.api.IMetaData;
+ import org.jdiameter.server.api.IMutablePeerTable;
+ import org.jdiameter.server.api.INetwork;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+ import java.net.InetAddress;
+ import java.net.UnknownHostException;
+ import java.util.ArrayList;
+ import java.util.List;
+ import java.util.Map;
+ import java.util.Set;
+ import java.util.concurrent.ConcurrentHashMap;
 
-import org.jdiameter.api.ApplicationId;
-import org.jdiameter.api.Avp;
-import org.jdiameter.api.Configuration;
-import org.jdiameter.api.Network;
-import org.jdiameter.api.NetworkReqListener;
-import org.jdiameter.api.OverloadException;
-import org.jdiameter.api.PeerTable;
-import org.jdiameter.api.StackType;
-import org.jdiameter.client.api.IContainer;
-import org.jdiameter.client.api.IMessage;
-import org.jdiameter.client.api.ISessionFactory;
-import org.jdiameter.client.api.controller.IPeer;
-import org.jdiameter.client.api.io.TransportException;
-import org.jdiameter.client.impl.helpers.IPConverter;
-import org.jdiameter.common.api.statistic.IStatisticManager;
-import org.jdiameter.server.api.IMetaData;
-import org.jdiameter.server.api.IMutablePeerTable;
-import org.jdiameter.server.api.INetwork;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+ import static org.jdiameter.client.impl.helpers.Parameters.OwnIPAddress;
+ import static org.jdiameter.server.impl.helpers.Parameters.OwnIPAddresses;
 
-/**
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public class MetaDataImpl extends org.jdiameter.client.impl.MetaDataImpl implements IMetaData {
+ /**
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public class MetaDataImpl extends org.jdiameter.client.impl.MetaDataImpl implements IMetaData
+ {
 
-  private static final Logger logger = LoggerFactory.getLogger(MetaDataImpl.class);
+	 private static final Logger logger = LoggerFactory.getLogger(MetaDataImpl.class);
 
-  private final Object lock = new Object();
+	 private final Object lock = new Object();
 
-  public MetaDataImpl(IContainer s) {
-    super(s);
-  }
+	 public MetaDataImpl(IContainer s)
+	 {
+		 super(s);
+	 }
 
-  public MetaDataImpl(IContainer s, IStatisticManager factory) {
-    super(s, factory);
-  }
+	 public MetaDataImpl(IContainer s, IStatisticManager factory)
+	 {
+		 super(s, factory);
+	 }
 
-  @Override
-  public StackType getStackType() {
-    return StackType.TYPE_SERVER;
-  }
+	 @Override
+	 public StackType getStackType()
+	 {
+		 return StackType.TYPE_SERVER;
+	 }
 
-  @Override
-  protected IPeer newLocalPeer(IStatisticManager statisticFactory) {
-    return new ServerLocalPeer(statisticFactory);
-  }
+	 @Override
+	 protected IPeer newLocalPeer(IStatisticManager statisticFactory)
+	 {
+		 return new ServerLocalPeer(statisticFactory);
+	 }
 
-  @Override
-  public void addApplicationId(ApplicationId applicationId) {
-    synchronized (lock) {
-      if (appIds.contains(applicationId)) {
-        return;
-      }
-      appIds.add(applicationId);
-    }
-    if (logger.isDebugEnabled()) {
-      logger.debug("Adding application id of auth [{}] acct [{}] vendor [{}]",
-          new Object[]{applicationId.getAuthAppId(), applicationId.getAcctAppId(), applicationId.getVendorId()});
-    }
-  }
+	 @Override
+	 public void addApplicationId(ApplicationId applicationId)
+	 {
+		 synchronized (lock) {
+			 if (appIds.contains(applicationId)) {
+				 return;
+			 }
+			 appIds.add(applicationId);
+		 }
+		 if (logger.isDebugEnabled()) {
+			 logger.debug("Adding application id of auth [{}] acct [{}] vendor [{}]",
+						  new Object[]{applicationId.getAuthAppId(), applicationId.getAcctAppId(), applicationId.getVendorId()});
+		 }
+	 }
 
-  @Override
-  public void remApplicationId(ApplicationId applicationId) {
-    synchronized (lock) {
-      appIds.remove(applicationId);
-    }
-    if (logger.isDebugEnabled()) {
-      logger.debug("Removing application id of auth [{}] acct [{}] vendor [{}]",
-          new Object[]{applicationId.getAuthAppId(), applicationId.getAcctAppId(), applicationId.getVendorId()});
-    }
-  }
+	 @Override
+	 public void remApplicationId(ApplicationId applicationId)
+	 {
+		 synchronized (lock) {
+			 appIds.remove(applicationId);
+		 }
+		 if (logger.isDebugEnabled()) {
+			 logger.debug("Removing application id of auth [{}] acct [{}] vendor [{}]",
+						  new Object[]{applicationId.getAuthAppId(), applicationId.getAcctAppId(), applicationId.getVendorId()});
+		 }
+	 }
 
-  @Override
-  public void reload() {
-    // Reload common application ids from configuration
-    synchronized (lock) {
-      appIds.clear();
-      logger.debug("Clearing out application ids");
-      getLocalPeer().getCommonApplications();
-      // Reload ip addresses from configuration
-      ((ServerLocalPeer) peer).resetAddresses();
-      peer.getIPAddresses();
-    }
-  }
+	 @Override
+	 public void reload()
+	 {
+		 // Reload common application ids from configuration
+		 synchronized (lock) {
+			 appIds.clear();
+			 logger.debug("Clearing out application ids");
+			 getLocalPeer().getCommonApplications();
+			 // Reload ip addresses from configuration
+			 ((ServerLocalPeer) peer).resetAddresses();
+			 peer.getIPAddresses();
+		 }
+	 }
 
-  protected class ServerLocalPeer extends ClientLocalPeer {
+	 protected class ServerLocalPeer extends ClientLocalPeer
+	 {
 
-    protected INetwork net = null;
-    protected IMutablePeerTable manager = null;
-    protected ISessionFactory factory = null;
-    // XXX: FT/HA // protected Map<String, NetworkReqListener> slc = null;
-    Map<Long, IMessage> peerRequests = new ConcurrentHashMap<Long, IMessage>();
+		 protected INetwork net = null;
+		 protected IMutablePeerTable manager = null;
+		 protected ISessionFactory factory = null;
+		 // XXX: FT/HA // protected Map<String, NetworkReqListener> slc = null;
+		 Map<Long, IMessage> peerRequests = new ConcurrentHashMap<Long, IMessage>();
 
-    public ServerLocalPeer(IStatisticManager statisticFactory) {
-      super(statisticFactory);
-    }
+		 public ServerLocalPeer(IStatisticManager statisticFactory)
+		 {
+			 super(statisticFactory);
+		 }
 
-    @Override
-    public Set<ApplicationId> getCommonApplications() {
-      Set<ApplicationId> set;
-      synchronized (lock) {
-        set = super.getCommonApplications();
-      }
-      return  set;
-    }
+		 @Override
+		 public Set<ApplicationId> getCommonApplications()
+		 {
+			 Set<ApplicationId> set;
+			 synchronized (lock) {
+				 set = super.getCommonApplications();
+			 }
+			 return set;
+		 }
 
-    @Override
-    public InetAddress[] getIPAddresses() {
-      if (addresses.length == 0) {
-        Configuration[] ipAddresses = stack.getConfiguration().getChildren(OwnIPAddresses.ordinal());
-        List<InetAddress> list = new ArrayList<InetAddress>();
-        if (ipAddresses != null) {
-          for (Configuration address : ipAddresses) {
-            if (address != null) {
-              InetAddress iaddress = getAddress(address);
-              if (iaddress != null) {
-                list.add(iaddress);
-              }
-            }
-          }
-        }
-        else {
-          InetAddress address = getDefaultIpAddress();
-          if (address != null) {
-            list.add(address);
-          }
-        }
-        addresses = list.toArray(new InetAddress[list.size()]);
-      }
-      return addresses;
-    }
+		 @Override
+		 public InetAddress[] getIPAddresses()
+		 {
+			 if (addresses.length == 0) {
+				 Configuration[] ipAddresses = stack.getConfiguration().getChildren(OwnIPAddresses.ordinal());
+				 List<InetAddress> list = new ArrayList<InetAddress>();
+				 if (ipAddresses != null) {
+					 for (Configuration address : ipAddresses) {
+						 if (address != null) {
+							 InetAddress iaddress = getAddress(address);
+							 if (iaddress != null) {
+								 list.add(iaddress);
+							 }
+						 }
+					 }
+				 }
+				 else {
+					 InetAddress address = getDefaultIpAddress();
+					 if (address != null) {
+						 list.add(address);
+					 }
+				 }
+				 addresses = list.toArray(new InetAddress[list.size()]);
+			 }
+			 return addresses;
+		 }
 
-    private InetAddress getAddress(Configuration configuration) {
-      InetAddress rc;
-      String address = configuration.getStringValue(OwnIPAddress.ordinal(), null);
-      if (address == null || address.length() == 0) {
-        rc = getDefaultIpAddress();
-      }
-      else {
-        try {
-          rc = InetAddress.getByName(address);
-        }
-        catch (UnknownHostException e) {
-          logger.debug("Unable to retrieve IP by Address [{}]", address, e);
-          rc = IPConverter.InetAddressByIPv4(address);
-          if (rc == null) {
-            rc = IPConverter.InetAddressByIPv6(address);
-          }
-          if (rc == null) {
-            rc = getDefaultIpAddress();
-          }
-        }
-      }
-      return rc;
-    }
+		 private InetAddress getAddress(Configuration configuration)
+		 {
+			 InetAddress rc;
+			 String address = configuration.getStringValue(OwnIPAddress.ordinal(), null);
+			 if (address == null || address.length() == 0) {
+				 rc = getDefaultIpAddress();
+			 }
+			 else {
+				 try {
+					 rc = InetAddress.getByName(address);
+				 }
+				 catch (UnknownHostException e) {
+					 logger.debug("Unable to retrieve IP by Address [{}]", address, e);
+					 rc = IPConverter.InetAddressByIPv4(address);
+					 if (rc == null) {
+						 rc = IPConverter.InetAddressByIPv6(address);
+					 }
+					 if (rc == null) {
+						 rc = getDefaultIpAddress();
+					 }
+				 }
+			 }
+			 return rc;
+		 }
 
-    private InetAddress getDefaultIpAddress() {
-      try {
-        return InetAddress.getByName(getLocalPeer().getUri().getFQDN());
-      }
-      catch (Exception e1) {
-        logger.debug("Unable to retrieve IP by URI [{}]", getLocalPeer().getUri().getFQDN(), e1);
-        try {
-          return InetAddress.getLocalHost();
-        }
-        catch (Exception e2) {
-          logger.debug("Unable to retrieve IP for localhost", e2);
-        }
-      }
-      return null;
-    }
+		 private InetAddress getDefaultIpAddress()
+		 {
+			 try {
+				 return InetAddress.getByName(getLocalPeer().getUri().getFQDN());
+			 }
+			 catch (Exception e1) {
+				 logger.debug("Unable to retrieve IP by URI [{}]", getLocalPeer().getUri().getFQDN(), e1);
+				 try {
+					 return InetAddress.getLocalHost();
+				 }
+				 catch (Exception e2) {
+					 logger.debug("Unable to retrieve IP for localhost", e2);
+				 }
+			 }
+			 return null;
+		 }
 
-    // Local processing message
-    @Override
-    @SuppressWarnings("unchecked")
-    public boolean sendMessage(IMessage message) throws TransportException, OverloadException {
-      logger.debug("Sending Message in Server Local Peer");
-      try {
-        if (net == null || manager == null) {
-          try {
-            logger.debug("Unwrapping network and manager");
-            net = (INetwork) stack.unwrap(Network.class);
-            manager = (IMutablePeerTable) stack.unwrap(PeerTable.class);
-            factory = manager.getSessionFactory();
-            // XXX: FT/HA // slc = manager.getSessionReqListeners();
-          }
-          catch (Exception e) {
-            logger.warn("Error initialising for message send", e);
-          }
-        }
+		 // Local processing message
+		 @Override
+		 @SuppressWarnings("unchecked")
+		 public boolean sendMessage(IMessage message) throws TransportException, OverloadException
+		 {
+			 logger.debug("Sending Message in Server Local Peer");
+			 try {
+				 if (net == null || manager == null) {
+					 try {
+						 logger.debug("Unwrapping network and manager");
+						 net = (INetwork) stack.unwrap(Network.class);
+						 manager = (IMutablePeerTable) stack.unwrap(PeerTable.class);
+						 factory = manager.getSessionFactory();
+						 // XXX: FT/HA // slc = manager.getSessionReqListeners();
+					 }
+					 catch (Exception e) {
+						 logger.warn("Error initialising for message send", e);
+					 }
+				 }
 
-        IMessage answer = null;
-        if (message.isRequest()) {
-          logger.debug("Message is a request");
-          message.setHopByHopIdentifier(peer.getHopByHopIdentifier());
-          peerRequests.put(message.getHopByHopIdentifier(), message);
-          NetworkReqListener listener = net.getListener(message);
-          if (listener != null) {
-            // This is duplicate code from PeerImpl
-            answer = manager.isDuplicate(message);
-            if (answer != null) {
-              logger.debug("Found message in duplicates. No need to invoke listener, will send previous answer.");
-              answer.setProxiable(message.isProxiable());
-              answer.getAvps().removeAvp(Avp.PROXY_INFO);
-              for (Avp avp : message.getAvps().getAvps(Avp.PROXY_INFO)) {
-                answer.getAvps().addAvp(avp);
-              }
-              answer.setHopByHopIdentifier(message.getHopByHopIdentifier());
-            }
-            else {
-              String avpSessionId = message.getSessionId();
-              if (avpSessionId != null) {
-                // XXX: FT/HA // NetworkReqListener sessionListener = slc.get(avpSessionId);
-                NetworkReqListener sessionListener = sessionDataSource.getSessionListener(avpSessionId);
-                if (sessionListener != null) {
-                  logger.debug("Giving message to sessionListener to process as Session-Id AVP existed in message "
-                      + "and was used to get a session from Session DataSource");
-                  answer = (IMessage) sessionListener.processRequest(message);
-                }
-                else {
-                  try {
-                    logger.debug("Giving message to listener to process. Listener was retrieved from net");
-                    answer = (IMessage) listener.processRequest(message);
-                    if (answer != null) {
-                      manager.saveToDuplicate(message.getDuplicationKey(), answer);
-                    }
-                  }
-                  catch (Exception e) {
-                    logger.debug("Error during processing message by listener", e);
-                  }
-                }
-              }
-            }
-          }
-          else {
-            if (logger.isDebugEnabled()) {
-              logger.debug("Unable to find handler {} for message {}", message.getSingleApplicationId(), message);
-            }
-          }
-          if (answer != null) {
-            if (logger.isDebugEnabled()) {
-              logger.debug("Removing message with HbH Identifier [{}] from Peer Requests Map", message.getHopByHopIdentifier());
-            }
-            peerRequests.remove(message.getHopByHopIdentifier());
-          }
-        }
-        else {
-          if (logger.isDebugEnabled()) {
-            logger.debug("Message is an answer. Setting answer to the message and fetching message from Peer Requests Map using HbH Identifier [{}]",
-                message.getHopByHopIdentifier());
-          }
-          answer = message;
-          message = peerRequests.get(answer.getHopByHopIdentifier());
-        }
-        // Process answer
-        if (message != null && !message.isTimeOut() && answer != null) {
-          logger.debug("Clearing timer on message and notifying event listeners of receiving success message");
-          message.clearTimer();
-          message.setState(IMessage.STATE_ANSWERED);
-          message.getEventListener().receivedSuccessMessage(message, answer);
-        }
-        return true;
-      }
-      catch (Exception e) {
-        logger.warn("Unable to process message {}", message, e);
-      }
-      return false;
-    }
-  }
-}
+				 IMessage answer = null;
+				 if (message.isRequest()) {
+					 logger.debug("Message is a request");
+					 message.setHopByHopIdentifier(peer.getHopByHopIdentifier());
+					 peerRequests.put(message.getHopByHopIdentifier(), message);
+					 NetworkReqListener listener = net.getListener(message);
+					 if (listener != null) {
+						 // This is duplicate code from PeerImpl
+						 answer = manager.isDuplicate(message);
+						 if (answer != null) {
+							 logger.debug("Found message in duplicates. No need to invoke listener, will send previous answer.");
+							 answer.setProxiable(message.isProxiable());
+							 answer.getAvps().removeAvp(Avp.PROXY_INFO);
+							 for (Avp avp : message.getAvps().getAvps(Avp.PROXY_INFO)) {
+								 answer.getAvps().addAvp(avp);
+							 }
+							 answer.setHopByHopIdentifier(message.getHopByHopIdentifier());
+						 }
+						 else {
+							 String avpSessionId = message.getSessionId();
+							 if (avpSessionId != null) {
+								 // XXX: FT/HA // NetworkReqListener sessionListener = slc.get(avpSessionId);
+								 NetworkReqListener sessionListener = sessionDataSource.getSessionListener(avpSessionId);
+								 if (sessionListener != null) {
+									 logger.debug("Giving message to sessionListener to process as Session-Id AVP existed in message "
+												  + "and was used to get a session from Session DataSource");
+									 answer = (IMessage) sessionListener.processRequest(message);
+								 }
+								 else {
+									 try {
+										 logger.debug("Giving message to listener to process. Listener was retrieved from net");
+										 answer = (IMessage) listener.processRequest(message);
+										 if (answer != null) {
+											 manager.saveToDuplicate(message.getDuplicationKey(), answer);
+										 }
+									 }
+									 catch (Exception e) {
+										 logger.debug("Error during processing message by listener", e);
+									 }
+								 }
+							 }
+						 }
+					 }
+					 else {
+						 if (logger.isDebugEnabled()) {
+							 logger.debug("Unable to find handler {} for message {}", message.getSingleApplicationId(), message);
+						 }
+					 }
+					 if (answer != null) {
+						 if (logger.isDebugEnabled()) {
+							 logger.debug("Removing message with HbH Identifier [{}] from Peer Requests Map", message.getHopByHopIdentifier());
+						 }
+						 peerRequests.remove(message.getHopByHopIdentifier());
+					 }
+				 }
+				 else {
+					 if (logger.isDebugEnabled()) {
+						 logger.debug("Message is an answer. Setting answer to the message and fetching message from Peer Requests Map using HbH Identifier [{}]",
+									  message.getHopByHopIdentifier());
+					 }
+					 answer = message;
+					 message = peerRequests.get(answer.getHopByHopIdentifier());
+				 }
+				 // Process answer
+				 if (message != null && !message.isTimeOut() && answer != null) {
+					 logger.debug("Clearing timer on message and notifying event listeners of receiving success message");
+					 message.clearTimer();
+					 message.setState(IMessage.STATE_ANSWERED);
+					 message.getEventListener().receivedSuccessMessage(message, answer);
+				 }
+				 return true;
+			 }
+			 catch (Exception e) {
+				 logger.warn("Unable to process message {}", message, e);
+			 }
+			 return false;
+		 }
+	 }
+ }

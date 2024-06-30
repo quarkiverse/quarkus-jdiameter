@@ -40,30 +40,31 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.server.impl.app.cca;
+ package org.jdiameter.server.impl.app.cca;
 
-import java.io.Serializable;
+ import org.jdiameter.common.api.app.cca.ICCASessionData;
+ import org.jdiameter.common.api.app.cca.ServerCCASessionState;
 
-import org.jdiameter.common.api.app.cca.ICCASessionData;
-import org.jdiameter.common.api.app.cca.ServerCCASessionState;
+ import java.io.Serializable;
 
-/**
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface IServerCCASessionData extends ICCASessionData {
+ /**
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IServerCCASessionData extends ICCASessionData
+ {
 
-  boolean isStateless();
+	 boolean isStateless();
 
-  void setStateless(boolean stateless);
+	 void setStateless(boolean stateless);
 
-  ServerCCASessionState getServerCCASessionState();
+	 ServerCCASessionState getServerCCASessionState();
 
-  void setServerCCASessionState(ServerCCASessionState state);
+	 void setServerCCASessionState(ServerCCASessionState state);
 
-  void setTccTimerId(Serializable tccTimerId);
+	 void setTccTimerId(Serializable tccTimerId);
 
-  Serializable getTccTimerId();
+	 Serializable getTccTimerId();
 
-}
+ }

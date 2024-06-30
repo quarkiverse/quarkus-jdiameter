@@ -40,15 +40,16 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.server.impl.app.cxdx;
+ package org.jdiameter.server.impl.app.cxdx;
 
-import org.jdiameter.common.api.app.cxdx.ICxDxSessionData;
+ import org.jdiameter.common.api.app.cxdx.ICxDxSessionData;
 
-/**
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface IServerCxDxSessionData extends ICxDxSessionData{
+ /**
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IServerCxDxSessionData extends ICxDxSessionData
+ {
 
-}
+ }

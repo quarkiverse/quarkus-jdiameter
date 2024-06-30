@@ -40,15 +40,16 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api;
+ package org.jdiameter.api;
 
-/**
- * This enumerated class define Peer states. More information you can read on document
- * "Authentication, Authorization and Accounting (AAA) Transport Profile"
- *
- * @author erick.svenson@yahoo.com
- * @version 1.5.1 Final
- */
-public enum PeerState {
-  OKAY, SUSPECT, DOWN, REOPEN, INITIAL
-}
+ /**
+  * This enumerated class define Peer states. More information you can read on document "Authentication, Authorization
+  * and Accounting (AAA) Transport Profile"
+  *
+  * @author erick.svenson@yahoo.com
+  * @version 1.5.1 Final
+  */
+ public enum PeerState
+ {
+	 OKAY, SUSPECT, DOWN, REOPEN, INITIAL
+ }

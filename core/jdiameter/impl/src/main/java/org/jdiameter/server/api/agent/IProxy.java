@@ -40,12 +40,13 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.server.api.agent;
+ package org.jdiameter.server.api.agent;
 
-/**
- *
- * @author babass
- */
-public interface IProxy extends IAgent {
+ /**
+  * @author babass
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IProxy extends IAgent
+ {
 
-}
+ }

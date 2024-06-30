@@ -40,59 +40,67 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.server.impl.app.gx;
+ package org.jdiameter.server.impl.app.gx;
 
-import java.io.Serializable;
+ import org.jdiameter.common.api.app.AppSessionDataLocalImpl;
+ import org.jdiameter.common.api.app.gx.ServerGxSessionState;
 
-import org.jdiameter.common.api.app.AppSessionDataLocalImpl;
-import org.jdiameter.common.api.app.gx.ServerGxSessionState;
+ import java.io.Serializable;
 
-/**
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public class ServerGxSessionDataLocalImpl extends AppSessionDataLocalImpl implements IServerGxSessionData {
+ /**
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public class ServerGxSessionDataLocalImpl extends AppSessionDataLocalImpl implements IServerGxSessionData
+ {
 
-  protected boolean stateless = true;
-  protected ServerGxSessionState state = ServerGxSessionState.IDLE;
-  protected Serializable tccTimerId;
+	 protected boolean stateless = true;
+	 protected ServerGxSessionState state = ServerGxSessionState.IDLE;
+	 protected Serializable tccTimerId;
 
-  /**
-   *
-   */
-  public ServerGxSessionDataLocalImpl() {
+	 /**
+	  *
+	  */
+	 public ServerGxSessionDataLocalImpl()
+	 {
 
-  }
+	 }
 
-  @Override
-  public boolean isStateless() {
-    return stateless;
-  }
+	 @Override
+	 public boolean isStateless()
+	 {
+		 return stateless;
+	 }
 
-  @Override
-  public void setStateless(boolean stateless) {
-    this.stateless = stateless;
-  }
+	 @Override
+	 public void setStateless(boolean stateless)
+	 {
+		 this.stateless = stateless;
+	 }
 
-  @Override
-  public ServerGxSessionState getServerGxSessionState() {
-    return state;
-  }
+	 @Override
+	 public ServerGxSessionState getServerGxSessionState()
+	 {
+		 return state;
+	 }
 
-  @Override
-  public void setServerGxSessionState(ServerGxSessionState state) {
-    this.state = state;
-  }
+	 @Override
+	 public void setServerGxSessionState(ServerGxSessionState state)
+	 {
+		 this.state = state;
+	 }
 
-  @Override
-  public Serializable getTccTimerId() {
-    return tccTimerId;
-  }
+	 @Override
+	 public Serializable getTccTimerId()
+	 {
+		 return tccTimerId;
+	 }
 
-  @Override
-  public void setTccTimerId(Serializable tccTimerId) {
-    this.tccTimerId = tccTimerId;
-  }
+	 @Override
+	 public void setTccTimerId(Serializable tccTimerId)
+	 {
+		 this.tccTimerId = tccTimerId;
+	 }
 
-}
+ }

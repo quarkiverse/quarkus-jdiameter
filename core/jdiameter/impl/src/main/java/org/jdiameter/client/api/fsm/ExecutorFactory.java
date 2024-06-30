@@ -40,18 +40,19 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.client.api.fsm;
+ package org.jdiameter.client.api.fsm;
 
-import java.util.concurrent.ExecutorService;
+ import java.util.concurrent.ExecutorService;
 
-/**
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public interface ExecutorFactory {
+ /**
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface ExecutorFactory
+ {
 
-  ExecutorService getExecutor();
+	 ExecutorService getExecutor();
 
-}
+ }

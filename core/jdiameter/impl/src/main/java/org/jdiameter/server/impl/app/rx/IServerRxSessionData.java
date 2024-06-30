@@ -40,25 +40,26 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.server.impl.app.rx;
+ package org.jdiameter.server.impl.app.rx;
 
-import org.jdiameter.common.api.app.rx.IRxSessionData;
-import org.jdiameter.common.api.app.rx.ServerRxSessionState;
+ import org.jdiameter.common.api.app.rx.IRxSessionData;
+ import org.jdiameter.common.api.app.rx.ServerRxSessionState;
 
-/**
- *
- * @author <a href="mailto:richard.good@smilecoms.com"> Richard Good </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public interface IServerRxSessionData extends IRxSessionData {
+ /**
+  * @author <a href="mailto:richard.good@smilecoms.com"> Richard Good </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IServerRxSessionData extends IRxSessionData
+ {
 
-  boolean isStateless();
+	 boolean isStateless();
 
-  void setStateless(boolean stateless);
+	 void setStateless(boolean stateless);
 
-  ServerRxSessionState getServerRxSessionState();
+	 ServerRxSessionState getServerRxSessionState();
 
-  void setServerRxSessionState(ServerRxSessionState state);
+	 void setServerRxSessionState(ServerRxSessionState state);
 
-}
+ }

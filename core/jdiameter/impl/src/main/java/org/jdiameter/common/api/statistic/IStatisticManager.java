@@ -40,58 +40,59 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.api.statistic;
+ package org.jdiameter.common.api.statistic;
 
-import java.util.List;
-import java.util.Set;
+ import java.util.List;
+ import java.util.Set;
 
-/**
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface IStatisticManager {
+ /**
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IStatisticManager
+ {
 
-  IStatisticRecord newCounterRecord(IStatisticRecord.Counters recordDescription);
+	 IStatisticRecord newCounterRecord(IStatisticRecord.Counters recordDescription);
 
-  IStatisticRecord newCounterRecord(IStatisticRecord.Counters recordDescription, IStatisticRecord.ValueHolder counters);
+	 IStatisticRecord newCounterRecord(IStatisticRecord.Counters recordDescription, IStatisticRecord.ValueHolder counters);
 
-  IStatisticRecord newCounterRecord(IStatisticRecord.Counters recordDescription, IStatisticRecord.ValueHolder counters, IStatisticRecord... rec);
+	 IStatisticRecord newCounterRecord(IStatisticRecord.Counters recordDescription, IStatisticRecord.ValueHolder counters, IStatisticRecord... rec);
 
-  IStatisticRecord newCounterRecord(String name, String description);
+	 IStatisticRecord newCounterRecord(String name, String description);
 
-  IStatisticRecord newCounterRecord(String name, String description, IStatisticRecord.ValueHolder counter);
+	 IStatisticRecord newCounterRecord(String name, String description, IStatisticRecord.ValueHolder counter);
 
-  IStatisticRecord newPerSecondCounterRecord(String name, IStatisticRecord.Counters recordDescription, IStatisticRecord record);
+	 IStatisticRecord newPerSecondCounterRecord(String name, IStatisticRecord.Counters recordDescription, IStatisticRecord record);
 
-  IStatistic newStatistic(String name, IStatistic.Groups group, IStatisticRecord... rec);
+	 IStatistic newStatistic(String name, IStatistic.Groups group, IStatisticRecord... rec);
 
-  //IStatistic newStatistic(String name, String description, IStatisticRecord... rec);
+	 //IStatistic newStatistic(String name, String description, IStatisticRecord... rec);
 
-  //void removePerSecondCounterRecord(String name, IStatisticRecord.Counters recordDescription);
+	 //void removePerSecondCounterRecord(String name, IStatisticRecord.Counters recordDescription);
 
-  void removePerSecondCounterRecord(IStatisticRecord rec);
+	 void removePerSecondCounterRecord(IStatisticRecord rec);
 
-  //void removeStatistic(String name);
+	 //void removeStatistic(String name);
 
-  //void removeStatistic(String name, IStatistic.Groups group);
+	 //void removeStatistic(String name, IStatistic.Groups group);
 
-  void removeStatistic(IStatistic stat);
+	 void removeStatistic(IStatistic stat);
 
-  // --- non factory methods, metadata access
-  boolean isOn();
+	 // --- non factory methods, metadata access
+	 boolean isOn();
 
-  long getPause();
+	 long getPause();
 
-  long getDelay();
+	 long getDelay();
 
-  Set<String> getEnabled();
+	 Set<String> getEnabled();
 
-  // --- access method
+	 // --- access method
 
-  List<IStatisticRecord> getPSStatisticRecord();
+	 List<IStatisticRecord> getPSStatisticRecord();
 
-  List<IStatistic> getStatistic();
+	 List<IStatistic> getStatistic();
 
-}
+ }

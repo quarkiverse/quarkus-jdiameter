@@ -25,7 +25,6 @@ import org.jdiameter.api.app.AppRequestEvent;
 
 /**
  * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
- *
  */
 
 /*
@@ -41,11 +40,13 @@ import org.jdiameter.api.app.AppRequestEvent;
  * Location operation request)
  */
 
-public interface ProvideLocationRequest extends AppRequestEvent {
+@SuppressWarnings("all")//3rd party lib
+public interface ProvideLocationRequest extends AppRequestEvent
+{
 
-  String _SHORT_NAME = "PLR";
-  String _LONG_NAME = "Provide-Location-Request";
+	String _SHORT_NAME = "PLR";
+	String _LONG_NAME = "Provide-Location-Request";
 
-  int code = 8388620;
+	int code = 8388620;
 
 }

@@ -40,57 +40,62 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api;
+ package org.jdiameter.api;
 
-/**
- * This interface introduces a capability to work with a network.
- * You can get instance of this interface over stack instance:
- * <code>
- * if (stack.isWrapperFor(Network.class)) {
- *       Network netWork = stack.unwrap(Network.class);
- * .....
- * }
- * </code>
- *
- * @author erick.svenson@yahoo.com
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @version 1.5.1 Final
- */
-public interface Network extends Wrapper {
+ /**
+  * This interface introduces a capability to work with a network. You can get instance of this interface over stack
+  * instance:
+  * <code>
+  * if (stack.isWrapperFor(Network.class)) { Network netWork = stack.unwrap(Network.class); ..... }
+  * </code>
+  *
+  * @author erick.svenson@yahoo.com
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @version 1.5.1 Final
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface Network extends Wrapper
+ {
 
-  /**
-   * Return local peer network statistics
-   * @return network statistics
-   */
-  Statistic getStatistic();
+	 /**
+	  * Return local peer network statistics
+	  *
+	  * @return network statistics
+	  */
+	 Statistic getStatistic();
 
-  /**
-   * Register listener for processing network requests
-   * @param applicationId application Id
-   * @param listener request listener
-   * @throws ApplicationAlreadyUseException  if listener with predefined appId already append to network
-   */
-  void addNetworkReqListener(NetworkReqListener listener, ApplicationId... applicationId) throws ApplicationAlreadyUseException;
+	 /**
+	  * Register listener for processing network requests
+	  *
+	  * @param applicationId application Id
+	  * @param listener      request listener
+	  *
+	  * @throws ApplicationAlreadyUseException if listener with predefined appId already append to network
+	  */
+	 void addNetworkReqListener(NetworkReqListener listener, ApplicationId... applicationId) throws ApplicationAlreadyUseException;
 
-  /**
-   * Register listener for processing network requests
-   * @param selector application selector
-   * @param listener request listener
-   */
-  void addNetworkReqListener(NetworkReqListener listener, Selector<Message, ApplicationId>... selector);
+	 /**
+	  * Register listener for processing network requests
+	  *
+	  * @param selector application selector
+	  * @param listener request listener
+	  */
+	 void addNetworkReqListener(NetworkReqListener listener, Selector<Message, ApplicationId>... selector);
 
-  /**
-   * Remove request listener
-   * @param applicationId application id of listener
-   */
-  void removeNetworkReqListener(ApplicationId... applicationId);
+	 /**
+	  * Remove request listener
+	  *
+	  * @param applicationId application id of listener
+	  */
+	 void removeNetworkReqListener(ApplicationId... applicationId);
 
-  /**
-   * Remove request listener
-   * @param selector selector of application
-   */
-  void removeNetworkReqListener(Selector<Message, ApplicationId>... selector);
+	 /**
+	  * Remove request listener
+	  *
+	  * @param selector selector of application
+	  */
+	 void removeNetworkReqListener(Selector<Message, ApplicationId>... selector);
 
-}
+ }
 

@@ -40,30 +40,31 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.server.impl.app.gx;
+ package org.jdiameter.server.impl.app.gx;
 
-import java.io.Serializable;
+ import org.jdiameter.common.api.app.gx.IGxSessionData;
+ import org.jdiameter.common.api.app.gx.ServerGxSessionState;
 
-import org.jdiameter.common.api.app.gx.IGxSessionData;
-import org.jdiameter.common.api.app.gx.ServerGxSessionState;
+ import java.io.Serializable;
 
-/**
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface IServerGxSessionData extends IGxSessionData {
+ /**
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IServerGxSessionData extends IGxSessionData
+ {
 
-  boolean isStateless();
+	 boolean isStateless();
 
-  void setStateless(boolean stateless);
+	 void setStateless(boolean stateless);
 
-  ServerGxSessionState getServerGxSessionState();
+	 ServerGxSessionState getServerGxSessionState();
 
-  void setServerGxSessionState(ServerGxSessionState state);
+	 void setServerGxSessionState(ServerGxSessionState state);
 
-  void setTccTimerId(Serializable tccTimerId);
+	 void setTccTimerId(Serializable tccTimerId);
 
-  Serializable getTccTimerId();
+	 Serializable getTccTimerId();
 
-}
+ }

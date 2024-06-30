@@ -40,39 +40,40 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.api.cxdx;
+ package org.jdiameter.api.cxdx;
 
-import org.jdiameter.api.IllegalDiameterStateException;
-import org.jdiameter.api.InternalException;
-import org.jdiameter.api.OverloadException;
-import org.jdiameter.api.RouteException;
-import org.jdiameter.api.app.AppSession;
-import org.jdiameter.api.app.StateMachine;
-import org.jdiameter.api.cxdx.events.JLocationInfoAnswer;
-import org.jdiameter.api.cxdx.events.JMultimediaAuthAnswer;
-import org.jdiameter.api.cxdx.events.JPushProfileRequest;
-import org.jdiameter.api.cxdx.events.JRegistrationTerminationRequest;
-import org.jdiameter.api.cxdx.events.JServerAssignmentAnswer;
-import org.jdiameter.api.cxdx.events.JUserAuthorizationAnswer;
+ import org.jdiameter.api.IllegalDiameterStateException;
+ import org.jdiameter.api.InternalException;
+ import org.jdiameter.api.OverloadException;
+ import org.jdiameter.api.RouteException;
+ import org.jdiameter.api.app.AppSession;
+ import org.jdiameter.api.app.StateMachine;
+ import org.jdiameter.api.cxdx.events.JLocationInfoAnswer;
+ import org.jdiameter.api.cxdx.events.JMultimediaAuthAnswer;
+ import org.jdiameter.api.cxdx.events.JPushProfileRequest;
+ import org.jdiameter.api.cxdx.events.JRegistrationTerminationRequest;
+ import org.jdiameter.api.cxdx.events.JServerAssignmentAnswer;
+ import org.jdiameter.api.cxdx.events.JUserAuthorizationAnswer;
 
-/**
- *
- * @author <a href="mailto:baranowb@gmail.com">Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface ServerCxDxSession extends AppSession, StateMachine {
+ /**
+  * @author <a href="mailto:baranowb@gmail.com">Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface ServerCxDxSession extends AppSession, StateMachine
+ {
 
-  void sendUserAuthorizationAnswer(JUserAuthorizationAnswer answer) throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
+	 void sendUserAuthorizationAnswer(JUserAuthorizationAnswer answer) throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
 
-  void sendServerAssignmentAnswer(JServerAssignmentAnswer answer) throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
+	 void sendServerAssignmentAnswer(JServerAssignmentAnswer answer) throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
 
-  void sendLocationInformationAnswer(JLocationInfoAnswer answer) throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
+	 void sendLocationInformationAnswer(JLocationInfoAnswer answer) throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
 
-  void sendMultimediaAuthAnswer(JMultimediaAuthAnswer answer) throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
+	 void sendMultimediaAuthAnswer(JMultimediaAuthAnswer answer) throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
 
-  void sendRegistrationTerminationRequest(JRegistrationTerminationRequest request)
-      throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
+	 void sendRegistrationTerminationRequest(JRegistrationTerminationRequest request)
+	 throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
 
-  void sendPushProfileRequest(JPushProfileRequest request) throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
+	 void sendPushProfileRequest(JPushProfileRequest request) throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
 
-}
+ }

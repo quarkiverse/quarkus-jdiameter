@@ -40,21 +40,23 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.server.impl.app.cxdx;
+ package org.jdiameter.server.impl.app.cxdx;
 
-import org.jdiameter.common.impl.app.cxdx.CxDxLocalSessionDataImpl;
+ import org.jdiameter.common.impl.app.cxdx.CxDxLocalSessionDataImpl;
 
-/**
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public class ServerCxDxSessionDataLocalImpl extends CxDxLocalSessionDataImpl implements IServerCxDxSessionData {
+ /**
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public class ServerCxDxSessionDataLocalImpl extends CxDxLocalSessionDataImpl implements IServerCxDxSessionData
+ {
 
-  /**
-   *
-   */
-  public ServerCxDxSessionDataLocalImpl() {
-  }
+	 /**
+	  *
+	  */
+	 public ServerCxDxSessionDataLocalImpl()
+	 {
+	 }
 
-}
+ }

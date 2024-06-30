@@ -40,41 +40,44 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.api.app.cca;
+ package org.jdiameter.common.api.app.cca;
 
-import java.util.concurrent.ScheduledFuture;
+ import org.jdiameter.api.Request;
+ import org.jdiameter.api.cca.ServerCCASession;
 
-import org.jdiameter.api.Request;
-import org.jdiameter.api.cca.ServerCCASession;
+ import java.util.concurrent.ScheduledFuture;
 
-/**
- * Diameter Credit Control Application Server Additional listener
- * Actions for FSM
- *
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public interface IServerCCASessionContext {
+ /**
+  * Diameter Credit Control Application Server Additional listener Actions for FSM
+  *
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IServerCCASessionContext
+ {
 
-  void sessionSupervisionTimerExpired(ServerCCASession session);
+	 void sessionSupervisionTimerExpired(ServerCCASession session);
 
-  /**
-   * This is called always when Tcc starts
-   * @param session
-   * @param future
-   */
-  void sessionSupervisionTimerStarted(ServerCCASession session, ScheduledFuture future);
+	 /**
+	  * This is called always when Tcc starts
+	  *
+	  * @param session
+	  * @param future
+	  */
+	 void sessionSupervisionTimerStarted(ServerCCASession session, ScheduledFuture future);
 
-  void sessionSupervisionTimerReStarted(ServerCCASession session, ScheduledFuture future);
+	 void sessionSupervisionTimerReStarted(ServerCCASession session, ScheduledFuture future);
 
-  void sessionSupervisionTimerStopped(ServerCCASession session, ScheduledFuture future);
+	 void sessionSupervisionTimerStopped(ServerCCASession session, ScheduledFuture future);
 
-  /**
-   * Returns seconds value representing default validity time, App session uses 2x for Tcc timer
-   * @return
-   */
-  long getDefaultValidityTime();
+	 /**
+	  * Returns seconds value representing default validity time, App session uses 2x for Tcc timer
+	  *
+	  * @return
+	  */
+	 long getDefaultValidityTime();
 
-  void timeoutExpired(Request request);
+	 void timeoutExpired(Request request);
 
-}
+ }

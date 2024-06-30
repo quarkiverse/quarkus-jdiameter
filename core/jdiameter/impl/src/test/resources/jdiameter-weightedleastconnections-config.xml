@@ -37,7 +37,7 @@
         Determines whether the URI should be used as FQDN. If it is set to true, the stack expects
         the destination/origin host to be in the format of "aaa://isdn.domain.com:3868" rather than the
         normal "isdn.domain.com". The default value is false. -->
-        <UseUriAsFqdn value="true" /> <!-- Needed for Ericsson Emulator (set to true) -->
+        <UseUriAsFqdn value="true"/> <!-- Needed for Ericsson Emulator (set to true) -->
 
         <!--
         Determines how many tasks the peer state machine can have before rejecting the next task.
@@ -144,16 +144,16 @@
             -->
             <Realm name="remotepeer.2scale.net" peers="127.0.0.1" local_action="LOCAL" dynamic="false" exp_time="1">
                 <ApplicationID>
-                    <VendorId value="10415" />
-                    <AuthApplId value="4" />
-                    <AcctApplId value="0" />
+                    <VendorId value="10415"/>
+                    <AuthApplId value="4"/>
+                    <AcctApplId value="0"/>
                 </ApplicationID>
             </Realm>
         </Realms>
     </Network>
 
     <Extensions>
-        <RouterEngine value="org.jdiameter.client.impl.router.WeightedLeastConnectionsRouter" />
+        <RouterEngine value="org.jdiameter.client.impl.router.WeightedLeastConnectionsRouter"/>
     </Extensions>
 
 </Configuration>

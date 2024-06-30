@@ -40,27 +40,28 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.api.app.acc;
+ package org.jdiameter.common.api.app.acc;
 
-import org.jdiameter.api.Answer;
-import org.jdiameter.api.ApplicationId;
-import org.jdiameter.api.Request;
-import org.jdiameter.api.acc.events.AccountAnswer;
-import org.jdiameter.api.acc.events.AccountRequest;
+ import org.jdiameter.api.Answer;
+ import org.jdiameter.api.ApplicationId;
+ import org.jdiameter.api.Request;
+ import org.jdiameter.api.acc.events.AccountAnswer;
+ import org.jdiameter.api.acc.events.AccountRequest;
 
-/**
- *
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
- */
-public interface IAccMessageFactory {
+ /**
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public interface IAccMessageFactory
+ {
 
-  ApplicationId getApplicationId();
+	 ApplicationId getApplicationId();
 
-  int getAccMessageCommandCode();
+	 int getAccMessageCommandCode();
 
-  AccountRequest createAccRequest(Request request);
+	 AccountRequest createAccRequest(Request request);
 
-  AccountAnswer createAccAnswer(Answer answer);
+	 AccountAnswer createAccAnswer(Answer answer);
 
-}
+ }

@@ -40,28 +40,29 @@
   *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
   */
 
-package org.jdiameter.common.impl.app.cxdx;
+ package org.jdiameter.common.impl.app.cxdx;
 
-import org.jdiameter.api.Message;
-import org.jdiameter.api.cxdx.events.JRegistrationTerminationRequest;
-import org.jdiameter.common.impl.app.AppRequestEventImpl;
+ import org.jdiameter.api.Message;
+ import org.jdiameter.api.cxdx.events.JRegistrationTerminationRequest;
+ import org.jdiameter.common.impl.app.AppRequestEventImpl;
 
-/**
- *
- * @author <a href="mailto:baranowb@gmail.com">Bartosz Baranowski </a>
- * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
- */
-public class JRegistrationTerminationRequestImpl extends AppRequestEventImpl implements JRegistrationTerminationRequest {
+ /**
+  * @author <a href="mailto:baranowb@gmail.com">Bartosz Baranowski </a>
+  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+  */
+ @SuppressWarnings("all")//3rd party lib
+ public class JRegistrationTerminationRequestImpl extends AppRequestEventImpl implements JRegistrationTerminationRequest
+ {
 
-  private static final long serialVersionUID = 1L;
+	 private static final long serialVersionUID = 1L;
 
-  /**
-   *
-   * @param message
-   */
-  public JRegistrationTerminationRequestImpl(Message message) {
-    super(message);
-    message.setRequest(true);
-  }
+	 /**
+	  * @param message
+	  */
+	 public JRegistrationTerminationRequestImpl(Message message)
+	 {
+		 super(message);
+		 message.setRequest(true);
+	 }
 
-}
+ }

@@ -38,17 +38,17 @@
  *   License along with this software; if not, write to the Free
  *   Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
-*/
+ */
 
 package org.jdiameter.common.api.app.slh;
 
 /**
  * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
- *
  */
 
-public enum SLhSessionState {
+public enum SLhSessionState
+{
 
-  IDLE, MESSAGE_SENT_RECEIVED, TERMINATED, TIMEDOUT;
+	IDLE, MESSAGE_SENT_RECEIVED, TERMINATED, TIMEDOUT;
 
 }
