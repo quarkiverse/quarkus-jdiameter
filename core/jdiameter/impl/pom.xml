@@ -41,7 +41,7 @@
             <version>${commons-pool.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.go.sctp</groupId>
+            <groupId>io.go.protocols.sctp</groupId>
             <artifactId>sctp-impl</artifactId>
             <version>${sctp.version}</version>
         </dependency>
