@@ -1,8 +1,0 @@
-language: java
-
-after_success:
-  - mvn com.blackducksoftware.integration:hub-maven-plugin:2.0.2:build-bom -Dhub.output.directory=. -Dhub.deploy.bdio=false
-  - bash <(curl -s https://copilot.blackducksoftware.com/bash/travis) ./*_bdio.jsonld
-
-# Enable container-based infrastructure, see https://docs.travis-ci.com/user/ci-environment/
-sudo: false
