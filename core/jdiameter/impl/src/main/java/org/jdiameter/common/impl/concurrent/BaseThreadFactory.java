@@ -42,6 +42,9 @@
 
  package org.jdiameter.common.impl.concurrent;
 
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+
  import java.util.concurrent.ExecutorService;
  import java.util.concurrent.Executors;
  import java.util.concurrent.ThreadFactory;
@@ -53,14 +56,22 @@
  @SuppressWarnings("all")//3rd party lib
  class BaseThreadFactory implements ThreadFactory
  {
-
+	 private static final Logger log = LoggerFactory.getLogger(BaseThreadFactory.class);
 	 public static final String ENTITY_NAME = "ThreadPool";
 
 	 private ExecutorService threadPoolExecutor;
 
-	 BaseThreadFactory()
+	 BaseThreadFactory(boolean useVirtualThreads)
 	 {
-		 this.threadPoolExecutor = Executors.newCachedThreadPool();
+		 if (useVirtualThreads) {
+			 log.info("Using virtual thread pool executor");
+			 this.threadPoolExecutor = Executors.newVirtualThreadPerTaskExecutor();
+		 }
+		 else {
+			 log.info("Using cached thread pool executor");
+			 this.threadPoolExecutor = Executors.newCachedThreadPool();
+		 }
+
 	 }
 
 	 public ExecutorService getThreadPool()

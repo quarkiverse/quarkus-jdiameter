@@ -42,6 +42,8 @@
 
  package org.jdiameter.common.impl.concurrent;
 
+ import org.jdiameter.api.Configuration;
+ import org.jdiameter.client.impl.helpers.Parameters;
  import org.jdiameter.common.api.concurrent.IConcurrentEntityFactory;
  import org.jdiameter.common.api.statistic.IStatistic;
  import org.jdiameter.common.api.statistic.IStatisticRecord;
@@ -57,16 +59,19 @@
  @SuppressWarnings("all")//3rd party libs
  public class ConcurrentEntityFactory implements IConcurrentEntityFactory
  {
+	 private Configuration config;
 
 	 // TODO: get rid of that?
-	 public ConcurrentEntityFactory()
+	 public ConcurrentEntityFactory(Configuration config)
 	 {
+		 this.config = config;
 	 }
 
 	 @Override
 	 public ThreadFactory newThreadFactory()
 	 {
-		 return new BaseThreadFactory();
+		 boolean useVirtualThreads = config.getBooleanValue(Parameters.UseVirtualThreads.ordinal(), (Boolean) Parameters.UseVirtualThreads.defValue());
+		 return new BaseThreadFactory(useVirtualThreads);
 	 }
 
 	 @Override

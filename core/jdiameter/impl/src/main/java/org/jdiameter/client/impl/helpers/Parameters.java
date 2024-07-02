@@ -141,6 +141,11 @@
 	 public static final Parameters UseUriAsFqdn = new Parameters("UseUriAsFqdn", Boolean.class, false);
 
 	 /**
+	  * Virtual thread usage
+	  */
+	 public static final Parameters UseVirtualThreads = new Parameters("UseVirtualThreads", Boolean.class, false);
+
+	 /**
 	  * Peer name property
 	  */
 	 public static final Parameters PeerName = new Parameters("PeerName", String.class, "");
