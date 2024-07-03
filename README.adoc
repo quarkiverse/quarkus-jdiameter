@@ -1,0 +1,26 @@
+= Go diameter
+
+This is a fork of the RestComm jDiameter Stack with a couple of enhancement done:
+
+- Update the minimum java compatibility to Java 21
+- Added support for Virtual Threading
+- Removed use of Pico Containers
+- Added Quarkus Extension
+- Updated all the dependencies to latest versions
+
+It is still early days and I have only started the project (Jul 2024).
+The enhancement above is done but I still need to implement a CI/CD pipeline for the project and push the artifacts to a public repository.
+
+== Virtual Threading
+
+There is now a new parameter called "UseVirtualThreads" that if set to true will use virtual threads for the diameter stack.
+
+In order to use virtual thread the minimum support Java version had to be change to Java 21.
+
+== Quarkus Extension
+
+The Quarkus extension is still a work in progress.Functionally it is working.
+I am just yet sure about the implementation.
+Currently there is a Server and Client version.
+
+I am, however, planning to merge the two implementation as there is no difference between the server and client versions anymore.
