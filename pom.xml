@@ -153,7 +153,7 @@
                     <layout>default</layout>
                 </repository>
                 <repository>
-                    <id>devrepo alternative</id>
+                    <id>devrepo2</id>
                     <name>Dev Repo</name>
                     <url>http://host.docker.internal:8046/artifactory/devrepo/</url>
                     <layout>default</layout>
