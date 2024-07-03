@@ -19,8 +19,7 @@ In order to use virtual thread the minimum support Java version had to be change
 
 == Quarkus Extension
 
-The Quarkus extension is still a work in progress.Functionally it is working.
-I am just yet sure about the implementation.
-Currently there is a Server and Client version.
+The Quarkus extension is still a work in progress, but is functionally working.
+I am not yet sure about the implementation, currently there is a Server and Client version.
 
 I am, however, planning to merge the two implementation as there is no difference between the server and client versions anymore.
