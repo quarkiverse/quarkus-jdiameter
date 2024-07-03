@@ -107,6 +107,14 @@ public interface Parameter
 	@WithName("rec-timeout")
 	Optional<Long> recTimeout();
 
+
+	/**
+	 * Determines how long it takes for the session to timeout
+	 * The delay is in milliseconds.
+	 */
+	@WithName("session-Timeout")
+	Optional<Long> sessionTimeout();
+
 	/**
 	 * Determines the number of threads for handling events in the Peer FSM.
 	 */

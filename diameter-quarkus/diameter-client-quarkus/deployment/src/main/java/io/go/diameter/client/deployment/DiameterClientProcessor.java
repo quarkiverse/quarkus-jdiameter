@@ -1,8 +1,9 @@
 package io.go.diameter.client.deployment;
 
 import io.go.diameter.DiameterClient;
+import io.go.diameter.client.runtime.DiameterClientConfig;
+import io.go.diameter.client.runtime.DiameterClientFactory;
 import io.go.diameter.client.runtime.DiameterClientRecorder;
-import io.go.diameter.config.DiameterClientConfig;
 import io.quarkus.arc.deployment.SyntheticBeanBuildItem;
 import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
@@ -10,6 +11,7 @@ import io.quarkus.deployment.annotations.Record;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Default;
+import org.jboss.jandex.ClassType;
 import org.jboss.jandex.DotName;
 import org.jdiameter.api.Configuration;
 import org.slf4j.Logger;
@@ -44,6 +46,7 @@ class DiameterClientProcessor
 												 false,
 												 true)
 									 .createWith(recorder.clientConfiguration(DEFAULT_NAME))
+									 .addInjectionPoint(ClassType.create(DotName.createSimple(DiameterClientFactory.class)))
 									 .done());
 		}//if
 
@@ -56,6 +59,7 @@ class DiameterClientProcessor
 													 true,
 													 false)
 										 .createWith(recorder.clientConfiguration(clientName))
+										 .addInjectionPoint(ClassType.create(DotName.createSimple(DiameterClientFactory.class)))
 										 .done());
 			}//for
 		}//if
@@ -79,11 +83,14 @@ class DiameterClientProcessor
 		}
 
 		if (isNamedPersistenceUnit) {
-			configurator.addQualifier().annotation(DiameterClient.class).addValue("value", clientName).done();
+			configurator.addQualifier()
+					.annotation(DiameterClient.class)
+					.addValue("value", clientName)
+					.done();
 		}
 		else {
-			configurator.addQualifier(Default.class);
-			configurator.addQualifier().annotation(DiameterClient.class).done();
+			configurator.addQualifier(Default.class)
+					.addQualifier(DiameterClient.class);
 		}
 
 		return configurator;

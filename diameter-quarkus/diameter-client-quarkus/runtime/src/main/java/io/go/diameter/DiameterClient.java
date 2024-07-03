@@ -11,7 +11,7 @@ import java.util.Objects;
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Target({TYPE, FIELD, METHOD, PARAMETER})
+@Target({TYPE, FIELD, METHOD, PARAMETER, PACKAGE})
 @Retention(RUNTIME)
 @Documented
 @Qualifier

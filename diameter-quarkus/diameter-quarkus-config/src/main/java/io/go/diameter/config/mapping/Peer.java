@@ -38,5 +38,5 @@ public interface Peer
 	 */
 	@WithDefault("false")
 	@WithName("attempt-connect")
-	Boolean attemptConnect();
+	Optional<Boolean> attemptConnect();
 }

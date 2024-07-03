@@ -1,8 +1,7 @@
 package io.go.diameter.server.runtime;
 
 import io.go.diameter.DiameterServer;
-import io.go.diameter.config.DiameterServerConfig;
-import io.go.diameter.config.DiameterServerConfiguration;
+import io.go.diameter.config.DiameterConfiguration;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
 import jakarta.inject.Inject;
@@ -18,6 +17,6 @@ public class DiameterServerConfigProducer
 	@Produces
 	public Configuration getConfiguration()
 	{
-		return new DiameterServerConfiguration(config);
+		return new DiameterConfiguration(config.getConfig());
 	}
 }

@@ -19,6 +19,13 @@
         <module>runtime</module>
     </modules>
 
+    <dependencies>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-extension-processor</artifactId>
+            <version>${quarkus.version}</version>
+        </dependency>
+    </dependencies>
     <build>
         <pluginManagement>
             <plugins>

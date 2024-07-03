@@ -2,28 +2,30 @@ package io.go.diameter.client.runtime;
 
 import io.go.diameter.config.DiameterConfig;
 import io.go.diameter.config.DiameterConfiguration;
-import io.quarkus.arc.SyntheticCreationalContext;
-import io.quarkus.runtime.annotations.Recorder;
 import io.smallrye.config.SmallRyeConfig;
+import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.config.ConfigProvider;
 import org.jdiameter.api.Configuration;
 
-import java.util.function.Function;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-@Recorder
-public class DiameterClientRecorder
+@ApplicationScoped
+public class DiameterClientFactory
 {
-	public Function<SyntheticCreationalContext<Configuration>, Configuration> clientConfiguration(String clientName)
+	private final Map<String, Configuration> configurationList = new ConcurrentHashMap<>();
+
+	public Configuration getConfiguration(String clientName)
 	{
-		return context -> {
+		return configurationList.computeIfAbsent(clientName, k -> {
 			SmallRyeConfig config = ConfigProvider.getConfig().unwrap(SmallRyeConfig.class);
 			DiameterClientConfig client = config.getConfigMapping(DiameterClientConfig.class);
 
-			DiameterConfig diameterConfig = client.getDiameterConfig(clientName);
+			DiameterConfig diameterConfig = client.getDiameterConfig(k);
 			if (diameterConfig == null) {
-				throw new IllegalArgumentException("No client configuration found for " + clientName);
+				throw new IllegalArgumentException("No client configuration found for " + k);
 			}
 			return new DiameterConfiguration(diameterConfig);
-		};
+		});
 	}
 }

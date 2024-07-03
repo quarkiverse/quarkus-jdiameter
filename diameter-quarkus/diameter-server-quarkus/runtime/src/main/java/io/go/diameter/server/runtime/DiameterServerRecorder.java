@@ -1,7 +1,6 @@
 package io.go.diameter.server.runtime;
 
-import io.go.diameter.config.DiameterServerConfig;
-import io.go.diameter.config.DiameterServerConfiguration;
+import io.go.diameter.config.DiameterConfiguration;
 import io.quarkus.arc.SyntheticCreationalContext;
 import io.quarkus.runtime.annotations.Recorder;
 import jakarta.inject.Inject;
@@ -17,7 +16,7 @@ public class DiameterServerRecorder
 	DiameterServerConfig config;
 
 	private final ReentrantLock lock = new ReentrantLock();
-	private DiameterServerConfiguration serverConfiguration;
+	private DiameterConfiguration serverConfiguration;
 
 	public Function<SyntheticCreationalContext<Configuration>, Configuration> serverConfiguration()
 	{
@@ -25,7 +24,7 @@ public class DiameterServerRecorder
 			lock.lock();
 			try {
 				if (serverConfiguration == null) {
-					serverConfiguration = new DiameterServerConfiguration(config);
+					serverConfiguration = new DiameterConfiguration(config.getConfig());
 				}
 				return serverConfiguration;
 			}

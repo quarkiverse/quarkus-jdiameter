@@ -5,15 +5,16 @@ import org.jdiameter.api.Configuration;
 import org.jdiameter.client.impl.helpers.AppConfiguration;
 import org.jdiameter.client.impl.helpers.ExtensionPoint;
 import org.jdiameter.client.impl.helpers.Ordinal;
-import org.jdiameter.client.impl.helpers.Parameters;
 import org.jdiameter.server.impl.helpers.EmptyConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiameterClientConfiguration extends EmptyConfiguration
+import static org.jdiameter.server.impl.helpers.Parameters.*;
+
+public class DiameterConfiguration extends EmptyConfiguration
 {
-	public DiameterClientConfiguration(DiameterConfig config)
+	public DiameterConfiguration(DiameterConfig config)
 	{
 		addLocalPeer(config.localPeer());
 		addParameters(config.parameter());
@@ -23,14 +24,42 @@ public class DiameterClientConfiguration extends EmptyConfiguration
 
 	protected void addLocalPeer(LocalPeer peerConfig)
 	{
-		add(Parameters.OwnDiameterURI, peerConfig.uri());
-		add(Parameters.OwnRealm, peerConfig.realm());
-		add(Parameters.OwnVendorID, peerConfig.vendorId());
-		add(Parameters.OwnProductName, peerConfig.productName());
-		add(Parameters.OwnFirmwareRevision, peerConfig.firmwareRevision());
+		add(OwnDiameterURI, peerConfig.uri());
+		add(OwnRealm, peerConfig.realm());
+		add(OwnVendorID, peerConfig.vendorId());
+		add(OwnProductName, peerConfig.productName());
+		add(OwnFirmwareRevision, peerConfig.firmwareRevision());
 		if (peerConfig.applications().isPresent()) {
 			addApplications(peerConfig.applications().get());
 		}
+		addIPAddresses(peerConfig.ipAddresses());
+
+		if (peerConfig.overloadMonitors().isPresent()) {
+			addOverloadMonitor(peerConfig.overloadMonitors().get());
+		}
+	}
+
+	protected void addOverloadMonitor(List<OverloadMonitor> entries)
+	{
+		ArrayList<Configuration> items = new ArrayList<>();
+		entries.forEach(entry -> items.add(addOverloadMonitorItem(entry)));
+		add(OverloadMonitor, items.toArray(EMPTY_ARRAY));
+	}
+
+	protected Configuration addOverloadMonitorItem(OverloadMonitor entry)
+	{
+		return EmptyConfiguration.getInstance()
+				.add(OverloadEntryIndex, entry.index())
+				.add(OverloadEntrylowThreshold, entry.lowThreshold())
+				.add(OverloadEntryhighThreshold, entry.highThreshold())
+				.add(ApplicationId, addApplicationID(entry.applicationId()));
+	}
+
+	protected void addIPAddresses(List<String> ipAddresses)
+	{
+		ArrayList<Configuration> items = new ArrayList<>();
+		ipAddresses.forEach(ip -> items.add(EmptyConfiguration.getInstance().add(OwnIPAddress, ip)));
+		add(OwnIPAddresses, items.toArray(EMPTY_ARRAY));
 	}
 
 	protected Configuration addApplicationID(ApplicationId applicationId)
@@ -38,22 +67,22 @@ public class DiameterClientConfiguration extends EmptyConfiguration
 		if (applicationId != null) {
 			AppConfiguration e = EmptyConfiguration.getInstance();
 			if (applicationId.vendorId().isPresent()) {
-				e.add(Parameters.VendorId, applicationId.vendorId().get());
+				e.add(VendorId, applicationId.vendorId().get());
 			}
 			else {
-				e.add(Parameters.VendorId, 0L);
+				e.add(VendorId, 0L);
 			}
 			if (applicationId.authApplId().isPresent()) {
-				e.add(Parameters.AuthApplId, applicationId.authApplId().get());
+				e.add(AuthApplId, applicationId.authApplId().get());
 			}
 			else {
-				e.add(Parameters.AuthApplId, 0L);
+				e.add(AuthApplId, 0L);
 			}
 			if (applicationId.acctApplId().isPresent()) {
-				e.add(Parameters.AcctApplId, applicationId.acctApplId().get());
+				e.add(AcctApplId, applicationId.acctApplId().get());
 			}
 			else {
-				e.add(Parameters.AcctApplId, 0L);
+				e.add(AcctApplId, 0L);
 			}
 			return e;
 		}
@@ -66,60 +95,72 @@ public class DiameterClientConfiguration extends EmptyConfiguration
 		for (ApplicationId appId : applications) {
 			items.add(addApplicationID(appId));
 		}
-		add(Parameters.ApplicationId, items.toArray(EMPTY_ARRAY));
+		add(ApplicationId, items.toArray(EMPTY_ARRAY));
 	}
 
 	protected void addParameters(Parameter parametersConfig)
 	{
 		if (parametersConfig.useUriAsFqdn().isPresent()) {
-			add(Parameters.UseUriAsFqdn, parametersConfig.useUriAsFqdn().get());
-		}
-		else {
-			add(Parameters.UseUriAsFqdn, false);
+			add(UseUriAsFqdn, parametersConfig.useUriAsFqdn().get());
 		}
 		if (parametersConfig.queueSize().isPresent()) {
-			add(Parameters.QueueSize, parametersConfig.queueSize().get());
+			add(QueueSize, parametersConfig.queueSize().get());
 		}
 		if (parametersConfig.messageTimeout().isPresent()) {
-			add(Parameters.MessageTimeOut, parametersConfig.messageTimeout().get());
+			add(MessageTimeOut, parametersConfig.messageTimeout().get());
 		}
 		if (parametersConfig.stopTimeout().isPresent()) {
-			add(Parameters.StopTimeOut, parametersConfig.stopTimeout().get());
+			add(StopTimeOut, parametersConfig.stopTimeout().get());
 		}
 		if (parametersConfig.ceaTimeout().isPresent()) {
-			add(Parameters.CeaTimeOut, parametersConfig.ceaTimeout().get());
+			add(CeaTimeOut, parametersConfig.ceaTimeout().get());
 		}
 		if (parametersConfig.iacTimeout().isPresent()) {
-			add(Parameters.IacTimeOut, parametersConfig.iacTimeout().get());
+			add(IacTimeOut, parametersConfig.iacTimeout().get());
 		}
 		if (parametersConfig.dwaTimeout().isPresent()) {
-			add(Parameters.DwaTimeOut, parametersConfig.dwaTimeout().get());
+			add(DwaTimeOut, parametersConfig.dwaTimeout().get());
 		}
 		if (parametersConfig.dpaTimeout().isPresent()) {
-			add(Parameters.DpaTimeOut, parametersConfig.dpaTimeout().get());
+			add(DpaTimeOut, parametersConfig.dpaTimeout().get());
 		}
 		if (parametersConfig.recTimeout().isPresent()) {
-			add(Parameters.RecTimeOut, parametersConfig.recTimeout().get());
+			add(RecTimeOut, parametersConfig.recTimeout().get());
 		}
 		if (parametersConfig.peerFSMThreadCount().isPresent()) {
-			add(Parameters.PeerFSMThreadCount, parametersConfig.peerFSMThreadCount().get());
+			add(PeerFSMThreadCount, parametersConfig.peerFSMThreadCount().get());
+		}
+		if (parametersConfig.useVirtualThreads().isPresent()) {
+			add(UseVirtualThreads, parametersConfig.useVirtualThreads().get());
+		}
+		if (parametersConfig.acceptUndefinedPeer().isPresent()) {
+			add(AcceptUndefinedPeer, parametersConfig.acceptUndefinedPeer().get());
 		}
 
-		if (parametersConfig.useVirtualThreads().isPresent()) {
-			add(Parameters.UseVirtualThreads, parametersConfig.useVirtualThreads().get());
+		if (parametersConfig.duplicateTimer().isPresent()) {
+			add(DuplicateTimer, parametersConfig.duplicateTimer().get());
+		}
+
+		if (parametersConfig.duplicateProtection().isPresent()) {
+			add(DuplicateProtection, parametersConfig.duplicateProtection().get());
+		}
+
+		if (parametersConfig.duplicateSize().isPresent()) {
+			add(DuplicateSize, parametersConfig.duplicateSize().get());
+		}
+
+		if (parametersConfig.sessionTimeout().isPresent()) {
+			add(SessionTimeOut, parametersConfig.sessionTimeout().get());
+		}
+
+		if (parametersConfig.bindDelay().isPresent()) {
+			add(BindDelay, parametersConfig.bindDelay().get());
 		}
 
 		if (parametersConfig.concurrent().isPresent()) {
 			addConcurrent(parametersConfig.concurrent().get());
 		}
-	}
 
-	protected AppConfiguration createConcurrentItem(String name, int size)
-	{
-		AppConfiguration cfg = EmptyConfiguration.getInstance();
-		cfg.add(Parameters.ConcurrentEntityName, name);
-		cfg.add(Parameters.ConcurrentEntityPoolSize, size);
-		return cfg;
 	}
 
 	protected void addConcurrent(Concurrent concurrent)
@@ -157,8 +198,17 @@ public class DiameterClientConfiguration extends EmptyConfiguration
 			items.add(createConcurrentItem("ThreadGroup", concurrent.threadGroup().get()));
 		}
 
-		add(Parameters.Concurrent, items.toArray(EMPTY_ARRAY));
+		add(Concurrent, items.toArray(EMPTY_ARRAY));
 	}
+
+	protected AppConfiguration createConcurrentItem(String name, int size)
+	{
+		AppConfiguration cfg = EmptyConfiguration.getInstance();
+		cfg.add(ConcurrentEntityName, name);
+		cfg.add(ConcurrentEntityPoolSize, size);
+		return cfg;
+	}
+
 
 	protected void addNetwork(Network network)
 	{
@@ -170,21 +220,25 @@ public class DiameterClientConfiguration extends EmptyConfiguration
 	{
 		ArrayList<Configuration> items = new ArrayList<>();
 		peers.forEach(peer -> items.add(addPeer(peer)));
-		add(Parameters.PeerTable, items.toArray(EMPTY_ARRAY));
+		add(PeerTable, items.toArray(EMPTY_ARRAY));
 	}
 
 	protected AppConfiguration addPeer(Peer peer)
 	{
 		AppConfiguration peerConfig = EmptyConfiguration.getInstance()
-				.add(Parameters.PeerRating, peer.rating())
-				.add(Parameters.PeerName, peer.peerUri());
+				.add(PeerRating, peer.rating())
+				.add(PeerName, peer.peerUri());
 
 		if (peer.ip().isPresent()) {
-			peerConfig.add(Parameters.PeerIp, peer.ip().get());
+			peerConfig.add(PeerIp, peer.ip().get());
 		}
 
 		if (peer.portRange().isPresent()) {
-			peerConfig.add(Parameters.PeerLocalPortRange, peer.portRange().get());
+			peerConfig.add(PeerLocalPortRange, peer.portRange().get());
+		}
+
+		if (peer.attemptConnect().isPresent()) {
+			peerConfig.add(PeerAttemptConnection, peer.attemptConnect().get());
 		}
 
 		return peerConfig;
@@ -194,23 +248,28 @@ public class DiameterClientConfiguration extends EmptyConfiguration
 	{
 		ArrayList<Configuration> items = new ArrayList<>();
 		realms.forEach(realm -> items.add(addRealm(realm)));
-		add(Parameters.RealmTable, items.toArray(EMPTY_ARRAY));
+		add(RealmTable, items.toArray(EMPTY_ARRAY));
 	}
 
 	protected AppConfiguration buildRealm(Realm realm)
 	{
-		return EmptyConfiguration.getInstance().
-				add(Parameters.ApplicationId, addApplicationID(realm.applicationId()));
+		return EmptyConfiguration.getInstance()
+				.add(RealmName, realm.realmName())
+				.add(RealmHosts, realm.peers())
+				.add(RealmLocalAction, realm.localAction().name())
+				.add(RealmEntryIsDynamic, realm.dynamic())
+				.add(RealmEntryExpTime, realm.expTime())
+				.add(ApplicationId, addApplicationID(realm.applicationId()));
 	}
 
 	protected Configuration addRealm(Realm realm)
 	{
-		return EmptyConfiguration.getInstance().add(Parameters.RealmEntry, buildRealm(realm));
+		return EmptyConfiguration.getInstance().add(RealmEntry, buildRealm(realm));
 	}
 
 	protected void addInternalExtension(Ordinal ep, String value)
 	{
-		Configuration[] extensionConfs = this.getChildren(org.jdiameter.client.impl.helpers.Parameters.Extensions.ordinal());
+		Configuration[] extensionConfs = this.getChildren(Extensions.ordinal());
 		AppConfiguration internalExtensions = (AppConfiguration) extensionConfs[org.jdiameter.client.impl.helpers.ExtensionPoint.Internal.id()];
 		internalExtensions.add(ep, value);
 	}
@@ -264,17 +323,33 @@ public class DiameterClientConfiguration extends EmptyConfiguration
 		if (extension.agentConfiguration().isPresent()) {
 			addInternalExtension(ExtensionPoint.InternalAgentConfiguration, extension.agentConfiguration().get());
 		}
+
 		if (extension.agentProxy().isPresent()) {
 			addInternalExtension(ExtensionPoint.InternalAgentProxy, extension.agentProxy().get());
 		}
+
 		if (extension.sessionDatasource().isPresent()) {
 			addInternalExtension(ExtensionPoint.InternalSessionDatasource, extension.agentRedirect().get());
 		}
+
 		if (extension.timerFacility().isPresent()) {
 			addInternalExtension(ExtensionPoint.InternalTimerFacility, extension.timerFacility().get());
 		}
+
 		if (extension.peerController().isPresent()) {
 			addInternalExtension(ExtensionPoint.InternalPeerController, extension.peerController().get());
+		}
+
+		if (extension.networkGuard().isPresent()) {
+			addInternalExtension(org.jdiameter.server.impl.helpers.ExtensionPoint.InternalNetworkGuard, extension.networkGuard().get());
+		}
+
+		if (extension.network().isPresent()) {
+			addInternalExtension(org.jdiameter.server.impl.helpers.ExtensionPoint.InternalNetWork, extension.network().get());
+		}
+
+		if (extension.overloadManager().isPresent()) {
+			addInternalExtension(org.jdiameter.server.impl.helpers.ExtensionPoint.InternalOverloadManager, extension.overloadManager().get());
 		}
 	}
 }
