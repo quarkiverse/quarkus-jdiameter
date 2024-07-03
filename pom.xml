@@ -152,6 +152,12 @@
                     <url>http://localhost:8046/artifactory/devrepo/</url>
                     <layout>default</layout>
                 </repository>
+                <repository>
+                    <id>devrepo</id>
+                    <name>Dev Repo</name>
+                    <url>http://host.docker.internal:8046/artifactory/devrepo/</url>
+                    <layout>default</layout>
+                </repository>
             </repositories>
 
             <distributionManagement>
