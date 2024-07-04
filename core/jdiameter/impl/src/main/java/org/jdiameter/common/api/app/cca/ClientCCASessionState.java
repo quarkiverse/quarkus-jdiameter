@@ -59,7 +59,7 @@
 	 PENDING_BUFFERED(5),
 	 OPEN(6);
 
-	 private int stateValue = -1;
+	 private int stateValue;
 
 	 ClientCCASessionState(int stateV)
 	 {

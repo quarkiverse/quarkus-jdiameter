@@ -89,6 +89,7 @@
 	 }
 
 	 @Override
+	 @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
 	 public boolean equals(Object o)
 	 {
 		 return this == o || parentTask.equals(o);

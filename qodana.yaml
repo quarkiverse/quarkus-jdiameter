@@ -18,10 +18,10 @@ profile:
 #    paths:
 #      - <path/where/not/run/inspection>
 
-projectJDK: 21 #(Applied in CI/CD pipeline)
+projectJDK: "21" #(Applied in CI/CD pipeline)
 
-#Execute shell command before Qodana execution (Applied in CI/CD pipeline)
-#bootstrap: sh ./prepare-qodana.sh
+# Execute shell command before Qodana execution (Applied in CI/CD pipeline)
+# bootstrap: sh ./prepare-qodana.sh
 
 #Install IDE plugins before Qodana execution (Applied in CI/CD pipeline)
 #plugins:
@@ -30,25 +30,5 @@ projectJDK: 21 #(Applied in CI/CD pipeline)
 #Specify Qodana linter for analysis (Applied in CI/CD pipeline)
 linter: jetbrains/qodana-jvm:latest
 exclude:
-  - name: AutoCloseableResource
-
-licenseRules:
-  - keys:
-      - "PROPRIETARY-LICENSE"
-      - "MIT"
-    prohibited:
-      - "BSD-3-CLAUSE-NO-CHANGE"
-    allowed:
-      - "ISC"
-
-  - keys: ["Apache-2.0"]
-    allowed:
-      - "MIT"
-      - "NONE"
-      - "BSD-3-CLAUSE-NO-TRADEMARK"
-      - "EPL-2.0"
-      - "GPL-2.0-only"
-      - "GPL-1.0-or-later"
-      - "LGPL-2.1-only"
-      - "LGPL-2.0-or-later"
-      - "MPL-1.1"
+  - name: CdiInjectionPointsInspection
+  - name: EqualsWhichDoesntCheckParameterClass

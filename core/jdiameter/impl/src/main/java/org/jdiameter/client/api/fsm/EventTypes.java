@@ -116,7 +116,7 @@
 	  */
 	 RECEIVE_MSG_EVENT;
 
-	 boolean highPriority = false;
+	 boolean highPriority;
 
 	 EventTypes()
 	 {

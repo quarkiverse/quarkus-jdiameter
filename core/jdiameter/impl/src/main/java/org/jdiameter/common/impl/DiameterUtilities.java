@@ -79,7 +79,7 @@ public class DiameterUtilities
 				continue;
 			}//if
 
-			Object avpValue = null;
+			Object avpValue;
 			boolean isGrouped = false;
 
 			try {

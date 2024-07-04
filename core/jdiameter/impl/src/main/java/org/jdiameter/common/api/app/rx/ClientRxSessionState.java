@@ -60,7 +60,7 @@
 	 PENDING_EVENT(3),
 	 PENDING_BUFFERED(4),
 	 OPEN(5);
-	 private int stateValue = -1;
+	 private int stateValue;
 
 	 ClientRxSessionState(int stateV)
 	 {

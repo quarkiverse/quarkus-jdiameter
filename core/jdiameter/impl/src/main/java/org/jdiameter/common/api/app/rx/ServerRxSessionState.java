@@ -57,7 +57,7 @@
 	 IDLE(0),
 	 OPEN(1);
 
-	 private int stateRepresentation = -1;
+	 private int stateRepresentation;
 
 	 ServerRxSessionState(int v)
 	 {

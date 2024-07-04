@@ -42,6 +42,7 @@
 
  package org.jdiameter.api;
 
+ import java.io.Serial;
  import java.io.Serializable;
 
  /**
@@ -54,6 +55,7 @@
  public final class ApplicationId implements Serializable
  {
 
+	 @Serial
 	 private static final long serialVersionUID = 1L;
 
 	 /**
@@ -92,15 +94,14 @@
 		 long VENDOR_SPECIFIC_APPLICATIONS_MAX = 0xfffffffe;
 	 }
 
-	 private long venId = UNDEFINED_VALUE;
-	 private long authId = UNDEFINED_VALUE;
-	 private long acctId = UNDEFINED_VALUE;
+	 private long venId;
+	 private long authId;
+	 private long acctId;
 
 	 /**
 	  * Create instance of ApplicationId use Authentication-App-Id
 	  *
 	  * @param authAppId authentication application id
-	  *
 	  * @return instance of class
 	  */
 	 public static ApplicationId createByAuthAppId(long authAppId)
@@ -112,7 +113,6 @@
 	  * Create instance of ApplicationId use Accounting-Applicaion-Id
 	  *
 	  * @param acchAppId accounting applicaion Id
-	  *
 	  * @return instance of class
 	  */
 	 public static ApplicationId createByAccAppId(long acchAppId)
@@ -125,7 +125,6 @@
 	  *
 	  * @param vendorId  vendor specific id
 	  * @param authAppId authentication application id
-	  *
 	  * @return instance of class
 	  */
 	 public static ApplicationId createByAuthAppId(long vendorId, long authAppId)
@@ -138,7 +137,6 @@
 	  *
 	  * @param vendorId  vendor specific id
 	  * @param acchAppId accounting applicaion Id
-	  *
 	  * @return instance of class
 	  */
 	 public static ApplicationId createByAccAppId(long vendorId, long acchAppId)
@@ -187,7 +185,6 @@
 
 	 /**
 	  * @param obj check object
-	  *
 	  * @return true if check object equals current instance (all appId is equals)
 	  */
 
@@ -197,8 +194,8 @@
 		 if (obj instanceof ApplicationId) {
 			 ApplicationId appId = (ApplicationId) obj;
 			 return authId == appId.authId &&
-					acctId == appId.acctId &&
-					venId == appId.venId;
+					 acctId == appId.acctId &&
+					 venId == appId.venId;
 		 }
 		 else {
 			 return false;
