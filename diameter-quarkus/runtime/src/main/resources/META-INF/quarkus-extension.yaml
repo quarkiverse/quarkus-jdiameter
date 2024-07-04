@@ -1,0 +1,5 @@
+name: Go Diameter
+description: Quarkus Diameter Extension
+metadata:
+  config:
+    - "diameter."

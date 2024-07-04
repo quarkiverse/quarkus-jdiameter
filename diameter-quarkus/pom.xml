@@ -12,12 +12,11 @@
 
     <artifactId>diameter-quarkus-parent</artifactId>
     <packaging>pom</packaging>
-    <name>Diameter Quarkus Extension - Parent</name>
+    <name>Go :: Diameter Quarkus Extension :: Parent</name>
 
     <modules>
-        <module>diameter-quarkus-config</module>
-        <module>diameter-server-quarkus</module>
-        <module>diameter-client-quarkus</module>
+        <module>deployment</module>
+        <module>runtime</module>
     </modules>
 
     <properties>
@@ -48,11 +47,6 @@
             <dependency>
                 <groupId>io.go.diameter</groupId>
                 <artifactId>jdiameter-impl</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.go.diameter</groupId>
-                <artifactId>diameter-quarkus-config</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

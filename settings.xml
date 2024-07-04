@@ -7,10 +7,5 @@
             <username>teamcity</username>
             <password>${env.REPO_PASSWORD}</password>
         </server>
-        <server>
-            <id>devrepo2</id>
-            <username>teamcity</username>
-            <password>${env.REPO_PASSWORD}</password>
-        </server>
     </servers>
 </settings>
