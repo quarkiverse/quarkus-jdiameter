@@ -69,7 +69,6 @@
 	  * @param session parent application session (FSM)
 	  * @param request request object
 	  * @param answer  answer object
-	  *
 	  * @throws InternalException             The InternalException signals that internal error has occurred.
 	  * @throws IllegalDiameterStateException The IllegalStateException signals that session has incorrect state
 	  *                                       (invalid).
@@ -77,22 +76,23 @@
 	  * @throws OverloadException             The OverloadException signals that destination host is overloaded.
 	  */
 	 void doCreditControlAnswer(ClientGxSession session, GxCreditControlRequest request, GxCreditControlAnswer answer)
-	 throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
+			 throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
 
 	 /**
 	  * Notifies this ClientGxSessionListener that the ClientGxSession has received a RAR message.
 	  *
 	  * @param session parent application session (FSM)
 	  * @param request request object
-	  *
 	  * @throws InternalException             The InternalException signals that internal error has occurred.
 	  * @throws IllegalDiameterStateException The IllegalStateException signals that session has incorrect state
 	  *                                       (invalid).
 	  * @throws RouteException                The NoRouteException signals that no route exist for a given realm.
 	  * @throws OverloadException             The OverloadException signals that destination host is overloaded.
 	  */
-	 void doGxReAuthRequest(ClientGxSession session, GxReAuthRequest request)
-	 throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
+	 default void doGxReAuthRequest(ClientGxSession session, GxReAuthRequest request)
+			 throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+	 {
+	 }
 
 	 /**
 	  * Notifies this ClientGxSessionListener that the ClientGxSession has received a non Gx message, usually some
@@ -101,15 +101,16 @@
 	  * @param session parent application session (FSM)
 	  * @param request request object
 	  * @param answer  answer object
-	  *
 	  * @throws InternalException             The InternalException signals that internal error has occurred.
 	  * @throws IllegalDiameterStateException The IllegalStateException signals that session has incorrect state
 	  *                                       (invalid).
 	  * @throws RouteException                The NoRouteException signals that no route exist for a given realm.
 	  * @throws OverloadException             The OverloadException signals that destination host is overloaded.
 	  */
-	 void doOtherEvent(AppSession session, AppRequestEvent request, AppAnswerEvent answer)
-	 throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
+	 default void doOtherEvent(AppSession session, AppRequestEvent request, AppAnswerEvent answer)
+			 throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+	 {
+	 }
 
 	 /**
 	  * Provides with default value of DDFH AVP - this is used when AVP is not present or send operation fails for some
@@ -117,7 +118,10 @@
 	  *
 	  * @return
 	  */
-	 int getDefaultDDFHValue();
+	 default int getDefaultDDFHValue()
+	 {
+		 return 0;
+	 }
 
 	 /**
 	  * Provides with default value of CCFH AVP - this is used when AVP is not present or send operation fails for some
@@ -125,5 +129,8 @@
 	  *
 	  * @return
 	  */
-	 int getDefaultCCFHValue();
+	 default int getDefaultCCFHValue()
+	 {
+		 return 0;
+	 }
  }

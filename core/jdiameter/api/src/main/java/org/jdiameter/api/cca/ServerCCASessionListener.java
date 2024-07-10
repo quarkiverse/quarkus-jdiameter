@@ -69,7 +69,6 @@
 	  *
 	  * @param session parent application session (FSM)
 	  * @param request request object
-	  *
 	  * @throws InternalException             The InternalException signals that internal error is occurred.
 	  * @throws IllegalDiameterStateException The IllegalStateException signals that session has incorrect state
 	  *                                       (invalid).
@@ -77,7 +76,7 @@
 	  * @throws OverloadException             The OverloadException signals that destination host is overloaded.
 	  */
 	 void doCreditControlRequest(ServerCCASession session, JCreditControlRequest request)
-	 throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
+			 throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
 
 	 /**
 	  * Notifies this ServerCCASessionListener that the ServerCCASession has received a RAA message.
@@ -85,15 +84,16 @@
 	  * @param session parent application session (FSM)
 	  * @param request request object
 	  * @param answer  answer object
-	  *
 	  * @throws InternalException             The InternalException signals that internal error is occurred.
 	  * @throws IllegalDiameterStateException The IllegalStateException signals that session has incorrect state
 	  *                                       (invalid).
 	  * @throws RouteException                The NoRouteException signals that no route exist for a given realm.
 	  * @throws OverloadException             The OverloadException signals that destination host is overloaded.
 	  */
-	 void doReAuthAnswer(ServerCCASession session, ReAuthRequest request, ReAuthAnswer answer)
-	 throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
+	 default void doReAuthAnswer(ServerCCASession session, ReAuthRequest request, ReAuthAnswer answer)
+			 throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+	 {
+	 }
 
 	 /**
 	  * Notifies this ServerCCASessionListener that the ServerCCASession has received not CCA message, now it can be even
@@ -102,14 +102,15 @@
 	  * @param session parent application session (FSM)
 	  * @param request request object
 	  * @param answer  answer object
-	  *
 	  * @throws InternalException             The InternalException signals that internal error is occurred.
 	  * @throws IllegalDiameterStateException The IllegalStateException signals that session has incorrect state
 	  *                                       (invalid).
 	  * @throws RouteException                The NoRouteException signals that no route exist for a given realm.
 	  * @throws OverloadException             The OverloadException signals that destination host is overloaded.
 	  */
-	 void doOtherEvent(AppSession session, AppRequestEvent request, AppAnswerEvent answer)
-	 throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
+	 default void doOtherEvent(AppSession session, AppRequestEvent request, AppAnswerEvent answer)
+			 throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+	 {
+	 }
 
  }

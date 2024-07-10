@@ -49,12 +49,7 @@
  import org.jdiameter.api.app.AppAnswerEvent;
  import org.jdiameter.api.app.AppRequestEvent;
  import org.jdiameter.api.app.AppSession;
- import org.jdiameter.api.rx.events.RxAARequest;
- import org.jdiameter.api.rx.events.RxAbortSessionAnswer;
- import org.jdiameter.api.rx.events.RxAbortSessionRequest;
- import org.jdiameter.api.rx.events.RxReAuthAnswer;
- import org.jdiameter.api.rx.events.RxReAuthRequest;
- import org.jdiameter.api.rx.events.RxSessionTermRequest;
+ import org.jdiameter.api.rx.events.*;
 
  /**
   * This interface defines the possible actions for the different states in the server Rx Interface state machine.
@@ -68,17 +63,25 @@
  {
 
 	 void doAARequest(ServerRxSession session, RxAARequest request)
-	 throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
+			 throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
 
-	 void doSessionTermRequest(ServerRxSession session, RxSessionTermRequest request)
-	 throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
+	 default void doSessionTermRequest(ServerRxSession session, RxSessionTermRequest request)
+			 throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+	 {
+	 }
 
-	 void doReAuthAnswer(ServerRxSession session, RxReAuthRequest request, RxReAuthAnswer answer)
-	 throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
+	 default void doReAuthAnswer(ServerRxSession session, RxReAuthRequest request, RxReAuthAnswer answer)
+			 throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+	 {
+	 }
 
-	 void doAbortSessionAnswer(ServerRxSession session, RxAbortSessionRequest request, RxAbortSessionAnswer answer)
-	 throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
+	 default void doAbortSessionAnswer(ServerRxSession session, RxAbortSessionRequest request, RxAbortSessionAnswer answer)
+			 throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+	 {
+	 }
 
-	 void doOtherEvent(AppSession session, AppRequestEvent request, AppAnswerEvent answer)
-	 throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
+	 default void doOtherEvent(AppSession session, AppRequestEvent request, AppAnswerEvent answer)
+			 throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+	 {
+	 }
  }
