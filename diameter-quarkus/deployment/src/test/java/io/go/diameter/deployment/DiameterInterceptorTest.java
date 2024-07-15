@@ -34,13 +34,12 @@ public class DiameterInterceptorTest
 	}
 
 	@DiameterServiceOptions(
-			application = DiameterApplication.CCA,
+			type = DiameterApplication.CCA,
 			mode = ApplicationMode.CLIENT
 	)
 	@DiameterService
 	static class DiameterServiceTest implements ClientCCASessionListener
 	{
-
 		@Override
 		public void doCreditControlAnswer(ClientCCASession session, JCreditControlRequest request, JCreditControlAnswer answer) throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
 		{

@@ -13,6 +13,9 @@
     <artifactId>diameter-quarkus</artifactId>
     <name>GO :: Diameter Quarkus Extension :: Runtime</name>
 
+    <properties>
+        <quicklyDocs>true</quicklyDocs>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -48,7 +51,7 @@
                             <deployment>${project.groupId}:${project.artifactId}-deployment:${project.version}
                             </deployment>
                             <capabilities>
-                                <provides>io.go.diameter.client</provides>
+                                <provides>io.go.diameter</provides>
                             </capabilities>
                         </configuration>
                     </execution>

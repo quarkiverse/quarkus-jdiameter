@@ -18,9 +18,9 @@ public @interface DiameterServiceOptions
 	/**
 	 * Specifies the diameter configuration name
 	 */
-	String value() default DiameterConfig.DEFAULT_CONFIG_NAME;
+	String config() default DiameterConfig.DEFAULT_CONFIG_NAME;
 
-	DiameterApplication application();
+	DiameterApplication type();
 
 	ApplicationMode mode();
 

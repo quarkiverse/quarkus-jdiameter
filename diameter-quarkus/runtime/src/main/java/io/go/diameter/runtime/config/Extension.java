@@ -99,7 +99,7 @@ public interface Extension
 	Optional<String> statisticProcessor();
 
 	/**
-	 * The NetWork extension
+	 * The Network extension
 	 */
 	@WithName("network")
 	Optional<String> network();
@@ -129,7 +129,7 @@ public interface Extension
 	Optional<String> agentConfiguration();
 
 	/**
-	 * The Agen tProxy extension
+	 * The Agent Proxy extension
 	 */
 	@WithName("agent-proxy")
 	Optional<String> agentProxy();

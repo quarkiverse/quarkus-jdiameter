@@ -15,12 +15,14 @@ import java.util.Optional;
 /**
  * The Diameter Config describes the entire Diameter configuration mapping for both the
  * server and client
+ *
+ * @asciidoclet
  */
 @ConfigGroup
 public interface DiameterDetailConfig
 {
 	/**
-	 * If we create a Configuration for this config detail
+	 * Indicates if the defined diameter configuration is enabled. If not enabled the configuration will be ignored.*
 	 */
 	@WithDefault("true")
 	Boolean enabled();

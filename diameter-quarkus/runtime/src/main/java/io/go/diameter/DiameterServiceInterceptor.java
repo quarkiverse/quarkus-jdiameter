@@ -190,13 +190,13 @@ public class DiameterServiceInterceptor
 			throw new DiameterSetupException("@DiameterServiceOptions is required for @DeviceService");
 		}
 
-		try (InstanceHandle<Stack> stackHandle = Arc.container().instance(Stack.class, new DiameterConfig.DiameterConfigLiteral(options.value()))) {
+		try (InstanceHandle<Stack> stackHandle = Arc.container().instance(Stack.class, new DiameterConfig.DiameterConfigLiteral(options.config()))) {
 			if (stackHandle.isAvailable()) {
 				Stack stack = stackHandle.get();
 
 				ISessionFactory sessionFactory = (ISessionFactory) stack.getSessionFactory();
 
-				Class<? extends AppSession> appSessionClass = switch (options.application()) {
+				Class<? extends AppSession> appSessionClass = switch (options.type()) {
 					//3GPP CCA Application
 					case CCA -> setupCAAFactory(sessionFactory, options.mode(), context.getTarget());
 					//3GPP Rx Application
@@ -222,13 +222,13 @@ public class DiameterServiceInterceptor
 				Network network = stack.unwrap(Network.class);
 				Set<ApplicationId> applIds = stack.getMetaData().getLocalPeer().getCommonApplications();
 				for (ApplicationId applId : applIds) {
-					LOG.info("Diameter Service '{}': Adding Listener for [{}].", options.value(), applId);
+					LOG.info("Diameter Service '{}': Adding Listener for [{}].", options.config(), applId);
 					network.addNetworkReqListener(networkReqListener, applId);
 				}
-				LOG.info("Diameter Service '{}': Supporting {} applications.", options.value(), applIds.size());
+				LOG.info("Diameter Service '{}': Supporting {} applications.", options.config(), applIds.size());
 
 				stack.start(Mode.ALL_PEERS, 30000, TimeUnit.MILLISECONDS);
-				LOG.info("Starting the '{}' Diameter Stack.", options.value());
+				LOG.info("Starting the '{}' Diameter Stack.", options.config());
 			}
 		}
 
