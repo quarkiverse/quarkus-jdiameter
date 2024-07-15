@@ -1,0 +1,57 @@
+include::../includes/attributes.adoc[]
+= Implementing a Diameter Service
+Diameter implementations are exposed as CDI beans are automatically registered and started
+
+To implement a service a class needs to be defined and annotated with `@DiameterService` and `@DiameterServiceOptions`.
+The `@DiameterServiceOption` is required and if missing a build time exception will be generated.
+
+[source,java]
+----
+@DiameterService <1>
+@DiameterServiceOption( <2>
+		mode = ApplicationMode.CLIENT, <3>
+		type = DiameterApplication.CCA, <4>
+		authApplId = 4L <5>
+		config = client1 <6>
+)
+public class MyDiameterService implements ClientCCASessionListener <7>
+{
+	@Override
+	public void doCreditControlAnswer(ClientCCASession session, JCreditControlRequest request, JCreditControlAnswer answer) throws InternalException
+	{
+		//...
+	}
+}
+----
+
+<1> Marking the class as a diameter service
+<2> The option to apply to the diameter service
+<3> The mode of the service (CLIENT or SERVER)
+<4> The application session type (see list below)
+<5> The auth application id
+<6> The configuration profile the use
+<7> Implements the the SessionListener associated with the `Session Type`.
+(See List below)
+
+NOTE: If the SessionListener associated with the Session Type is not implemented an exception will be generated at startup.
+
+== Application Session Types
+
+The following application session are currently support by the `@DiamterService`:
+
+|===
+| *Session Type* | *Server Session Interface* | *Client Session Interface*
+| Credit Control Application (CCA) | ServerCCASessionListener | ClientCCASessionListener
+| Rx |  ClientRxSessionListener | ClientRxSessionListener
+| S6a |  ServerS6aSessionListener | ClientS6aSessionListener
+| Gq | ServerAuthSessionListener | ClientAuthSessionListener
+|===
+
+== Example Configuration
+
+TIP:For more information about the extension configuration please refer to the <<configuration-reference,Configuration Reference>>.
+
+[[configuration-reference]]
+== Configuration Reference
+
+include::{generated-dir}/config/diameter.adoc[leveloffset=+1]
