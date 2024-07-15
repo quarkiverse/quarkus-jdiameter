@@ -1,0 +1,16 @@
+{
+  "name": "goDiameter",
+  "description": "Go Diameter Documentation",
+  "homepage": "http://localhost:8080",
+  "private": true,
+  "scripts": {
+    "build": "antora --extension @antora/lunr-extension antora-playbook.yml",
+    "preview": "http-server target/site -c-1"
+  },
+  "dependencies": {
+    "@antora/lunr-extension": "^1.0.0-alpha.8",
+    "antora": "~3.1.7",
+    "asciidoctor": "^3.0.4",
+    "asciidoctor-kroki": "^0.18.1"
+  }
+}

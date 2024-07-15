@@ -1,0 +1,22 @@
+= Go Diameter Stack
+
+include::./includes/attributes.adoc[]
+
+== Introduction
+
+Welcome to the {provider} {product-name} documentation.
+The documentation will guide you on how to install, configure and use {provider} {product-name} stack.
+
+NOTE: The {provider} {product-name} is a fork from the Restcomm JDiameter project and the original project can be found at https://github.com/Restcomm/jdiameter.
+
+The documentation provided here includes the original project documentation with a new section being added covering how to use the stack in Quarkus.
+
+== Prerequisite Knowledge
+
+The reader must have a working knowledge of the 3GPP Diameter protocol.
+
+== Disclaimer
+
+The {provider} {product-name} stack is provided `as is` an the authors do not guarantee
+
+If you get to a point where you need a specific feature not currently supported or the Quarkus extension is not working as expected, send me an email at {email}, or even better, get involved!

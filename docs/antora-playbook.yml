@@ -1,0 +1,31 @@
+site:
+  title: Offline Diameter Docs
+  start_page: goDiameter::index.adoc
+
+output:
+  clean: true
+  dir: target/site
+
+content:
+  sources:
+    - url: .. # common module containing just the main index
+      branches: HEAD
+      start_path: docs
+ui:
+  bundle:
+    url: https://github.com/eddiecarpenter/antora-ui-go-docs/releases/latest/download/ui-bundle.zip
+    snapshot: true
+
+runtime:
+  fetch: false
+  cache_dir: ./cache
+
+asciidoc:
+  attributes:
+    kroki-fetch-diagram: true
+    page-pagination: ''
+    experimental: ''
+    generated-dir: ../../../../../target/asciidoc/generated
+
+  extensions:
+    - asciidoctor-kroki

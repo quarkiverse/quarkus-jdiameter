@@ -1,0 +1,13 @@
+:project-version: ${release.current-version}
+:authors: Eddie Carpenter <eddie.carpenter@icloud.com>
+:copyright: Apache2
+:provider: Go
+:product-name: Diameter
+:description: {product-name} documentation
+:favicon: favicon.svg
+:project-version: 3.0.0
+:email: eddie.carpenter@icloud.com
+:jee-platform: JBoss Application Server
+:jee-version: 1.8
+:this-trunk-source-code-url: https://github.com/eddiecarpenter/go-jdiameter
+:generated-dir: ../../../../../target/asciidoc/generated

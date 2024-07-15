@@ -1,0 +1,5 @@
+name: goDiameter
+title: Go Diameter
+version: 3.0.0
+nav:
+  - modules/ROOT/nav.adoc
