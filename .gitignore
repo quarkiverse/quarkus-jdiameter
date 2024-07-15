@@ -29,3 +29,8 @@ target
 Icon?
 ehthumbs.db
 Thumbs.db
+
+#ascidoc
+**/node_modules/
+package-lock.json
+**/cache/
