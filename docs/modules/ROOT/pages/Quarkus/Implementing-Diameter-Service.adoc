@@ -54,4 +54,4 @@ TIP:For more information about the extension configuration please refer to the <
 [[configuration-reference]]
 == Configuration Reference
 
-include::{generated-dir}/config/diameter.adoc[leveloffset=+1]
+include::../includes/diameter.adoc[leveloffset=+1]

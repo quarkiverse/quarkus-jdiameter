@@ -1,4 +1,6 @@
+:leveloffset: +1
 include::./includes/attributes.adoc[]
+:leveloffset: -1
 [[_mf_message_format]]
 = Message Format
 

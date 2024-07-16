@@ -40,6 +40,28 @@
             </plugin>
 
             <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/modules/ROOT/pages/includes/</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/../target/asciidoc/generated/config/</directory>
+                                    <include>*.adoc</include>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
                 <groupId>org.antora</groupId>
                 <artifactId>antora-maven-plugin</artifactId>
                 <version>1.0.0-alpha.4</version>
@@ -65,6 +87,12 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!--            <plugin>-->
+            <!--                <groupId>org.asciidoctor</groupId>-->
+            <!--                <artifactId>asciidoctor-maven-plugin</artifactId>-->
+            <!--            </plugin>-->
+
         </plugins>
     </build>
 

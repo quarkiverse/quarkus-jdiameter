@@ -10,4 +10,3 @@
 :jee-platform: JBoss Application Server
 :jee-version: 1.8
 :this-trunk-source-code-url: https://github.com/eddiecarpenter/go-jdiameter
-:generated-dir: ../../../../../target/asciidoc/generated
