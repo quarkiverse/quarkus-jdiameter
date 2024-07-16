@@ -16,6 +16,7 @@
     <modules>
         <module>core</module>
         <module>diameter-quarkus</module>
+        <module>docs</module>
     </modules>
 
     <properties>
@@ -37,6 +38,11 @@
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
         <maven-clean-plugin.version>3.2.0</maven-clean-plugin.version>
+        
+        <!-- maven-enforcer-plugin -->
+        <maven.min.version>3.8.6</maven.min.version>
+        <jdk.min.version>${maven.compiler.source}</jdk.min.version>
+        <insecure.repositories>ERROR</insecure.repositories>
     </properties>
 
     <licenses>
@@ -65,6 +71,58 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-java-version</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <bannedRepositories>
+                                    <message>To build this project, don't use maven repositories over HTTP. Please use
+                                        HTTPS in your settings.xml or run the build with property
+                                        insecure.repositories=WARN
+                                    </message>
+                                    <level>${insecure.repositories}</level>
+                                    <bannedRepositories>
+                                        <bannedRepository>http://*</bannedRepository>
+                                    </bannedRepositories>
+                                    <bannedPluginRepositories>
+                                        <bannedPluginRepository>http://*</bannedPluginRepository>
+                                    </bannedPluginRepositories>
+                                </bannedRepositories>
+                                <requireJavaVersion>
+                                    <message>To build this project JDK ${jdk.min.version} (or greater) is required.
+                                        Please install it.
+                                    </message>
+                                    <version>${jdk.min.version}</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>enforce-maven-version</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <message>To build this project Maven ${maven.min.version} (or greater) is required.
+                                        Please install it.
+                                    </message>
+                                    <version>${maven.min.version}</version>
+                                </requireMavenVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -137,7 +195,22 @@
             <id>dev</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>quicklyDocs</name>
+                </property>
             </activation>
+
+            <properties>
+                <skipTests>true</skipTests>
+                <skipITs>true</skipITs>
+                <enforcer.skip>true</enforcer.skip>
+                <skipExtensionValidation>true</skipExtensionValidation>
+                <skip.gradle.tests>true</skip.gradle.tests>
+                <invoker.skip>true</invoker.skip>   <!-- maven-invoker-plugin -->
+                <forbiddenapis.skip>true</forbiddenapis.skip> <!-- forbidden-apis maven plugin -->
+                <skipCodestartValidation>true</skipCodestartValidation>
+                <truststore.skip>true</truststore.skip>
+            </properties>
 
             <repositories>
                 <repository>
@@ -162,6 +235,29 @@
                     <layout>default</layout>
                 </repository>
             </distributionManagement>
+        </profile>
+
+        <profile>
+            <id>quick-build-docs</id>
+            <activation>
+                <property>
+                    <name>quicklyDocs</name>
+                </property>
+            </activation>
+            <properties>
+                <skipTests>true</skipTests>
+                <skipITs>true</skipITs>
+                <enforcer.skip>true</enforcer.skip>
+                <skipExtensionValidation>true</skipExtensionValidation>
+                <skip.gradle.tests>true</skip.gradle.tests>
+                <invoker.skip>true</invoker.skip>   <!-- maven-invoker-plugin -->
+                <forbiddenapis.skip>true</forbiddenapis.skip> <!-- forbidden-apis maven plugin -->
+                <skipCodestartValidation>true</skipCodestartValidation>
+                <truststore.skip>true</truststore.skip>
+            </properties>
+            <build>
+                <defaultGoal>clean install</defaultGoal>
+            </build>
         </profile>
     </profiles>
 </project>

@@ -1,0 +1,164 @@
+
+:summaryTableId: config-group-io-go-diameter-runtime-config-local-peer
+[.configuration-legend]
+icon:lock[title=Fixed at build time] Configuration property fixed at build time - All other configuration properties are overridable at runtime
+[.configuration-reference, cols="80,.^10,.^10"]
+|===
+
+h|[[config-group-io-go-diameter-runtime-config-local-peer_configuration]]link:#config-group-io-go-diameter-runtime-config-local-peer_configuration[Configuration property]
+
+h|Type
+h|Default
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-local-peer_diameter-local-peer-uri]]`link:#config-group-io-go-diameter-runtime-config-local-peer_diameter-local-peer-uri[diameter.local-peer.uri]`
+
+`link:#config-group-io-go-diameter-runtime-config-local-peer_diameter-local-peer-uri[diameter."named-config".local-peer.uri]`
+
+
+[.description]
+--
+Specifies the URI for the local peer. The URI has the following format: "aaa://FQDN:port".
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_LOCAL_PEER_URI+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_LOCAL_PEER_URI+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|`aaa://localhost:1812`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-local-peer_diameter-local-peer-ip-addresses]]`link:#config-group-io-go-diameter-runtime-config-local-peer_diameter-local-peer-ip-addresses[diameter.local-peer.ip-addresses]`
+
+`link:#config-group-io-go-diameter-runtime-config-local-peer_diameter-local-peer-ip-addresses[diameter."named-config".local-peer.ip-addresses]`
+
+
+[.description]
+--
+Contains one or more valid IP address for the local peer.`
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_LOCAL_PEER_IP_ADDRESSES+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_LOCAL_PEER_IP_ADDRESSES+++`
+endif::add-copy-button-to-env-var[]
+--|list of string 
+|`127.0.0.1`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-local-peer_diameter-local-peer-realm]]`link:#config-group-io-go-diameter-runtime-config-local-peer_diameter-local-peer-realm[diameter.local-peer.realm]`
+
+`link:#config-group-io-go-diameter-runtime-config-local-peer_diameter-local-peer-realm[diameter."named-config".local-peer.realm]`
+
+
+[.description]
+--
+Specifies the realm of the local peer.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_LOCAL_PEER_REALM+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_LOCAL_PEER_REALM+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|`io.go.diameter`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-local-peer_diameter-local-peer-product-name]]`link:#config-group-io-go-diameter-runtime-config-local-peer_diameter-local-peer-product-name[diameter.local-peer.product-name]`
+
+`link:#config-group-io-go-diameter-runtime-config-local-peer_diameter-local-peer-product-name[diameter."named-config".local-peer.product-name]`
+
+
+[.description]
+--
+Specifies the name of the local peer product
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_LOCAL_PEER_PRODUCT_NAME+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_LOCAL_PEER_PRODUCT_NAME+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|`Go Diameter`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-local-peer_diameter-local-peer-firmware-revision]]`link:#config-group-io-go-diameter-runtime-config-local-peer_diameter-local-peer-firmware-revision[diameter.local-peer.firmware-revision]`
+
+`link:#config-group-io-go-diameter-runtime-config-local-peer_diameter-local-peer-firmware-revision[diameter."named-config".local-peer.firmware-revision]`
+
+
+[.description]
+--
+Specifies the version of the firmware.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_LOCAL_PEER_FIRMWARE_REVISION+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_LOCAL_PEER_FIRMWARE_REVISION+++`
+endif::add-copy-button-to-env-var[]
+--|long 
+|`3`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-local-peer_diameter-local-peer-vendor-id]]`link:#config-group-io-go-diameter-runtime-config-local-peer_diameter-local-peer-vendor-id[diameter.local-peer.vendor-id]`
+
+`link:#config-group-io-go-diameter-runtime-config-local-peer_diameter-local-peer-vendor-id[diameter."named-config".local-peer.vendor-id]`
+
+
+[.description]
+--
+Specifies a numeric identifier that corresponds to the vendor ID allocated by IANA.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_LOCAL_PEER_VENDOR_ID+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_LOCAL_PEER_VENDOR_ID+++`
+endif::add-copy-button-to-env-var[]
+--|long 
+|`0`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-local-peer_diameter-local-peer-applications]]`link:#config-group-io-go-diameter-runtime-config-local-peer_diameter-local-peer-applications[diameter.local-peer.applications]`
+
+`link:#config-group-io-go-diameter-runtime-config-local-peer_diameter-local-peer-applications[diameter."named-config".local-peer.applications]`
+
+
+[.description]
+--
+Contains a list of default supported applications.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_LOCAL_PEER_APPLICATIONS+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_LOCAL_PEER_APPLICATIONS+++`
+endif::add-copy-button-to-env-var[]
+--|list of ApplicationId 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-local-peer_diameter-local-peer-overload-monitors]]`link:#config-group-io-go-diameter-runtime-config-local-peer_diameter-local-peer-overload-monitors[diameter.local-peer.overload-monitors]`
+
+`link:#config-group-io-go-diameter-runtime-config-local-peer_diameter-local-peer-overload-monitors[diameter."named-config".local-peer.overload-monitors]`
+
+
+[.description]
+--
+Optional parent element containing child elements that specify settings relating to the Overload Monitor.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS+++`
+endif::add-copy-button-to-env-var[]
+--|list of OverloadMonitorEntry 
+|
+
+|===
