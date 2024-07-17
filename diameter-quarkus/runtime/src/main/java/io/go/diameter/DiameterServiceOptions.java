@@ -1,8 +1,6 @@
 package io.go.diameter;
 
 
-import org.jdiameter.api.ApplicationId;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -23,19 +21,4 @@ public @interface DiameterServiceOptions
 	DiameterApplication type();
 
 	ApplicationMode mode();
-
-	/**
-	 * Specifies the vendor ID for application definition.
-	 */
-	long vendorId() default ApplicationId.UNDEFINED_VALUE;
-
-	/**
-	 * The Authentication Application ID for application definition.
-	 */
-	long authApplId() default ApplicationId.UNDEFINED_VALUE;
-
-	/**
-	 * The Account Application ID for application definition.
-	 */
-	long acctApplId() default ApplicationId.UNDEFINED_VALUE;
 }

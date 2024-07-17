@@ -11,7 +11,7 @@ import io.smallrye.config.WithUnnamedKey;
 import java.util.Map;
 
 @ConfigMapping(prefix = "diameter")
-@ConfigRoot(phase = ConfigPhase.BUILD_AND_RUN_TIME_FIXED, name = "diameter")
+@ConfigRoot(phase = ConfigPhase.BUILD_AND_RUN_TIME_FIXED)
 public interface DiameterConfigs
 {
 	/**
