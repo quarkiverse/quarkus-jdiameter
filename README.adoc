@@ -1,4 +1,4 @@
-= Go diameter
+= Go Diameter Stack
 
 This is a fork of the RestComm jDiameter Stack with a couple of enhancement done:
 
@@ -8,8 +8,7 @@ This is a fork of the RestComm jDiameter Stack with a couple of enhancement done
 - Added Quarkus Extension
 - Updated all the dependencies to latest versions
 
-It is still early days and I have only started the project (Jul 2024).
-The enhancement above is done but I still need to implement a CI/CD pipeline for the project and push the artifacts to a public repository.
+The project was only started in Jul 2024. The enhancement above is done but I still need to implement a CI/CD pipeline for the project and push the artifacts to a public repository.
 
 == Virtual Threading
 
@@ -19,4 +18,5 @@ In order to use virtual thread the minimum support Java version had to be change
 
 == Quarkus Extension
 
-The extension allows for the injection of configurations,
+The extension allows for the injection of configurations and stacks.
+See the docs folder for the relevant documentation.
