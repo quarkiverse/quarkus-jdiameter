@@ -44,12 +44,12 @@ public class MyDiameterService implements ClientCCASessionListener <6>
 
 NOTE: If the SessionListener associated with the Session Type is not implemented an exception will be generated at startup.
 
-== Network Listeners
+== Diameter Server mode
 
-The interceptor will create a network listener for defined Diameter Service.
+When the diameter stack is started in SERVER mode, the Diameter Service interceptor automatically creates a network listener for defined Diameter Service.
 The interceptor will skip creating a listener if it detects that the Diameter Service has implemented the `NetworkListener` interface.
 
-TIP: In most cases you do not need to implement your own `NetworkListener` and can let the interceptor create one for you!
+TIP: In most cases you do not need to implement your own `NetworkListener` and you can let the interceptor create one for you!
 
 == Injecting the Diameter stack
 
