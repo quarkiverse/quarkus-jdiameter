@@ -223,8 +223,8 @@
 	 {
 		 return new StringBuffer("AppId [").
 				 append("Vendor-Id:").append(venId).
-				 append("; Auth-Application-Id:").append(authId).
-				 append("; Acct-Application-Id:").append(acctId).
+				 append("; Auth-Id:").append(authId).
+				 append("; Acct-Id:").append(acctId).
 				 append("]").
 				 toString();
 	 }
