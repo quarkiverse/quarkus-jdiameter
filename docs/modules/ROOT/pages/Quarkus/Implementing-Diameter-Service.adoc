@@ -4,6 +4,17 @@ Diameter implementations are exposed as CDI beans are automatically registered a
 
 To implement a service a class needs to be defined and annotated with `@DiameterService` and `@DiameterServiceOptions`.
 The `@DiameterServiceOption` is required and if missing a build time exception will be generated.
+The DiameterServiceOption is used to define the application type to setup.
+Only one Diameter service combination of application type and mode can be defined at any given time.
+For example only one CAA / Server service can be defined and a `DiameterConfigException` will be generated if additional one is defined.
+It is however allowed to define additional Diameter Services for other Application Type and mode combination on the same stack.
+
+TIP: For clarity, it is perfectly legal to to have two Diameter Services one for CAA / Client and another for CAA / Server, or any other combination of application type and mode as long as there is only one per combination per diameter stack.
+
+The DiameterService interceptor will initialise all the configured applications and *start* the Diameter stack (if not already started).
+In addition to registering the session factories it will also register a Network Listener for each
+
+=== Example
 
 [source,java]
 ----
@@ -11,15 +22,14 @@ The `@DiameterServiceOption` is required and if missing a build time exception w
 @DiameterServiceOption( <2>
 		mode = ApplicationMode.CLIENT, <3>
 		type = DiameterApplication.CCA, <4>
-		authApplId = 4L <5>
-		config = client1 <6>
+		config = "client1" <5>
 )
-public class MyDiameterService implements ClientCCASessionListener <7>
+public class MyDiameterService implements ClientCCASessionListener <6>
 {
 	@Override
 	public void doCreditControlAnswer(ClientCCASession session, JCreditControlRequest request, JCreditControlAnswer answer) throws InternalException
 	{
-		//...
+	    //...
 	}
 }
 ----
@@ -28,17 +38,48 @@ public class MyDiameterService implements ClientCCASessionListener <7>
 <2> The option to apply to the diameter service
 <3> The mode of the service (CLIENT or SERVER)
 <4> The application session type (see list below)
-<5> The auth application id
-<6> The configuration profile the use
-<7> Implements the the SessionListener associated with the `Session Type`.
+<5> The configuration profile the use
+<6> Implements the the SessionListener associated with the `Session Type`.
 (See List below)
 
 NOTE: If the SessionListener associated with the Session Type is not implemented an exception will be generated at startup.
 
+== Network Listeners
+
+The interceptor will create a network listener for defined Diameter Service.
+The interceptor will skip creating a listener if it detects that the Diameter Service has implemented the `NetworkListener` interface.
+
+TIP: In most cases you do not need to implement your own `NetworkListener` and can let the interceptor create one for you!
+
+== Injecting the Diameter stack
+
+An application can inject the diameter stack and configuration for a given configuration profile.
+
+NOTE: Only one stack is created per enabled configuration profile.
+
+TIP: The stack will only be active if there is a defined DiameterService for the stack.
+
+[source,java]
+----
+@ApplicationScoped
+public class Demo
+{
+    @DiameterConfig("test1")<1>
+    Stack stack;
+
+    @DiameterConfig("test2")<2>
+    Configuration test2Config;
+
+    //...
+}
+----
+
+<1> Injecting the Diameter stack associated with the "test1" configuration.
+<2> Injecting the Diameter configuration for the "test2" configuration.
+
 == Application Session Types
 
-The following application session are currently support by the `@DiamterService`:
-
+.Supported Application Session type.
 |===
 | *Session Type* | *Server Session Interface* | *Client Session Interface*
 | Credit Control Application (CCA) | ServerCCASessionListener | ClientCCASessionListener
