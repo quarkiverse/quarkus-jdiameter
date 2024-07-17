@@ -16,8 +16,6 @@ public interface DiameterConfigs
 {
 	/**
 	 * The defined named diameter client config
-	 *
-	 * @asciidoclet
 	 */
 	@WithParentName
 	@WithUnnamedKey(DiameterConfig.DEFAULT_CONFIG_NAME)

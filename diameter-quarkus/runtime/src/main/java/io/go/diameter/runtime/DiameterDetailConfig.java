@@ -15,8 +15,6 @@ import java.util.Optional;
 /**
  * The Diameter Config describes the entire Diameter configuration mapping for both the
  * server and client
- *
- * @asciidoclet
  */
 @ConfigGroup
 public interface DiameterDetailConfig
