@@ -61,11 +61,10 @@ TIP: The stack will only be active if there is a defined DiameterService for the
 
 [source,java]
 ----
-@ApplicationScoped
-public class Demo
+
+@ApplicationScoped public class Demo
 {
-    @DiameterConfig("test1")<1>
-    Stack stack;
+@DiameterConfig("test1")<1> Stack stack;
 
     @DiameterConfig("test2")<2>
     Configuration test2Config;
@@ -89,6 +88,54 @@ public class Demo
 |===
 
 == Example Configuration
+
+The example configuration defines two sets of client diameter config.
+One is the default config and the other is named config called 'test1'.
+
+[source,properties]
+----
+diameter.local-peer.uri=aaa://ocsclient:1812
+diameter.local-peer.ip-addresses[0]=0.0.0.0
+diameter.local-peer.ip-addresses[1]=127.0.0.1
+diameter.local-peer.realm=server.test.com
+diameter.local-peer.product-name=Diameter Test Client
+diameter.local-peer.firmware-revision=1
+diameter.local-peer.applications[0].auth-appl-id=4
+diameter.local-peer.applications[1].auth-appl-id=4
+diameter.local-peer.applications[1].vendor-id=10415
+diameter.parameter.use-virtual-threads=true
+diameter.network.peers[0].peer-uri=aaa://ocs.test.org:3868
+diameter.network.peers[0].ip=127.0.0.1
+diameter.network.peers[0].attempt-connect=true
+diameter.network.peers[0].rating=0
+diameter.network.realms[0].realm-name=server.test.com
+diameter.network.realms[0].peers=192.168.241.1,localhost
+diameter.network.realms[0].local-action=local
+diameter.network.realms[0].dynamic=false
+diameter.network.realms[0].exp-time=1
+diameter.network.realms[0].application-id.auth-appl-id=4
+
+diameter.test1.local-peer.uri=aaa://ocsclient:1813
+diameter.test1.local-peer.ip-addresses[0]=0.0.0.0
+diameter.test1.local-peer.ip-addresses[1]=127.0.0.1
+diameter.test1.local-peer.realm=server.test.com
+diameter.test1.local-peer.product-name=Diameter Test Client
+diameter.test1.local-peer.firmware-revision=1
+diameter.test1.local-peer.applications[0].auth-appl-id=4
+diameter.test1.local-peer.applications[1].auth-appl-id=4
+diameter.test1.local-peer.applications[1].vendor-id=10415
+diameter.test1.parameter.use-virtual-threads=true
+diameter.test1.network.peers[0].peer-uri=aaa://ocs.test.org:3868
+diameter.test1.network.peers[0].ip=127.0.0.1
+diameter.test1.network.peers[0].attempt-connect=true
+diameter.test1.network.peers[0].rating=0
+diameter.test1.network.realms[0].realm-name=server.test.com
+diameter.test1.network.realms[0].peers=192.168.241.1,localhost
+diameter.test1.network.realms[0].local-action=local
+diameter.test1.network.realms[0].dynamic=false
+diameter.test1.network.realms[0].exp-time=1
+diameter.test1.network.realms[0].application-id.auth-appl-id=4
+----
 
 TIP:For more information about the extension configuration please refer to the <<configuration-reference,Configuration Reference>>.
 
