@@ -1,11 +1,9 @@
 package io.go.diameter.runtime.config;
 
-import io.quarkus.runtime.annotations.ConfigGroup;
 import io.smallrye.config.WithName;
 
 import java.util.Optional;
 
-@ConfigGroup
 public interface Extension
 {
 	/**

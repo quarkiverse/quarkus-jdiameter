@@ -1,27 +1,45 @@
 package io.go.diameter.runtime;
 
 import io.go.diameter.runtime.config.*;
+import io.go.diameter.runtime.transport.TLSClientConnection;
+import io.quarkus.tls.TlsConfiguration;
+import io.quarkus.tls.TlsConfigurationRegistry;
 import org.jdiameter.api.Configuration;
 import org.jdiameter.client.impl.helpers.AppConfiguration;
 import org.jdiameter.client.impl.helpers.Ordinal;
 import org.jdiameter.server.impl.helpers.EmptyConfiguration;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import static org.jdiameter.server.impl.helpers.ExtensionPoint.*;
 import static org.jdiameter.server.impl.helpers.Parameters.*;
 
 public class DiameterConfiguration extends EmptyConfiguration
 {
-	public DiameterConfiguration(DiameterDetailConfig config)
+	private final TlsConfigurationRegistry tlsRegistry;
+	private final List<Configuration> securityItems;
+
+	public DiameterConfiguration(DiameterDetailConfig config,
+								 TlsConfigurationRegistry tlsRegistry)
 	{
+		super(true);
+
+		securityItems = new ArrayList<>();
+		this.tlsRegistry = tlsRegistry;
+
 		addLocalPeer(config.localPeer());
 		addParameters(config.parameter());
 		addNetwork(config.network());
 		if (config.extension().isPresent()) {
 			addExtensions(config.extension().get());
 		}
+		if (!securityItems.isEmpty()) {
+			addInternalExtension(InternalTransportFactory, TLSClientConnection.class.getCanonicalName());
+			add(Security, securityItems.toArray(EMPTY_ARRAY));
+		}//if
 	}
 
 	protected void addLocalPeer(LocalPeer peerConfig)
@@ -31,24 +49,36 @@ public class DiameterConfiguration extends EmptyConfiguration
 		add(OwnVendorID, peerConfig.vendorId());
 		add(OwnProductName, peerConfig.productName());
 		add(OwnFirmwareRevision, peerConfig.firmwareRevision());
-		if (peerConfig.applications().isPresent()) {
-			addApplications(peerConfig.applications().get());
+		if (!peerConfig.applications().isEmpty()) {
+			addApplications(peerConfig.applications().values());
 		}
 		addIPAddresses(peerConfig.ipAddresses());
 
-		if (peerConfig.overloadMonitors().isPresent()) {
-			addOverloadMonitor(peerConfig.overloadMonitors().get());
+		if (!peerConfig.overloadMonitors().isEmpty()) {
+			addOverloadMonitor(peerConfig.overloadMonitors().values());
+		}
+
+		if (peerConfig.tlsConfigurationName().isPresent()) {
+			TlsConfiguration tlsConfig = tlsRegistry.get(peerConfig.tlsConfigurationName().get()).orElse(null);
+			if (tlsConfig == null) {
+				throw new DiameterSetupException("Tls configuration '" + peerConfig.tlsConfigurationName().get() + "' not found");
+			}
+
+			add(SecurityRef, peerConfig.tlsConfigurationName().get());
+			securityItems.add(getInstance().add(SDName, peerConfig.tlsConfigurationName().get())
+									  .add(SecurityData, tlsConfig));
+
 		}
 	}
 
-	protected void addOverloadMonitor(List<io.go.diameter.runtime.config.OverloadMonitorEntry> entries)
+	protected void addOverloadMonitor(Collection<OverloadMonitor> entries)
 	{
 		ArrayList<Configuration> items = new ArrayList<>();
 		entries.forEach(entry -> items.add(addOverloadMonitorItem(entry)));
 		add(OverloadMonitor, items.toArray(EMPTY_ARRAY));
 	}
 
-	protected Configuration addOverloadMonitorItem(io.go.diameter.runtime.config.OverloadMonitorEntry entry)
+	protected Configuration addOverloadMonitorItem(OverloadMonitor entry)
 	{
 		return EmptyConfiguration.getInstance()
 				.add(OverloadEntryIndex, entry.index())
@@ -57,10 +87,10 @@ public class DiameterConfiguration extends EmptyConfiguration
 				.add(ApplicationId, addApplicationID(entry.applicationId()));
 	}
 
-	protected void addIPAddresses(List<String> ipAddresses)
+	protected void addIPAddresses(Set<String> ipAddresses)
 	{
 		ArrayList<Configuration> items = new ArrayList<>();
-		ipAddresses.forEach(ip -> items.add(EmptyConfiguration.getInstance().add(OwnIPAddress, ip)));
+		ipAddresses.forEach(ip -> items.add(EmptyConfiguration.getInstance().add(OwnIPAddress, ip.trim())));
 		add(OwnIPAddresses, items.toArray(EMPTY_ARRAY));
 	}
 
@@ -72,7 +102,7 @@ public class DiameterConfiguration extends EmptyConfiguration
 				.add(AcctApplId, applicationId.acctApplId());
 	}
 
-	protected void addApplications(List<ApplicationId> applications)
+	protected void addApplications(Collection<ApplicationId> applications)
 	{
 		ArrayList<Configuration> items = new ArrayList<>();
 		for (ApplicationId appId : applications) {
@@ -186,11 +216,11 @@ public class DiameterConfiguration extends EmptyConfiguration
 
 	protected void addNetwork(Network network)
 	{
-		addPeers(network.peers());
-		addRealms(network.realms());
+		addPeers(network.peers().values());
+		addRealms(network.realms().values());
 	}
 
-	protected void addPeers(List<Peer> peers)
+	protected void addPeers(Collection<Peer> peers)
 	{
 		ArrayList<Configuration> items = new ArrayList<>();
 		peers.forEach(peer -> items.add(addPeer(peer)));
@@ -212,10 +242,20 @@ public class DiameterConfiguration extends EmptyConfiguration
 			peerConfig.add(PeerLocalPortRange, peer.portRange().get());
 		}
 
+		if (peer.tlsConfigurationName().isPresent()) {
+			TlsConfiguration tlsConfig = tlsRegistry.get(peer.tlsConfigurationName().get()).orElse(null);
+			if (tlsConfig == null) {
+				throw new DiameterSetupException("Tls configuration '" + peer.tlsConfigurationName().get() + "' not found");
+			}
+			peerConfig.add(SecurityRef, peer.tlsConfigurationName().get());
+			securityItems.add(getInstance().add(SDName, peer.tlsConfigurationName().get())
+									  .add(SecurityData, tlsConfig));
+		}
+
 		return peerConfig;
 	}
 
-	protected void addRealms(List<Realm> realms)
+	protected void addRealms(Collection<Realm> realms)
 	{
 		ArrayList<Configuration> items = new ArrayList<>();
 		realms.forEach(realm -> items.add(addRealm(realm)));

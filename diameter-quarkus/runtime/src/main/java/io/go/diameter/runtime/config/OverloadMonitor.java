@@ -4,7 +4,10 @@ import io.quarkus.runtime.annotations.ConfigGroup;
 import io.smallrye.config.WithName;
 
 @ConfigGroup
-public interface OverloadMonitorEntry
+/*
+ * The Overload Monitor configuration
+ */
+public interface OverloadMonitor
 {
 	/**
 	 * Defines the index of this overload monitor, so priorities/orders can be specified.

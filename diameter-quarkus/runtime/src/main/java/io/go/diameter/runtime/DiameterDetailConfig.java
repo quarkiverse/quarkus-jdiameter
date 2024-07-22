@@ -5,7 +5,7 @@ import io.go.diameter.runtime.config.Extension;
 import io.go.diameter.runtime.config.LocalPeer;
 import io.go.diameter.runtime.config.Network;
 import io.go.diameter.runtime.config.Parameter;
-import io.quarkus.runtime.annotations.ConfigGroup;
+import io.quarkus.runtime.annotations.ConfigDocSection;
 import io.smallrye.config.WithDefault;
 import io.smallrye.config.WithDefaults;
 import io.smallrye.config.WithName;
@@ -16,7 +16,6 @@ import java.util.Optional;
  * The Diameter Config describes the entire Diameter configuration mapping for both the
  * server and client
  */
-@ConfigGroup
 public interface DiameterDetailConfig
 {
 	/**
@@ -30,6 +29,7 @@ public interface DiameterDetailConfig
 	 */
 	@WithName("local-peer")
 	@WithDefaults
+	@ConfigDocSection
 	LocalPeer localPeer();
 
 	/**
@@ -37,6 +37,7 @@ public interface DiameterDetailConfig
 	 */
 	@WithName("parameter")
 	@WithDefaults
+	@ConfigDocSection
 	Parameter parameter();
 
 	/**
@@ -44,11 +45,13 @@ public interface DiameterDetailConfig
 	 */
 	@WithName("network")
 	@WithDefaults
+	@ConfigDocSection
 	Network network();
 
 	/**
 	 * The extensions elements contains elements that override existing components in the Diameter stack.
 	 */
 	@WithName("extensions")
+	@ConfigDocSection
 	Optional<Extension> extension();
 }

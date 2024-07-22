@@ -27,13 +27,13 @@ import jakarta.interceptor.InvocationContext;
 import org.jdiameter.api.*;
 import org.jdiameter.api.app.AppSession;
 import org.jdiameter.api.auth.ClientAuthSession;
-import org.jdiameter.api.auth.ClientAuthSessionListener;
 import org.jdiameter.api.auth.ServerAuthSession;
-import org.jdiameter.api.auth.ServerAuthSessionListener;
 import org.jdiameter.api.cca.ClientCCASession;
 import org.jdiameter.api.cca.ClientCCASessionListener;
 import org.jdiameter.api.cca.ServerCCASession;
 import org.jdiameter.api.cca.ServerCCASessionListener;
+import org.jdiameter.api.gq.ClientGqSessionListener;
+import org.jdiameter.api.gq.ServerGqSessionListener;
 import org.jdiameter.api.rx.ClientRxSession;
 import org.jdiameter.api.rx.ClientRxSessionListener;
 import org.jdiameter.api.rx.ServerRxSession;
@@ -61,152 +61,80 @@ public class DiameterServiceInterceptor
 {
 	private static final Logger LOG = LoggerFactory.getLogger(DiameterServiceInterceptor.class);
 
-	private void setupCAAFactory(Stack stack, ISessionFactory sessionFactory, DiameterServiceOptions options, Object target) throws ApplicationAlreadyUseException, InternalException
+	private void setupClientCAAFactory(ISessionFactory sessionFactory, DiameterServiceOptions options, ClientCCASessionListener sessionListener)
 	{
-		ApplicationMode mode = options.mode();
+		LOG.info("Staring CAA Diameter Client Service [{}].", options.config());
 		CCASessionFactoryImpl sessionFactoryImpl = new CCASessionFactoryImpl(sessionFactory);
-
-		if (mode == ApplicationMode.CLIENT) {
-			if (sessionFactory.getAppSessionFactory(ClientCCASession.class) != null) {
-				throw new DiameterSetupException("The Session Factory for CAA - Client is already configured.");
-			}
-
-			sessionFactory.registerAppFacory(ClientCCASession.class, sessionFactoryImpl);
-			if (target instanceof ClientCCASessionListener clientSessionListener) {
-				sessionFactoryImpl.setClientSessionListener(clientSessionListener);
-			}
-			else {
-				throw new DiameterSetupException("Missing implementation of ClientCCASessionListener");
-			}
-		}
-		else {
-			if (sessionFactory.getAppSessionFactory(ClientCCASession.class) != null) {
-				throw new DiameterSetupException("The Session Factory for CAA - Server is already configured.");
-			}
-
-			sessionFactory.registerAppFacory(ServerCCASession.class, sessionFactoryImpl);
-			if (target instanceof ServerCCASessionListener serverSessionListener) {
-				sessionFactoryImpl.setServerSessionListener(serverSessionListener);
-			}
-			else {
-				throw new DiameterSetupException("Missing implementation of ServerCCASessionListener");
-			}
-
-			setupDiameterServer(stack, sessionFactory, ServerCCASession.class, target, options);
-		}
+		sessionFactory.registerAppFacory(ClientCCASession.class, sessionFactoryImpl);
+		sessionFactoryImpl.setClientSessionListener(sessionListener);
 	}
 
-	private void setupRxFactory(Stack stack, ISessionFactory sessionFactory, DiameterServiceOptions options, Object target) throws ApplicationAlreadyUseException, InternalException
+	private void setupServerCAAFactory(Stack stack, ISessionFactory sessionFactory, DiameterServiceOptions options, ServerCCASessionListener sessionListener) throws ApplicationAlreadyUseException, InternalException
 	{
-		ApplicationMode mode = options.mode();
+		LOG.info("Staring CAA Diameter Server Service [{}].", options.config());
+		CCASessionFactoryImpl sessionFactoryImpl = new CCASessionFactoryImpl(sessionFactory);
+		sessionFactory.registerAppFacory(ServerCCASession.class, sessionFactoryImpl);
+		sessionFactoryImpl.setServerSessionListener(sessionListener);
+		setupDiameterServer(stack, sessionFactory, ServerCCASession.class, sessionListener, options);
+	}
+
+	private void clientSetupRxFactory(ISessionFactory sessionFactory, DiameterServiceOptions options, ClientRxSessionListener listener)
+	{
+		LOG.info("Staring Rx Diameter Client Service [{}].", options.config());
 		RxSessionFactoryImpl sessionFactoryImpl = new RxSessionFactoryImpl(sessionFactory);
+		sessionFactory.registerAppFacory(ClientRxSession.class, sessionFactoryImpl);
+		sessionFactoryImpl.setClientSessionListener(listener);
+	}
 
-		if (mode == ApplicationMode.CLIENT) {
-			if (sessionFactory.getAppSessionFactory(ClientRxSession.class) != null) {
-				throw new DiameterSetupException("The Session Factory for Rx - Client is already configured.");
-			}
-
-			sessionFactory.registerAppFacory(ClientRxSession.class, sessionFactoryImpl);
-			if (target instanceof ClientRxSessionListener clientSessionListener) {
-				sessionFactoryImpl.setClientSessionListener(clientSessionListener);
-			}
-			else {
-				throw new DiameterSetupException("Missing implementation of ClientRxSessionListener");
-			}
-		}
-		else {
-			if (sessionFactory.getAppSessionFactory(ServerRxSession.class) != null) {
-				throw new DiameterSetupException("The Session Factory for Rx - Server is already configured.");
-			}
-
-			sessionFactory.registerAppFacory(ServerRxSession.class, sessionFactoryImpl);
-			if (target instanceof ServerRxSessionListener serverSessionListener) {
-				sessionFactoryImpl.setServerSessionListener(serverSessionListener);
-			}
-			else {
-				throw new DiameterSetupException("Missing implementation of ServerRxSessionListener");
-			}
-
-			setupDiameterServer(stack, sessionFactory, ServerRxSession.class, target, options);
-		}
+	private void serverSetupRxFactory(Stack stack, ISessionFactory sessionFactory, DiameterServiceOptions options, ServerRxSessionListener listener) throws ApplicationAlreadyUseException, InternalException
+	{
+		LOG.info("Staring Rx Diameter Server Service [{}].", options.config());
+		RxSessionFactoryImpl sessionFactoryImpl = new RxSessionFactoryImpl(sessionFactory);
+		sessionFactory.registerAppFacory(ServerRxSession.class, sessionFactoryImpl);
+		sessionFactoryImpl.setServerSessionListener(listener);
+		setupDiameterServer(stack, sessionFactory, ServerRxSession.class, listener, options);
 	}
 
 
-	private void setupS6aFactory(Stack stack, ISessionFactory sessionFactory, DiameterServiceOptions options, Object target) throws ApplicationAlreadyUseException, InternalException
+	private void clientSetupS6aFactory(ISessionFactory sessionFactory, DiameterServiceOptions options, ClientS6aSessionListener listener)
 	{
-		ApplicationMode mode = options.mode();
+		LOG.info("Staring S6a Diameter Client Service [{}].", options.config());
 		S6aSessionFactoryImpl sessionFactoryImpl = new S6aSessionFactoryImpl(sessionFactory);
-
-		if (mode == ApplicationMode.CLIENT) {
-			if (sessionFactory.getAppSessionFactory(ClientS6aSession.class) != null) {
-				throw new DiameterSetupException("The Session Factory for S6a - Client is already configured.");
-			}
-
-			sessionFactory.registerAppFacory(ClientS6aSession.class, sessionFactoryImpl);
-			if (target instanceof ClientS6aSessionListener clientSessionListener) {
-				sessionFactoryImpl.setClientSessionListener(clientSessionListener);
-			}
-			else {
-				throw new DiameterSetupException("Missing implementation of ClientS6aSessionListener");
-			}
-		}
-		else {
-			if (sessionFactory.getAppSessionFactory(ServerS6aSession.class) != null) {
-				throw new DiameterSetupException("The Session Factory for S6a - Server is already configured.");
-			}
-
-			sessionFactory.registerAppFacory(ServerS6aSession.class, sessionFactoryImpl);
-			if (target instanceof ServerS6aSessionListener serverSessionListener) {
-				sessionFactoryImpl.setServerSessionListener(serverSessionListener);
-			}
-			else {
-				throw new DiameterSetupException("Missing implementation of ServerS6aSessionListener");
-			}
-
-			setupDiameterServer(stack, sessionFactory, ServerS6aSession.class, target, options);
-		}
+		sessionFactory.registerAppFacory(ClientS6aSession.class, sessionFactoryImpl);
+		sessionFactoryImpl.setClientSessionListener(listener);
 	}
 
-	private void setupGqFactory(Stack stack, ISessionFactory sessionFactory, DiameterServiceOptions options, Object target) throws ApplicationAlreadyUseException, InternalException
+	private void serverSetupS6aFactory(Stack stack, ISessionFactory sessionFactory, DiameterServiceOptions options, ServerS6aSessionListener listener) throws ApplicationAlreadyUseException, InternalException
 	{
-		ApplicationMode mode = options.mode();
+		LOG.info("Staring S6a Diameter Server Service [{}].", options.config());
+		S6aSessionFactoryImpl sessionFactoryImpl = new S6aSessionFactoryImpl(sessionFactory);
+		sessionFactory.registerAppFacory(ServerS6aSession.class, sessionFactoryImpl);
+		sessionFactoryImpl.setServerSessionListener(listener);
+		setupDiameterServer(stack, sessionFactory, ServerS6aSession.class, listener, options);
+	}
+
+	private void clientSetupGqFactory(ISessionFactory sessionFactory, DiameterServiceOptions options, ClientGqSessionListener listener)
+	{
+		LOG.info("Staring Gq Diameter Client Service [{}].", options.config());
 		GqSessionFactoryImpl sessionFactoryImpl = new GqSessionFactoryImpl(sessionFactory);
+		sessionFactory.registerAppFacory(ClientAuthSession.class, sessionFactoryImpl);
+		sessionFactoryImpl.setClientSessionListener(listener);
+	}
 
-		if (mode == ApplicationMode.CLIENT) {
-			if (sessionFactory.getAppSessionFactory(ClientAuthSession.class) != null) {
-				throw new DiameterSetupException("The Session Factory for Gq - Client is already configured.");
-			}
-
-			sessionFactory.registerAppFacory(ClientAuthSession.class, sessionFactoryImpl);
-			if (target instanceof ClientAuthSessionListener clientSessionListener) {
-				sessionFactoryImpl.setClientSessionListener(clientSessionListener);
-			}
-			else {
-				throw new DiameterSetupException("Missing implementation of ClientAuthSessionListener");
-			}
-		}
-		else {
-			if (sessionFactory.getAppSessionFactory(ServerAuthSession.class) != null) {
-				throw new DiameterSetupException("The Session Factory for Gq - Server is already configured.");
-			}
-
-			sessionFactory.registerAppFacory(ServerAuthSession.class, sessionFactoryImpl);
-			if (target instanceof ServerAuthSessionListener serverSessionListener) {
-				sessionFactoryImpl.setServerSessionListener(serverSessionListener);
-			}
-			else {
-				throw new DiameterSetupException("Missing implementation of ServerAuthSessionListener");
-			}
-
-			setupDiameterServer(stack, sessionFactory, ServerAuthSession.class, target, options);
-		}
+	private void serverSetupGqFactory(Stack stack, ISessionFactory sessionFactory, DiameterServiceOptions options, ServerGqSessionListener listener) throws ApplicationAlreadyUseException, InternalException
+	{
+		LOG.info("Staring Gq Diameter Server Service [{}].", options.config());
+		GqSessionFactoryImpl sessionFactoryImpl = new GqSessionFactoryImpl(sessionFactory);
+		sessionFactory.registerAppFacory(ServerAuthSession.class, sessionFactoryImpl);
+		sessionFactoryImpl.setServerSessionListener(listener);
+		setupDiameterServer(stack, sessionFactory, ServerAuthSession.class, listener, options);
 	}
 
 	private NetworkReqListener createListener(ISessionFactory sessionFactory, Class<? extends AppSession> appSession)
 	{
 		return request -> {
 			try {
-				ApplicationId appId = request.getApplicationIdAvps().isEmpty() ? null : request.getApplicationIdAvps().iterator().next();
+				ApplicationId appId = request.getApplicationIdAvps().isEmpty() ? null : request.getApplicationIdAvps().getFirst();
 				LOG.debug("Received request for {} and {}", appSession.getSimpleName(), appId);
 				NetworkReqListener listener = sessionFactory.getNewAppSession(request.getSessionId(), appId, appSession, Collections.emptyList());
 				return listener.processRequest(request);
@@ -255,16 +183,16 @@ public class DiameterServiceInterceptor
 
 				ISessionFactory sessionFactory = (ISessionFactory) stack.getSessionFactory();
 
-				LOG.info("Staring {} Diameter Service [{}] in {} mode.", options.type(), options.config(), options.mode());
-				switch (options.type()) {
-					//3GPP CCA Application
-					case CCA -> setupCAAFactory(stack, sessionFactory, options, context.getTarget());
-					//3GPP Rx Application
-					case RX -> setupRxFactory(stack, sessionFactory, options, context.getTarget());
-					//3GPP S6a Application
-					case S6A -> setupS6aFactory(stack, sessionFactory, options, context.getTarget());
-					//3GPP Gq Application
-					case GQ -> setupGqFactory(stack, sessionFactory, options, context.getTarget());
+				switch (context.getTarget()) {
+					case ClientCCASessionListener listener -> setupClientCAAFactory(sessionFactory, options, listener);
+					case ServerCCASessionListener listener -> setupServerCAAFactory(stack, sessionFactory, options, listener);
+					case ClientRxSessionListener listener -> clientSetupRxFactory(sessionFactory, options, listener);
+					case ServerRxSessionListener listener -> serverSetupRxFactory(stack, sessionFactory, options, listener);
+					case ClientS6aSessionListener listener -> clientSetupS6aFactory(sessionFactory, options, listener);
+					case ServerS6aSessionListener listener -> serverSetupS6aFactory(stack, sessionFactory, options, listener);
+					case ClientGqSessionListener listener -> clientSetupGqFactory(sessionFactory, options, listener);
+					case ServerGqSessionListener listener -> serverSetupGqFactory(stack, sessionFactory, options, listener);
+					default -> throw new DiameterSetupException("Unknown Diameter Service");
 				}
 
 				if (!stack.isActive()) {

@@ -3,6 +3,7 @@ package io.go.diameter.runtime;
 import io.quarkus.arc.SyntheticCreationalContext;
 import io.quarkus.runtime.ShutdownContext;
 import io.quarkus.runtime.annotations.Recorder;
+import io.quarkus.tls.TlsConfigurationRegistry;
 import io.smallrye.config.SmallRyeConfig;
 import org.eclipse.microprofile.config.ConfigProvider;
 import org.jdiameter.api.*;
@@ -12,13 +13,15 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 @Recorder
 public class DiameterRecorder
 {
 	private static final Logger LOG = LoggerFactory.getLogger(DiameterRecorder.class);
 
-	public Function<SyntheticCreationalContext<Configuration>, Configuration> diameterConfiguration(String configName)
+	public Function<SyntheticCreationalContext<Configuration>, Configuration> diameterConfiguration(Supplier<TlsConfigurationRegistry> registrySupplier,
+																									String configName)
 	{
 		return context -> {
 			LOG.info("Building Diameter configuration for profile '{}'", configName);
@@ -29,11 +32,14 @@ public class DiameterRecorder
 			if (diameterConfig == null) {
 				throw new IllegalArgumentException("No Diameter configuration found for profile '" + configName + "'");
 			}
-			return new DiameterConfiguration(diameterConfig);
+
+			return new DiameterConfiguration(diameterConfig, registrySupplier.get());
 		};
 	}
 
-	public Function<SyntheticCreationalContext<Stack>, Stack> diameterStack(ShutdownContext shutdownContext, String configName)
+	public Function<SyntheticCreationalContext<Stack>, Stack> diameterStack(ShutdownContext shutdownContext,
+																			Supplier<TlsConfigurationRegistry> registrySupplier,
+																			String configName)
 	{
 		return context -> {
 			try {
@@ -47,7 +53,7 @@ public class DiameterRecorder
 				}
 
 				Stack stack = new StackImpl();
-				stack.init(new DiameterConfiguration(diameterConfig));
+				stack.init(new DiameterConfiguration(diameterConfig, registrySupplier.get()));
 				shutdownContext.addShutdownTask(() -> {
 					LOG.info("Stopping '{}' Diameter Stack", configName);
 					if (stack.isActive()) {

@@ -6,6 +6,9 @@ import io.smallrye.config.WithName;
 
 import java.util.Optional;
 
+/**
+ * Parent element containing the child Peer elements
+ */
 @ConfigGroup
 public interface Peer
 {
@@ -42,4 +45,16 @@ public interface Peer
 	@WithDefault("false")
 	@WithName("attempt-connect")
 	Boolean attemptConnect();
+
+	/**
+	 * The name of the TLS configuration to use.
+	 * <p>
+	 * If not set and the default TLS configuration is configured ({@code quarkus.tls.*}) then that will be used.
+	 * If a name is configured, it uses the configuration from {@code quarkus.tls.<name>.*}
+	 * If a name is configured, but no TLS configuration is found with that name then an error will be thrown.
+	 * <p>
+	 * If no TLS configuration is set, and {@code quarkus.tls.*} is not configured, then, no security will be used
+	 */
+	@WithName("tls-configuration-name")
+	Optional<String> tlsConfigurationName();
 }

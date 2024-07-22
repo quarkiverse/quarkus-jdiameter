@@ -7,6 +7,9 @@ import org.jdiameter.api.LocalAction;
 
 import java.util.Optional;
 
+/**
+ * Parent element containing all realms that connect into the Diameter network.
+ */
 @ConfigGroup
 public interface Realm
 {

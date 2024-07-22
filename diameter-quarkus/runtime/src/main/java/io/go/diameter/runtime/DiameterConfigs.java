@@ -16,12 +16,13 @@ public interface DiameterConfigs
 {
 	/**
 	 * The defined named diameter client config
+	 *
+	 * @asciidocx
 	 */
 	@WithParentName
 	@WithUnnamedKey(DiameterConfig.DEFAULT_CONFIG_NAME)
 	@ConfigDocMapKey("named-config")
 	Map<String, DiameterDetailConfig> diameterConfigs();
-
 
 	default DiameterDetailConfig getDiameterConfig(String clientName)
 	{

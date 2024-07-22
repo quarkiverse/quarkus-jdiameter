@@ -1,13 +1,14 @@
 package io.go.diameter.runtime.config;
 
-import io.quarkus.runtime.annotations.ConfigGroup;
+import io.quarkus.runtime.annotations.ConfigDocSection;
 import io.smallrye.config.WithDefault;
 import io.smallrye.config.WithName;
+import io.smallrye.config.WithUnnamedKey;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
-@ConfigGroup
 public interface LocalPeer
 {
 	/**
@@ -18,11 +19,23 @@ public interface LocalPeer
 	String uri();
 
 	/**
+	 * The name of the TLS configuration to use.
+	 * <p>
+	 * If not set and the default TLS configuration is configured ({@code quarkus.tls.*}) then that will be used.
+	 * If a name is configured, it uses the configuration from {@code quarkus.tls.<name>.*}
+	 * If a name is configured, but no TLS configuration is found with that name then an error will be thrown.
+	 * <p>
+	 * If no TLS configuration is set, and {@code quarkus.tls.*} is not configured, then, no security will be used
+	 */
+	@WithName("tls-configuration-name")
+	Optional<String> tlsConfigurationName();
+
+	/**
 	 * Contains one or more valid IP address for the local peer.`
 	 */
 	@WithName("ip-addresses")
 	@WithDefault("127.0.0.1")
-	List<String> ipAddresses();
+	Set<String> ipAddresses();
 
 	/**
 	 * Specifies the realm of the local peer.
@@ -56,12 +69,16 @@ public interface LocalPeer
 	 * Contains a list of default supported applications.
 	 */
 	@WithName("applications")
-	Optional<List<ApplicationId>> applications();
+	@ConfigDocSection
+	@WithUnnamedKey
+	Map<String, ApplicationId> applications();
 
 	/**
 	 * Optional parent element containing child elements that specify settings
-	 * relating to the Overload Monitor.
+	 * relating to the Overload Monitor. The map key is the index of this overload monitor,
+	 * so priorities/orders can be specified.
 	 */
 	@WithName("overload-monitors")
-	Optional<List<OverloadMonitorEntry>> overloadMonitors();
+	@ConfigDocSection
+	Map<String, OverloadMonitor> overloadMonitors();
 }
