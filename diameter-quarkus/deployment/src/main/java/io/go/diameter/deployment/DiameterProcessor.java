@@ -16,6 +16,7 @@ import io.quarkus.deployment.builditem.CombinedIndexBuildItem;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
 import io.quarkus.deployment.builditem.ServiceStartBuildItem;
 import io.quarkus.deployment.builditem.ShutdownContextBuildItem;
+import io.quarkus.tls.TlsRegistryBuildItem;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Default;
 import jakarta.interceptor.Interceptor;
@@ -53,6 +54,7 @@ class DiameterProcessor
 	ServiceStartBuildItem generateDiameterConfiguration(DiameterRecorder recorder,
 														DiameterConfigs diameterConfig,
 														ShutdownContextBuildItem shutdownContextBuildItem,
+														TlsRegistryBuildItem tlsRegistryBuildItem,
 														BuildProducer<SyntheticBeanBuildItem> syntheticBeanBuildItemBuildProducer)
 	{
 		if (diameterConfig.diameterConfigs() != null) {
@@ -63,7 +65,7 @@ class DiameterProcessor
 														 Configuration.class,
 														 DOTNAME_CONFIGURATION,
 														 configName.equals(DiameterConfig.DEFAULT_CONFIG_NAME))
-											 .createWith(recorder.diameterConfiguration(configName))
+											 .createWith(recorder.diameterConfiguration(tlsRegistryBuildItem.registry(), configName))
 											 .done());
 
 					syntheticBeanBuildItemBuildProducer
@@ -71,7 +73,7 @@ class DiameterProcessor
 														 Stack.class,
 														 DOTNAME_STACK,
 														 configName.equals(DiameterConfig.DEFAULT_CONFIG_NAME))
-											 .createWith(recorder.diameterStack(shutdownContextBuildItem, configName))
+											 .createWith(recorder.diameterStack(shutdownContextBuildItem, tlsRegistryBuildItem.registry(), configName))
 											 .done());
 				}//if
 			}//for

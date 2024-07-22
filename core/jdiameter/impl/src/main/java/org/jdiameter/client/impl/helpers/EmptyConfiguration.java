@@ -91,31 +91,31 @@
 	 {
 		 if (callInit) {
 			 add(Extensions, getInstance(). // Internal extension point
-													add(ExtensionName, ExtensionPoint.Internal.name()).
-											add(InternalMetaData, InternalMetaData.defValue()).
-											add(InternalRouterEngine, InternalRouterEngine.defValue()).
-											add(InternalMessageParser, InternalMessageParser.defValue()).
-											add(InternalElementParser, InternalElementParser.defValue()).
-											add(InternalTransportFactory, InternalTransportFactory.defValue()).
-											add(InternalConnectionClass, InternalConnectionClass.defValue()).
-											add(InternalPeerFsmFactory, InternalPeerFsmFactory.defValue()).
-											add(InternalSessionFactory, InternalSessionFactory.defValue()).
-											add(InternalPeerController, InternalPeerController.defValue()).
-											add(InternalRealmController, InternalRealmController.defValue()).
-											add(InternalAgentRedirect, InternalAgentRedirect.defValue()).
-											add(InternalAgentConfiguration, InternalAgentConfiguration.defValue()).
-											add(InternalSessionDatasource, InternalSessionDatasource.defValue()).
-											add(InternalTimerFacility, InternalTimerFacility.defValue()).
-											add(InternalStatisticFactory, InternalStatisticFactory.defValue()
+						 add(ExtensionName, ExtensionPoint.Internal.name()).
+						 add(InternalMetaData, InternalMetaData.defValue()).
+						 add(InternalRouterEngine, InternalRouterEngine.defValue()).
+						 add(InternalMessageParser, InternalMessageParser.defValue()).
+						 add(InternalElementParser, InternalElementParser.defValue()).
+						 add(InternalTransportFactory, InternalTransportFactory.defValue()).
+						 add(InternalConnectionClass, InternalConnectionClass.defValue()).
+						 add(InternalPeerFsmFactory, InternalPeerFsmFactory.defValue()).
+						 add(InternalSessionFactory, InternalSessionFactory.defValue()).
+						 add(InternalPeerController, InternalPeerController.defValue()).
+						 add(InternalRealmController, InternalRealmController.defValue()).
+						 add(InternalAgentRedirect, InternalAgentRedirect.defValue()).
+						 add(InternalAgentConfiguration, InternalAgentConfiguration.defValue()).
+						 add(InternalSessionDatasource, InternalSessionDatasource.defValue()).
+						 add(InternalTimerFacility, InternalTimerFacility.defValue()).
+						 add(InternalStatisticFactory, InternalStatisticFactory.defValue()
 
-											   ),
+						 ),
 				 getInstance().  // StackLayer extension point
-										 add(ExtensionName, ExtensionPoint.StackLayer.name()),
+						 add(ExtensionName, ExtensionPoint.StackLayer.name()),
 				 getInstance().  // ControllerLayer extension point
-										 add(ExtensionName, ExtensionPoint.ControllerLayer.name()),
+						 add(ExtensionName, ExtensionPoint.ControllerLayer.name()),
 				 getInstance().  // TransportLayer extension point
-										 add(ExtensionName, ExtensionPoint.TransportLayer.name())
-				);
+						 add(ExtensionName, ExtensionPoint.TransportLayer.name())
+			 );
 		 }
 	 }
 
@@ -149,7 +149,8 @@
 		 elements.put(key, value);
 	 }
 
-	 protected Object getValue(int key)
+	 @Override
+	 public Object getValue(int key)
 	 {
 		 return elements.get(key);
 	 }

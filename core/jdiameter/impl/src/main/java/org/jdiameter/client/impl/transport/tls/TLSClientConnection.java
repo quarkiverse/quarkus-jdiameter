@@ -104,7 +104,7 @@
 				 throw new Exception("Can not create connection without TLS parameters");
 			 }
 			 logger.trace("Initializing TLS with reference '{}'", ref);
-			 fillSecurityData(config, ref);
+			 this.factory = fillSecurityData(config, ref);
 		 }
 		 catch (Exception e) {
 			 throw new IllegalArgumentException(e);
@@ -126,7 +126,7 @@
 				 throw new Exception("Can not create connection without TLS parameters");
 			 }
 			 logger.trace("Initializing TLS with reference '{}'", ref);
-			 fillSecurityData(config, ref);
+			 this.factory = fillSecurityData(config, ref);
 		 }
 		 catch (Exception e) {
 			 throw new IllegalArgumentException(e);
@@ -148,25 +148,25 @@
 			 if (localPeerSSLConfig == null) {
 				 throw new Exception("Can not create connection without TLS parameters");
 			 }
-			 fillSecurityData(localPeerSSLConfig);
+			 this.factory = fillSecurityData(localPeerSSLConfig);
 		 }
 		 catch (Exception e) {
 			 throw new IllegalArgumentException(e);
 		 }
 	 }
 
-	 private void fillSecurityData(Configuration config, String ref) throws Exception
+	 protected SSLSocketFactory fillSecurityData(Configuration config, String ref) throws Exception
 	 {
 		 sslConfig = TLSUtils.getSSLConfiguration(config, ref);
 		 if (sslConfig == null) {
 			 throw new Exception("Incorrect reference to secutity data");
 		 }
-		 this.factory = getSSLContext(sslConfig);
+		 return getSSLContext(sslConfig);
 	 }
 
-	 private void fillSecurityData(Configuration config) throws Exception
+	 protected SSLSocketFactory fillSecurityData(Configuration config) throws Exception
 	 {
-		 this.factory = getSSLContext(config);
+		 return getSSLContext(config);
 	 }
 
 	 protected TLSTransportClient getClient()
