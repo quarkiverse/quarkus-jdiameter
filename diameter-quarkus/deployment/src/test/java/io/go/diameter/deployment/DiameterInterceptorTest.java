@@ -1,7 +1,5 @@
 package io.go.diameter.deployment;
 
-import io.go.diameter.ApplicationMode;
-import io.go.diameter.DiameterApplication;
 import io.go.diameter.DiameterService;
 import io.go.diameter.DiameterServiceOptions;
 import io.quarkus.test.QuarkusUnitTest;
@@ -21,10 +19,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 public class DiameterInterceptorTest
 {
 	@RegisterExtension
-	static final QuarkusUnitTest config = new QuarkusUnitTest()
-			.setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class)
-					.addClasses(DiameterServiceTest.class))
-			.withConfigurationResource("application.properties");
+	static final QuarkusUnitTest config = new QuarkusUnitTest().setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class).addClasses(DiameterServiceTest.class)).withConfigurationResource("application.properties");
 
 
 	@Test
@@ -33,10 +28,7 @@ public class DiameterInterceptorTest
 		//Dummy test to trigger the test case
 	}
 
-	@DiameterServiceOptions(
-			type = DiameterApplication.CCA,
-			mode = ApplicationMode.CLIENT
-	)
+	@DiameterServiceOptions
 	@DiameterService
 	static class DiameterServiceTest implements ClientCCASessionListener
 	{
