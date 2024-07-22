@@ -1,0 +1,349 @@
+
+:summaryTableId: config-group-io-go-diameter-runtime-config-network
+[.configuration-legend]
+icon:lock[title=Fixed at build time] Configuration property fixed at build time - All other configuration properties are overridable at runtime
+[.configuration-reference, cols="80,.^10,.^10"]
+|===
+
+h|[[config-group-io-go-diameter-runtime-config-network_diameter-network-peers-list-of-external-peers-and-the-way-they-connect]]link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-list-of-external-peers-and-the-way-they-connect[List of external peers and the way they connect]
+
+h|Type
+h|Default
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-network_diameter-network-peers-peer-uri]]`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-peer-uri[diameter.network.peers.peer-uri]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-peer-uri[diameter.network.peers."peers".peer-uri]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-peer-uri[diameter."named-config".network.peers."peers".peer-uri]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-peer-uri[diameter."named-config".network.peers.peer-uri]`
+
+
+[.description]
+--
+Specifies the name of the peer in the form of a URI. The structure is "aaa://++[++fqdn++\|++ip++]++:port" (for example, "aaa://192.168.1.1:3868").
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_PEERS_PEER_URI+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_NETWORK_PEERS_PEER_URI+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|`aaa://localhost:3868`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-network_diameter-network-peers-rating]]`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-rating[diameter.network.peers.rating]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-rating[diameter.network.peers."peers".rating]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-rating[diameter."named-config".network.peers."peers".rating]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-rating[diameter."named-config".network.peers.rating]`
+
+
+[.description]
+--
+Specifies the rating of this peer in order to achieve peer priorities/sorting.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_PEERS_RATING+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_NETWORK_PEERS_RATING+++`
+endif::add-copy-button-to-env-var[]
+--|int 
+|`1`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-network_diameter-network-peers-ip]]`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-ip[diameter.network.peers.ip]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-ip[diameter.network.peers."peers".ip]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-ip[diameter."named-config".network.peers."peers".ip]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-ip[diameter."named-config".network.peers.ip]`
+
+
+[.description]
+--
+Specifies the actual ip for the peer-uri, for example 192.168.1.1
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_PEERS_IP+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_NETWORK_PEERS_IP+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-network_diameter-network-peers-port-range]]`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-port-range[diameter.network.peers.port-range]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-port-range[diameter.network.peers."peers".port-range]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-port-range[diameter."named-config".network.peers."peers".port-range]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-port-range[diameter."named-config".network.peers.port-range]`
+
+
+[.description]
+--
+Specifies a port range to accept connection override the port number in peer-uri
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_PEERS_PORT_RANGE+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_NETWORK_PEERS_PORT_RANGE+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-network_diameter-network-peers-attempt-connect]]`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-attempt-connect[diameter.network.peers.attempt-connect]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-attempt-connect[diameter.network.peers."peers".attempt-connect]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-attempt-connect[diameter."named-config".network.peers."peers".attempt-connect]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-attempt-connect[diameter."named-config".network.peers.attempt-connect]`
+
+
+[.description]
+--
+Determines if the stack should try to connect to this peer.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_PEERS_ATTEMPT_CONNECT+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_NETWORK_PEERS_ATTEMPT_CONNECT+++`
+endif::add-copy-button-to-env-var[]
+--|boolean 
+|`false`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-network_diameter-network-peers-tls-configuration-name]]`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-tls-configuration-name[diameter.network.peers.tls-configuration-name]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-tls-configuration-name[diameter.network.peers."peers".tls-configuration-name]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-tls-configuration-name[diameter."named-config".network.peers."peers".tls-configuration-name]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-peers-tls-configuration-name[diameter."named-config".network.peers.tls-configuration-name]`
+
+
+[.description]
+--
+The name of the TLS configuration to use.
+
+If not set and the default TLS configuration is configured (`quarkus.tls.++*++`) then that will be used. If a name is configured, it uses the configuration from `quarkus.tls.<name>.++*++` If a name is configured, but no TLS configuration is found with that name then an error will be thrown.
+
+If no TLS configuration is set, and `quarkus.tls.++*++` is not configured, then, no security will be used
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_PEERS_TLS_CONFIGURATION_NAME+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_NETWORK_PEERS_TLS_CONFIGURATION_NAME+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+h|[[config-group-io-go-diameter-runtime-config-network_diameter-network-realms-list-of-all-realms-that-connect-into-the-diameter-network]]link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-list-of-all-realms-that-connect-into-the-diameter-network[List of all realms that connect into the Diameter network]
+
+h|Type
+h|Default
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-network_diameter-network-realms-realm-name]]`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-realm-name[diameter.network.realms.realm-name]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-realm-name[diameter.network.realms."realms".realm-name]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-realm-name[diameter."named-config".network.realms."realms".realm-name]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-realm-name[diameter."named-config".network.realms.realm-name]`
+
+
+[.description]
+--
+Contains attributes and elements that describe different realms configured for the Core.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_REALMS_REALM_NAME+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_NETWORK_REALMS_REALM_NAME+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|`io.go.diameter`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-network_diameter-network-realms-peers]]`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-peers[diameter.network.realms.peers]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-peers[diameter.network.realms."realms".peers]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-peers[diameter."named-config".network.realms."realms".peers]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-peers[diameter."named-config".network.realms.peers]`
+
+
+[.description]
+--
+Comma separated list of peers. Each peer is represented by an IP Address or FQDN.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_REALMS_PEERS+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_NETWORK_REALMS_PEERS+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|`localhost`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-network_diameter-network-realms-local-action]]`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-local-action[diameter.network.realms.local-action]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-local-action[diameter.network.realms."realms".local-action]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-local-action[diameter."named-config".network.realms."realms".local-action]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-local-action[diameter."named-config".network.realms.local-action]`
+
+
+[.description]
+--
+Determines the action the Local Peer will play on the specified realm: Act as a LOCAL peer.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_REALMS_LOCAL_ACTION+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_NETWORK_REALMS_LOCAL_ACTION+++`
+endif::add-copy-button-to-env-var[]
+-- a|
+`local`, `relay`, `proxy`, `redirect` 
+|`local`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-network_diameter-network-realms-dynamic]]`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-dynamic[diameter.network.realms.dynamic]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-dynamic[diameter.network.realms."realms".dynamic]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-dynamic[diameter."named-config".network.realms."realms".dynamic]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-dynamic[diameter."named-config".network.realms.dynamic]`
+
+
+[.description]
+--
+Specifies if this realm is dynamic. That is, peers that connect to peers with this realm name will be added to the realm peer list if not present already.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_REALMS_DYNAMIC+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_NETWORK_REALMS_DYNAMIC+++`
+endif::add-copy-button-to-env-var[]
+--|boolean 
+|`false`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-network_diameter-network-realms-exp-time]]`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-exp-time[diameter.network.realms.exp-time]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-exp-time[diameter.network.realms."realms".exp-time]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-exp-time[diameter."named-config".network.realms."realms".exp-time]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-exp-time[diameter."named-config".network.realms.exp-time]`
+
+
+[.description]
+--
+The time before a peer belonging to this realm is removed if no connection is available. The time is in seconds.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_REALMS_EXP_TIME+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_NETWORK_REALMS_EXP_TIME+++`
+endif::add-copy-button-to-env-var[]
+--|long 
+|`1`
+
+
+h|[[config-group-io-go-diameter-runtime-config-network_diameter-network-realms-application-id-the-applications-supported]]link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-application-id-the-applications-supported[The applications supported]
+This configuration section is optional
+h|Type
+h|Default
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-network_diameter-network-realms-application-id-vendor-id]]`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-application-id-vendor-id[diameter.network.realms.application-id.vendor-id]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-application-id-vendor-id[diameter.network.realms."realms".application-id.vendor-id]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-application-id-vendor-id[diameter."named-config".network.realms."realms".application-id.vendor-id]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-application-id-vendor-id[diameter."named-config".network.realms.application-id.vendor-id]`
+
+
+[.description]
+--
+Specifies the vendor ID for application definition.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_REALMS_APPLICATION_ID_VENDOR_ID+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_NETWORK_REALMS_APPLICATION_ID_VENDOR_ID+++`
+endif::add-copy-button-to-env-var[]
+--|long 
+|`0`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-network_diameter-network-realms-application-id-auth-appl-id]]`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-application-id-auth-appl-id[diameter.network.realms.application-id.auth-appl-id]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-application-id-auth-appl-id[diameter.network.realms."realms".application-id.auth-appl-id]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-application-id-auth-appl-id[diameter."named-config".network.realms."realms".application-id.auth-appl-id]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-application-id-auth-appl-id[diameter."named-config".network.realms.application-id.auth-appl-id]`
+
+
+[.description]
+--
+The Authentication Application ID for application definition.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_REALMS_APPLICATION_ID_AUTH_APPL_ID+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_NETWORK_REALMS_APPLICATION_ID_AUTH_APPL_ID+++`
+endif::add-copy-button-to-env-var[]
+--|long 
+|`0`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-network_diameter-network-realms-application-id-acct-appl-id]]`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-application-id-acct-appl-id[diameter.network.realms.application-id.acct-appl-id]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-application-id-acct-appl-id[diameter.network.realms."realms".application-id.acct-appl-id]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-application-id-acct-appl-id[diameter."named-config".network.realms."realms".application-id.acct-appl-id]`
+
+`link:#config-group-io-go-diameter-runtime-config-network_diameter-network-realms-application-id-acct-appl-id[diameter."named-config".network.realms.application-id.acct-appl-id]`
+
+
+[.description]
+--
+The Account Application ID for application definition.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_REALMS_APPLICATION_ID_ACCT_APPL_ID+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_NETWORK_REALMS_APPLICATION_ID_ACCT_APPL_ID+++`
+endif::add-copy-button-to-env-var[]
+--|long 
+|`0`
+
+|===

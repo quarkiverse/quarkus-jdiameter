@@ -1,0 +1,202 @@
+
+:summaryTableId: config-group-io-go-diameter-runtime-config-realm
+[.configuration-legend]
+icon:lock[title=Fixed at build time] Configuration property fixed at build time - All other configuration properties are overridable at runtime
+[.configuration-reference, cols="80,.^10,.^10"]
+|===
+
+h|[[config-group-io-go-diameter-runtime-config-realm_configuration]]link:#config-group-io-go-diameter-runtime-config-realm_configuration[Configuration property]
+
+h|Type
+h|Default
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-realm-name]]`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-realm-name[diameter.network.realms.realm-name]`
+
+`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-realm-name[diameter.network.realms."realms".realm-name]`
+
+`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-realm-name[diameter."named-config".network.realms."realms".realm-name]`
+
+`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-realm-name[diameter."named-config".network.realms.realm-name]`
+
+
+[.description]
+--
+Contains attributes and elements that describe different realms configured for the Core.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_REALMS_REALM_NAME+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_NETWORK_REALMS_REALM_NAME+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|`io.go.diameter`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-peers]]`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-peers[diameter.network.realms.peers]`
+
+`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-peers[diameter.network.realms."realms".peers]`
+
+`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-peers[diameter."named-config".network.realms."realms".peers]`
+
+`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-peers[diameter."named-config".network.realms.peers]`
+
+
+[.description]
+--
+Comma separated list of peers. Each peer is represented by an IP Address or FQDN.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_REALMS_PEERS+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_NETWORK_REALMS_PEERS+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|`localhost`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-local-action]]`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-local-action[diameter.network.realms.local-action]`
+
+`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-local-action[diameter.network.realms."realms".local-action]`
+
+`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-local-action[diameter."named-config".network.realms."realms".local-action]`
+
+`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-local-action[diameter."named-config".network.realms.local-action]`
+
+
+[.description]
+--
+Determines the action the Local Peer will play on the specified realm: Act as a LOCAL peer.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_REALMS_LOCAL_ACTION+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_NETWORK_REALMS_LOCAL_ACTION+++`
+endif::add-copy-button-to-env-var[]
+-- a|
+`local`, `relay`, `proxy`, `redirect` 
+|`local`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-dynamic]]`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-dynamic[diameter.network.realms.dynamic]`
+
+`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-dynamic[diameter.network.realms."realms".dynamic]`
+
+`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-dynamic[diameter."named-config".network.realms."realms".dynamic]`
+
+`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-dynamic[diameter."named-config".network.realms.dynamic]`
+
+
+[.description]
+--
+Specifies if this realm is dynamic. That is, peers that connect to peers with this realm name will be added to the realm peer list if not present already.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_REALMS_DYNAMIC+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_NETWORK_REALMS_DYNAMIC+++`
+endif::add-copy-button-to-env-var[]
+--|boolean 
+|`false`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-exp-time]]`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-exp-time[diameter.network.realms.exp-time]`
+
+`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-exp-time[diameter.network.realms."realms".exp-time]`
+
+`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-exp-time[diameter."named-config".network.realms."realms".exp-time]`
+
+`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-exp-time[diameter."named-config".network.realms.exp-time]`
+
+
+[.description]
+--
+The time before a peer belonging to this realm is removed if no connection is available. The time is in seconds.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_REALMS_EXP_TIME+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_NETWORK_REALMS_EXP_TIME+++`
+endif::add-copy-button-to-env-var[]
+--|long 
+|`1`
+
+
+h|[[config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-application-id-the-applications-supported]]link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-application-id-the-applications-supported[The applications supported]
+This configuration section is optional
+h|Type
+h|Default
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-application-id-vendor-id]]`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-application-id-vendor-id[diameter.network.realms.application-id.vendor-id]`
+
+`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-application-id-vendor-id[diameter.network.realms."realms".application-id.vendor-id]`
+
+`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-application-id-vendor-id[diameter."named-config".network.realms."realms".application-id.vendor-id]`
+
+`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-application-id-vendor-id[diameter."named-config".network.realms.application-id.vendor-id]`
+
+
+[.description]
+--
+Specifies the vendor ID for application definition.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_REALMS_APPLICATION_ID_VENDOR_ID+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_NETWORK_REALMS_APPLICATION_ID_VENDOR_ID+++`
+endif::add-copy-button-to-env-var[]
+--|long 
+|`0`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-application-id-auth-appl-id]]`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-application-id-auth-appl-id[diameter.network.realms.application-id.auth-appl-id]`
+
+`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-application-id-auth-appl-id[diameter.network.realms."realms".application-id.auth-appl-id]`
+
+`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-application-id-auth-appl-id[diameter."named-config".network.realms."realms".application-id.auth-appl-id]`
+
+`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-application-id-auth-appl-id[diameter."named-config".network.realms.application-id.auth-appl-id]`
+
+
+[.description]
+--
+The Authentication Application ID for application definition.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_REALMS_APPLICATION_ID_AUTH_APPL_ID+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_NETWORK_REALMS_APPLICATION_ID_AUTH_APPL_ID+++`
+endif::add-copy-button-to-env-var[]
+--|long 
+|`0`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-application-id-acct-appl-id]]`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-application-id-acct-appl-id[diameter.network.realms.application-id.acct-appl-id]`
+
+`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-application-id-acct-appl-id[diameter.network.realms."realms".application-id.acct-appl-id]`
+
+`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-application-id-acct-appl-id[diameter."named-config".network.realms."realms".application-id.acct-appl-id]`
+
+`link:#config-group-io-go-diameter-runtime-config-realm_diameter-network-realms-application-id-acct-appl-id[diameter."named-config".network.realms.application-id.acct-appl-id]`
+
+
+[.description]
+--
+The Account Application ID for application definition.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_REALMS_APPLICATION_ID_ACCT_APPL_ID+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_NETWORK_REALMS_APPLICATION_ID_ACCT_APPL_ID+++`
+endif::add-copy-button-to-env-var[]
+--|long 
+|`0`
+
+|===

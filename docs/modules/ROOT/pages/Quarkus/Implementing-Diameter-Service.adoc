@@ -7,9 +7,9 @@ The `@DiameterServiceOption` is required and if missing a build time exception w
 The DiameterServiceOption is used to define the application type to setup.
 Only one Diameter service combination of application type and mode can be defined at any given time.
 For example only one CAA / Server service can be defined and a `DiameterConfigException` will be generated if additional one is defined.
-It is however allowed to define additional Diameter Services for other Application Type and mode combination on the same stack.
+It is however allowed to define additional Diameter Services for other Application Type and mode combination on the same Diameter stack, but not in the same service.
 
-TIP: For clarity, it is perfectly legal to to have two Diameter Services one for CAA / Client and another for CAA / Server, or any other combination of application type and mode as long as there is only one per combination per diameter stack.
+TIP: For clarity, it is perfectly legal to to have two Diameter Services, one for CAA / Client and another for CAA / Server, or any other combination of application type and mode as long as there is only one per service per diameter stack.
 
 The DiameterService interceptor will initialise all the configured applications and *start* the Diameter stack (if not already started).
 In addition to registering the session factories it will also register a Network Listener for each
@@ -88,75 +88,47 @@ One is the default config and the other is named config called 'test1'.
 [source,properties]
 ----
 diameter.local-peer.uri=aaa://ocsclient:1812
-diameter.local-peer.ip-addresses[0]=0.0.0.0
-diameter.local-peer.ip-addresses[1]=127.0.0.1
+diameter.local-peer.ip-addresses=0.0.0.0, 127.0.0.1
 diameter.local-peer.realm=server.test.com
 diameter.local-peer.product-name=Diameter Test Client
 diameter.local-peer.firmware-revision=1
-diameter.local-peer.applications[0].auth-appl-id=4
-diameter.local-peer.applications[1].auth-appl-id=4
-diameter.local-peer.applications[1].vendor-id=10415
+diameter.local-peer.applications.0.auth-appl-id=4
+diameter.local-peer.applications.1.auth-appl-id=4
+diameter.local-peer.applications.1.vendor-id=10415
 diameter.parameter.use-virtual-threads=true
-diameter.network.peers[0].peer-uri=aaa://ocs.test.org:3868
-diameter.network.peers[0].ip=127.0.0.1
-diameter.network.peers[0].attempt-connect=true
-diameter.network.peers[0].rating=0
-diameter.network.realms[0].realm-name=server.test.com
-diameter.network.realms[0].peers=192.168.241.1,localhost
-diameter.network.realms[0].local-action=local
-diameter.network.realms[0].dynamic=false
-diameter.network.realms[0].exp-time=1
-diameter.network.realms[0].application-id.auth-appl-id=4
+diameter.network.peers.peer-uri=aaa://ocs.test.org:3868
+diameter.network.peers.ip=127.0.0.1
+diameter.network.peers.attempt-connect=true
+diameter.network.peers.rating=0
+diameter.network.realms.realm-name=server.test.com
+diameter.network.realms.peers=192.168.241.1,localhost
+diameter.network.realms.local-action=local
+diameter.network.realms.dynamic=false
+diameter.network.realms.exp-time=1
+diameter.network.realms.application-id.auth-appl-id=4
 
 diameter.test1.local-peer.uri=aaa://ocsclient:1813
-diameter.test1.local-peer.ip-addresses[0]=0.0.0.0
-diameter.test1.local-peer.ip-addresses[1]=127.0.0.1
+diameter.test1.local-peer.ip-addresses[0]=0.0.0.0, 127.0.0.1
 diameter.test1.local-peer.realm=server.test.com
 diameter.test1.local-peer.product-name=Diameter Test Client
 diameter.test1.local-peer.firmware-revision=1
-diameter.test1.local-peer.applications[0].auth-appl-id=4
-diameter.test1.local-peer.applications[1].auth-appl-id=4
-diameter.test1.local-peer.applications[1].vendor-id=10415
+diameter.test1.local-peer.applications.0.auth-appl-id=4
+diameter.test1.local-peer.applications.1.auth-appl-id=4
+diameter.test1.local-peer.applications.1.vendor-id=10415
 diameter.test1.parameter.use-virtual-threads=true
-diameter.test1.network.peers[0].peer-uri=aaa://ocs.test.org:3868
-diameter.test1.network.peers[0].ip=127.0.0.1
-diameter.test1.network.peers[0].attempt-connect=true
-diameter.test1.network.peers[0].rating=0
-diameter.test1.network.realms[0].realm-name=server.test.com
-diameter.test1.network.realms[0].peers=192.168.241.1,localhost
-diameter.test1.network.realms[0].local-action=local
-diameter.test1.network.realms[0].dynamic=false
-diameter.test1.network.realms[0].exp-time=1
-diameter.test1.network.realms[0].application-id.auth-appl-id=4
+diameter.test1.network.peers.peer-uri=aaa://ocs.test.org:3868
+diameter.test1.network.peers.ip=127.0.0.1
+diameter.test1.network.peers.attempt-connect=true
+diameter.test1.network.peers.rating=0
+diameter.test1.network.realms.realm-name=server.test.com
+diameter.test1.network.realms.peers=192.168.241.1,localhost
+diameter.test1.network.realms.local-action=local
+diameter.test1.network.realms.dynamic=false
+diameter.test1.network.realms.exp-time=1
+diameter.test1.network.realms.application-id.auth-appl-id=4
 ----
 
 TIP:For more information about the extension configuration please refer to the <<configuration-reference,Configuration Reference>>.
 
 [[configuration-reference]]
-== Configuration Reference
-
-=== Diameter Detail Config
-
-=== Local Peers
-
-include::../includes/config-group-io-go-diameter-runtime-config-local-peer.adoc[leveloffset=+1]
-
-=== Network
-
-include::../includes/config-group-io-go-diameter-runtime-config-network.adoc[leveloffset=+1]
-
-=== Peers
-
-include::../includes/config-group-io-go-diameter-runtime-config-peer.adoc[leveloffset=+1]
-
-=== Realms
-
-include::../includes/config-group-io-go-diameter-runtime-config-realm.adoc[leveloffset=+1]
-
-=== Parameters
-
-include::../includes/config-group-io-go-diameter-runtime-config-parameter.adoc[leveloffset=+1]
-
-=== Extensions
-
-include::../includes/config-group-io-go-diameter-runtime-config-extension.adoc[leveloffset=+1]
+include::../includes/diameter.adoc[leveloffset=+1]

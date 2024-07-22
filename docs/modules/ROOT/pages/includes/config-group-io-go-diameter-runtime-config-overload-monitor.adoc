@@ -1,0 +1,126 @@
+
+:summaryTableId: config-group-io-go-diameter-runtime-config-overload-monitor
+[.configuration-legend]
+icon:lock[title=Fixed at build time] Configuration property fixed at build time - All other configuration properties are overridable at runtime
+[.configuration-reference, cols="80,.^10,.^10"]
+|===
+
+h|[[config-group-io-go-diameter-runtime-config-overload-monitor_configuration]]link:#config-group-io-go-diameter-runtime-config-overload-monitor_configuration[Configuration property]
+
+h|Type
+h|Default
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-index]]`link:#config-group-io-go-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-index[diameter.local-peer.overload-monitors."overload-monitors".index]`
+
+`link:#config-group-io-go-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-index[diameter."named-config".local-peer.overload-monitors."overload-monitors".index]`
+
+
+[.description]
+--
+Defines the index of this overload monitor, so priorities/orders can be specified.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__INDEX+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__INDEX+++`
+endif::add-copy-button-to-env-var[]
+--|int 
+|`0`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-low-threshold]]`link:#config-group-io-go-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-low-threshold[diameter.local-peer.overload-monitors."overload-monitors".low-threshold]`
+
+`link:#config-group-io-go-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-low-threshold[diameter."named-config".local-peer.overload-monitors."overload-monitors".low-threshold]`
+
+
+[.description]
+--
+The low threshold for activation of the overload monitor.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__LOW_THRESHOLD+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__LOW_THRESHOLD+++`
+endif::add-copy-button-to-env-var[]
+--|double 
+|`0d`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-high-threshold]]`link:#config-group-io-go-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-high-threshold[diameter.local-peer.overload-monitors."overload-monitors".high-threshold]`
+
+`link:#config-group-io-go-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-high-threshold[diameter."named-config".local-peer.overload-monitors."overload-monitors".high-threshold]`
+
+
+[.description]
+--
+The high threshold for activation of the overload monitor.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__HIGH_THRESHOLD+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__HIGH_THRESHOLD+++`
+endif::add-copy-button-to-env-var[]
+--|double 
+|`0d`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-application-id-vendor-id]]`link:#config-group-io-go-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-application-id-vendor-id[diameter.local-peer.overload-monitors."overload-monitors".application-id.vendor-id]`
+
+`link:#config-group-io-go-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-application-id-vendor-id[diameter."named-config".local-peer.overload-monitors."overload-monitors".application-id.vendor-id]`
+
+
+[.description]
+--
+Specifies the vendor ID for application definition.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__APPLICATION_ID_VENDOR_ID+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__APPLICATION_ID_VENDOR_ID+++`
+endif::add-copy-button-to-env-var[]
+--|long 
+|`0`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-application-id-auth-appl-id]]`link:#config-group-io-go-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-application-id-auth-appl-id[diameter.local-peer.overload-monitors."overload-monitors".application-id.auth-appl-id]`
+
+`link:#config-group-io-go-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-application-id-auth-appl-id[diameter."named-config".local-peer.overload-monitors."overload-monitors".application-id.auth-appl-id]`
+
+
+[.description]
+--
+The Authentication Application ID for application definition.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__APPLICATION_ID_AUTH_APPL_ID+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__APPLICATION_ID_AUTH_APPL_ID+++`
+endif::add-copy-button-to-env-var[]
+--|long 
+|`0`
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-go-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-application-id-acct-appl-id]]`link:#config-group-io-go-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-application-id-acct-appl-id[diameter.local-peer.overload-monitors."overload-monitors".application-id.acct-appl-id]`
+
+`link:#config-group-io-go-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-application-id-acct-appl-id[diameter."named-config".local-peer.overload-monitors."overload-monitors".application-id.acct-appl-id]`
+
+
+[.description]
+--
+The Account Application ID for application definition.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__APPLICATION_ID_ACCT_APPL_ID+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__APPLICATION_ID_ACCT_APPL_ID+++`
+endif::add-copy-button-to-env-var[]
+--|long 
+|`0`
+
+|===
