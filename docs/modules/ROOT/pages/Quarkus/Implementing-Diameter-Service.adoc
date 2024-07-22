@@ -19,12 +19,8 @@ In addition to registering the session factories it will also register a Network
 [source,java]
 ----
 @DiameterService <1>
-@DiameterServiceOption( <2>
-		mode = ApplicationMode.CLIENT, <3>
-		type = DiameterApplication.CCA, <4>
-		config = "client1" <5>
-)
-public class MyDiameterService implements ClientCCASessionListener <6>
+@DiameterServiceOption(config = "client1") <2>
+public class MyDiameterService implements ClientCCASessionListener <3>
 {
 	@Override
 	public void doCreditControlAnswer(ClientCCASession session, JCreditControlRequest request, JCreditControlAnswer answer) throws InternalException
@@ -35,14 +31,9 @@ public class MyDiameterService implements ClientCCASessionListener <6>
 ----
 
 <1> Marking the class as a diameter service
-<2> The option to apply to the diameter service
-<3> The mode of the service (CLIENT or SERVER)
-<4> The application session type (see list below)
-<5> The configuration profile the use
-<6> Implements the the SessionListener associated with the `Session Type`.
+<2> The configuration option to apply to the diameter service
+<3> Implements the the SessionListener associated with the `Session Type`.
 (See List below)
-
-NOTE: If the SessionListener associated with the Session Type is not implemented an exception will be generated at startup.
 
 == Diameter Server mode
 
@@ -86,6 +77,8 @@ TIP: The stack will only be active if there is a defined DiameterService for the
 | S6a |  ServerS6aSessionListener | ClientS6aSessionListener
 | Gq | ServerAuthSessionListener | ClientAuthSessionListener
 |===
+
+== Using TLS
 
 == Example Configuration
 
@@ -142,4 +135,28 @@ TIP:For more information about the extension configuration please refer to the <
 [[configuration-reference]]
 == Configuration Reference
 
-include::../includes/diameter.adoc[leveloffset=+1]
+=== Diameter Detail Config
+
+=== Local Peers
+
+include::../includes/config-group-io-go-diameter-runtime-config-local-peer.adoc[leveloffset=+1]
+
+=== Network
+
+include::../includes/config-group-io-go-diameter-runtime-config-network.adoc[leveloffset=+1]
+
+=== Peers
+
+include::../includes/config-group-io-go-diameter-runtime-config-peer.adoc[leveloffset=+1]
+
+=== Realms
+
+include::../includes/config-group-io-go-diameter-runtime-config-realm.adoc[leveloffset=+1]
+
+=== Parameters
+
+include::../includes/config-group-io-go-diameter-runtime-config-parameter.adoc[leveloffset=+1]
+
+=== Extensions
+
+include::../includes/config-group-io-go-diameter-runtime-config-extension.adoc[leveloffset=+1]

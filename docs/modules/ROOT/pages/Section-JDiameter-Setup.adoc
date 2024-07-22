@@ -16,14 +16,7 @@ Ensure that the following requirements have been met before continuing with the 
 === Software Prerequisites
 
 {provider} Diameter Stack has the following software dependencies:
-
-* Pico Container
 * slf4j
-
-Clustered setup also requires following:
-
-* JDiameter HA
-* JBoss Cache
 
 [[_jdiameter_source_code]]
 == Source Code

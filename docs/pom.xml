@@ -22,7 +22,6 @@
         <dependency>
             <groupId>io.go.diameter</groupId>
             <artifactId>diameter-quarkus</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -41,10 +40,11 @@
 
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
                 <executions>
                     <execution>
                         <id>copy-resources</id>
-                        <phase>generate-resources</phase>
+                        <phase>compile</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
@@ -52,7 +52,7 @@
                             <outputDirectory>${project.basedir}/modules/ROOT/pages/includes/</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${project.basedir}/../target/asciidoc/generated/config/</directory>
+                                    <directory>${project.basedir}/../target/asciidoc/generated/config</directory>
                                     <include>*.adoc</include>
                                 </resource>
                             </resources>
