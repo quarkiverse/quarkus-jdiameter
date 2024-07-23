@@ -1,6 +1,6 @@
 [[_introduction]]
 include::./includes/attributes.adoc[]
-= Introduction to {provider} Diameter
+= Introduction to {product-name} Diameter
 
 Diameter is a computer networking protocol for Authentication, Authorization and Accounting (), as defined in RFC3588.
 It is a successor to RADIUS, and has been designed to overcome certain RADIUS limitations:
@@ -33,7 +33,7 @@ include::Section-Introduction-Message_Format.adoc[]
 [[_introduction_contents]]
 == Contents
 
-{provider} Diameter core is built on top of three basic components:
+{product-name} core is built on top of three basic components:
 
 Stack::
 Extensible Diameter Stack.

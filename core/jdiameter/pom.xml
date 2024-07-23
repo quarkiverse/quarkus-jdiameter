@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>io.go.diameter</groupId>
+        <groupId>io.quarkiverse.diameter</groupId>
         <artifactId>diameter-core-parent</artifactId>
         <version>2.0.0</version>
         <relativePath>../pom.xml</relativePath>
@@ -15,7 +15,7 @@
 
     <packaging>pom</packaging>
 
-    <name>Go :: Diameter Stack :: ${project.artifactId}</name>
+    <name>Quarkus :: Diameter Stack :: ${project.artifactId}</name>
 
     <modules>
         <module>api</module>
