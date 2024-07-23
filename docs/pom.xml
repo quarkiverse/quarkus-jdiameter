@@ -27,6 +27,24 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>it.ozimov</groupId>
+                <artifactId>yaml-properties-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>${project.basedir}/../.github/project.yml</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>3.3.2</version>
                 <configuration>
@@ -81,18 +99,11 @@
 
                             <options>
                                 <option>log-failure-level error</option>
-                                <option>attribute[] generated-dir=${generated-dir}</option>
                             </options>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-
-            <!--            <plugin>-->
-            <!--                <groupId>org.asciidoctor</groupId>-->
-            <!--                <artifactId>asciidoctor-maven-plugin</artifactId>-->
-            <!--            </plugin>-->
-
         </plugins>
     </build>
 
