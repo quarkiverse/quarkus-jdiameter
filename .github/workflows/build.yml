@@ -58,11 +58,12 @@ jobs:
           cat /home/runner/.m2/settings.xml
           
       - name: Configure GPG Key
-        run: |
-          echo -n "$GPG_PRIVATE_KEY"
-          echo -n "$GPG_PRIVATE_KEY" | base64 --decode | gpg --import
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+        run: |
+          echo -n "${GPG_PRIVATE_KEY}"
+          echo -n "${GPG_PRIVATE_KEY}" | base64 --decode | gpg --import
+        
 
       - name: Build with Maven
         run: mvn -B clean install -Dno-format
