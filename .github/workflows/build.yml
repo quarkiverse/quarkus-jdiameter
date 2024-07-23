@@ -61,8 +61,8 @@ jobs:
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
         run: |
-          echo -n "${GPG_PRIVATE_KEY}"
-          echo -n "${GPG_PRIVATE_KEY}" | base64 --decode | gpg --import
+          echo -n "$GPG_PRIVATE_KEY"
+          echo -n "$GPG_PRIVATE_KEY" | base64 --decode | gpg --import
         
 
       - name: Build with Maven
