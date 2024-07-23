@@ -34,13 +34,12 @@ import org.jdiameter.api.app.AppAnswerEvent;
  * (RIR) command.
  *
  */
-@SuppressWarnings("all")//3rd party lib
-public interface LCSRoutingInfoAnswer extends AppAnswerEvent
-{
+@SuppressWarnings("all") //3rd party lib
+public interface LCSRoutingInfoAnswer extends AppAnswerEvent {
 
-	String _SHORT_NAME = "RIA";
-	String _LONG_NAME = "LCS-Routing-Info-Answer";
+    String _SHORT_NAME = "RIA";
+    String _LONG_NAME = "LCS-Routing-Info-Answer";
 
-	int code = 8388622;
+    int code = 8388622;
 
 }

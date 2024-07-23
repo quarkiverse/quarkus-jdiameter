@@ -33,22 +33,21 @@ import org.jdiameter.api.slh.events.LCSRoutingInfoAnswer;
  * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
  */
 
-@SuppressWarnings("all")//3rd party lib
-public interface ServerSLhSession extends AppSession, StateMachine
-{
+@SuppressWarnings("all") //3rd party lib
+public interface ServerSLhSession extends AppSession, StateMachine {
 
-	/**
-	 * Send LCS-Routing-Info-Answer to client
-	 *
-	 * @param answer LCS-Routing-Info-Answer event instance
-	 *
-	 * @throws InternalException             The InternalException signals that internal error is occurred.
-	 * @throws IllegalDiameterStateException The IllegalStateException signals that session has incorrect state
-	 *                                       (invalid).
-	 * @throws RouteException                The NoRouteException signals that no route exist for a given realm.
-	 * @throws OverloadException             The OverloadException signals that destination host is overloaded.
-	 */
-	void sendLCSRoutingInfoAnswer(LCSRoutingInfoAnswer answer)
-	throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
+    /**
+     * Send LCS-Routing-Info-Answer to client
+     *
+     * @param answer LCS-Routing-Info-Answer event instance
+     *
+     * @throws InternalException The InternalException signals that internal error is occurred.
+     * @throws IllegalDiameterStateException The IllegalStateException signals that session has incorrect state
+     *         (invalid).
+     * @throws RouteException The NoRouteException signals that no route exist for a given realm.
+     * @throws OverloadException The OverloadException signals that destination host is overloaded.
+     */
+    void sendLCSRoutingInfoAnswer(LCSRoutingInfoAnswer answer)
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException;
 
 }

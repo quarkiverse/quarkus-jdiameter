@@ -27,29 +27,28 @@ import org.jdiameter.api.app.AppRequestEvent;
  * sent by MME or SGSN to EIR to check the Mobile Equipment's identity status (e.g. to check that it has not been
  * stolen, or, to verify that it does not have faults).
  */
-@SuppressWarnings("all")//3rd party lib
-public interface JMEIdentityCheckRequest extends AppRequestEvent
-{
+@SuppressWarnings("all") //3rd party lib
+public interface JMEIdentityCheckRequest extends AppRequestEvent {
 
-	String _SHORT_NAME = "ECR";
-	String _LONG_NAME = "ME-Identity-Check-Request";
-	int code = 324;
+    String _SHORT_NAME = "ECR";
+    String _LONG_NAME = "ME-Identity-Check-Request";
+    int code = 324;
 
-	Avp getTerminalInformationAvp();
+    Avp getTerminalInformationAvp();
 
-	boolean hasIMEI();
+    boolean hasIMEI();
 
-	String getIMEI();
+    String getIMEI();
 
-	boolean hasTgpp2MEID();
+    boolean hasTgpp2MEID();
 
-	byte[] getTgpp2MEID();
+    byte[] getTgpp2MEID();
 
-	boolean hasSoftwareVersion();
+    boolean hasSoftwareVersion();
 
-	String getSoftwareVersion();
+    String getSoftwareVersion();
 
-	boolean isUserNameAVPPresent();
+    boolean isUserNameAVPPresent();
 
-	String getUserName();
+    String getUserName();
 }
