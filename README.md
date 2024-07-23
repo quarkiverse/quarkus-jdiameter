@@ -2,11 +2,11 @@
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-) <!-- ALL-CONTRIBUTORS-BADGE:END -->
-![Build](https://img.shields.io/github/actions/workflow/status/eddiecarpenter/go-jdiameter/build.yml?branch=main)
+[![Build](https://github.com/eddiecarpenter/go-jdiameter/actions/workflows/build.yml/badge.svg)](https://github.com/eddiecarpenter/go-jdiameter/actions/workflows/build.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/io.quarkiverse.quarkus-zookeeper/quarkus-zookeeper.svg?label=Maven%20Central&style=flat-square)](https://search.maven.org/artifact/io.quarkiverse.quarkus-zookeeper/quarkus-zookeeper)
 ![License](https://img.shields.io/github/license/eddiecarpenter/go-jdiameter)
 
-This is a fork of the RestComm jDiameter Stack with a couple of enhancement done:
+This is a fork of the RestComm jDiameter Stack with a couple of enhancements done:
 
 - Update the minimum java compatibility to Java 21
 - Added support for Virtual Threading
@@ -15,7 +15,7 @@ This is a fork of the RestComm jDiameter Stack with a couple of enhancement done
 - Updated all the dependencies to latest versions
 - Removed support for SCTP protocol (Not used and deprecated for 5G)
 
-The project was only started in Jul 2024. The enhancement above is done but I still need to implement a CI/CD pipeline
+The project was only started in Jul 2024. The enhancement above is done, but I still need to implement a CI/CD pipeline
 for the project and push the artefacts to a public repository.
 
 **NOTE**: This is an unofficial community extension, and it is not directly related nor supported by RestComm Ltd.
@@ -25,7 +25,7 @@ for the project and push the artefacts to a public repository.
 There is now a new parameter called "UseVirtualThreads" that if set to true will use virtual threads for the diameter
 stack.
 
-In order to use virtual thread the minimum support Java version had to be change to Java 21.
+To use virtual threading, the minimum supported Java version had to be changed to Java 21.
 
 ## Quarkus Extension
 
