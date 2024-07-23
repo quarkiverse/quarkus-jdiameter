@@ -19,16 +19,7 @@
 
 package org.jdiameter.client.impl.router;
 
-import org.jdiameter.api.ApplicationId;
-import org.jdiameter.api.Configuration;
-import org.jdiameter.api.IllegalDiameterStateException;
-import org.jdiameter.api.InternalException;
-import org.jdiameter.api.LocalAction;
-import org.jdiameter.api.OverloadException;
-import org.jdiameter.api.PeerStateListener;
-import org.jdiameter.api.Realm;
-import org.jdiameter.api.Statistic;
-import org.jdiameter.api.URI;
+import org.jdiameter.api.*;
 import org.jdiameter.api.app.StateChangeListener;
 import org.jdiameter.client.api.IAnswer;
 import org.jdiameter.client.api.IMessage;
@@ -45,7 +36,7 @@ import org.jdiameter.common.api.statistic.IStatisticRecord;
 import org.jdiameter.common.impl.controller.AbstractPeer;
 import org.jdiameter.common.impl.statistic.StatisticManagerImpl;
 import org.jdiameter.server.api.agent.IAgentConfiguration;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -56,7 +47,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import static org.testng.AssertJUnit.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 /**
  * Various testcases for Router implementations

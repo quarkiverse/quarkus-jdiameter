@@ -41,20 +41,28 @@
             <version>${commons-pool.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.go.protocols.sctp</groupId>
-            <artifactId>sctp-impl</artifactId>
-            <version>${sctp.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.go.protocols.sctp</groupId>
-            <artifactId>sctp-api</artifactId>
-            <version>${sctp.version}</version>
-        </dependency>
-        <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
             <version>${netty.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+            <version>${junit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+            <version>${junit.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

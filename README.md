@@ -13,6 +13,7 @@ This is a fork of the RestComm jDiameter Stack with a couple of enhancement done
 - Removed use of Pico Containers
 - Added Quarkus Extension
 - Updated all the dependencies to latest versions
+- Removed support for SCTP protocol (Not used and deprecated for 5G)
 
 The project was only started in Jul 2024. The enhancement above is done but I still need to implement a CI/CD pipeline
 for the project and push the artefacts to a public repository.
