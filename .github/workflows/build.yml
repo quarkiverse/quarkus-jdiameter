@@ -52,14 +52,18 @@ jobs:
           distribution: temurin
           java-version: 21
           cache: 'maven'
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          gpg-passphrase:
 
-      - name: Configure GPG Key
+      - name: Display settings.xml
         run: |
-          echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --import
+          cat /home/runner/.m2/settings.xml
+          
+      - name: Configure GPG Key
         env:
-          GPG_SIGNING_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+        run: |
+          echo -n "$GPG_PRIVATE_KEY"
+          echo -n "$GPG_PRIVATE_KEY" | base64 --decode | gpg --import
+        
 
       - name: Build with Maven
         run: mvn -B clean install -Dno-format
