@@ -55,6 +55,10 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase:
 
+      - name: Display settings.xml
+        run: |
+          cat /home/runner/.m2/settings.xml
+          
       - name: Configure GPG Key
         run: |
           echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --import
