@@ -2,6 +2,7 @@
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-) <!-- ALL-CONTRIBUTORS-BADGE:END -->
+![Build](https://img.shields.io/github/actions/workflow/status/eddiecarpenter/go-jdiameter/build.yml?branch=main)
 [![Build](<https://img.shields.io/github/actions/workflow/status/quarkiverse/quarkus-zookeeper-client/build.yml?branch=main>)](https://github.com/quarkiverse/quarkus-zookeeper-client/actions?query=workflow%3ABuild)
 [![Maven Central](https://img.shields.io/maven-central/v/io.quarkiverse.quarkus-zookeeper/quarkus-zookeeper.svg?label=Maven%20Central&style=flat-square)](https://search.maven.org/artifact/io.quarkiverse.quarkus-zookeeper/quarkus-zookeeper)
 ![License](https://img.shields.io/github/license/eddiecarpenter/go-jdiameter)
