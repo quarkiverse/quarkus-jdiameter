@@ -61,6 +61,7 @@ jobs:
           
       - name: Configure GPG Key
         run: |
+          echo -n "$GPG_SIGNING_KEY"
           echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --import
         env:
           GPG_SIGNING_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
