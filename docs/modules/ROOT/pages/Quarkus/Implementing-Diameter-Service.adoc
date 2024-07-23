@@ -14,7 +14,7 @@ TIP: For clarity, it is perfectly legal to to have two Diameter Services, one fo
 The DiameterService interceptor will initialise all the configured applications and *start* the Diameter stack (if not already started).
 In addition to registering the session factories it will also register a Network Listener for each
 
-=== Example
+== Example
 
 [source,java]
 ----
@@ -55,9 +55,10 @@ TIP: The stack will only be active if there is a defined DiameterService for the
 
 @ApplicationScoped public class Demo
 {
-@DiameterConfig("test1")<1> Stack stack;
+    @DiameterConfig("test1") <1>
+    Stack stack;
 
-    @DiameterConfig("test2")<2>
+    @DiameterConfig("test2") <2>
     Configuration test2Config;
 
     //...
