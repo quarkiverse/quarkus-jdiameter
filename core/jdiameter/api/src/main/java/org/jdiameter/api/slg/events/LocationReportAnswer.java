@@ -37,13 +37,12 @@ import org.jdiameter.api.app.AppAnswerEvent;
  * Location Report operation answer).
  */
 
-@SuppressWarnings("all")//3rd party lib
-public interface LocationReportAnswer extends AppAnswerEvent
-{
+@SuppressWarnings("all") //3rd party lib
+public interface LocationReportAnswer extends AppAnswerEvent {
 
-	String _SHORT_NAME = "LRA";
-	String _LONG_NAME = "Location-Report-Answer";
+    String _SHORT_NAME = "LRA";
+    String _LONG_NAME = "Location-Report-Answer";
 
-	int code = 8388621;
+    int code = 8388621;
 
 }

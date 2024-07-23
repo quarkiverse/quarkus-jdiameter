@@ -29,16 +29,15 @@ package org.jdiameter.api;
  * @author erick.svenson@yahoo.com
  * @version 1.5.1 Final
  */
-@SuppressWarnings("all")//3rd party lib
-public interface NetworkReqListener
-{
+@SuppressWarnings("all") //3rd party lib
+public interface NetworkReqListener {
 
-	/**
-	 * This method use for process new network requests.
-	 *
-	 * @param request request message
-	 *
-	 * @return answer immediate answer message. Method may return null and an Answer will be sent later on
-	 */
-	Answer processRequest(Request request);
+    /**
+     * This method use for process new network requests.
+     *
+     * @param request request message
+     *
+     * @return answer immediate answer message. Method may return null and an Answer will be sent later on
+     */
+    Answer processRequest(Request request);
 }

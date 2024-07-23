@@ -37,13 +37,12 @@ import org.jdiameter.api.app.AppRequestEvent;
  * Report operation request)
  */
 
-@SuppressWarnings("all")//3rd party lib
-public interface LocationReportRequest extends AppRequestEvent
-{
+@SuppressWarnings("all") //3rd party lib
+public interface LocationReportRequest extends AppRequestEvent {
 
-	String _SHORT_NAME = "LRR";
-	String _LONG_NAME = "Location-Report-Request";
+    String _SHORT_NAME = "LRR";
+    String _LONG_NAME = "Location-Report-Request";
 
-	int code = 8388621;
+    int code = 8388621;
 
 }

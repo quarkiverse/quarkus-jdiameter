@@ -33,13 +33,12 @@ import org.jdiameter.api.app.AppRequestEvent;
  * retrieving routing information for LCS (Location Services) for a specified user from the HSS.
  *
  */
-@SuppressWarnings("all")//3rd party lib
-public interface LCSRoutingInfoRequest extends AppRequestEvent
-{
+@SuppressWarnings("all") //3rd party lib
+public interface LCSRoutingInfoRequest extends AppRequestEvent {
 
-	String _SHORT_NAME = "RIR";
-	String _LONG_NAME = "LCS-Routing-Info-Request";
+    String _SHORT_NAME = "RIR";
+    String _LONG_NAME = "LCS-Routing-Info-Request";
 
-	int code = 8388622;
+    int code = 8388622;
 
 }
