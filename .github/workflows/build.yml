@@ -51,6 +51,9 @@ jobs:
           distribution: temurin
           java-version: 21
           cache: 'maven'
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
 
       - name: Build with Maven
         run: mvn -B clean install -Dno-format
