@@ -2,12 +2,13 @@
 :examples-dir: ./../examples/
 :authors: Eddie Carpenter <eddie.carpenter@icloud.com>
 :copyright: Apache2
-:provider: Go
 :product-name: Quarkus Diameter
 :description: {product-name} documentation
 :favicon: favicon.svg
-:project-version: 3.0.0
+:project-version: 2.0.0
 :email: eddie.carpenter@icloud.com
 :jee-platform: JBoss Application Server
 :jee-version: 1.8
-:this-trunk-source-code-url: https://github.com/eddiecarpenter/go-jdiameter
+
+:this-issue-tracker-url: https://github.com/eddiecarpenter/quarkus-jdiameter/issues
+:this-trunk-source-code-url: https://github.com/eddiecarpenter/quarkus-jdiameter

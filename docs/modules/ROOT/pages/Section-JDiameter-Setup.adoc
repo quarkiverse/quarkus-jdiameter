@@ -1,6 +1,6 @@
 [[_jdiameter_setup]]
 include::./includes/attributes.adoc[]
-= {provider}  Diameter Stack Setup
+= {product-name} Stack Setup
 
 [[_jdiameter_preinstall_requirements_and_prerequisites]]
 == Pre-Install Requirements and Prerequisites
@@ -10,18 +10,18 @@ Ensure that the following requirements have been met before continuing with the 
 [[_jdiameter_hardware_requirements]]
 === Hardware Requirements
 
-{provider} Diameter Stack does not have any hardware requirements.
+{product-name} Stack does not have any hardware requirements.
 
 [[_jdiameter_software_prerequisites]]
 === Software Prerequisites
 
-{provider} Diameter Stack has the following software dependencies:
+{product-name} Stack has the following software dependencies:
 * slf4j
 
 [[_jdiameter_source_code]]
 == Source Code
 
-This section provides instructions on how to obtain and build the {provider} Diameter Stack from source code.
+This section provides instructions on how to obtain and build the {product-name} Stack from source code.
 
 [[_jdiameter_release_source_building]]
 === Release Source Code Building

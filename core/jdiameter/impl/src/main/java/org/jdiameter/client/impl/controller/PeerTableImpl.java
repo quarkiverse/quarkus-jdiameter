@@ -107,16 +107,12 @@
 	 {
 	 }
 
-	 public PeerTableImpl(Configuration globalConfig, MetaData metaData, IContainer stack, IRouter router, IFsmFactory fsmFactory,
-						  ITransportLayerFactory transportFactory, IStatisticManager statisticFactory,
-						  IConcurrentFactory concurrentFactory, IMessageParser parser)
+	 public PeerTableImpl(Configuration globalConfig, MetaData metaData, IContainer stack, IRouter router, IFsmFactory fsmFactory, ITransportLayerFactory transportFactory, IStatisticManager statisticFactory, IConcurrentFactory concurrentFactory, IMessageParser parser)
 	 {
 		 init(stack, router, globalConfig, metaData, fsmFactory, transportFactory, statisticFactory, concurrentFactory, parser);
 	 }
 
-	 protected void init(IContainer stack, IRouter router, Configuration globalConfig, MetaData metaData, IFsmFactory fsmFactory,
-						 ITransportLayerFactory transportFactory, IStatisticManager statisticFactory,
-						 IConcurrentFactory concurrentFactory, IMessageParser parser)
+	 protected void init(IContainer stack, IRouter router, Configuration globalConfig, MetaData metaData, IFsmFactory fsmFactory, ITransportLayerFactory transportFactory, IStatisticManager statisticFactory, IConcurrentFactory concurrentFactory, IMessageParser parser)
 	 {
 		 logger.debug("Initializing Peer Table.");
 		 this.router = router;
@@ -136,8 +132,7 @@
 					 String portRange = peerConfig.getStringValue(PeerLocalPortRange.ordinal(), null);
 					 try {
 						 // create predefined peer
-						 IPeer peer = (IPeer) createPeer(rating, uri, ip, portRange, metaData, globalConfig, peerConfig, fsmFactory, transportFactory, statisticFactory,
-														 concurrentFactory, parser);
+						 IPeer peer = (IPeer) createPeer(rating, uri, ip, portRange, metaData, globalConfig, peerConfig, fsmFactory, transportFactory, statisticFactory, concurrentFactory, parser);
 						 if (peer != null) {
 							 //NOTE: this depends on conf, in normal case realm is younger part of FQDN, but in some cases
 							 //conf peers may contain IPs only... sucks.
@@ -154,13 +149,9 @@
 		 }
 	 }
 
-	 protected Peer createPeer(int rating, String uri, String ip, String portRange, MetaData metaData, Configuration config, Configuration peerConfig,
-							   IFsmFactory fsmFactory, ITransportLayerFactory transportFactory, IStatisticManager statisticFactory, IConcurrentFactory concurrentFactory,
-							   IMessageParser parser)
-			 throws InternalException, TransportException, URISyntaxException, UnknownServiceException
+	 protected Peer createPeer(int rating, String uri, String ip, String portRange, MetaData metaData, Configuration config, Configuration peerConfig, IFsmFactory fsmFactory, ITransportLayerFactory transportFactory, IStatisticManager statisticFactory, IConcurrentFactory concurrentFactory, IMessageParser parser) throws InternalException, TransportException, URISyntaxException, UnknownServiceException
 	 {
-		 return new PeerImpl(this, rating, new URI(uri), ip, portRange, metaData.unwrap(IMetaData.class), config,
-							 peerConfig, fsmFactory, transportFactory, statisticFactory, concurrentFactory, parser, this.sessionDatasource);
+		 return new PeerImpl(this, rating, new URI(uri), ip, portRange, metaData.unwrap(IMetaData.class), config, peerConfig, fsmFactory, transportFactory, statisticFactory, concurrentFactory, parser, this.sessionDatasource);
 	 }
 
 	 @Override
@@ -181,9 +172,7 @@
 		 if (message.isRequest()) {
 			 if (logger.isDebugEnabled()) {
 				 logger.debug("Send request {} [destHost={}; destRealm={}]", new Object[]{
-						 message,
-						 message.getAvps().getAvp(Avp.DESTINATION_HOST) != null ? message.getAvps().getAvp(Avp.DESTINATION_HOST).getOctetString() : "",
-						 message.getAvps().getAvp(Avp.DESTINATION_REALM) != null ? message.getAvps().getAvp(Avp.DESTINATION_REALM).getOctetString() : ""
+						 message, message.getAvps().getAvp(Avp.DESTINATION_HOST) != null ? message.getAvps().getAvp(Avp.DESTINATION_HOST).getOctetString() : "", message.getAvps().getAvp(Avp.DESTINATION_REALM) != null ? message.getAvps().getAvp(Avp.DESTINATION_REALM).getOctetString() : ""
 				 });
 			 }
 
@@ -191,9 +180,7 @@
 			 if (router.updateRoute(message)) {
 				 if (logger.isDebugEnabled()) {
 					 logger.debug("Updated route on message {} [destHost={}; destRealm={}]", new Object[]{
-							 message,
-							 message.getAvps().getAvp(Avp.DESTINATION_HOST) != null ? message.getAvps().getAvp(Avp.DESTINATION_HOST).getOctetString() : "",
-							 message.getAvps().getAvp(Avp.DESTINATION_REALM) != null ? message.getAvps().getAvp(Avp.DESTINATION_REALM).getOctetString() : ""
+							 message, message.getAvps().getAvp(Avp.DESTINATION_HOST) != null ? message.getAvps().getAvp(Avp.DESTINATION_HOST).getOctetString() : "", message.getAvps().getAvp(Avp.DESTINATION_REALM) != null ? message.getAvps().getAvp(Avp.DESTINATION_REALM).getOctetString() : ""
 					 });
 				 }
 			 }
@@ -351,8 +338,7 @@
 					 long waitTime = 250;
 					 Thread.sleep(waitTime);
 					 remWaitTime -= waitTime;
-					 logger.debug("Waited {}ms. Time remaining to wait: {}ms. {} Thread still active.",
-								  new Object[]{waitTime, remWaitTime, ((ThreadPoolExecutor) concurrentFactory.getThreadPool()).getActiveCount()});
+					 logger.debug("Waited {}ms. Time remaining to wait: {}ms. {} Thread still active.", new Object[]{waitTime, remWaitTime, ((ThreadPoolExecutor) concurrentFactory.getThreadPool()).getActiveCount()});
 					 // it did not terminated, let's interrupt
 					 // FIXME: remove ASAP, this is very bad, it kills threads in middle of op,
 					 //        killing FSM of peer for instance, after that its not usable.
@@ -390,24 +376,7 @@
 	 public void destroy()
 	 {
 		 logger.debug("In destroy. Going to destroy concurrentFactory's thread group");
-		 if (concurrentFactory != null) {
-			 try {
-				 // concurrentFactory.getThreadGroup().interrupt();
-				 // concurrentFactory.getThreadGroup().stop(); //had to add it to make testStartStopStart pass....
-				 // concurrentFactory.getThreadGroup().destroy();
-			 }
-			 catch (IllegalThreadStateException itse) {
-				 if (logger.isDebugEnabled()) {
-					 logger.debug("Failure trying to destroy ThreadGroup probably due to existing active threads. Use stop() before destroy(). (nr_threads={})",
-								  ((ThreadPoolExecutor) concurrentFactory.getThreadPool()).getActiveCount());
-				 }
-			 }
-			 catch (ThreadDeath td) {
-				 // The class ThreadDeath is specifically a subclass of Error rather than Exception, even though it is a
-				 // "normal occurrence", because many applications catch all occurrences of Exception and then discard the
-				 // exception.  ....
-			 }
-		 }
+		
 		 if (router != null) {
 			 logger.debug("Calling destroy on router");
 			 router.destroy();

@@ -1,5 +1,5 @@
 include::./includes/attributes.adoc[]
-= User Guide to {provider} {product-name} {project-version}
+= User Guide to {product-name} {project-version}
 
 :leveloffset: +1
 include::Chapter-Introduction.adoc[]

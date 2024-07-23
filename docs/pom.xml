@@ -4,14 +4,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>io.go.diameter</groupId>
+        <groupId>io.quarkiverse.diameter</groupId>
         <artifactId>diameter-parent</artifactId>
         <version>2.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>diameter-docs</artifactId>
-    <name>Go :: Diameter Documentation :: ${project.artifactId}</name>
+    <name>Quarkus :: Diameter Documentation :: ${project.artifactId}</name>
 
     <properties>
         <antora.maven.plugin.version>1.0.0-alpha.4</antora.maven.plugin.version>
@@ -20,7 +20,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.go.diameter</groupId>
+            <groupId>io.quarkiverse.diameter</groupId>
             <artifactId>diameter-quarkus</artifactId>
         </dependency>
     </dependencies>

@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>io.go.diameter</groupId>
+        <groupId>io.quarkiverse.diameter</groupId>
         <artifactId>diameter-parent</artifactId>
         <version>2.0.0</version>
         <relativePath>../pom.xml</relativePath>
@@ -12,7 +12,7 @@
 
     <artifactId>diameter-quarkus-parent</artifactId>
     <packaging>pom</packaging>
-    <name>Go :: Diameter Quarkus Extension :: Parent</name>
+    <name>Quarkus :: Diameter Quarkus Extension :: Parent</name>
 
     <modules>
         <module>deployment</module>
@@ -40,12 +40,12 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>io.go.diameter</groupId>
+                <groupId>io.quarkiverse.diameter</groupId>
                 <artifactId>jdiameter-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.go.diameter</groupId>
+                <groupId>io.quarkiverse.diameter</groupId>
                 <artifactId>jdiameter-impl</artifactId>
                 <version>${project.version}</version>
             </dependency>

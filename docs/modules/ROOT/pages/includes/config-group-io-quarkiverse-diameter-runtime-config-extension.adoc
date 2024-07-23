@@ -1,0 +1,430 @@
+
+:summaryTableId: config-group-io-quarkiverse-diameter-runtime-config-extension
+[.configuration-legend]
+icon:lock[title=Fixed at build time] Configuration property fixed at build time - All other configuration properties are overridable at runtime
+[.configuration-reference, cols="80,.^10,.^10"]
+|===
+
+h|[[config-group-io-quarkiverse-diameter-runtime-config-extension_configuration]]link:#config-group-io-quarkiverse-diameter-runtime-config-extension_configuration[Configuration property]
+
+h|Type
+h|Default
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-metadata]]`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-metadata[diameter.extensions.metadata]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-metadata[diameter."named-config".extensions.metadata]`
+
+
+[.description]
+--
+The MetaData extension
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_EXTENSIONS_METADATA+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_EXTENSIONS_METADATA+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-message-parser]]`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-message-parser[diameter.extensions.message-parser]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-message-parser[diameter."named-config".extensions.message-parser]`
+
+
+[.description]
+--
+The MetaData extension
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_EXTENSIONS_MESSAGE_PARSER+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_EXTENSIONS_MESSAGE_PARSER+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-element-parser]]`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-element-parser[diameter.extensions.element-parser]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-element-parser[diameter."named-config".extensions.element-parser]`
+
+
+[.description]
+--
+The MetaData extension
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_EXTENSIONS_ELEMENT_PARSER+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_EXTENSIONS_ELEMENT_PARSER+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-router-engine]]`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-router-engine[diameter.extensions.router-engine]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-router-engine[diameter."named-config".extensions.router-engine]`
+
+
+[.description]
+--
+The MetaData extension
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_EXTENSIONS_ROUTER_ENGINE+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_EXTENSIONS_ROUTER_ENGINE+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-peer-controller]]`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-peer-controller[diameter.extensions.peer-controller]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-peer-controller[diameter."named-config".extensions.peer-controller]`
+
+
+[.description]
+--
+The MetaData extension
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_EXTENSIONS_PEER_CONTROLLER+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_EXTENSIONS_PEER_CONTROLLER+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-realm-controller]]`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-realm-controller[diameter.extensions.realm-controller]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-realm-controller[diameter."named-config".extensions.realm-controller]`
+
+
+[.description]
+--
+The Realm Controller extension
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_EXTENSIONS_REALM_CONTROLLER+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_EXTENSIONS_REALM_CONTROLLER+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-session-factory]]`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-session-factory[diameter.extensions.session-factory]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-session-factory[diameter."named-config".extensions.session-factory]`
+
+
+[.description]
+--
+The Session Factory extension
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_EXTENSIONS_SESSION_FACTORY+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_EXTENSIONS_SESSION_FACTORY+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-transport-factory]]`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-transport-factory[diameter.extensions.transport-factory]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-transport-factory[diameter."named-config".extensions.transport-factory]`
+
+
+[.description]
+--
+The Transport Factory extension
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_EXTENSIONS_TRANSPORT_FACTORY+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_EXTENSIONS_TRANSPORT_FACTORY+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-connection]]`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-connection[diameter.extensions.connection]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-connection[diameter."named-config".extensions.connection]`
+
+
+[.description]
+--
+The Connection extension
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_EXTENSIONS_CONNECTION+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_EXTENSIONS_CONNECTION+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-network-guard]]`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-network-guard[diameter.extensions.network-guard]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-network-guard[diameter."named-config".extensions.network-guard]`
+
+
+[.description]
+--
+The Network Guard extension
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_EXTENSIONS_NETWORK_GUARD+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_EXTENSIONS_NETWORK_GUARD+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-peer-fsm-factory]]`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-peer-fsm-factory[diameter.extensions.peer-fsm-factory]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-peer-fsm-factory[diameter."named-config".extensions.peer-fsm-factory]`
+
+
+[.description]
+--
+The Peer Fsm Factory extension
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_EXTENSIONS_PEER_FSM_FACTORY+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_EXTENSIONS_PEER_FSM_FACTORY+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-statistic-factory]]`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-statistic-factory[diameter.extensions.statistic-factory]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-statistic-factory[diameter."named-config".extensions.statistic-factory]`
+
+
+[.description]
+--
+The Statistic Factory extension
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_EXTENSIONS_STATISTIC_FACTORY+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_EXTENSIONS_STATISTIC_FACTORY+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-concurrent-factory]]`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-concurrent-factory[diameter.extensions.concurrent-factory]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-concurrent-factory[diameter."named-config".extensions.concurrent-factory]`
+
+
+[.description]
+--
+The Concurrent Factory extension
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_EXTENSIONS_CONCURRENT_FACTORY+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_EXTENSIONS_CONCURRENT_FACTORY+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-concurrent-entity-factory]]`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-concurrent-entity-factory[diameter.extensions.concurrent-entity-factory]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-concurrent-entity-factory[diameter."named-config".extensions.concurrent-entity-factory]`
+
+
+[.description]
+--
+The Concurrent Entity Factory extension
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_EXTENSIONS_CONCURRENT_ENTITY_FACTORY+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_EXTENSIONS_CONCURRENT_ENTITY_FACTORY+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-statistic-processor]]`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-statistic-processor[diameter.extensions.statistic-processor]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-statistic-processor[diameter."named-config".extensions.statistic-processor]`
+
+
+[.description]
+--
+The Statistic Processor extension
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_EXTENSIONS_STATISTIC_PROCESSOR+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_EXTENSIONS_STATISTIC_PROCESSOR+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-network]]`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-network[diameter.extensions.network]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-network[diameter."named-config".extensions.network]`
+
+
+[.description]
+--
+The Network extension
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_EXTENSIONS_NETWORK+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_EXTENSIONS_NETWORK+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-session-datasource]]`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-session-datasource[diameter.extensions.session-datasource]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-session-datasource[diameter."named-config".extensions.session-datasource]`
+
+
+[.description]
+--
+The Session Datasource extension
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_EXTENSIONS_SESSION_DATASOURCE+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_EXTENSIONS_SESSION_DATASOURCE+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-timer-facility]]`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-timer-facility[diameter.extensions.timer-facility]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-timer-facility[diameter."named-config".extensions.timer-facility]`
+
+
+[.description]
+--
+The Timer Facility extension
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_EXTENSIONS_TIMER_FACILITY+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_EXTENSIONS_TIMER_FACILITY+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-agent-redirect]]`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-agent-redirect[diameter.extensions.agent-redirect]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-agent-redirect[diameter."named-config".extensions.agent-redirect]`
+
+
+[.description]
+--
+The Agent Redirect extension
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_EXTENSIONS_AGENT_REDIRECT+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_EXTENSIONS_AGENT_REDIRECT+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-agent-configuration]]`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-agent-configuration[diameter.extensions.agent-configuration]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-agent-configuration[diameter."named-config".extensions.agent-configuration]`
+
+
+[.description]
+--
+The Agent Configuration extension
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_EXTENSIONS_AGENT_CONFIGURATION+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_EXTENSIONS_AGENT_CONFIGURATION+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-agent-proxy]]`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-agent-proxy[diameter.extensions.agent-proxy]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-agent-proxy[diameter."named-config".extensions.agent-proxy]`
+
+
+[.description]
+--
+The Agent Proxy extension
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_EXTENSIONS_AGENT_PROXY+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_EXTENSIONS_AGENT_PROXY+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-overload-manager]]`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-overload-manager[diameter.extensions.overload-manager]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-extension_diameter-extensions-overload-manager[diameter."named-config".extensions.overload-manager]`
+
+
+[.description]
+--
+The Overload Manager extension
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_EXTENSIONS_OVERLOAD_MANAGER+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_EXTENSIONS_OVERLOAD_MANAGER+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|
+
+|===

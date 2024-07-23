@@ -1,6 +1,6 @@
 [[_jdiameter]]
 include::./includes/attributes.adoc[]
-= {provider}  Diameter Stack
+= {product-name} Stack
 
 The Diameter Stack is the core component of the presented Diameter solution.
 It performs all necessary tasks to allow user interaction with the Diameter network.
