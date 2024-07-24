@@ -65,6 +65,11 @@ jobs:
           echo -n "$GPG_PRIVATE_KEY"
           echo -n "$GPG_PRIVATE_KEY" | base64 --decode | gpg --import
 
+      - name: Set up Maven 3.9.6
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: 3.9.6
+        run: mvn -v
 
       - name: Build with Maven
         run: mvn -B clean install -Dno-format
