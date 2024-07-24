@@ -69,6 +69,8 @@ jobs:
         uses: stCarolas/setup-maven@v5
         with:
           maven-version: 3.9.6
+
+      - name: Display Maven Version    
         run: mvn -v
 
       - name: Build with Maven
