@@ -31,20 +31,17 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
  */
-@SuppressWarnings("all")//3rd party lib
-public class RxAbortSessionAnswerImpl extends AppAnswerEventImpl implements RxAbortSessionAnswer
-{
+@SuppressWarnings("all") //3rd party lib
+public class RxAbortSessionAnswerImpl extends AppAnswerEventImpl implements RxAbortSessionAnswer {
 
-	private static final long serialVersionUID = 1L;
-	protected static final Logger logger = LoggerFactory.getLogger(RxAbortSessionAnswerImpl.class);
+    private static final long serialVersionUID = 1L;
+    protected static final Logger logger = LoggerFactory.getLogger(RxAbortSessionAnswerImpl.class);
 
-	public RxAbortSessionAnswerImpl(Request message, long resultCode)
-	{
-		super(message.createAnswer(resultCode));
-	}
+    public RxAbortSessionAnswerImpl(Request message, long resultCode) {
+        super(message.createAnswer(resultCode));
+    }
 
-	public RxAbortSessionAnswerImpl(Answer message)
-	{
-		super(message);
-	}
+    public RxAbortSessionAnswerImpl(Answer message) {
+        super(message);
+    }
 }

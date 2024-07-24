@@ -27,12 +27,10 @@ import org.jdiameter.common.impl.app.slg.SLgLocalSessionDataImpl;
  * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
  */
 
-@SuppressWarnings("all")//3rd party lib
-public class ClientSLgSessionDataLocalImpl extends SLgLocalSessionDataImpl implements IClientSLgSessionData
-{
+@SuppressWarnings("all") //3rd party lib
+public class ClientSLgSessionDataLocalImpl extends SLgLocalSessionDataImpl implements IClientSLgSessionData {
 
-	public ClientSLgSessionDataLocalImpl()
-	{
-	}
+    public ClientSLgSessionDataLocalImpl() {
+    }
 
 }

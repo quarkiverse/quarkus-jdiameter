@@ -32,17 +32,16 @@ import org.jdiameter.api.rx.ClientRxSession;
  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
  * @author <a href="mailto:richard.good@smilecoms.com"> Richard Good </a>
  */
-@SuppressWarnings("all")//3rd party lib
-public interface IClientRxSessionContext
-{
+@SuppressWarnings("all") //3rd party lib
+public interface IClientRxSessionContext {
 
-	void grantAccessOnDeliverFailure(ClientRxSession clientCCASessionImpl, Message request);
+    void grantAccessOnDeliverFailure(ClientRxSession clientCCASessionImpl, Message request);
 
-	void denyAccessOnDeliverFailure(ClientRxSession clientCCASessionImpl, Message request);
+    void denyAccessOnDeliverFailure(ClientRxSession clientCCASessionImpl, Message request);
 
-	void grantAccessOnFailureMessage(ClientRxSession clientCCASessionImpl);
+    void grantAccessOnFailureMessage(ClientRxSession clientCCASessionImpl);
 
-	void denyAccessOnFailureMessage(ClientRxSession clientCCASessionImpl);
+    void denyAccessOnFailureMessage(ClientRxSession clientCCASessionImpl);
 
-	void indicateServiceError(ClientRxSession clientCCASessionImpl);
+    void indicateServiceError(ClientRxSession clientCCASessionImpl);
 }

@@ -19,24 +19,23 @@
 
 package org.jdiameter.common.api.app.s13;
 
+import java.io.Serializable;
+
 import org.jdiameter.api.Request;
 import org.jdiameter.common.api.app.IAppSessionData;
 
-import java.io.Serializable;
+@SuppressWarnings("all") //3rd party lib
+public interface IS13SessionData extends IAppSessionData {
 
-@SuppressWarnings("all")//3rd party lib
-public interface IS13SessionData extends IAppSessionData
-{
+    void setS13SessionState(S13SessionState state);
 
-	void setS13SessionState(S13SessionState state);
+    S13SessionState getS13SessionState();
 
-	S13SessionState getS13SessionState();
+    Serializable getTsTimerId();
 
-	Serializable getTsTimerId();
+    void setTsTimerId(Serializable tid);
 
-	void setTsTimerId(Serializable tid);
+    void setBuffer(Request buffer);
 
-	void setBuffer(Request buffer);
-
-	Request getBuffer();
+    Request getBuffer();
 }

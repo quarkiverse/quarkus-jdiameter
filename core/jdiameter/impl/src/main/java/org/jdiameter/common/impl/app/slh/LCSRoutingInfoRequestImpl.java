@@ -30,18 +30,16 @@ import org.slf4j.LoggerFactory;
 /**
  * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
  */
-@SuppressWarnings("all")//3rd party lib
-public class LCSRoutingInfoRequestImpl extends AppRequestEventImpl implements LCSRoutingInfoRequest
-{
+@SuppressWarnings("all") //3rd party lib
+public class LCSRoutingInfoRequestImpl extends AppRequestEventImpl implements LCSRoutingInfoRequest {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	protected static final Logger logger = LoggerFactory.getLogger(LCSRoutingInfoRequestImpl.class);
+    protected static final Logger logger = LoggerFactory.getLogger(LCSRoutingInfoRequestImpl.class);
 
-	public LCSRoutingInfoRequestImpl(Message message)
-	{
-		super(message);
-		message.setRequest(true);
-	}
+    public LCSRoutingInfoRequestImpl(Message message) {
+        super(message);
+        message.setRequest(true);
+    }
 
 }

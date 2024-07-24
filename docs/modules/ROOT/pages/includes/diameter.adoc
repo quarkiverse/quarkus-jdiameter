@@ -1196,8 +1196,8 @@ endif::add-copy-button-to-env-var[]
 |`0`
 
 
-h|[[diameter_diameter-extension-the-extensions-elements-contains-elements-that-override-existing-components-in-the-diameter-stack]]link:#diameter_diameter-extension-the-extensions-elements-contains-elements-that-override-existing-components-in-the-diameter-stack[The extensions elements contains elements that override existing components in the Diameter stack]
-This configuration section is optional
+h|[[diameter_diameter-extensions-the-extensions-elements-contains-elements-that-override-existing-components-in-the-diameter-stack]]link:#diameter_diameter-extensions-the-extensions-elements-contains-elements-that-override-existing-components-in-the-diameter-stack[The extensions elements contains elements that override existing components in the Diameter stack]
+
 h|Type
 h|Default
 

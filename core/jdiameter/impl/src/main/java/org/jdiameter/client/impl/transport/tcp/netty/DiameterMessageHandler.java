@@ -19,51 +19,46 @@
 
 package org.jdiameter.client.impl.transport.tcp.netty;
 
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.util.ReferenceCountUtil;
 import org.jdiameter.api.AvpDataException;
 import org.jdiameter.client.api.IMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.ReferenceCountUtil;
+
 /**
  * @author <a href="mailto:jqayyum@gmail.com"> Jehanzeb Qayyum </a>
  */
-@SuppressWarnings("all")//3rd party lib
-public class DiameterMessageHandler extends ChannelInboundHandlerAdapter
-{
-	protected static final Logger logger = LoggerFactory.getLogger(DiameterMessageHandler.class);
+@SuppressWarnings("all") //3rd party lib
+public class DiameterMessageHandler extends ChannelInboundHandlerAdapter {
+    protected static final Logger logger = LoggerFactory.getLogger(DiameterMessageHandler.class);
 
-	protected final TCPClientConnection parentConnection;
+    protected final TCPClientConnection parentConnection;
 
-	public DiameterMessageHandler(TCPClientConnection parentConnection)
-	{
-		this.parentConnection = parentConnection;
-	}
+    public DiameterMessageHandler(TCPClientConnection parentConnection) {
+        this.parentConnection = parentConnection;
+    }
 
-	@Override
-	public void channelRead(ChannelHandlerContext ctx, Object msg)
-	{
-		logger.debug("Received message TCP Transport from [{}]", ctx.channel().remoteAddress());
-		IMessage m = (IMessage) msg;
-		try {
-			logger.debug("Passing message on to parent");
-			parentConnection.onMessageReceived(m);
-			logger.debug("Finished passing message on to parent");
-		}
-		catch (AvpDataException e) {
-			logger.debug("Garbage was received. Discarding.");
-			parentConnection.onAvpDataException(e);
-		}
-		finally {
-			ReferenceCountUtil.release(m);
-		}
-	}
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        logger.debug("Received message TCP Transport from [{}]", ctx.channel().remoteAddress());
+        IMessage m = (IMessage) msg;
+        try {
+            logger.debug("Passing message on to parent");
+            parentConnection.onMessageReceived(m);
+            logger.debug("Finished passing message on to parent");
+        } catch (AvpDataException e) {
+            logger.debug("Garbage was received. Discarding.");
+            parentConnection.onAvpDataException(e);
+        } finally {
+            ReferenceCountUtil.release(m);
+        }
+    }
 
-	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
-	{
-		logger.error(cause.getMessage(), cause);
-	}
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        logger.error(cause.getMessage(), cause);
+    }
 }

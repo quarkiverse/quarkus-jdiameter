@@ -32,8 +32,8 @@ public class DiameterConfiguration extends EmptyConfiguration
 		addLocalPeer(config.localPeer());
 		addParameters(config.parameter());
 		addNetwork(config.network());
-		if (config.extension().isPresent()) {
-			addExtensions(config.extension().get());
+		if (config.extensions() != null) {
+			addExtensions(config.extensions());
 		}
 		if (!securityItems.isEmpty()) {
 			addInternalExtension(InternalTransportFactory, TLSClientConnection.class.getCanonicalName());
@@ -326,7 +326,7 @@ public class DiameterConfiguration extends EmptyConfiguration
 		}
 
 		if (extension.sessionDatasource().isPresent()) {
-			addInternalExtension(InternalSessionDatasource, extension.agentRedirect().get());
+			addInternalExtension(InternalSessionDatasource, extension.sessionDatasource().get());
 		}
 
 		if (extension.timerFacility().isPresent()) {

@@ -19,7 +19,16 @@
 
 package org.jdiameter.client.impl.transport.tls.netty;
 
-import io.netty.channel.Channel;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import javax.net.ssl.SSLSocketFactory;
+
 import org.jdiameter.api.AvpDataException;
 import org.jdiameter.api.Configuration;
 import org.jdiameter.api.InternalException;
@@ -36,355 +45,305 @@ import org.jdiameter.server.impl.helpers.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.SSLSocketFactory;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import io.netty.channel.Channel;
 
 /**
  * @author <a href="mailto:jqayyum@gmail.com"> Jehanzeb Qayyum </a>
  */
-@SuppressWarnings("all")//3rd party lib
-public class TLSClientConnection implements IConnection
-{
+@SuppressWarnings("all") //3rd party lib
+public class TLSClientConnection implements IConnection {
 
-	private static Logger logger = LoggerFactory.getLogger(TLSClientConnection.class);
+    private static Logger logger = LoggerFactory.getLogger(TLSClientConnection.class);
 
-	private TLSTransportClient client;
-	private SSLSocketFactory factory;
-	private Configuration sslConfig;
+    private TLSTransportClient client;
+    private SSLSocketFactory factory;
+    private Configuration sslConfig;
 
-	private final long createdTime = System.currentTimeMillis();
+    private final long createdTime = System.currentTimeMillis();
 
-	private LinkedBlockingQueue<Event> buffer = new LinkedBlockingQueue<Event>(64);
+    private LinkedBlockingQueue<Event> buffer = new LinkedBlockingQueue<Event>(64);
 
-	private Lock lock = new ReentrantLock();
-	private ConcurrentLinkedQueue<IConnectionListener> listeners = new ConcurrentLinkedQueue<IConnectionListener>();
+    private Lock lock = new ReentrantLock();
+    private ConcurrentLinkedQueue<IConnectionListener> listeners = new ConcurrentLinkedQueue<IConnectionListener>();
 
-	// Cached value for connection key
-	private String cachedKey = null;
+    // Cached value for connection key
+    private String cachedKey = null;
 
-	public TLSClientConnection(Configuration config, IConcurrentFactory concurrentFactory, InetAddress remoteAddress,
-							   int remotePort, InetAddress localAddress, int localPort, IMessageParser parser, String ref) throws Exception
-	{
-		String secRef = ref;
-		if (secRef == null) {
-			if (!config.isAttributeExist(Parameters.SecurityRef.ordinal())) {
-				throw new IllegalArgumentException("No security_ref attribute present in local peer!");
-			}
-			else {
-				secRef = config.getStringValue(Parameters.SecurityRef.ordinal(), "");
-			}
-		}
-		this.sslConfig = TLSUtils.getSSLConfiguration(config, secRef);
-		this.client = new TLSTransportClient(this, concurrentFactory, parser, sslConfig,
-											 new InetSocketAddress(remoteAddress, remotePort), new InetSocketAddress(localAddress, localPort));
-		// this.client.start();
-	}
+    public TLSClientConnection(Configuration config, IConcurrentFactory concurrentFactory, InetAddress remoteAddress,
+            int remotePort, InetAddress localAddress, int localPort, IMessageParser parser, String ref) throws Exception {
+        String secRef = ref;
+        if (secRef == null) {
+            if (!config.isAttributeExist(Parameters.SecurityRef.ordinal())) {
+                throw new IllegalArgumentException("No security_ref attribute present in local peer!");
+            } else {
+                secRef = config.getStringValue(Parameters.SecurityRef.ordinal(), "");
+            }
+        }
+        this.sslConfig = TLSUtils.getSSLConfiguration(config, secRef);
+        this.client = new TLSTransportClient(this, concurrentFactory, parser, sslConfig,
+                new InetSocketAddress(remoteAddress, remotePort), new InetSocketAddress(localAddress, localPort));
+        // this.client.start();
+    }
 
-	public TLSClientConnection(Configuration config, IConcurrentFactory concurrentFactory, InetAddress remoteAddress,
-							   int remotePort, InetAddress localAddress, int localPort, IConnectionListener listener, IMessageParser parser, String ref)
-	throws InterruptedException
-	{
-		this.listeners.add(listener);
+    public TLSClientConnection(Configuration config, IConcurrentFactory concurrentFactory, InetAddress remoteAddress,
+            int remotePort, InetAddress localAddress, int localPort, IConnectionListener listener, IMessageParser parser,
+            String ref)
+            throws InterruptedException {
+        this.listeners.add(listener);
 
-		String secRef = ref;
-		if (secRef == null) {
-			if (!config.isAttributeExist(Parameters.SecurityRef.ordinal())) {
-				throw new IllegalArgumentException("No security_ref attribute present in local peer!");
-			}
-			else {
-				secRef = config.getStringValue(Parameters.SecurityRef.ordinal(), "");
-			}
-		}
-		this.sslConfig = TLSUtils.getSSLConfiguration(config, secRef);
+        String secRef = ref;
+        if (secRef == null) {
+            if (!config.isAttributeExist(Parameters.SecurityRef.ordinal())) {
+                throw new IllegalArgumentException("No security_ref attribute present in local peer!");
+            } else {
+                secRef = config.getStringValue(Parameters.SecurityRef.ordinal(), "");
+            }
+        }
+        this.sslConfig = TLSUtils.getSSLConfiguration(config, secRef);
 
-		this.client = new TLSTransportClient(this, concurrentFactory, parser, sslConfig,
-											 new InetSocketAddress(remoteAddress, remotePort), new InetSocketAddress(localAddress, localPort));
-		// this.client.start();
-	}
+        this.client = new TLSTransportClient(this, concurrentFactory, parser, sslConfig,
+                new InetSocketAddress(remoteAddress, remotePort), new InetSocketAddress(localAddress, localPort));
+        // this.client.start();
+    }
 
-	public TLSClientConnection(Configuration config, Configuration localPeerSSLConfig, IConcurrentFactory concurrentFactory,
-							   IMessageParser parser, Channel channel) throws Exception
-	{
+    public TLSClientConnection(Configuration config, Configuration localPeerSSLConfig, IConcurrentFactory concurrentFactory,
+            IMessageParser parser, Channel channel) throws Exception {
 
-		if (localPeerSSLConfig == null) {
-			throw new IllegalArgumentException("Can not create connection without TLS parameters");
-		}
+        if (localPeerSSLConfig == null) {
+            throw new IllegalArgumentException("Can not create connection without TLS parameters");
+        }
 
-		this.sslConfig = localPeerSSLConfig;
-		this.client = new TLSTransportClient(this, concurrentFactory, parser, sslConfig, channel);
+        this.sslConfig = localPeerSSLConfig;
+        this.client = new TLSTransportClient(this, concurrentFactory, parser, sslConfig, channel);
 
-		// this.client.start();
-	}
+        // this.client.start();
+    }
 
-	protected TLSTransportClient getClient()
-	{
-		return client;
-	}
+    protected TLSTransportClient getClient() {
+        return client;
+    }
 
-	public Configuration getSSLConfig()
-	{
-		return sslConfig;
-	}
+    public Configuration getSSLConfig() {
+        return sslConfig;
+    }
 
-	public SSLSocketFactory getSSLFactory()
-	{
-		return factory;
-	}
+    public SSLSocketFactory getSSLFactory() {
+        return factory;
+    }
 
-	public long getCreatedTime()
-	{
-		return createdTime;
-	}
+    public long getCreatedTime() {
+        return createdTime;
+    }
 
-	public InetAddress getRemoteAddress()
-	{
-		return getClient().getDestAddress().getAddress();
-	}
+    public InetAddress getRemoteAddress() {
+        return getClient().getDestAddress().getAddress();
+    }
 
-	public int getRemotePort()
-	{
-		return getClient().getDestAddress().getPort();
-	}
+    public int getRemotePort() {
+        return getClient().getDestAddress().getPort();
+    }
 
-	public void addConnectionListener(IConnectionListener listener)
-	{
-		lock.lock();
-		try {
-			listeners.add(listener);
-			if (buffer.size() != 0) {
-				for (Event e : buffer) {
-					try {
-						onEvent(e);
-					}
-					catch (AvpDataException e1) {
-						// ignore
-					}
-				}
-				buffer.clear();
-			}
-		}
-		finally {
-			lock.unlock();
-		}
-	}
+    public void addConnectionListener(IConnectionListener listener) {
+        lock.lock();
+        try {
+            listeners.add(listener);
+            if (buffer.size() != 0) {
+                for (Event e : buffer) {
+                    try {
+                        onEvent(e);
+                    } catch (AvpDataException e1) {
+                        // ignore
+                    }
+                }
+                buffer.clear();
+            }
+        } finally {
+            lock.unlock();
+        }
+    }
 
-	public void remAllConnectionListener()
-	{
-		lock.lock();
-		try {
-			listeners.clear();
-		}
-		finally {
-			lock.unlock();
-		}
-	}
+    public void remAllConnectionListener() {
+        lock.lock();
+        try {
+            listeners.clear();
+        } finally {
+            lock.unlock();
+        }
+    }
 
-	public void remConnectionListener(IConnectionListener listener)
-	{
-		lock.lock();
-		try {
-			listeners.remove(listener);
-		}
-		finally {
-			lock.unlock();
-		}
-	}
+    public void remConnectionListener(IConnectionListener listener) {
+        lock.lock();
+        try {
+            listeners.remove(listener);
+        } finally {
+            lock.unlock();
+        }
+    }
 
-	public void release() throws IOException
-	{
-		try {
-			if (getClient() != null) {
-				getClient().release();
-			}
-		}
-		catch (Exception e) {
-			throw new IOException(e.getMessage());
-		}
-		finally {
-			buffer.clear();
-			remAllConnectionListener();
-		}
-	}
+    public void release() throws IOException {
+        try {
+            if (getClient() != null) {
+                getClient().release();
+            }
+        } catch (Exception e) {
+            throw new IOException(e.getMessage());
+        } finally {
+            buffer.clear();
+            remAllConnectionListener();
+        }
+    }
 
-	public boolean isWrapperFor(Class<?> aClass) throws InternalException
-	{
-		return false;
-	}
+    public boolean isWrapperFor(Class<?> aClass) throws InternalException {
+        return false;
+    }
 
-	public <T> T unwrap(Class<T> aClass) throws InternalException
-	{
-		return null;
-	}
+    public <T> T unwrap(Class<T> aClass) throws InternalException {
+        return null;
+    }
 
-	public boolean isConnected()
-	{
-		return getClient() != null && getClient().isConnected();
-	}
+    public boolean isConnected() {
+        return getClient() != null && getClient().isConnected();
+    }
 
-	public boolean isNetworkInitiated()
-	{
-		return false;
-	}
+    public boolean isNetworkInitiated() {
+        return false;
+    }
 
-	public String getKey()
-	{
-		if (this.cachedKey == null) {
-			this.cachedKey = new StringBuffer("aaas://").append(getRemoteAddress().getHostName()).append(":").append(getRemotePort())
-														.toString();
-		}
+    public String getKey() {
+        if (this.cachedKey == null) {
+            this.cachedKey = new StringBuffer("aaas://").append(getRemoteAddress().getHostName()).append(":")
+                    .append(getRemotePort())
+                    .toString();
+        }
 
-		return this.cachedKey;
-	}
+        return this.cachedKey;
+    }
 
-	public void connect() throws TransportException
-	{
-		try {
-			// getClient().initialize();
-			getClient().start();
-		}
-		catch (Exception e) {
-			throw new TransportException("Cannot init transport: ", TransportError.Internal, e);
-		}
-	}
+    public void connect() throws TransportException {
+        try {
+            // getClient().initialize();
+            getClient().start();
+        } catch (Exception e) {
+            throw new TransportException("Cannot init transport: ", TransportError.Internal, e);
+        }
+    }
 
-	public void disconnect() throws InternalError
-	{
-		try {
-			if (getClient() != null) {
-				getClient().stop();
-			}
-		}
-		catch (Exception e) {
-			throw new InternalError("Error while stopping transport: " + e.getMessage());
-		}
-	}
+    public void disconnect() throws InternalError {
+        try {
+            if (getClient() != null) {
+                getClient().stop();
+            }
+        } catch (Exception e) {
+            throw new InternalError("Error while stopping transport: " + e.getMessage());
+        }
+    }
 
-	public void sendMessage(IMessage message) throws TransportException, OverloadException
-	{
-		try {
-			if (getClient() != null) {
-				getClient().sendMessage(message);
-			}
-		}
-		catch (Exception e) {
-			throw new TransportException("Cannot send message: ", TransportError.FailedSendMessage, e);
-		}
-	}
+    public void sendMessage(IMessage message) throws TransportException, OverloadException {
+        try {
+            if (getClient() != null) {
+                getClient().sendMessage(message);
+            }
+        } catch (Exception e) {
+            throw new TransportException("Cannot send message: ", TransportError.FailedSendMessage, e);
+        }
+    }
 
-	protected void onDisconnect() throws AvpDataException
-	{
-		onEvent(new Event(EventType.DISCONNECTED));
-	}
+    protected void onDisconnect() throws AvpDataException {
+        onEvent(new Event(EventType.DISCONNECTED));
+    }
 
-	protected void onMessageReceived(IMessage message) throws AvpDataException
-	{
-		// if (logger.isDebugEnabled()) {
-		// logger.debug("Received message of size [{}]", message.array().length);
-		// }
-		onEvent(new Event(EventType.MESSAGE_RECEIVED, message));
-	}
+    protected void onMessageReceived(IMessage message) throws AvpDataException {
+        // if (logger.isDebugEnabled()) {
+        // logger.debug("Received message of size [{}]", message.array().length);
+        // }
+        onEvent(new Event(EventType.MESSAGE_RECEIVED, message));
+    }
 
-	protected void onAvpDataException(AvpDataException e)
-	{
-		try {
-			onEvent(new Event(EventType.DATA_EXCEPTION, e));
-		}
-		catch (AvpDataException e1) {
-			// ignore
-		}
-	}
+    protected void onAvpDataException(AvpDataException e) {
+        try {
+            onEvent(new Event(EventType.DATA_EXCEPTION, e));
+        } catch (AvpDataException e1) {
+            // ignore
+        }
+    }
 
-	protected void onConnected()
-	{
-		try {
-			onEvent(new Event(EventType.CONNECTED));
-		}
-		catch (AvpDataException e1) {
-			// ignore
-		}
-	}
+    protected void onConnected() {
+        try {
+            onEvent(new Event(EventType.CONNECTED));
+        } catch (AvpDataException e1) {
+            // ignore
+        }
+    }
 
-	protected void onEvent(Event event) throws AvpDataException
-	{
-		lock.lock();
-		try {
-			if (processBufferedMessages(event)) {
-				for (IConnectionListener listener : listeners) {
-					switch (event.type) {
-						case CONNECTED:
-							listener.connectionOpened(getKey());
-							break;
-						case DISCONNECTED:
-							listener.connectionClosed(getKey(), null);
-							break;
-						case MESSAGE_RECEIVED:
-							listener.messageReceived(getKey(), event.message);
-							break;
-						case DATA_EXCEPTION:
-							listener.internalError(getKey(), null,
-												   new TransportException("Avp Data Exception:", TransportError.ReceivedBrokenMessage, event.exception));
-							break;
-					}
-				}
-			}
-		}
-		finally {
-			lock.unlock();
-		}
-	}
+    protected void onEvent(Event event) throws AvpDataException {
+        lock.lock();
+        try {
+            if (processBufferedMessages(event)) {
+                for (IConnectionListener listener : listeners) {
+                    switch (event.type) {
+                        case CONNECTED:
+                            listener.connectionOpened(getKey());
+                            break;
+                        case DISCONNECTED:
+                            listener.connectionClosed(getKey(), null);
+                            break;
+                        case MESSAGE_RECEIVED:
+                            listener.messageReceived(getKey(), event.message);
+                            break;
+                        case DATA_EXCEPTION:
+                            listener.internalError(getKey(), null,
+                                    new TransportException("Avp Data Exception:", TransportError.ReceivedBrokenMessage,
+                                            event.exception));
+                            break;
+                    }
+                }
+            }
+        } finally {
+            lock.unlock();
+        }
+    }
 
-	protected boolean processBufferedMessages(Event event) throws AvpDataException
-	{
-		if (listeners.size() == 0) {
-			try {
-				buffer.add(event);
-			}
-			catch (IllegalStateException e) {
-				// FIXME : requires JDK6 : buffer.removeLast();
-				Event[] tempBuffer = buffer.toArray(new Event[buffer.size()]);
-				buffer.remove(tempBuffer[tempBuffer.length - 1]);
-				buffer.add(event);
-			}
-			return false;
-		}
-		else {
-			return true;
-		}
-	}
+    protected boolean processBufferedMessages(Event event) throws AvpDataException {
+        if (listeners.size() == 0) {
+            try {
+                buffer.add(event);
+            } catch (IllegalStateException e) {
+                // FIXME : requires JDK6 : buffer.removeLast();
+                Event[] tempBuffer = buffer.toArray(new Event[buffer.size()]);
+                buffer.remove(tempBuffer[tempBuffer.length - 1]);
+                buffer.add(event);
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
 
-	// --------------------- helper classes ----------------------
-	private enum EventType
-	{
-		CONNECTED, DISCONNECTED, MESSAGE_RECEIVED, DATA_EXCEPTION
-	}
+    // --------------------- helper classes ----------------------
+    private enum EventType {
+        CONNECTED,
+        DISCONNECTED,
+        MESSAGE_RECEIVED,
+        DATA_EXCEPTION
+    }
 
-	private static class Event
-	{
-		EventType type;
-		IMessage message;
-		Exception exception;
+    private static class Event {
+        EventType type;
+        IMessage message;
+        Exception exception;
 
-		Event(EventType type)
-		{
-			this.type = type;
-		}
+        Event(EventType type) {
+            this.type = type;
+        }
 
-		Event(EventType type, Exception exception)
-		{
-			this(type);
-			this.exception = exception;
-		}
+        Event(EventType type, Exception exception) {
+            this(type);
+            this.exception = exception;
+        }
 
-		Event(EventType type, IMessage message)
-		{
-			this(type);
-			this.message = message;
-		}
-	}
+        Event(EventType type, IMessage message) {
+            this(type);
+            this.message = message;
+        }
+    }
 }

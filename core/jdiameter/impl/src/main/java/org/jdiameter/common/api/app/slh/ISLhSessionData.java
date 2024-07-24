@@ -42,29 +42,28 @@
 
 package org.jdiameter.common.api.app.slh;
 
+import java.io.Serializable;
+
 import org.jdiameter.api.Request;
 import org.jdiameter.common.api.app.IAppSessionData;
-
-import java.io.Serializable;
 
 /**
  * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
  */
 
-@SuppressWarnings("all")//3rd party lib
-public interface ISLhSessionData extends IAppSessionData
-{
+@SuppressWarnings("all") //3rd party lib
+public interface ISLhSessionData extends IAppSessionData {
 
-	void setSLhSessionState(SLhSessionState state);
+    void setSLhSessionState(SLhSessionState state);
 
-	SLhSessionState getSLhSessionState();
+    SLhSessionState getSLhSessionState();
 
-	Serializable getTsTimerId();
+    Serializable getTsTimerId();
 
-	void setTsTimerId(Serializable tid);
+    void setTsTimerId(Serializable tid);
 
-	void setBuffer(Request buffer);
+    void setBuffer(Request buffer);
 
-	Request getBuffer();
+    Request getBuffer();
 
 }

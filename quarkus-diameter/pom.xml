@@ -10,9 +10,9 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>diameter-quarkus-parent</artifactId>
+    <artifactId>quarkus-diameter-parent</artifactId>
     <packaging>pom</packaging>
-    <name>Quarkus :: Diameter Quarkus Extension :: Parent</name>
+    <name>Quarkus :: Quarkus Diameter Extension :: Parent</name>
 
     <modules>
         <module>deployment</module>
@@ -25,7 +25,7 @@
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <quarkus.version>3.12.0</quarkus.version>
+        <quarkus.version>3.12.3</quarkus.version>
         <surefire-plugin.version>3.2.5</surefire-plugin.version>
         <maven-jandex-plugin.version>3.1.1</maven-jandex-plugin.version>
     </properties>

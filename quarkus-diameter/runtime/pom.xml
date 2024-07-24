@@ -5,13 +5,13 @@
 
     <parent>
         <groupId>io.quarkiverse.diameter</groupId>
-        <artifactId>diameter-quarkus-parent</artifactId>
+        <artifactId>quarkus-diameter-parent</artifactId>
         <version>2.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>diameter-quarkus</artifactId>
-    <name>Quarkus :: Diameter Quarkus Extension :: Runtime</name>
+    <artifactId>quarkus-diameter</artifactId>
+    <name>Quarkus :: Quarkus Diameter Extension :: Runtime</name>
 
     <properties>
         <quicklyDocs>true</quicklyDocs>

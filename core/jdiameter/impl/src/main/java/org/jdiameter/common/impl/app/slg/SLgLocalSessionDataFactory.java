@@ -33,24 +33,20 @@ import org.jdiameter.server.impl.app.slg.ServerSLgSessionDataLocalImpl;
  * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
  */
 
-@SuppressWarnings("all")//3rd party lib
-public class SLgLocalSessionDataFactory implements IAppSessionDataFactory<ISLgSessionData>
-{
+@SuppressWarnings("all") //3rd party lib
+public class SLgLocalSessionDataFactory implements IAppSessionDataFactory<ISLgSessionData> {
 
-	public ISLgSessionData getAppSessionData(Class<? extends AppSession> clazz, String sessionId)
-	{
-		if (clazz.equals(ClientSLgSession.class)) {
-			ClientSLgSessionDataLocalImpl data = new ClientSLgSessionDataLocalImpl();
-			data.setSessionId(sessionId);
-			return data;
-		}
-		else if (clazz.equals(ServerSLgSession.class)) {
-			ServerSLgSessionDataLocalImpl data = new ServerSLgSessionDataLocalImpl();
-			data.setSessionId(sessionId);
-			return data;
-		}
-		else {
-			throw new IllegalArgumentException("Invalid Session Class: " + clazz.toString());
-		}
-	}
+    public ISLgSessionData getAppSessionData(Class<? extends AppSession> clazz, String sessionId) {
+        if (clazz.equals(ClientSLgSession.class)) {
+            ClientSLgSessionDataLocalImpl data = new ClientSLgSessionDataLocalImpl();
+            data.setSessionId(sessionId);
+            return data;
+        } else if (clazz.equals(ServerSLgSession.class)) {
+            ServerSLgSessionDataLocalImpl data = new ServerSLgSessionDataLocalImpl();
+            data.setSessionId(sessionId);
+            return data;
+        } else {
+            throw new IllegalArgumentException("Invalid Session Class: " + clazz.toString());
+        }
+    }
 }

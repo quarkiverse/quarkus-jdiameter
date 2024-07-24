@@ -1196,8 +1196,8 @@ endif::add-copy-button-to-env-var[]
 |`0`
 
 
-h|[[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_diameter-extension-the-extensions-elements-contains-elements-that-override-existing-components-in-the-diameter-stack]]link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_diameter-extension-the-extensions-elements-contains-elements-that-override-existing-components-in-the-diameter-stack[The extensions elements contains elements that override existing components in the Diameter stack]
-This configuration section is optional
+h|[[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_diameter-extensions-the-extensions-elements-contains-elements-that-override-existing-components-in-the-diameter-stack]]link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_diameter-extensions-the-extensions-elements-contains-elements-that-override-existing-components-in-the-diameter-stack[The extensions elements contains elements that override existing components in the Diameter stack]
+
 h|Type
 h|Default
 

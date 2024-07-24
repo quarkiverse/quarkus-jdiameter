@@ -31,20 +31,17 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
  */
-@SuppressWarnings("all")//3rd party lib
-public class RxSessionTermAnswerImpl extends AppAnswerEventImpl implements RxSessionTermAnswer
-{
+@SuppressWarnings("all") //3rd party lib
+public class RxSessionTermAnswerImpl extends AppAnswerEventImpl implements RxSessionTermAnswer {
 
-	private static final long serialVersionUID = 1L;
-	protected static final Logger logger = LoggerFactory.getLogger(RxSessionTermAnswerImpl.class);
+    private static final long serialVersionUID = 1L;
+    protected static final Logger logger = LoggerFactory.getLogger(RxSessionTermAnswerImpl.class);
 
-	public RxSessionTermAnswerImpl(Request message, long resultCode)
-	{
-		super(message.createAnswer(resultCode));
-	}
+    public RxSessionTermAnswerImpl(Request message, long resultCode) {
+        super(message.createAnswer(resultCode));
+    }
 
-	public RxSessionTermAnswerImpl(Answer message)
-	{
-		super(message);
-	}
+    public RxSessionTermAnswerImpl(Answer message) {
+        super(message);
+    }
 }

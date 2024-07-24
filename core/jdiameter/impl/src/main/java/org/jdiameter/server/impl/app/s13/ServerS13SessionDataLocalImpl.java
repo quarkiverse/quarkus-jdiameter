@@ -21,10 +21,8 @@ package org.jdiameter.server.impl.app.s13;
 
 import org.jdiameter.common.impl.app.s13.S13LocalSessionDataImpl;
 
-@SuppressWarnings("all")//3rd party lib
-public class ServerS13SessionDataLocalImpl extends S13LocalSessionDataImpl implements IServerS13SessionData
-{
-	public ServerS13SessionDataLocalImpl()
-	{
-	}
+@SuppressWarnings("all") //3rd party lib
+public class ServerS13SessionDataLocalImpl extends S13LocalSessionDataImpl implements IServerS13SessionData {
+    public ServerS13SessionDataLocalImpl() {
+    }
 }

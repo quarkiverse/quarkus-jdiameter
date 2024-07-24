@@ -3,6 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
+    <parent>
+        <groupId>io.quarkiverse</groupId>
+        <artifactId>quarkiverse-parent</artifactId>
+        <version>16</version>
+        <relativePath/>
+    </parent>
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.quarkiverse.diameter</groupId>
     <artifactId>diameter-parent</artifactId>
@@ -11,10 +18,42 @@
 
     <name>Quarkus :: Diameter :: ${project.artifactId}</name>
     <description>Quarkus Diameter</description>
+    <url>https://github.com/eddiecarpenter/quarkus-jdiameter</url>
+
+    <scm>
+        <connection>scm:git:git@github.com:eddiecarpenter/quarkus-jdiameter.git</connection>
+        <developerConnection>scm:git:https://github.com/eddiecarpenter/quarkus-jdiameter.git</developerConnection>
+        <url>https://github.com/eddiecarpenter/quarkus-jdiameter</url>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/eddiecarpenter/quarkus-jdiameter/issues/</url>
+    </issueManagement>
+
+    <licenses>
+        <license>
+            <name>GNU Affero General Public License</name>
+            <url>https://www.gnu.org/licenses/agpl-3.0.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>eddiecarpenter</id>
+            <name>Eddie Carpenter</name>
+            <email>eddie.carpenter@icloud.com</email>
+            <roles>
+                <role>Project Lead</role>
+            </roles>
+            <timezone>NZST (GMT+12)</timezone>
+        </developer>
+    </developers>
 
     <modules>
         <module>core</module>
-        <module>diameter-quarkus</module>
+        <module>quarkus-diameter</module>
         <module>docs</module>
     </modules>
 
@@ -23,7 +62,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-
+        <maven.compiler.release>21</maven.compiler.release>
+        <format.skip>true</format.skip>
         <commons-pool.version>1.6</commons-pool.version>
         <junit.version>5.10.3</junit.version>
         <slf4j.version>2.0.7</slf4j.version>
@@ -38,18 +78,32 @@
         <maven-clean-plugin.version>3.2.0</maven-clean-plugin.version>
 
         <!-- maven-enforcer-plugin -->
-        <maven.min.version>3.8.6</maven.min.version>
+        <maven.min.version>3.9.6</maven.min.version>
         <jdk.min.version>${maven.compiler.source}</jdk.min.version>
         <insecure.repositories>ERROR</insecure.repositories>
     </properties>
 
-    <licenses>
-        <license>
-            <name>GNU Affero General Public License</name>
-            <url>http://www.gnu.org/licenses/agpl.html</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>sonatype-nexus-release</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Maven Repository Switchboard</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <dependencyManagement>
         <dependencies>
@@ -60,7 +114,7 @@
             </dependency>
             <dependency>
                 <groupId>io.quarkiverse.diameter</groupId>
-                <artifactId>diameter-quarkus</artifactId>
+                <artifactId>quarkus-diameter</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
@@ -145,13 +199,17 @@
                 </executions>
             </plugin>
 
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.0</version>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <failOnError>false</failOnError>
+                </configuration>
                 <executions>
                     <execution>
-                        <id>attach-sources</id>
+                        <id>attach-javadoc</id>
                         <phase>verify</phase>
                         <goals>
                             <goal>jar</goal>
@@ -159,103 +217,31 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-source-plugin</artifactId>-->
+            <!--                <version>3.3.0</version>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <id>attach-sources</id>-->
+            <!--                        <phase>verify</phase>-->
+            <!--                        <goals>-->
+            <!--                            <goal>jar</goal>-->
+            <!--                        </goals>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
+
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.5.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>release</id>
-            <repositories>
-                <repository>
-                    <id>Nexus</id>
-                    <name>Nexus Group</name>
-                    <url>https://nexus.frei.dev/repository/maven-public/</url>
-                    <layout>default</layout>
-                </repository>
-                <repository>
-                    <id>repo</id>
-                    <name>Dev Repo</name>
-                    <url>http://localhost:8046/artifactory/releaserepo/</url>
-                    <layout>default</layout>
-                </repository>
-            </repositories>
-
-            <distributionManagement>
-                <repository>
-                    <id>repo</id>
-                    <name>Release Repo</name>
-                    <url>http://localhost:8046/artifactory/releaserepo/</url>
-                </repository>
-            </distributionManagement>
-        </profile>
-
-        <profile>
-            <id>dev</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-                <property>
-                    <name>quicklyDocs</name>
-                </property>
-            </activation>
-
-            <properties>
-                <skipTests>true</skipTests>
-                <skipITs>true</skipITs>
-                <enforcer.skip>true</enforcer.skip>
-                <skipExtensionValidation>true</skipExtensionValidation>
-                <skip.gradle.tests>true</skip.gradle.tests>
-                <invoker.skip>true</invoker.skip>   <!-- maven-invoker-plugin -->
-                <forbiddenapis.skip>true</forbiddenapis.skip> <!-- forbidden-apis maven plugin -->
-                <skipCodestartValidation>true</skipCodestartValidation>
-                <truststore.skip>true</truststore.skip>
-            </properties>
-
-            <repositories>
-                <repository>
-                    <id>central</id>
-                    <name>Maven Central</name>
-                    <url>https://repo1.maven.org/maven2/</url>
-                    <layout>default</layout>
-                </repository>
-                <repository>
-                    <id>devrepo</id>
-                    <name>Dev Repo</name>
-                    <url>http://localhost:8046/artifactory/devrepo/</url>
-                    <layout>default</layout>
-                </repository>
-            </repositories>
-
-            <distributionManagement>
-                <repository>
-                    <id>devrepo</id>
-                    <name>Dev Repo</name>
-                    <url>http://localhost:8046/artifactory/devrepo/</url>
-                    <layout>default</layout>
-                </repository>
-            </distributionManagement>
-        </profile>
-
-        <profile>
-            <id>quick-build-docs</id>
-            <activation>
-                <property>
-                    <name>quicklyDocs</name>
-                </property>
-            </activation>
-            <properties>
-                <skipTests>true</skipTests>
-                <skipITs>true</skipITs>
-                <enforcer.skip>true</enforcer.skip>
-                <skipExtensionValidation>true</skipExtensionValidation>
-                <skip.gradle.tests>true</skip.gradle.tests>
-                <invoker.skip>true</invoker.skip>   <!-- maven-invoker-plugin -->
-                <forbiddenapis.skip>true</forbiddenapis.skip> <!-- forbidden-apis maven plugin -->
-                <skipCodestartValidation>true</skipCodestartValidation>
-                <truststore.skip>true</truststore.skip>
-            </properties>
-            <build>
-                <defaultGoal>clean install</defaultGoal>
-            </build>
-        </profile>
-    </profiles>
 </project>
