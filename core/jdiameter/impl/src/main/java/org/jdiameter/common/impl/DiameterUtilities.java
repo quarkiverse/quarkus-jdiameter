@@ -28,131 +28,126 @@ import org.jdiameter.common.impl.validation.DictionaryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DiameterUtilities
-{
-	private static final Logger LOG = LoggerFactory.getLogger(DiameterUtilities.class);
-	public static final Dictionary AVP_DICTIONARY = DictionaryImpl.INSTANCE;
+public class DiameterUtilities {
+    private static final Logger LOG = LoggerFactory.getLogger(DiameterUtilities.class);
+    public static final Dictionary AVP_DICTIONARY = DictionaryImpl.INSTANCE;
 
-	private DiameterUtilities()
-	{
-	}
+    private DiameterUtilities() {
+    }
 
-	//-------------------------------------------------------[ printMessage ]---
-	public static void printMessage(Message message)
-	{
-		if (LOG.isTraceEnabled()) {
-			String reqFlag = message.isRequest() ? "R" : "A";
-			String flags = reqFlag + (message.isError() ? " | E" : "");
+    //-------------------------------------------------------[ printMessage ]---
+    public static void printMessage(Message message) {
+        if (LOG.isTraceEnabled()) {
+            String reqFlag = message.isRequest() ? "R" : "A";
+            String flags = reqFlag + (message.isError() ? " | E" : "");
 
-			LOG.trace("Message [{}] Command-Code: {} / E2E({}) / HbH({})", flags, message.getCommandCode(), message.getEndToEndIdentifier(), message.getHopByHopIdentifier());
-			LOG.trace("\n- - - - - - - - - - - - - - - - AVPs - - - - - - - - - - - - - - - -\n{}", printAvps(message.getAvps()));
-		}//if
-	}//printMessage
+            LOG.trace("Message [{}] Command-Code: {} / E2E({}) / HbH({})", flags, message.getCommandCode(),
+                    message.getEndToEndIdentifier(), message.getHopByHopIdentifier());
+            LOG.trace("\n- - - - - - - - - - - - - - - - AVPs - - - - - - - - - - - - - - - -\n{}",
+                    printAvps(message.getAvps()));
+        } //if
+    }//printMessage
 
-	//----------------------------------------------------------[ printAvps ]---
-	public static String printAvps(AvpSet avps, String keywordSep)
-	{
-		return printAvps(avps, keywordSep, "", false);
-	}
+    //----------------------------------------------------------[ printAvps ]---
+    public static String printAvps(AvpSet avps, String keywordSep) {
+        return printAvps(avps, keywordSep, "", false);
+    }
 
-	public static String printAvps(AvpSet avps)
-	{
-		return printAvps(avps, "-");
-	}//printAvps
+    public static String printAvps(AvpSet avps) {
+        return printAvps(avps, "-");
+    }//printAvps
 
-	//----------------------------------------------------------[ printAvps ]---
-	public static String printAvps(AvpSet avps, String indentation, boolean log)
-	{
-		return printAvps(avps, "-", indentation, log);
-	}
+    //----------------------------------------------------------[ printAvps ]---
+    public static String printAvps(AvpSet avps, String indentation, boolean log) {
+        return printAvps(avps, "-", indentation, log);
+    }
 
-	public static String printAvps(AvpSet avps, String pKeywordSep, String indentation, boolean log)
-	{
-		if (avps == null) {
-			return "AvpSet is null";
-		}//if
+    public static String printAvps(AvpSet avps, String pKeywordSep, String indentation, boolean log) {
+        if (avps == null) {
+            return "AvpSet is null";
+        } //if
 
-		StringBuilder stringBuilder = new StringBuilder();
-		for (Avp avp : avps) {
-			AvpRepresentation avpRep = AVP_DICTIONARY.getAvp(avp.getCode(), avp.getVendorId());
-			if (avpRep == null) {
-				continue;
-			}//if
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Avp avp : avps) {
+            AvpRepresentation avpRep = AVP_DICTIONARY.getAvp(avp.getCode(), avp.getVendorId());
+            if (avpRep == null) {
+                continue;
+            } //if
 
-			Object avpValue;
-			boolean isGrouped = false;
+            Object avpValue;
+            boolean isGrouped = false;
 
-			try {
-				String avpType = AVP_DICTIONARY.getAvp(avp.getCode(), avp.getVendorId()).getType();
+            try {
+                String avpType = AVP_DICTIONARY.getAvp(avp.getCode(), avp.getVendorId()).getType();
 
-				if (null == avpType) {
-					avpValue = avp.getUTF8String().replace("\r", "").replace("\n", "");
-				}//if
-				else {
-					switch (avpType) {
-						case "Integer32", "AppId":
-							avpValue = avp.getInteger32();
-							break;
-						case "Unsigned32", "VendorId":
-							avpValue = avp.getUnsigned32();
-							break;
-						case "Float64":
-							avpValue = avp.getFloat64();
-							break;
-						case "Integer64":
-							avpValue = avp.getInteger64();
-							break;
-						case "Time":
-							avpValue = avp.getTime();
-							break;
-						case "Unsigned64":
-							avpValue = avp.getUnsigned64();
-							break;
-						case "Grouped":
-							avpValue = "<Grouped>";
-							isGrouped = true;
-							break;
-						default:
-							avpValue = avp.getUTF8String().replace("\r", "").replace("\n", "");
-							break;
-					}//else Switch
-				}
-			}//try
-			catch (AvpDataException ignore) {
-				try {
-					avpValue = avp.getUTF8String().replace("\r", "").replace("\n", "");
-				}//try
-				catch (AvpDataException e) {
-					avpValue = avp.toString();
-				}//catch
-			}//catch
+                if (null == avpType) {
+                    avpValue = avp.getUTF8String().replace("\r", "").replace("\n", "");
+                } //if
+                else {
+                    switch (avpType) {
+                        case "Integer32", "AppId":
+                            avpValue = avp.getInteger32();
+                            break;
+                        case "Unsigned32", "VendorId":
+                            avpValue = avp.getUnsigned32();
+                            break;
+                        case "Float64":
+                            avpValue = avp.getFloat64();
+                            break;
+                        case "Integer64":
+                            avpValue = avp.getInteger64();
+                            break;
+                        case "Time":
+                            avpValue = avp.getTime();
+                            break;
+                        case "Unsigned64":
+                            avpValue = avp.getUnsigned64();
+                            break;
+                        case "Grouped":
+                            avpValue = "<Grouped>";
+                            isGrouped = true;
+                            break;
+                        default:
+                            avpValue = avp.getUTF8String().replace("\r", "").replace("\n", "");
+                            break;
+                    }//else Switch
+                }
+            } //try
+            catch (AvpDataException ignore) {
+                try {
+                    avpValue = avp.getUTF8String().replace("\r", "").replace("\n", "");
+                } //try
+                catch (AvpDataException e) {
+                    avpValue = avp.toString();
+                } //catch
+            } //catch
 
-			String fieldName = avpRep.getName().replace("-", pKeywordSep);
-			StringBuilder avpLine = new StringBuilder(indentation)
-					.append(avp.getCode())
-					.append(": ")
-					.append(fieldName);
-			while (avpLine.length() < 40) {
-				avpLine.append(avpLine.length() % 2 == 0 ? "." : " ");
-			}//while
-			avpLine.append(avpValue);
+            String fieldName = avpRep.getName().replace("-", pKeywordSep);
+            StringBuilder avpLine = new StringBuilder(indentation)
+                    .append(avp.getCode())
+                    .append(": ")
+                    .append(fieldName);
+            while (avpLine.length() < 40) {
+                avpLine.append(avpLine.length() % 2 == 0 ? "." : " ");
+            } //while
+            avpLine.append(avpValue);
 
-			if (log && LOG.isDebugEnabled()) {
-				LOG.debug(avpLine.toString());
-			}//if
+            if (log && LOG.isDebugEnabled()) {
+                LOG.debug(avpLine.toString());
+            } //if
 
-			stringBuilder.append(avpLine.toString()).append('\n');
+            stringBuilder.append(avpLine.toString()).append('\n');
 
-			if (isGrouped) {
-				try {
-					stringBuilder.append(printAvps(avp.getGrouped(), pKeywordSep, indentation + "  ", log));
-				}//try
-				catch (AvpDataException e) {
-					// Failed to ungroup... ignore then...
-				}//catch
-			}//if
-		}//for
+            if (isGrouped) {
+                try {
+                    stringBuilder.append(printAvps(avp.getGrouped(), pKeywordSep, indentation + "  ", log));
+                } //try
+                catch (AvpDataException e) {
+                    // Failed to ungroup... ignore then...
+                } //catch
+            } //if
+        } //for
 
-		return stringBuilder.toString();
-	}//printAvps
+        return stringBuilder.toString();
+    }//printAvps
 }//DiameterUtilities

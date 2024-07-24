@@ -21,8 +21,7 @@ package org.jdiameter.server.impl.app.s13;
 
 import org.jdiameter.common.api.app.s13.IS13SessionData;
 
-@SuppressWarnings("all")//3rd party lib
-public interface IServerS13SessionData extends IS13SessionData
-{
+@SuppressWarnings("all") //3rd party lib
+public interface IServerS13SessionData extends IS13SessionData {
 
 }

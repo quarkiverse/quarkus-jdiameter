@@ -29,20 +29,17 @@ import org.slf4j.LoggerFactory;
 /**
  * @author <a href="mailto:carl-magnus.bjorkell@emblacom.com"> Carl-Magnus Björkell </a>
  */
-@SuppressWarnings("all")//3rd party lib
-public class GxReAuthRequestImpl extends AppRequestEventImpl implements GxReAuthRequest
-{
+@SuppressWarnings("all") //3rd party lib
+public class GxReAuthRequestImpl extends AppRequestEventImpl implements GxReAuthRequest {
 
-	private static final long serialVersionUID = 1L;
-	protected static final Logger logger = LoggerFactory.getLogger(GxReAuthRequestImpl.class);
+    private static final long serialVersionUID = 1L;
+    protected static final Logger logger = LoggerFactory.getLogger(GxReAuthRequestImpl.class);
 
-	public GxReAuthRequestImpl(AppSession session, String destRealm, String destHost)
-	{
-		super(session.getSessions().get(0).createRequest(code, session.getSessionAppId(), destRealm, destHost));
-	}
+    public GxReAuthRequestImpl(AppSession session, String destRealm, String destHost) {
+        super(session.getSessions().get(0).createRequest(code, session.getSessionAppId(), destRealm, destHost));
+    }
 
-	public GxReAuthRequestImpl(Request request)
-	{
-		super(request);
-	}
+    public GxReAuthRequestImpl(Request request) {
+        super(request);
+    }
 }

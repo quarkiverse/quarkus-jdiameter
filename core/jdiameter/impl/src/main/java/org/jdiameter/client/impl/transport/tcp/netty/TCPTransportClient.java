@@ -19,6 +19,14 @@
 
 package org.jdiameter.client.impl.transport.tcp.netty;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+
+import org.jdiameter.client.api.IMessage;
+import org.jdiameter.client.api.parser.IMessageParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -30,209 +38,181 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.EventExecutorGroup;
-import org.jdiameter.client.api.IMessage;
-import org.jdiameter.client.api.parser.IMessageParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.net.InetSocketAddress;
 
 /**
  * @author <a href="mailto:jqayyum@gmail.com"> Jehanzeb Qayyum </a>
  */
-@SuppressWarnings("all")//3rd party lib
-public class TCPTransportClient
-{
-	protected EventLoopGroup workerGroup;
-	protected EventExecutorGroup eventExecutorGroup = new DefaultEventExecutorGroup(1);
-	protected Channel channel;
-	protected TCPClientConnection parentConnection;
-	protected InetSocketAddress destAddress;
-	protected InetSocketAddress sourceAddress; // TODO: what?
-	protected String socketDescription;
-	protected static final Logger logger = LoggerFactory.getLogger(TCPClientConnection.class);
-	protected IMessageParser parser;
+@SuppressWarnings("all") //3rd party lib
+public class TCPTransportClient {
+    protected EventLoopGroup workerGroup;
+    protected EventExecutorGroup eventExecutorGroup = new DefaultEventExecutorGroup(1);
+    protected Channel channel;
+    protected TCPClientConnection parentConnection;
+    protected InetSocketAddress destAddress;
+    protected InetSocketAddress sourceAddress; // TODO: what?
+    protected String socketDescription;
+    protected static final Logger logger = LoggerFactory.getLogger(TCPClientConnection.class);
+    protected IMessageParser parser;
 
-	protected static final int CONNECT_TIMEOUT = 500; // mills
+    protected static final int CONNECT_TIMEOUT = 500; // mills
 
-	protected TCPTransportClient(TCPClientConnection parentConnection, IMessageParser parser)
-	{
-		if (parentConnection == null) {
-			throw new IllegalArgumentException("Parent connection cannot be null");
-		}
-		this.parentConnection = parentConnection;
+    protected TCPTransportClient(TCPClientConnection parentConnection, IMessageParser parser) {
+        if (parentConnection == null) {
+            throw new IllegalArgumentException("Parent connection cannot be null");
+        }
+        this.parentConnection = parentConnection;
 
-		if (parser == null) {
-			throw new IllegalArgumentException("Parser cannot be null");
-		}
-		this.parser = parser;
-	}
+        if (parser == null) {
+            throw new IllegalArgumentException("Parser cannot be null");
+        }
+        this.parser = parser;
+    }
 
-	public TCPTransportClient(TCPClientConnection parentConnection, IMessageParser parser, InetSocketAddress destAddress,
-							  InetSocketAddress sourceAddress)
-	{
-		this(parentConnection, parser);
+    public TCPTransportClient(TCPClientConnection parentConnection, IMessageParser parser, InetSocketAddress destAddress,
+            InetSocketAddress sourceAddress) {
+        this(parentConnection, parser);
 
-		logger.debug("Client only connection");
+        logger.debug("Client only connection");
 
-		if (destAddress == null && sourceAddress == null) {
-			throw new IllegalArgumentException("Either Destination or Source address is required");
-		}
+        if (destAddress == null && sourceAddress == null) {
+            throw new IllegalArgumentException("Either Destination or Source address is required");
+        }
 
-		if (sourceAddress != null) {
-			this.sourceAddress = sourceAddress;
-		}
+        if (sourceAddress != null) {
+            this.sourceAddress = sourceAddress;
+        }
 
-		if (destAddress != null) {
-			this.destAddress = destAddress;
-			this.socketDescription = destAddress.toString();
-		}
-	}
+        if (destAddress != null) {
+            this.destAddress = destAddress;
+            this.socketDescription = destAddress.toString();
+        }
+    }
 
-	public TCPTransportClient(TCPClientConnection parentConnection, IMessageParser parser, Channel channel)
-	{
-		this(parentConnection, parser);
-		logger.debug("Server only connection");
+    public TCPTransportClient(TCPClientConnection parentConnection, IMessageParser parser, Channel channel) {
+        this(parentConnection, parser);
+        logger.debug("Server only connection");
 
-		if (channel == null) {
-			throw new IllegalArgumentException("Channel cannot be null");
-		}
-		this.channel = channel;
-		ChannelPipeline pipeline = this.channel.pipeline();
-		pipeline.addLast("decoder", new DiameterMessageDecoder(parentConnection, parser));
-		pipeline.addLast("encoder", new DiameterMessageEncoder(parser));
-		pipeline.addLast(eventExecutorGroup, "msgHandler", new DiameterMessageHandler(parentConnection));
+        if (channel == null) {
+            throw new IllegalArgumentException("Channel cannot be null");
+        }
+        this.channel = channel;
+        ChannelPipeline pipeline = this.channel.pipeline();
+        pipeline.addLast("decoder", new DiameterMessageDecoder(parentConnection, parser));
+        pipeline.addLast("encoder", new DiameterMessageEncoder(parser));
+        pipeline.addLast(eventExecutorGroup, "msgHandler", new DiameterMessageHandler(parentConnection));
 
-		this.destAddress = (InetSocketAddress) this.channel.remoteAddress();
-	}
+        this.destAddress = (InetSocketAddress) this.channel.remoteAddress();
+    }
 
-	public void start() throws InterruptedException
-	{
-		logger.debug("Starting TCP Transport on [{}]", socketDescription);
-		if (isConnected()) {
-			logger.debug("TCP Transport already started, [{}]", socketDescription);
-			return;
-		}
+    public void start() throws InterruptedException {
+        logger.debug("Starting TCP Transport on [{}]", socketDescription);
+        if (isConnected()) {
+            logger.debug("TCP Transport already started, [{}]", socketDescription);
+            return;
+        }
 
-		this.workerGroup = new NioEventLoopGroup();
-		Bootstrap bootstrap = new Bootstrap().group(workerGroup).channel(NioSocketChannel.class)
-											 .option(ChannelOption.SO_KEEPALIVE, true).option(ChannelOption.CONNECT_TIMEOUT_MILLIS, CONNECT_TIMEOUT)
-											 .handler(new ChannelInitializer<SocketChannel>()
-											 {
-												 @Override
-												 public void initChannel(SocketChannel ch) throws Exception
-												 {
-													 ChannelPipeline pipeline = ch.pipeline();
-													 pipeline.addLast("decoder", new DiameterMessageDecoder(parentConnection, parser));
-													 pipeline.addLast("encoder", new DiameterMessageEncoder(parser));
-													 pipeline.addLast(eventExecutorGroup, "msgHandler", new DiameterMessageHandler(parentConnection));
-												 }
-											 });
+        this.workerGroup = new NioEventLoopGroup();
+        Bootstrap bootstrap = new Bootstrap().group(workerGroup).channel(NioSocketChannel.class)
+                .option(ChannelOption.SO_KEEPALIVE, true).option(ChannelOption.CONNECT_TIMEOUT_MILLIS, CONNECT_TIMEOUT)
+                .handler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    public void initChannel(SocketChannel ch) throws Exception {
+                        ChannelPipeline pipeline = ch.pipeline();
+                        pipeline.addLast("decoder", new DiameterMessageDecoder(parentConnection, parser));
+                        pipeline.addLast("encoder", new DiameterMessageEncoder(parser));
+                        pipeline.addLast(eventExecutorGroup, "msgHandler", new DiameterMessageHandler(parentConnection));
+                    }
+                });
 
-		this.channel = bootstrap.remoteAddress(destAddress).connect().sync().channel();
-		logger.debug("TCP Transport connected successfully, [{}]", socketDescription);
+        this.channel = bootstrap.remoteAddress(destAddress).connect().sync().channel();
+        logger.debug("TCP Transport connected successfully, [{}]", socketDescription);
 
-		parentConnection.onConnected();
-	}
+        parentConnection.onConnected();
+    }
 
-	public void stop()
-	{
-		logger.debug("Stopping TCP Transport, [{}]", socketDescription);
-		if (!isConnected()) {
-			logger.debug("Already stoppped TCP Transport, [{}]", socketDescription);
-			return;
-		}
-		closeChannel();
-		closeWorkerGroup();
-		closeEventExecutorGroup();
-		logger.debug("Transport is stopped [{}]", socketDescription);
-	}
+    public void stop() {
+        logger.debug("Stopping TCP Transport, [{}]", socketDescription);
+        if (!isConnected()) {
+            logger.debug("Already stoppped TCP Transport, [{}]", socketDescription);
+            return;
+        }
+        closeChannel();
+        closeWorkerGroup();
+        closeEventExecutorGroup();
+        logger.debug("Transport is stopped [{}]", socketDescription);
+    }
 
-	private void closeEventExecutorGroup()
-	{
-		if (eventExecutorGroup != null) {
-			try {
-				eventExecutorGroup.shutdownGracefully().sync();
-			}
-			catch (InterruptedException e) {
-				logger.error("Error stopping socket " + socketDescription, e);
-			}
-			eventExecutorGroup = null;
-		}
-	}
+    private void closeEventExecutorGroup() {
+        if (eventExecutorGroup != null) {
+            try {
+                eventExecutorGroup.shutdownGracefully().sync();
+            } catch (InterruptedException e) {
+                logger.error("Error stopping socket " + socketDescription, e);
+            }
+            eventExecutorGroup = null;
+        }
+    }
 
-	private void closeWorkerGroup()
-	{
-		if (workerGroup != null) {
-			try {
-				workerGroup.shutdownGracefully().sync();
-			}
-			catch (InterruptedException e) {
-				logger.error("Error stopping socket " + socketDescription, e);
-			}
-			workerGroup = null;
-		}
-	}
+    private void closeWorkerGroup() {
+        if (workerGroup != null) {
+            try {
+                workerGroup.shutdownGracefully().sync();
+            } catch (InterruptedException e) {
+                logger.error("Error stopping socket " + socketDescription, e);
+            }
+            workerGroup = null;
+        }
+    }
 
-	private void closeChannel()
-	{
-		if (channel != null) {
-			try {
-				channel.closeFuture().sync();
-			}
-			catch (InterruptedException e) {
-				logger.error("Error stopping socket " + socketDescription, e);
-			}
-			channel = null;
-		}
-	}
+    private void closeChannel() {
+        if (channel != null) {
+            try {
+                channel.closeFuture().sync();
+            } catch (InterruptedException e) {
+                logger.error("Error stopping socket " + socketDescription, e);
+            }
+            channel = null;
+        }
+    }
 
-	public void release() throws InterruptedException, IOException
-	{
-		logger.debug("Releasing TCP Transport, [{}]", socketDescription);
-		stop();
-		destAddress = null;
-		sourceAddress = null;
-	}
+    public void release() throws InterruptedException, IOException {
+        logger.debug("Releasing TCP Transport, [{}]", socketDescription);
+        stop();
+        destAddress = null;
+        sourceAddress = null;
+    }
 
-	public void sendMessage(IMessage message)
-	{
-		if (!isConnected()) {
-			throw new IllegalStateException("TCP transport is stopped on socket " + socketDescription);
-		}
-		channel.writeAndFlush(message);
-	}
+    public void sendMessage(IMessage message) {
+        if (!isConnected()) {
+            throw new IllegalStateException("TCP transport is stopped on socket " + socketDescription);
+        }
+        channel.writeAndFlush(message);
+    }
 
-	public String toString()
-	{
-		StringBuffer buffer = new StringBuffer();
-		buffer.append("Transport to ");
-		if (this.destAddress != null) {
-			buffer.append(this.destAddress.getHostName());
-			buffer.append(":");
-			buffer.append(this.destAddress.getPort());
-		}
-		else {
-			buffer.append("null");
-		}
-		buffer.append("@");
-		buffer.append(super.toString());
-		return buffer.toString();
-	}
+    public String toString() {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("Transport to ");
+        if (this.destAddress != null) {
+            buffer.append(this.destAddress.getHostName());
+            buffer.append(":");
+            buffer.append(this.destAddress.getPort());
+        } else {
+            buffer.append("null");
+        }
+        buffer.append("@");
+        buffer.append(super.toString());
+        return buffer.toString();
+    }
 
-	public TCPClientConnection getParent()
-	{
-		return parentConnection;
-	}
+    public TCPClientConnection getParent() {
+        return parentConnection;
+    }
 
-	public InetSocketAddress getDestAddress()
-	{
-		return this.destAddress;
-	}
+    public InetSocketAddress getDestAddress() {
+        return this.destAddress;
+    }
 
-	boolean isConnected()
-	{
-		return channel != null && channel.isActive();
-	}
+    boolean isConnected() {
+        return channel != null && channel.isActive();
+    }
 }

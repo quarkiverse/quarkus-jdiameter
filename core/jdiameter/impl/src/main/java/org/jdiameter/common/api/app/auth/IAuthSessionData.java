@@ -28,8 +28,7 @@ import org.jdiameter.common.api.app.IAppSessionData;
  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
  */
-@SuppressWarnings("all")//3rd party lib
-public interface IAuthSessionData extends IAppSessionData
-{
-	//marker interface
+@SuppressWarnings("all") //3rd party lib
+public interface IAuthSessionData extends IAppSessionData {
+    //marker interface
 }

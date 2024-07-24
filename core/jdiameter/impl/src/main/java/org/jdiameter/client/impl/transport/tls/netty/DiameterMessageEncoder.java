@@ -19,36 +19,34 @@
 
 package org.jdiameter.client.impl.transport.tls.netty;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.MessageToByteEncoder;
 import org.jdiameter.client.api.IMessage;
 import org.jdiameter.client.api.parser.IMessageParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.MessageToByteEncoder;
+
 /**
  * @author <a href="mailto:jqayyum@gmail.com"> Jehanzeb Qayyum </a>
  */
-@SuppressWarnings("all")//3rd party lib
-public class DiameterMessageEncoder extends MessageToByteEncoder<IMessage>
-{
-	private static final Logger logger = LoggerFactory.getLogger(DiameterMessageEncoder.class);
+@SuppressWarnings("all") //3rd party lib
+public class DiameterMessageEncoder extends MessageToByteEncoder<IMessage> {
+    private static final Logger logger = LoggerFactory.getLogger(DiameterMessageEncoder.class);
 
-	protected final IMessageParser parser;
+    protected final IMessageParser parser;
 
-	public DiameterMessageEncoder(IMessageParser parser)
-	{
-		this.parser = parser;
-	}
+    public DiameterMessageEncoder(IMessageParser parser) {
+        this.parser = parser;
+    }
 
-	@Override
-	protected void encode(ChannelHandlerContext ctx, IMessage msg, ByteBuf out) throws Exception
-	{
-		logger.debug("DiameterMessageEncoder");
-		logger.debug("Encoding message command code {}", msg.getCommandCode());
-		out.writeBytes(Unpooled.wrappedBuffer(parser.encodeMessage(msg)));
-	}
+    @Override
+    protected void encode(ChannelHandlerContext ctx, IMessage msg, ByteBuf out) throws Exception {
+        logger.debug("DiameterMessageEncoder");
+        logger.debug("Encoding message command code {}", msg.getCommandCode());
+        out.writeBytes(Unpooled.wrappedBuffer(parser.encodeMessage(msg)));
+    }
 
 }

@@ -51,19 +51,18 @@ import org.jdiameter.api.slh.events.LCSRoutingInfoRequest;
  * @author <a href="mailto:fernando.mendioroz@gmail.com"> Fernando Mendioroz </a>
  */
 
-@SuppressWarnings("all")//3rd party lib
-public interface ISLhMessageFactory
-{
+@SuppressWarnings("all") //3rd party lib
+public interface ISLhMessageFactory {
 
-	LCSRoutingInfoRequest createLCSRoutingInfoRequest(Request request);
+    LCSRoutingInfoRequest createLCSRoutingInfoRequest(Request request);
 
-	LCSRoutingInfoAnswer createLCSRoutingInfoAnswer(Answer answer);
+    LCSRoutingInfoAnswer createLCSRoutingInfoAnswer(Answer answer);
 
-	/**
-	 * Returns the Application-Id that this message factory is related to
-	 *
-	 * @return the Application-Id value
-	 */
-	long getApplicationId();
+    /**
+     * Returns the Application-Id that this message factory is related to
+     *
+     * @return the Application-Id value
+     */
+    long getApplicationId();
 
 }

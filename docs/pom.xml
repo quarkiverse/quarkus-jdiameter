@@ -21,7 +21,7 @@
     <dependencies>
         <dependency>
             <groupId>io.quarkiverse.diameter</groupId>
-            <artifactId>diameter-quarkus</artifactId>
+            <artifactId>quarkus-diameter</artifactId>
         </dependency>
     </dependencies>
     <build>

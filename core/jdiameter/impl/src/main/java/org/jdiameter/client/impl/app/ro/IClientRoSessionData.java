@@ -1,94 +1,93 @@
- /*
-  * TeleStax, Open Source Cloud Communications
-  * Copyright 2011-2016, TeleStax Inc. and individual contributors
-  * by the @authors tag.
-  *
-  * This program is free software: you can redistribute it and/or modify
-  * under the terms of the GNU Affero General Public License as
-  * published by the Free Software Foundation; either version 3 of
-  * the License, or (at your option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful,
-  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  * GNU Affero General Public License for more details.
-  *
-  * You should have received a copy of the GNU Affero General Public License
-  * along with this program.  If not, see <http://www.gnu.org/licenses/>
-  *
-  * This file incorporates work covered by the following copyright and
-  * permission notice:
-  *
-  *   JBoss, Home of Professional Open Source
-  *   Copyright 2007-2011, Red Hat, Inc. and individual contributors
-  *   by the @authors tag. See the copyright.txt in the distribution for a
-  *   full listing of individual contributors.
-  *
-  *   This is free software; you can redistribute it and/or modify it
-  *   under the terms of the GNU Lesser General Public License as
-  *   published by the Free Software Foundation; either version 2.1 of
-  *   the License, or (at your option) any later version.
-  *
-  *   This software is distributed in the hope that it will be useful,
-  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
-  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-  *   Lesser General Public License for more details.
-  *
-  *   You should have received a copy of the GNU Lesser General Public
-  *   License along with this software; if not, write to the Free
-  *   Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-  *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
-  */
+/*
+ * TeleStax, Open Source Cloud Communications
+ * Copyright 2011-2016, TeleStax Inc. and individual contributors
+ * by the @authors tag.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation; either version 3 of
+ * the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
+ * This file incorporates work covered by the following copyright and
+ * permission notice:
+ *
+ *   JBoss, Home of Professional Open Source
+ *   Copyright 2007-2011, Red Hat, Inc. and individual contributors
+ *   by the @authors tag. See the copyright.txt in the distribution for a
+ *   full listing of individual contributors.
+ *
+ *   This is free software; you can redistribute it and/or modify it
+ *   under the terms of the GNU Lesser General Public License as
+ *   published by the Free Software Foundation; either version 2.1 of
+ *   the License, or (at your option) any later version.
+ *
+ *   This software is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ *   Lesser General Public License for more details.
+ *
+ *   You should have received a copy of the GNU Lesser General Public
+ *   License along with this software; if not, write to the Free
+ *   Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
 
- package org.jdiameter.client.impl.app.ro;
+package org.jdiameter.client.impl.app.ro;
 
- import org.jdiameter.api.Request;
- import org.jdiameter.common.api.app.ro.ClientRoSessionState;
- import org.jdiameter.common.api.app.ro.IRoSessionData;
+import java.io.Serializable;
 
- import java.io.Serializable;
+import org.jdiameter.api.Request;
+import org.jdiameter.common.api.app.ro.ClientRoSessionState;
+import org.jdiameter.common.api.app.ro.IRoSessionData;
 
- /**
-  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
-  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
-  */
- @SuppressWarnings("all")//3rd party lib
- public interface IClientRoSessionData extends IRoSessionData
- {
+/**
+ * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
+ * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
+ */
+@SuppressWarnings("all") //3rd party lib
+public interface IClientRoSessionData extends IRoSessionData {
 
-	 boolean isEventBased();
+    boolean isEventBased();
 
-	 void setEventBased(boolean b);
+    void setEventBased(boolean b);
 
-	 boolean isRequestTypeSet();
+    boolean isRequestTypeSet();
 
-	 void setRequestTypeSet(boolean b);
+    void setRequestTypeSet(boolean b);
 
-	 ClientRoSessionState getClientRoSessionState();
+    ClientRoSessionState getClientRoSessionState();
 
-	 void setClientRoSessionState(ClientRoSessionState state);
+    void setClientRoSessionState(ClientRoSessionState state);
 
-	 Serializable getTxTimerId();
+    Serializable getTxTimerId();
 
-	 void setTxTimerId(Serializable txTimerId);
+    void setTxTimerId(Serializable txTimerId);
 
-	 Request getTxTimerRequest();
+    Request getTxTimerRequest();
 
-	 void setTxTimerRequest(Request txTimerRequest);
+    void setTxTimerRequest(Request txTimerRequest);
 
-	 Request getBuffer();
+    Request getBuffer();
 
-	 void setBuffer(Request buffer);
+    void setBuffer(Request buffer);
 
-	 int getGatheredRequestedAction();
+    int getGatheredRequestedAction();
 
-	 void setGatheredRequestedAction(int gatheredRequestedAction);
+    void setGatheredRequestedAction(int gatheredRequestedAction);
 
-	 int getGatheredCCFH();
+    int getGatheredCCFH();
 
-	 void setGatheredCCFH(int gatheredCCFH);
+    void setGatheredCCFH(int gatheredCCFH);
 
-	 int getGatheredDDFH();
+    int getGatheredDDFH();
 
-	 void setGatheredDDFH(int gatheredDDFH);
- }
+    void setGatheredDDFH(int gatheredDDFH);
+}

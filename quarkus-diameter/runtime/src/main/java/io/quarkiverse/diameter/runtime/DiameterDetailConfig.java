@@ -10,8 +10,6 @@ import io.smallrye.config.WithDefault;
 import io.smallrye.config.WithDefaults;
 import io.smallrye.config.WithName;
 
-import java.util.Optional;
-
 /**
  * The Diameter Config describes the entire Diameter configuration mapping for both the
  * server and client
@@ -53,5 +51,6 @@ public interface DiameterDetailConfig
 	 */
 	@WithName("extensions")
 	@ConfigDocSection
-	Optional<Extension> extension();
+	@WithDefaults
+	Extension extensions();
 }

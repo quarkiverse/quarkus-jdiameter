@@ -19,6 +19,12 @@
 
 package org.jdiameter.client.impl.transport.tls.netty;
 
+import javax.net.ssl.SSLEngine;
+
+import org.jdiameter.client.impl.transport.tls.netty.TLSTransportClient.TlsHandshakingState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -27,80 +33,71 @@ import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslHandler;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
-import org.jdiameter.client.impl.transport.tls.netty.TLSTransportClient.TlsHandshakingState;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.net.ssl.SSLEngine;
 
 /**
  * @author <a href="mailto:jqayyum@gmail.com"> Jehanzeb Qayyum </a>
  */
-@SuppressWarnings("all")//3rd party lib
-public class StartTlsClientHandler extends ChannelInboundHandlerAdapter
-{
-	private static final Logger logger = LoggerFactory.getLogger(StartTlsClientHandler.class);
+@SuppressWarnings("all") //3rd party lib
+public class StartTlsClientHandler extends ChannelInboundHandlerAdapter {
+    private static final Logger logger = LoggerFactory.getLogger(StartTlsClientHandler.class);
 
-	private final TLSTransportClient tlsTransportClient;
+    private final TLSTransportClient tlsTransportClient;
 
-	public StartTlsClientHandler(TLSTransportClient tlsTransportClient)
-	{
-		this.tlsTransportClient = tlsTransportClient;
-	}
+    public StartTlsClientHandler(TLSTransportClient tlsTransportClient) {
+        this.tlsTransportClient = tlsTransportClient;
+    }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public void channelRead(final ChannelHandlerContext ctx, Object msg) throws Exception
-	{
-		logger.debug("StartTlsClientHandler");
-		ByteBuf buf = (ByteBuf) msg;
-		byte[] bytes = new byte[buf.readableBytes()];
-		buf.getBytes(buf.readerIndex(), bytes);
+    @SuppressWarnings("unchecked")
+    @Override
+    public void channelRead(final ChannelHandlerContext ctx, Object msg) throws Exception {
+        logger.debug("StartTlsClientHandler");
+        ByteBuf buf = (ByteBuf) msg;
+        byte[] bytes = new byte[buf.readableBytes()];
+        buf.getBytes(buf.readerIndex(), bytes);
 
-		if ("StartTlsResponse".equals(new String(bytes))) {
-			logger.debug("received StartTlsResponse");
+        if ("StartTlsResponse".equals(new String(bytes))) {
+            logger.debug("received StartTlsResponse");
 
-			SslContext sslContext = SslContextFactory.getSslContextForClient(this.tlsTransportClient.getConfig());
-			SSLEngine sslEngine = sslContext.newEngine(ctx.alloc());
-			sslEngine.setUseClientMode(true);
-			SslHandler sslHandler = new SslHandler(sslEngine, false);
+            SslContext sslContext = SslContextFactory.getSslContextForClient(this.tlsTransportClient.getConfig());
+            SSLEngine sslEngine = sslContext.newEngine(ctx.alloc());
+            sslEngine.setUseClientMode(true);
+            SslHandler sslHandler = new SslHandler(sslEngine, false);
 
-			final ChannelPipeline pipeline = ctx.pipeline();
-			pipeline.remove("startTlsClientHandler");
-			pipeline.addLast("sslHandler", sslHandler);
+            final ChannelPipeline pipeline = ctx.pipeline();
+            pipeline.remove("startTlsClientHandler");
+            pipeline.addLast("sslHandler", sslHandler);
 
-			logger.debug("StartTls starting handshake");
+            logger.debug("StartTls starting handshake");
 
-			sslHandler.handshakeFuture().addListener(new GenericFutureListener()
-			{
-				@Override
-				public void operationComplete(Future future) throws Exception
-				{
-					if (future.isSuccess()) {
-						logger.debug("StartTls handshake succesfull");
+            sslHandler.handshakeFuture().addListener(new GenericFutureListener() {
+                @Override
+                public void operationComplete(Future future) throws Exception {
+                    if (future.isSuccess()) {
+                        logger.debug("StartTls handshake succesfull");
 
-						tlsTransportClient.setTlsHandshakingState(TlsHandshakingState.SHAKEN);
+                        tlsTransportClient.setTlsHandshakingState(TlsHandshakingState.SHAKEN);
 
-						logger.debug("restoring all handlers");
+                        logger.debug("restoring all handlers");
 
-						pipeline.addLast("decoder", new DiameterMessageDecoder(StartTlsClientHandler.this.tlsTransportClient.getParent(),
-																			   StartTlsClientHandler.this.tlsTransportClient.getParser()));
-						pipeline.addLast("msgHandler",
-										 new DiameterMessageHandler(StartTlsClientHandler.this.tlsTransportClient.getParent(), true));
+                        pipeline.addLast("decoder",
+                                new DiameterMessageDecoder(StartTlsClientHandler.this.tlsTransportClient.getParent(),
+                                        StartTlsClientHandler.this.tlsTransportClient.getParser()));
+                        pipeline.addLast("msgHandler",
+                                new DiameterMessageHandler(StartTlsClientHandler.this.tlsTransportClient.getParent(), true));
 
-						pipeline.addLast("encoder", new DiameterMessageEncoder(StartTlsClientHandler.this.tlsTransportClient.getParser()));
-						pipeline.addLast("inbandWriter", new InbandSecurityHandler());
-					}
-				}
-			});
+                        pipeline.addLast("encoder",
+                                new DiameterMessageEncoder(StartTlsClientHandler.this.tlsTransportClient.getParser()));
+                        pipeline.addLast("inbandWriter", new InbandSecurityHandler());
+                    }
+                }
+            });
 
-		}
-	}
+        }
+    }
 
-	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)
-	{
-		logger.error(cause.getMessage(), cause);
-	}
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        logger.error(cause.getMessage(), cause);
+    }
 
 }
