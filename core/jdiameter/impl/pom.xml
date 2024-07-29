@@ -16,7 +16,7 @@
     <name>Quarkus :: Diameter Stack :: impl</name>
 
     <properties>
-        <vendor>Go</vendor>
+        <vendor>Quarkus</vendor>
     </properties>
 
     <dependencies>
