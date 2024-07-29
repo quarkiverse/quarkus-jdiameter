@@ -1196,6 +1196,35 @@ endif::add-copy-button-to-env-var[]
 |`0`
 
 
+h|[[diameter_diameter-network-realms-agent-the-agent-configuration]]link:#diameter_diameter-network-realms-agent-the-agent-configuration[The Agent configuration]
+This configuration section is optional
+h|Type
+h|Default
+
+a|icon:lock[title=Fixed at build time] [[diameter_diameter-network-realms-agent-properties]]`link:#diameter_diameter-network-realms-agent-properties[diameter.network.realms.agent."properties"]`
+
+`link:#diameter_diameter-network-realms-agent-properties[diameter.network.realms."realms".agent."properties"]`
+
+`link:#diameter_diameter-network-realms-agent-properties[diameter."named-config".network.realms."realms".agent."properties"]`
+
+`link:#diameter_diameter-network-realms-agent-properties[diameter."named-config".network.realms.agent."properties"]`
+
+
+[.description]
+--
+Retrieves the properties of the agent configuration.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_REALMS_AGENT__PROPERTIES_+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_NETWORK_REALMS_AGENT__PROPERTIES_+++`
+endif::add-copy-button-to-env-var[]
+--|link:https://docs.oracle.com/javase/8/docs/api/java/lang/String.html[String]
+ 
+|
+
+
 h|[[diameter_diameter-extensions-the-extensions-elements-contains-elements-that-override-existing-components-in-the-diameter-stack]]link:#diameter_diameter-extensions-the-extensions-elements-contains-elements-that-override-existing-components-in-the-diameter-stack[The extensions elements contains elements that override existing components in the Diameter stack]
 
 h|Type

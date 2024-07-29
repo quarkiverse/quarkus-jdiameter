@@ -3,8 +3,7 @@ include::../includes/attributes.adoc[]
 Diameter implementations are exposed as CDI beans are automatically registered and started
 
 To implement a service a class needs to be defined and annotated with `@DiameterService` and `@DiameterServiceOptions`.
-The `@DiameterServiceOption` is required and if missing a build time exception will be generated.
-The DiameterServiceOption is used to define the application type to setup.
+If `@DiameterServiceOption` is not specified the default config profile will be used.
 Only one Diameter service combination of application type and mode can be defined at any given time.
 For example only one CAA / Server service can be defined and a `DiameterConfigException` will be generated if additional one is defined.
 It is however allowed to define additional Diameter Services for other Application Type and mode combination on the same Diameter stack, but not in the same service.
@@ -31,7 +30,8 @@ public class MyDiameterService implements ClientCCASessionListener <3>
 ----
 
 <1> Marking the class as a diameter service
-<2> The configuration option to apply to the diameter service
+<2> The optional configuration option to apply to the diameter service.
+If not define the <default> configuration will be used.
 <3> Implements the the SessionListener associated with the `Session Type`.
 (See List below)
 
@@ -55,7 +55,7 @@ TIP: The stack will only be active if there is a defined DiameterService for the
 
 @ApplicationScoped public class Demo
 {
-    @DiameterConfig("test1") <1>
+    @DiameterConfig <1>
     Stack stack;
 
     @DiameterConfig("test2") <2>
@@ -65,7 +65,7 @@ TIP: The stack will only be active if there is a defined DiameterService for the
 }
 ----
 
-<1> Injecting the Diameter stack associated with the "test1" configuration.
+<1> Injecting the Diameter stack associated with the "<default>" configuration.
 <2> Injecting the Diameter configuration for the "test2" configuration.
 
 == Application Session Types

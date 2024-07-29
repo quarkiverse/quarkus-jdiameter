@@ -1,0 +1,36 @@
+
+:summaryTableId: config-group-io-quarkiverse-diameter-runtime-config-agent
+[.configuration-legend]
+icon:lock[title=Fixed at build time] Configuration property fixed at build time - All other configuration properties are overridable at runtime
+[.configuration-reference, cols="80,.^10,.^10"]
+|===
+
+h|[[config-group-io-quarkiverse-diameter-runtime-config-agent_configuration]]link:#config-group-io-quarkiverse-diameter-runtime-config-agent_configuration[Configuration property]
+
+h|Type
+h|Default
+
+a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-agent_diameter-network-realms-agent-properties]]`link:#config-group-io-quarkiverse-diameter-runtime-config-agent_diameter-network-realms-agent-properties[diameter.network.realms.agent."properties"]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-agent_diameter-network-realms-agent-properties[diameter.network.realms."realms".agent."properties"]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-agent_diameter-network-realms-agent-properties[diameter."named-config".network.realms."realms".agent."properties"]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-agent_diameter-network-realms-agent-properties[diameter."named-config".network.realms.agent."properties"]`
+
+
+[.description]
+--
+Retrieves the properties of the agent configuration.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_REALMS_AGENT__PROPERTIES_+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_NETWORK_REALMS_AGENT__PROPERTIES_+++`
+endif::add-copy-button-to-env-var[]
+--|link:https://docs.oracle.com/javase/8/docs/api/java/lang/String.html[String]
+ 
+|
+
+|===
