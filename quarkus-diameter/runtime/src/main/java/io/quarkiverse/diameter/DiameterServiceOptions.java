@@ -13,8 +13,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface DiameterServiceOptions
 {
-	/**
-	 * Specifies the diameter configuration name
-	 */
-	String config() default DiameterConfig.DEFAULT_CONFIG_NAME;
+    /**
+     * Specifies the diameter configuration name
+     */
+    String value() default DiameterConfig.DEFAULT_CONFIG_NAME;
 }

@@ -17,7 +17,6 @@
 
 package io.quarkiverse.diameter;
 
-import io.quarkiverse.diameter.runtime.DiameterSetupException;
 import io.quarkus.arc.Arc;
 import io.quarkus.arc.InstanceHandle;
 import jakarta.annotation.PostConstruct;
@@ -59,152 +58,155 @@ import java.util.concurrent.TimeUnit;
 @Priority(Interceptor.Priority.APPLICATION)
 public class DiameterServiceInterceptor
 {
-	private static final Logger LOG = LoggerFactory.getLogger(DiameterServiceInterceptor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DiameterServiceInterceptor.class);
 
-	private void setupClientCAAFactory(ISessionFactory sessionFactory, DiameterServiceOptions options, ClientCCASessionListener sessionListener)
-	{
-		LOG.info("Staring CAA Diameter Client Service [{}].", options.config());
-		CCASessionFactoryImpl sessionFactoryImpl = new CCASessionFactoryImpl(sessionFactory);
-		sessionFactory.registerAppFacory(ClientCCASession.class, sessionFactoryImpl);
-		sessionFactoryImpl.setClientSessionListener(sessionListener);
-	}
+    private void setupClientCAAFactory(ISessionFactory sessionFactory, String configProfile, ClientCCASessionListener sessionListener)
+    {
+        LOG.info("Staring CAA Diameter Client Service [{}].", configProfile);
+        CCASessionFactoryImpl sessionFactoryImpl = new CCASessionFactoryImpl(sessionFactory);
+        sessionFactory.registerAppFacory(ClientCCASession.class, sessionFactoryImpl);
+        sessionFactoryImpl.setClientSessionListener(sessionListener);
+    }
 
-	private void setupServerCAAFactory(Stack stack, ISessionFactory sessionFactory, DiameterServiceOptions options, ServerCCASessionListener sessionListener) throws ApplicationAlreadyUseException, InternalException
-	{
-		LOG.info("Staring CAA Diameter Server Service [{}].", options.config());
-		CCASessionFactoryImpl sessionFactoryImpl = new CCASessionFactoryImpl(sessionFactory);
-		sessionFactory.registerAppFacory(ServerCCASession.class, sessionFactoryImpl);
-		sessionFactoryImpl.setServerSessionListener(sessionListener);
-		setupDiameterServer(stack, sessionFactory, ServerCCASession.class, sessionListener, options);
-	}
+    private void setupServerCAAFactory(Stack stack, ISessionFactory sessionFactory, String configProfile, ServerCCASessionListener sessionListener) throws ApplicationAlreadyUseException, InternalException
+    {
+        LOG.info("Staring CAA Diameter Server Service [{}].", configProfile);
+        CCASessionFactoryImpl sessionFactoryImpl = new CCASessionFactoryImpl(sessionFactory);
+        sessionFactory.registerAppFacory(ServerCCASession.class, sessionFactoryImpl);
+        sessionFactoryImpl.setServerSessionListener(sessionListener);
+        setupDiameterServer(stack, sessionFactory, ServerCCASession.class, sessionListener, configProfile);
+    }
 
-	private void clientSetupRxFactory(ISessionFactory sessionFactory, DiameterServiceOptions options, ClientRxSessionListener listener)
-	{
-		LOG.info("Staring Rx Diameter Client Service [{}].", options.config());
-		RxSessionFactoryImpl sessionFactoryImpl = new RxSessionFactoryImpl(sessionFactory);
-		sessionFactory.registerAppFacory(ClientRxSession.class, sessionFactoryImpl);
-		sessionFactoryImpl.setClientSessionListener(listener);
-	}
+    private void clientSetupRxFactory(ISessionFactory sessionFactory, String configProfile, ClientRxSessionListener listener)
+    {
+        LOG.info("Staring Rx Diameter Client Service [{}].", configProfile);
+        RxSessionFactoryImpl sessionFactoryImpl = new RxSessionFactoryImpl(sessionFactory);
+        sessionFactory.registerAppFacory(ClientRxSession.class, sessionFactoryImpl);
+        sessionFactoryImpl.setClientSessionListener(listener);
+    }
 
-	private void serverSetupRxFactory(Stack stack, ISessionFactory sessionFactory, DiameterServiceOptions options, ServerRxSessionListener listener) throws ApplicationAlreadyUseException, InternalException
-	{
-		LOG.info("Staring Rx Diameter Server Service [{}].", options.config());
-		RxSessionFactoryImpl sessionFactoryImpl = new RxSessionFactoryImpl(sessionFactory);
-		sessionFactory.registerAppFacory(ServerRxSession.class, sessionFactoryImpl);
-		sessionFactoryImpl.setServerSessionListener(listener);
-		setupDiameterServer(stack, sessionFactory, ServerRxSession.class, listener, options);
-	}
+    private void serverSetupRxFactory(Stack stack, ISessionFactory sessionFactory, String configProfile, ServerRxSessionListener listener) throws ApplicationAlreadyUseException, InternalException
+    {
+        LOG.info("Staring Rx Diameter Server Service [{}].", configProfile);
+        RxSessionFactoryImpl sessionFactoryImpl = new RxSessionFactoryImpl(sessionFactory);
+        sessionFactory.registerAppFacory(ServerRxSession.class, sessionFactoryImpl);
+        sessionFactoryImpl.setServerSessionListener(listener);
+        setupDiameterServer(stack, sessionFactory, ServerRxSession.class, listener, configProfile);
+    }
 
 
-	private void clientSetupS6aFactory(ISessionFactory sessionFactory, DiameterServiceOptions options, ClientS6aSessionListener listener)
-	{
-		LOG.info("Staring S6a Diameter Client Service [{}].", options.config());
-		S6aSessionFactoryImpl sessionFactoryImpl = new S6aSessionFactoryImpl(sessionFactory);
-		sessionFactory.registerAppFacory(ClientS6aSession.class, sessionFactoryImpl);
-		sessionFactoryImpl.setClientSessionListener(listener);
-	}
+    private void clientSetupS6aFactory(ISessionFactory sessionFactory, String configProfile, ClientS6aSessionListener listener)
+    {
+        LOG.info("Staring S6a Diameter Client Service [{}].", configProfile);
+        S6aSessionFactoryImpl sessionFactoryImpl = new S6aSessionFactoryImpl(sessionFactory);
+        sessionFactory.registerAppFacory(ClientS6aSession.class, sessionFactoryImpl);
+        sessionFactoryImpl.setClientSessionListener(listener);
+    }
 
-	private void serverSetupS6aFactory(Stack stack, ISessionFactory sessionFactory, DiameterServiceOptions options, ServerS6aSessionListener listener) throws ApplicationAlreadyUseException, InternalException
-	{
-		LOG.info("Staring S6a Diameter Server Service [{}].", options.config());
-		S6aSessionFactoryImpl sessionFactoryImpl = new S6aSessionFactoryImpl(sessionFactory);
-		sessionFactory.registerAppFacory(ServerS6aSession.class, sessionFactoryImpl);
-		sessionFactoryImpl.setServerSessionListener(listener);
-		setupDiameterServer(stack, sessionFactory, ServerS6aSession.class, listener, options);
-	}
+    private void serverSetupS6aFactory(Stack stack, ISessionFactory sessionFactory, String configProfile, ServerS6aSessionListener listener) throws ApplicationAlreadyUseException, InternalException
+    {
+        LOG.info("Staring S6a Diameter Server Service [{}].", configProfile);
+        S6aSessionFactoryImpl sessionFactoryImpl = new S6aSessionFactoryImpl(sessionFactory);
+        sessionFactory.registerAppFacory(ServerS6aSession.class, sessionFactoryImpl);
+        sessionFactoryImpl.setServerSessionListener(listener);
+        setupDiameterServer(stack, sessionFactory, ServerS6aSession.class, listener, configProfile);
+    }
 
-	private void clientSetupGqFactory(ISessionFactory sessionFactory, DiameterServiceOptions options, ClientGqSessionListener listener)
-	{
-		LOG.info("Staring Gq Diameter Client Service [{}].", options.config());
-		GqSessionFactoryImpl sessionFactoryImpl = new GqSessionFactoryImpl(sessionFactory);
-		sessionFactory.registerAppFacory(ClientAuthSession.class, sessionFactoryImpl);
-		sessionFactoryImpl.setClientSessionListener(listener);
-	}
+    private void clientSetupGqFactory(ISessionFactory sessionFactory, String configProfile, ClientGqSessionListener listener)
+    {
+        LOG.info("Staring Gq Diameter Client Service [{}].", configProfile);
+        GqSessionFactoryImpl sessionFactoryImpl = new GqSessionFactoryImpl(sessionFactory);
+        sessionFactory.registerAppFacory(ClientAuthSession.class, sessionFactoryImpl);
+        sessionFactoryImpl.setClientSessionListener(listener);
+    }
 
-	private void serverSetupGqFactory(Stack stack, ISessionFactory sessionFactory, DiameterServiceOptions options, ServerGqSessionListener listener) throws ApplicationAlreadyUseException, InternalException
-	{
-		LOG.info("Staring Gq Diameter Server Service [{}].", options.config());
-		GqSessionFactoryImpl sessionFactoryImpl = new GqSessionFactoryImpl(sessionFactory);
-		sessionFactory.registerAppFacory(ServerAuthSession.class, sessionFactoryImpl);
-		sessionFactoryImpl.setServerSessionListener(listener);
-		setupDiameterServer(stack, sessionFactory, ServerAuthSession.class, listener, options);
-	}
+    private void serverSetupGqFactory(Stack stack, ISessionFactory sessionFactory, String configProfile, ServerGqSessionListener listener) throws ApplicationAlreadyUseException, InternalException
+    {
+        LOG.info("Staring Gq Diameter Server Service [{}].", configProfile);
+        GqSessionFactoryImpl sessionFactoryImpl = new GqSessionFactoryImpl(sessionFactory);
+        sessionFactory.registerAppFacory(ServerAuthSession.class, sessionFactoryImpl);
+        sessionFactoryImpl.setServerSessionListener(listener);
+        setupDiameterServer(stack, sessionFactory, ServerAuthSession.class, listener, configProfile);
+    }
 
-	private NetworkReqListener createListener(ISessionFactory sessionFactory, Class<? extends AppSession> appSession)
-	{
-		return request -> {
-			try {
-				ApplicationId appId = request.getApplicationIdAvps().isEmpty() ? null : request.getApplicationIdAvps().getFirst();
-				LOG.debug("Received request for {} and {}", appSession.getSimpleName(), appId);
-				NetworkReqListener listener = sessionFactory.getNewAppSession(request.getSessionId(), appId, appSession, Collections.emptyList());
-				return listener.processRequest(request);
-			}
-			catch (InternalException e) {
-				LOG.error(">< Failure handling received request.", e);
-			}
+    private NetworkReqListener createListener(ISessionFactory sessionFactory, Class<? extends AppSession> appSession)
+    {
+        return request -> {
+            try {
+                ApplicationId appId = request.getApplicationIdAvps().isEmpty() ? null : request.getApplicationIdAvps().getFirst();
+                LOG.debug("Received request for {} and {}", appSession.getSimpleName(), appId);
+                NetworkReqListener listener = sessionFactory.getNewAppSession(request.getSessionId(), appId, appSession, Collections.emptyList());
+                return listener.processRequest(request);
+            }
+            catch (InternalException e) {
+                LOG.error(">< Failure handling received request.", e);
+            }
 
-			return null;
-		};
-	}
+            return null;
+        };
+    }
 
-	private void setupDiameterServer(Stack stack, ISessionFactory sessionFactory, Class<? extends AppSession> appSessionClass, Object target, DiameterServiceOptions options) throws ApplicationAlreadyUseException, InternalException
-	{
-		NetworkReqListener networkReqListener;
-		//Check if the target implements their own listener. If they do, use their listener
-		if ((target instanceof NetworkReqListener listener)) {
-			networkReqListener = listener;
-		}
-		else {
-			networkReqListener = createListener(sessionFactory, appSessionClass);
-		}
+    private void setupDiameterServer(Stack stack, ISessionFactory sessionFactory, Class<? extends AppSession> appSessionClass, Object target, String configProfile) throws ApplicationAlreadyUseException, InternalException
+    {
+        NetworkReqListener networkReqListener;
+        //Check if the target implements their own listener. If they do, use their listener
+        if ((target instanceof NetworkReqListener listener)) {
+            networkReqListener = listener;
+        } else {
+            networkReqListener = createListener(sessionFactory, appSessionClass);
+        }
 
-		Network network = stack.unwrap(Network.class);
-		Set<ApplicationId> applIds = stack.getMetaData().getLocalPeer().getCommonApplications();
-		if (!applIds.isEmpty()) {
-			LOG.info("Diameter Server [{}]: Registering {} configured application(s)", options.config(), applIds.size());
-			for (ApplicationId applId : applIds) {
-				LOG.debug("Diameter Server [{}]: Registering {}", options.config(), applId);
-				network.addNetworkReqListener(networkReqListener, applId);
-			}
-		}
-	}
+        Network network = stack.unwrap(Network.class);
+        Set<ApplicationId> applIds = stack.getMetaData().getLocalPeer().getCommonApplications();
+        if (!applIds.isEmpty()) {
+            LOG.info("Diameter Server [{}]: Registering {} configured application(s)", configProfile, applIds.size());
+            for (ApplicationId applId : applIds) {
+                LOG.debug("Diameter Server [{}]: Registering {}", configProfile, applId);
+                network.addNetworkReqListener(networkReqListener, applId);
+            }
+        }
+    }
 
-	@PostConstruct
-	public Object startStack(InvocationContext context) throws Exception
-	{
-		DiameterServiceOptions options = context.getTarget().getClass().getAnnotation(DiameterServiceOptions.class);
-		if (options == null) {
-			throw new DiameterSetupException("@DiameterServiceOptions is required for @DeviceService");
-		}
+    @PostConstruct
+    public Object startStack(InvocationContext context) throws Exception
+    {
+        String configProfile;
+        DiameterServiceOptions options = context.getTarget().getClass().getAnnotation(DiameterServiceOptions.class);
+        if (options == null) {
+            configProfile = DiameterConfig.DEFAULT_CONFIG_NAME;
+        } else {
+            configProfile = options.value();
+        }
 
-		try (InstanceHandle<Stack> stackHandle = Arc.container().instance(Stack.class, new DiameterConfig.DiameterConfigLiteral(options.config()))) {
-			if (stackHandle.isAvailable()) {
-				Stack stack = stackHandle.get();
+        try (InstanceHandle<Stack> stackHandle = Arc.container().instance(Stack.class, new DiameterConfig.DiameterConfigLiteral(configProfile))) {
+            if (stackHandle.isAvailable()) {
+                Stack stack = stackHandle.get();
 
-				ISessionFactory sessionFactory = (ISessionFactory) stack.getSessionFactory();
+                ISessionFactory sessionFactory = (ISessionFactory) stack.getSessionFactory();
 
-				switch (context.getTarget()) {
-					case ClientCCASessionListener listener -> setupClientCAAFactory(sessionFactory, options, listener);
-					case ServerCCASessionListener listener -> setupServerCAAFactory(stack, sessionFactory, options, listener);
-					case ClientRxSessionListener listener -> clientSetupRxFactory(sessionFactory, options, listener);
-					case ServerRxSessionListener listener -> serverSetupRxFactory(stack, sessionFactory, options, listener);
-					case ClientS6aSessionListener listener -> clientSetupS6aFactory(sessionFactory, options, listener);
-					case ServerS6aSessionListener listener -> serverSetupS6aFactory(stack, sessionFactory, options, listener);
-					case ClientGqSessionListener listener -> clientSetupGqFactory(sessionFactory, options, listener);
-					case ServerGqSessionListener listener -> serverSetupGqFactory(stack, sessionFactory, options, listener);
-					default -> throw new DiameterSetupException("Unknown Diameter Service");
-				}
+                switch (context.getTarget()) {
+                    case ClientCCASessionListener listener -> setupClientCAAFactory(sessionFactory, configProfile, listener);
+                    case ServerCCASessionListener listener -> setupServerCAAFactory(stack, sessionFactory, configProfile, listener);
+                    case ClientRxSessionListener listener -> clientSetupRxFactory(sessionFactory, configProfile, listener);
+                    case ServerRxSessionListener listener -> serverSetupRxFactory(stack, sessionFactory, configProfile, listener);
+                    case ClientS6aSessionListener listener -> clientSetupS6aFactory(sessionFactory, configProfile, listener);
+                    case ServerS6aSessionListener listener -> serverSetupS6aFactory(stack, sessionFactory, configProfile, listener);
+                    case ClientGqSessionListener listener -> clientSetupGqFactory(sessionFactory, configProfile, listener);
+                    case ServerGqSessionListener listener -> serverSetupGqFactory(stack, sessionFactory, configProfile, listener);
+                    default -> {
+                        LOG.warn("No Session Listener implemented");
+                    }
+                }
 
-				if (!stack.isActive()) {
-					stack.start(Mode.ALL_PEERS, 30000, TimeUnit.MILLISECONDS);
-					LOG.debug("Starting the Diameter Stack [{}].", options.config());
-				}
-				else {
-					LOG.debug("The Diameter Stack is already started [{}].", options.config());
-				}
-			}
-		}
+                if (!stack.isActive()) {
+                    stack.start(Mode.ALL_PEERS, 30000, TimeUnit.MILLISECONDS);
+                    LOG.debug("Starting the Diameter Stack [{}].", configProfile);
+                } else {
+                    LOG.debug("The Diameter Stack is already started [{}].", configProfile);
+                }
+            }
+        }
 
-		return context.proceed();
-	}
+        return context.proceed();
+    }
 }
