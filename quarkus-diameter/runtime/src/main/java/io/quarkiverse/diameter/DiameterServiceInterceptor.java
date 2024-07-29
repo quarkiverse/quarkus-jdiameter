@@ -193,9 +193,8 @@ public class DiameterServiceInterceptor
                     case ServerS6aSessionListener listener -> serverSetupS6aFactory(stack, sessionFactory, configProfile, listener);
                     case ClientGqSessionListener listener -> clientSetupGqFactory(sessionFactory, configProfile, listener);
                     case ServerGqSessionListener listener -> serverSetupGqFactory(stack, sessionFactory, configProfile, listener);
-                    default -> {
-                        LOG.warn("No Session Listener implemented");
-                    }
+                    default -> LOG.warn("No Session Listener implemented");
+
                 }
 
                 if (!stack.isActive()) {
