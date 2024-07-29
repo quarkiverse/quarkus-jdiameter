@@ -23,7 +23,7 @@ public class DiameterConfiguration extends EmptyConfiguration
     {
         super(true);
 
-        securityItems = new ArrayList<>();
+        securityItems    = new ArrayList<>();
         this.tlsRegistry = tlsRegistry;
 
         addLocalPeer(config.localPeer());
@@ -249,7 +249,7 @@ public class DiameterConfiguration extends EmptyConfiguration
     protected AppConfiguration addAgent(Map<String, String> properties)
     {
         AppConfiguration agentConf = getInstance();
-        List<Configuration> props = new ArrayList<Configuration>();
+        List<Configuration> props = new ArrayList<>();
 
         for (Map.Entry<String, String> prop : properties.entrySet()) {
             AppConfiguration property = getInstance();
