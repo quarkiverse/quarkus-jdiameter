@@ -42,14 +42,7 @@
 
 package org.jdiameter.client.impl.app.s6a;
 
-import org.jdiameter.api.Answer;
-import org.jdiameter.api.EventListener;
-import org.jdiameter.api.IllegalDiameterStateException;
-import org.jdiameter.api.InternalException;
-import org.jdiameter.api.NetworkReqListener;
-import org.jdiameter.api.OverloadException;
-import org.jdiameter.api.Request;
-import org.jdiameter.api.RouteException;
+import org.jdiameter.api.*;
 import org.jdiameter.api.app.AppEvent;
 import org.jdiameter.api.app.StateChangeListener;
 import org.jdiameter.api.app.StateEvent;
@@ -73,7 +66,8 @@ import org.slf4j.LoggerFactory;
  */
 @SuppressWarnings("all") //3rd party lib
 public class S6aClientSessionImpl extends S6aSession
-        implements ClientS6aSession, EventListener<Request, Answer>, NetworkReqListener {
+        implements ClientS6aSession, EventListener<Request, Answer>, NetworkReqListener
+{
 
     private static final Logger logger = LoggerFactory.getLogger(S6aClientSessionImpl.class);
 
@@ -84,7 +78,8 @@ public class S6aClientSessionImpl extends S6aSession
     protected IClientS6aSessionData sessionData;
 
     public S6aClientSessionImpl(IClientS6aSessionData sessionData, IS6aMessageFactory fct, ISessionFactory sf,
-            ClientS6aSessionListener lst) {
+                                ClientS6aSessionListener lst)
+    {
         super(sf, sessionData);
         if (lst == null) {
             throw new IllegalArgumentException("Listener can not be null");
@@ -93,10 +88,15 @@ public class S6aClientSessionImpl extends S6aSession
             throw new IllegalArgumentException("ApplicationId can not be less than zero");
         }
 
-        this.appId = fct.getApplicationId();
-        this.listener = lst;
+        this.appId           = fct.getApplicationId();
+        this.listener        = lst;
         super.messageFactory = fct;
-        this.sessionData = sessionData;
+        this.sessionData     = sessionData;
+    }
+
+    public void setListener(ClientS6aSessionListener listener)
+    {
+        this.listener = listener;
     }
 
     /*
@@ -106,7 +106,8 @@ public class S6aClientSessionImpl extends S6aSession
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <E> E getState(Class<E> stateType) {
+    public <E> E getState(Class<E> stateType)
+    {
         return stateType == S6aSessionState.class ? (E) this.sessionData.getS6aSessionState() : null;
     }
 
@@ -116,7 +117,8 @@ public class S6aClientSessionImpl extends S6aSession
      * @see org.jdiameter.api.NetworkReqListener#processRequest(org.jdiameter.api.Request)
      */
     @Override
-    public Answer processRequest(Request request) {
+    public Answer processRequest(Request request)
+    {
         RequestDelivery rd = new RequestDelivery();
         rd.session = this;
         rd.request = request;
@@ -126,49 +128,57 @@ public class S6aClientSessionImpl extends S6aSession
 
     @Override
     public void sendAuthenticationInformationRequest(JAuthenticationInformationRequest request)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         send(Event.Type.SEND_MESSAGE, request, null);
     }
 
     @Override
     public void sendPurgeUERequest(JPurgeUERequest request)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         send(Event.Type.SEND_MESSAGE, request, null);
     }
 
     @Override
     public void sendNotifyRequest(JNotifyRequest request)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         send(Event.Type.SEND_MESSAGE, request, null);
     }
 
     @Override
     public void sendUpdateLocationRequest(JUpdateLocationRequest request)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         send(Event.Type.SEND_MESSAGE, request, null);
     }
 
     @Override
     public void sendCancelLocationAnswer(JCancelLocationAnswer answer)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         send(Event.Type.SEND_MESSAGE, null, answer);
     }
 
     @Override
     public void sendInsertSubscriberDataAnswer(JInsertSubscriberDataAnswer answer)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         send(Event.Type.SEND_MESSAGE, null, answer);
     }
 
     @Override
     public void sendDeleteSubscriberDataAnswer(JDeleteSubscriberDataAnswer answer)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         send(Event.Type.SEND_MESSAGE, null, answer);
     }
 
     @Override
     public void sendResetAnswer(JResetAnswer answer)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         send(Event.Type.SEND_MESSAGE, null, answer);
     }
 
@@ -178,11 +188,12 @@ public class S6aClientSessionImpl extends S6aSession
      * @see org.jdiameter.api.EventListener#receivedSuccessMessage(org.jdiameter.api.Message, org.jdiameter.api.Message)
      */
     @Override
-    public void receivedSuccessMessage(Request request, Answer answer) {
+    public void receivedSuccessMessage(Request request, Answer answer)
+    {
         AnswerDelivery rd = new AnswerDelivery();
         rd.session = this;
         rd.request = request;
-        rd.answer = answer;
+        rd.answer  = answer;
         super.scheduler.execute(rd);
     }
 
@@ -193,26 +204,31 @@ public class S6aClientSessionImpl extends S6aSession
      * org.jdiameter.api.EventListener#timeoutExpired(org.jdiameter.api.Message)
      */
     @Override
-    public void timeoutExpired(Request request) {
+    public void timeoutExpired(Request request)
+    {
         try {
             handleEvent(new Event(Event.Type.TIMEOUT_EXPIRES, new AppRequestEventImpl(request), null));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             logger.debug("Failed to process timeout message", e);
         }
     }
 
-    protected void send(Event.Type type, AppEvent request, AppEvent answer) throws InternalException {
+    protected void send(Event.Type type, AppEvent request, AppEvent answer) throws InternalException
+    {
         try {
             if (type != null) {
                 handleEvent(new Event(type, request, answer));
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new InternalException(e);
         }
     }
 
     @Override
-    public boolean handleEvent(StateEvent event) throws InternalException, OverloadException {
+    public boolean handleEvent(StateEvent event) throws InternalException, OverloadException
+    {
         try {
             sendAndStateLock.lock();
             if (!super.session.isValid()) {
@@ -267,7 +283,7 @@ public class S6aClientSessionImpl extends S6aSession
 
                         default:
                             logger.error("Invalid Event Type {} for S6a Client Session at state {}.", eventType,
-                                    sessionData.getS6aSessionState());
+                                         sessionData.getS6aSessionState());
                             break;
                     }
                     break;
@@ -282,7 +298,8 @@ public class S6aClientSessionImpl extends S6aSession
                         case SEND_MESSAGE:
                             try {
                                 super.session.send(((AppEvent) event.getData()).getMessage(), this);
-                            } finally {
+                            }
+                            finally {
                                 newState = S6aSessionState.TERMINATED;
                                 setState(newState);
                             }
@@ -293,7 +310,7 @@ public class S6aClientSessionImpl extends S6aSession
                             setState(newState);
                             super.cancelMsgTimer();
                             listener.doUpdateLocationAnswerEvent(this, (JUpdateLocationRequest) localEvent.getRequest(),
-                                    (JUpdateLocationAnswer) localEvent.getAnswer());
+                                                                 (JUpdateLocationAnswer) localEvent.getAnswer());
                             break;
 
                         case RECEIVE_AIA:
@@ -301,8 +318,8 @@ public class S6aClientSessionImpl extends S6aSession
                             setState(newState);
                             super.cancelMsgTimer();
                             listener.doAuthenticationInformationAnswerEvent(this,
-                                    (JAuthenticationInformationRequest) localEvent.getRequest(),
-                                    (JAuthenticationInformationAnswer) localEvent.getAnswer());
+                                                                            (JAuthenticationInformationRequest) localEvent.getRequest(),
+                                                                            (JAuthenticationInformationAnswer) localEvent.getAnswer());
                             break;
 
                         case RECEIVE_PUA:
@@ -310,7 +327,7 @@ public class S6aClientSessionImpl extends S6aSession
                             setState(newState);
                             super.cancelMsgTimer();
                             listener.doPurgeUEAnswerEvent(this, (JPurgeUERequest) localEvent.getRequest(),
-                                    (JPurgeUEAnswer) localEvent.getAnswer());
+                                                          (JPurgeUEAnswer) localEvent.getAnswer());
                             break;
 
                         case RECEIVE_NOA:
@@ -318,7 +335,7 @@ public class S6aClientSessionImpl extends S6aSession
                             setState(newState);
                             super.cancelMsgTimer();
                             listener.doNotifyAnswerEvent(this, (JNotifyRequest) localEvent.getRequest(),
-                                    (JNotifyAnswer) localEvent.getAnswer());
+                                                         (JNotifyAnswer) localEvent.getAnswer());
                             break;
 
                         default:
@@ -336,9 +353,11 @@ public class S6aClientSessionImpl extends S6aSession
                     logger.error("S6a Client FSM in wrong state: {}", state);
                     break;
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new InternalException(e);
-        } finally {
+        }
+        finally {
             sendAndStateLock.unlock();
         }
 
@@ -346,7 +365,8 @@ public class S6aClientSessionImpl extends S6aSession
     }
 
     @SuppressWarnings("unchecked")
-    protected void setState(S6aSessionState newState) {
+    protected void setState(S6aSessionState newState)
+    {
         S6aSessionState oldState = this.sessionData.getS6aSessionState();
         this.sessionData.setS6aSessionState(newState);
 
@@ -365,7 +385,8 @@ public class S6aClientSessionImpl extends S6aSession
      * @see org.jdiameter.common.impl.app.AppSessionImpl#onTimer(java.lang.String)
      */
     @Override
-    public void onTimer(String timerName) {
+    public void onTimer(String timerName)
+    {
         if (timerName.equals(IDLE_SESSION_TIMER_NAME)) {
             checkIdleAppSession();
         } else if (timerName.equals(S6aSession.TIMER_NAME_MSG_TIMEOUT)) {
@@ -374,12 +395,14 @@ public class S6aClientSessionImpl extends S6aSession
                 try {
                     handleEvent(
                             new Event(Event.Type.TIMEOUT_EXPIRES, new AppRequestEventImpl(this.sessionData.getBuffer()), null));
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     logger.debug("Failure handling Timeout event.");
                 }
                 this.sessionData.setBuffer(null);
                 this.sessionData.setTsTimerId(null);
-            } finally {
+            }
+            finally {
                 sendAndStateLock.unlock();
             }
         } else {
@@ -393,7 +416,8 @@ public class S6aClientSessionImpl extends S6aSession
      * @see org.jdiameter.common.impl.app.s6a.S6aSession#hashCode()
      */
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         final int prime = 31;
         int result = super.hashCode();
         result = prime * result + (int) (appId ^ (appId >>> 32));
@@ -406,7 +430,8 @@ public class S6aClientSessionImpl extends S6aSession
      * @see org.jdiameter.common.impl.app.s6a.S6aSession#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         if (this == obj) {
             return true;
         }
@@ -426,14 +451,17 @@ public class S6aClientSessionImpl extends S6aSession
     }
 
     @Override
-    public void release() {
+    public void release()
+    {
         if (isValid()) {
             try {
                 sendAndStateLock.lock();
                 super.release();
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failed to release session", e);
-            } finally {
+            }
+            finally {
                 sendAndStateLock.unlock();
             }
         } else {
@@ -441,12 +469,14 @@ public class S6aClientSessionImpl extends S6aSession
         }
     }
 
-    private class RequestDelivery implements Runnable {
+    private class RequestDelivery implements Runnable
+    {
         ClientS6aSession session;
         Request request;
 
         @Override
-        public void run() {
+        public void run()
+        {
             try {
                 switch (request.getCommandCode()) {
                     case JCancelLocationRequest.code:
@@ -456,12 +486,12 @@ public class S6aClientSessionImpl extends S6aSession
 
                     case JInsertSubscriberDataRequest.code:
                         handleEvent(new Event(Event.Type.RECEIVE_IDR, messageFactory.createInsertSubscriberDataRequest(request),
-                                null));
+                                              null));
                         break;
 
                     case JDeleteSubscriberDataRequest.code:
                         handleEvent(new Event(Event.Type.RECEIVE_DSR, messageFactory.createDeleteSubscriberDataRequest(request),
-                                null));
+                                              null));
                         break;
 
                     case JResetRequest.code:
@@ -472,47 +502,51 @@ public class S6aClientSessionImpl extends S6aSession
                         listener.doOtherEvent(session, new AppRequestEventImpl(request), null);
                         break;
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failed to process request message", e);
             }
         }
     }
 
-    private class AnswerDelivery implements Runnable {
+    private class AnswerDelivery implements Runnable
+    {
         ClientS6aSession session;
         Answer answer;
         Request request;
 
         @Override
-        public void run() {
+        public void run()
+        {
             try {
                 switch (answer.getCommandCode()) {
                     case JUpdateLocationAnswer.code:
                         handleEvent(new Event(Event.Type.RECEIVE_ULA, messageFactory.createUpdateLocationRequest(request),
-                                messageFactory.createUpdateLocationAnswer(answer)));
+                                              messageFactory.createUpdateLocationAnswer(answer)));
                         break;
 
                     case JAuthenticationInformationAnswer.code:
                         handleEvent(new Event(Event.Type.RECEIVE_AIA,
-                                messageFactory.createAuthenticationInformationRequest(request),
-                                messageFactory.createAuthenticationInformationAnswer(answer)));
+                                              messageFactory.createAuthenticationInformationRequest(request),
+                                              messageFactory.createAuthenticationInformationAnswer(answer)));
                         break;
 
                     case JPurgeUEAnswer.code:
                         handleEvent(new Event(Event.Type.RECEIVE_PUA, messageFactory.createPurgeUERequest(request),
-                                messageFactory.createPurgeUEAnswer(answer)));
+                                              messageFactory.createPurgeUEAnswer(answer)));
                         break;
 
                     case JNotifyAnswer.code:
                         handleEvent(new Event(Event.Type.RECEIVE_NOA, messageFactory.createNotifyRequest(request),
-                                messageFactory.createNotifyAnswer(answer)));
+                                              messageFactory.createNotifyAnswer(answer)));
                         break;
 
                     default:
                         listener.doOtherEvent(session, new AppRequestEventImpl(request), new AppAnswerEventImpl(answer));
                         break;
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failed to process success message", e);
             }
         }

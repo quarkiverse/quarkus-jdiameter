@@ -21,14 +21,7 @@
 
 package org.jdiameter.client.impl.app.slh;
 
-import org.jdiameter.api.Answer;
-import org.jdiameter.api.EventListener;
-import org.jdiameter.api.IllegalDiameterStateException;
-import org.jdiameter.api.InternalException;
-import org.jdiameter.api.NetworkReqListener;
-import org.jdiameter.api.OverloadException;
-import org.jdiameter.api.Request;
-import org.jdiameter.api.RouteException;
+import org.jdiameter.api.*;
 import org.jdiameter.api.app.AppEvent;
 import org.jdiameter.api.app.StateChangeListener;
 import org.jdiameter.api.app.StateEvent;
@@ -51,7 +44,8 @@ import org.slf4j.LoggerFactory;
  */
 @SuppressWarnings("all") //3rd party lib
 public class SLhClientSessionImpl extends SLhSession
-        implements ClientSLhSession, EventListener<Request, Answer>, NetworkReqListener {
+        implements ClientSLhSession, EventListener<Request, Answer>, NetworkReqListener
+{
 
     private static final Logger logger = LoggerFactory.getLogger(SLhClientSessionImpl.class);
 
@@ -61,7 +55,8 @@ public class SLhClientSessionImpl extends SLhSession
     protected IClientSLhSessionData sessionData;
 
     public SLhClientSessionImpl(IClientSLhSessionData sessionData, ISLhMessageFactory fct, ISessionFactory sf,
-            ClientSLhSessionListener lst) {
+                                ClientSLhSessionListener lst)
+    {
         super(sf, sessionData);
         if (lst == null) {
             throw new IllegalArgumentException("Listener can not be null");
@@ -70,18 +65,25 @@ public class SLhClientSessionImpl extends SLhSession
             throw new IllegalArgumentException("ApplicationId can not be less than zero");
         }
 
-        this.appId = fct.getApplicationId();
-        this.listener = lst;
+        this.appId           = fct.getApplicationId();
+        this.listener        = lst;
         super.messageFactory = fct;
-        this.sessionData = sessionData;
+        this.sessionData     = sessionData;
+    }
+
+    public void setListener(ClientSLhSessionListener listener)
+    {
+        this.listener = listener;
     }
 
     @SuppressWarnings("unchecked")
-    public <E> E getState(Class<E> stateType) {
+    public <E> E getState(Class<E> stateType)
+    {
         return stateType == SLhSessionState.class ? (E) this.sessionData.getSLhSessionState() : null;
     }
 
-    public Answer processRequest(Request request) {
+    public Answer processRequest(Request request)
+    {
         RequestDelivery rd = new RequestDelivery();
         rd.session = this;
         rd.request = request;
@@ -90,37 +92,44 @@ public class SLhClientSessionImpl extends SLhSession
     }
 
     public void sendLCSRoutingInfoRequest(LCSRoutingInfoRequest request)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         send(Event.Type.SEND_MESSAGE, request, null);
     }
 
-    public void receivedSuccessMessage(Request request, Answer answer) {
+    public void receivedSuccessMessage(Request request, Answer answer)
+    {
         AnswerDelivery rd = new AnswerDelivery();
         rd.session = this;
         rd.request = request;
-        rd.answer = answer;
+        rd.answer  = answer;
         super.scheduler.execute(rd);
     }
 
-    public void timeoutExpired(Request request) {
+    public void timeoutExpired(Request request)
+    {
         try {
             handleEvent(new Event(Event.Type.TIMEOUT_EXPIRES, new AppRequestEventImpl(request), null));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             logger.debug("Failed to process timeout message", e);
         }
     }
 
-    protected void send(Event.Type type, AppEvent request, AppEvent answer) throws InternalException {
+    protected void send(Event.Type type, AppEvent request, AppEvent answer) throws InternalException
+    {
         try {
             if (type != null) {
                 handleEvent(new Event(type, request, answer));
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new InternalException(e);
         }
     }
 
-    public boolean handleEvent(StateEvent event) throws InternalException, OverloadException {
+    public boolean handleEvent(StateEvent event) throws InternalException, OverloadException
+    {
         try {
             sendAndStateLock.lock();
             if (!super.session.isValid()) {
@@ -144,7 +153,7 @@ public class SLhClientSessionImpl extends SLhSession
 
                         default:
                             logger.error("Invalid Event Type {} for SLh Client Session at state {}.", eventType,
-                                    sessionData.getSLhSessionState());
+                                         sessionData.getSLhSessionState());
                             break;
                     }
                     break;
@@ -159,7 +168,8 @@ public class SLhClientSessionImpl extends SLhSession
                         case SEND_MESSAGE:
                             try {
                                 super.session.send(((AppEvent) event.getData()).getMessage(), this);
-                            } finally {
+                            }
+                            finally {
                                 newState = SLhSessionState.TERMINATED;
                                 setState(newState);
                             }
@@ -169,7 +179,7 @@ public class SLhClientSessionImpl extends SLhSession
                             newState = SLhSessionState.TERMINATED;
                             setState(newState);
                             listener.doLCSRoutingInfoAnswerEvent(this, (LCSRoutingInfoRequest) localEvent.getRequest(),
-                                    (LCSRoutingInfoAnswer) localEvent.getAnswer());
+                                                                 (LCSRoutingInfoAnswer) localEvent.getAnswer());
                             break;
 
                         default:
@@ -187,16 +197,19 @@ public class SLhClientSessionImpl extends SLhSession
                     logger.error("SLh Client FSM in wrong state: {}", state);
                     break;
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new InternalException(e);
-        } finally {
+        }
+        finally {
             sendAndStateLock.unlock();
         }
         return true;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    protected void setState(SLhSessionState newState) {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    protected void setState(SLhSessionState newState)
+    {
         SLhSessionState oldState = this.sessionData.getSLhSessionState();
         this.sessionData.setSLhSessionState(newState);
 
@@ -209,26 +222,30 @@ public class SLhClientSessionImpl extends SLhSession
         }
     }
 
-    public void onTimer(String timerName) {
+    public void onTimer(String timerName)
+    {
         if (timerName.equals(SLhSession.TIMER_NAME_MSG_TIMEOUT)) {
             try {
                 sendAndStateLock.lock();
                 try {
                     handleEvent(
                             new Event(Event.Type.TIMEOUT_EXPIRES, new AppRequestEventImpl(this.sessionData.getBuffer()), null));
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     logger.debug("Failure handling Timeout event.");
                 }
                 this.sessionData.setBuffer(null);
                 this.sessionData.setTsTimerId(null);
-            } finally {
+            }
+            finally {
                 sendAndStateLock.unlock();
             }
         }
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         final int prime = 31;
         int result = super.hashCode();
         result = prime * result + (int) (appId ^ (appId >>> 32));
@@ -236,7 +253,8 @@ public class SLhClientSessionImpl extends SLhSession
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         if (this == obj) {
             return true;
         }
@@ -255,14 +273,17 @@ public class SLhClientSessionImpl extends SLhSession
     }
 
     @Override
-    public void release() {
+    public void release()
+    {
         if (isValid()) {
             try {
                 sendAndStateLock.lock();
                 super.release();
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failed to release session", e);
-            } finally {
+            }
+            finally {
                 sendAndStateLock.unlock();
             }
         } else {
@@ -270,11 +291,13 @@ public class SLhClientSessionImpl extends SLhSession
         }
     }
 
-    private class RequestDelivery implements Runnable {
+    private class RequestDelivery implements Runnable
+    {
         ClientSLhSession session;
         Request request;
 
-        public void run() {
+        public void run()
+        {
             try {
                 switch (request.getCommandCode()) {
 
@@ -282,31 +305,35 @@ public class SLhClientSessionImpl extends SLhSession
                         listener.doOtherEvent(session, new AppRequestEventImpl(request), null);
                         break;
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failed to process request message", e);
             }
         }
     }
 
-    private class AnswerDelivery implements Runnable {
+    private class AnswerDelivery implements Runnable
+    {
         ClientSLhSession session;
         Answer answer;
         Request request;
 
-        public void run() {
+        public void run()
+        {
             try {
                 switch (answer.getCommandCode()) {
 
                     case LCSRoutingInfoAnswer.code:
                         handleEvent(new Event(Event.Type.RECEIVE_RIA, messageFactory.createLCSRoutingInfoRequest(request),
-                                messageFactory.createLCSRoutingInfoAnswer(answer)));
+                                              messageFactory.createLCSRoutingInfoAnswer(answer)));
                         break;
 
                     default:
                         listener.doOtherEvent(session, new AppRequestEventImpl(request), new AppAnswerEventImpl(answer));
                         break;
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failed to process success message", e);
             }
         }

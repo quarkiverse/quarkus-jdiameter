@@ -42,30 +42,8 @@
 
 package org.jdiameter.client.impl.app.ro;
 
-import java.io.Serializable;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import org.jdiameter.api.Answer;
-import org.jdiameter.api.AvpDataException;
-import org.jdiameter.api.EventListener;
-import org.jdiameter.api.IllegalDiameterStateException;
-import org.jdiameter.api.InternalException;
-import org.jdiameter.api.Message;
-import org.jdiameter.api.NetworkReqListener;
-import org.jdiameter.api.OverloadException;
-import org.jdiameter.api.Request;
-import org.jdiameter.api.RouteException;
-import org.jdiameter.api.app.AppAnswerEvent;
-import org.jdiameter.api.app.AppEvent;
-import org.jdiameter.api.app.AppSession;
-import org.jdiameter.api.app.StateChangeListener;
-import org.jdiameter.api.app.StateEvent;
+import org.jdiameter.api.*;
+import org.jdiameter.api.app.*;
 import org.jdiameter.api.auth.events.ReAuthAnswer;
 import org.jdiameter.api.auth.events.ReAuthRequest;
 import org.jdiameter.api.ro.ClientRoSession;
@@ -88,6 +66,15 @@ import org.jdiameter.common.impl.app.ro.AppRoSessionImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * Client Credit-Control Application session implementation
  *
@@ -96,7 +83,8 @@ import org.slf4j.LoggerFactory;
  */
 @SuppressWarnings("all") //3rd party lib
 public class ClientRoSessionImpl extends AppRoSessionImpl
-        implements ClientRoSession, NetworkReqListener, EventListener<Request, Answer> {
+        implements ClientRoSession, NetworkReqListener, EventListener<Request, Answer>
+{
 
     private static final Logger logger = LoggerFactory.getLogger(ClientRoSessionImpl.class);
 
@@ -115,7 +103,7 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
     protected static final String TX_TIMER_NAME = "Ro_CLIENT_TX_TIMER";
     protected static final long TX_TIMER_DEFAULT_VALUE = 30 * 60 * 1000; // miliseconds
 
-    protected long[] authAppIds = new long[] { 4 };
+    protected long[] authAppIds = new long[]{4};
 
     // Requested Action + Credit-Control and Direct-Debiting Failure-Handling ---
     protected static final int CCFH_TERMINATE = 0;
@@ -155,8 +143,9 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
     protected ArrayList<Event> eventQueue = new ArrayList<Event>();
 
     public ClientRoSessionImpl(IClientRoSessionData sessionData, IRoMessageFactory fct, ISessionFactory sf,
-            ClientRoSessionListener lst,
-            IClientRoSessionContext ctx, StateChangeListener<AppSession> stLst) {
+                               ClientRoSessionListener lst,
+                               IClientRoSessionContext ctx, StateChangeListener<AppSession> stLst)
+    {
         super(sf, sessionData);
         if (lst == null) {
             throw new IllegalArgumentException("Listener can not be null");
@@ -167,11 +156,11 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
         if (sessionData == null) {
             throw new IllegalArgumentException("SessionData can not be null");
         }
-        this.context = ctx;
+        this.context     = ctx;
         this.sessionData = sessionData;
-        this.authAppIds = fct.getApplicationIds();
-        this.listener = lst;
-        this.factory = fct;
+        this.authAppIds  = fct.getApplicationIds();
+        this.listener    = lst;
+        this.factory     = fct;
 
         IContainer icontainer = sf.getContainer();
         this.parser = icontainer.getAssemblerFacility().getComponentInstance(IMessageParser.class);
@@ -180,52 +169,67 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
 
     }
 
-    protected int getLocalCCFH() {
+    public void setListener(ClientRoSessionListener listener)
+    {
+        this.listener = listener;
+    }
+
+    protected int getLocalCCFH()
+    {
         return sessionData.getGatheredCCFH() >= 0 ? sessionData.getGatheredCCFH() : context.getDefaultCCFHValue();
     }
 
-    protected int getLocalDDFH() {
+    protected int getLocalDDFH()
+    {
         return sessionData.getGatheredDDFH() >= 0 ? sessionData.getGatheredDDFH() : context.getDefaultDDFHValue();
     }
 
     @Override
     public void sendCreditControlRequest(RoCreditControlRequest request)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         try {
             extractFHAVPs(request, null);
             this.handleEvent(new Event(true, request, null));
-        } catch (AvpDataException e) {
+        }
+        catch (AvpDataException e) {
             throw new InternalException(e);
         }
     }
 
     @Override
     public void sendReAuthAnswer(ReAuthAnswer answer)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         this.handleEvent(new Event(Event.Type.SEND_RAA, null, answer));
     }
 
     @Override
-    public boolean isStateless() {
+    public boolean isStateless()
+    {
         return false;
     }
 
-    public boolean isEventBased() {
+    public boolean isEventBased()
+    {
         return sessionData.isEventBased();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <E> E getState(Class<E> stateType) {
+    public <E> E getState(Class<E> stateType)
+    {
         return stateType == ClientRoSessionState.class ? (E) sessionData.getClientRoSessionState() : null;
     }
 
     @Override
-    public boolean handleEvent(StateEvent event) throws InternalException, OverloadException {
+    public boolean handleEvent(StateEvent event) throws InternalException, OverloadException
+    {
         return this.isEventBased() ? handleEventForEventBased(event) : handleEventForSessionBased(event);
     }
 
-    protected boolean handleEventForEventBased(StateEvent event) throws InternalException, OverloadException {
+    protected boolean handleEventForEventBased(StateEvent event) throws InternalException, OverloadException
+    {
         try {
             sendAndStateLock.lock();
             ClientRoSessionState state = sessionData.getClientRoSessionState();
@@ -244,7 +248,8 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
                             setState(ClientRoSessionState.PENDING_EVENT);
                             try {
                                 dispatchEvent(localEvent.getRequest());
-                            } catch (Exception e) {
+                            }
+                            catch (Exception e) {
                                 // This handles failure to send in PendingI state in FSM table
                                 logger.debug("Failure handling send event request", e);
                                 handleSendFailure(e, eventType, localEvent.getRequest().getMessage());
@@ -271,12 +276,13 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
                                 }
                                 if (isProvisional(resultCode) || isFailure(resultCode)) {
                                     handleFailureMessage((RoCreditControlAnswer) answer,
-                                            (RoCreditControlRequest) localEvent.getRequest(), eventType);
+                                                         (RoCreditControlRequest) localEvent.getRequest(), eventType);
                                 }
 
                                 deliverRoAnswer((RoCreditControlRequest) localEvent.getRequest(),
-                                        (RoCreditControlAnswer) localEvent.getAnswer());
-                            } catch (AvpDataException e) {
+                                                (RoCreditControlAnswer) localEvent.getAnswer());
+                            }
+                            catch (AvpDataException e) {
                                 logger.debug("Failure handling received answer event", e);
                                 setState(ClientRoSessionState.IDLE, false);
                             }
@@ -300,7 +306,7 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
                             setState(ClientRoSessionState.IDLE, false);
                             sessionData.setBuffer(null);
                             deliverRoAnswer((RoCreditControlRequest) localEvent.getRequest(),
-                                    (RoCreditControlAnswer) localEvent.getAnswer());
+                                            (RoCreditControlAnswer) localEvent.getAnswer());
                             break;
                         default:
                             logger.warn("Wrong event type ({}) on state {}", eventType, state);
@@ -315,14 +321,17 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
 
             dispatch();
             return true;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new InternalException(e);
-        } finally {
+        }
+        finally {
             sendAndStateLock.unlock();
         }
     }
 
-    protected boolean handleEventForSessionBased(StateEvent event) throws InternalException, OverloadException {
+    protected boolean handleEventForSessionBased(StateEvent event) throws InternalException, OverloadException
+    {
         try {
             sendAndStateLock.lock();
             ClientRoSessionState state = sessionData.getClientRoSessionState();
@@ -341,7 +350,8 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
                             setState(ClientRoSessionState.PENDING_INITIAL);
                             try {
                                 dispatchEvent(localEvent.getRequest());
-                            } catch (Exception e) {
+                            }
+                            catch (Exception e) {
                                 // This handles failure to send in PendingI state in FSM table
                                 handleSendFailure(e, eventType, localEvent.getRequest().getMessage());
                             }
@@ -366,10 +376,10 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
                                 setState(ClientRoSessionState.OPEN);
                             } else if (isProvisional(resultCode) || isFailure(resultCode)) {
                                 handleFailureMessage((RoCreditControlAnswer) answer,
-                                        (RoCreditControlRequest) localEvent.getRequest(), eventType);
+                                                     (RoCreditControlRequest) localEvent.getRequest(), eventType);
                             }
                             deliverRoAnswer((RoCreditControlRequest) localEvent.getRequest(),
-                                    (RoCreditControlAnswer) localEvent.getAnswer());
+                                            (RoCreditControlAnswer) localEvent.getAnswer());
                             break;
                         case Tx_TIMER_FIRED:
                             handleTxExpires(localEvent.getRequest().getMessage());
@@ -419,7 +429,8 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
                             setState(ClientRoSessionState.PENDING_UPDATE);
                             try {
                                 dispatchEvent(localEvent.getRequest());
-                            } catch (Exception e) {
+                            }
+                            catch (Exception e) {
                                 // This handles failure to send in PendingI state in FSM table
                                 handleSendFailure(e, eventType, localEvent.getRequest().getMessage());
                             }
@@ -442,7 +453,8 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
                             setState(ClientRoSessionState.PENDING_TERMINATION);
                             try {
                                 dispatchEvent(localEvent.getRequest());
-                            } catch (Exception e) {
+                            }
+                            catch (Exception e) {
                                 handleSendFailure(e, eventType, localEvent.getRequest().getMessage());
                             }
                             break;
@@ -452,7 +464,8 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
                         case SEND_RAA:
                             try {
                                 dispatchEvent(localEvent.getAnswer());
-                            } catch (Exception e) {
+                            }
+                            catch (Exception e) {
                                 handleSendFailure(e, eventType, localEvent.getRequest().getMessage());
                             }
                             break;
@@ -477,10 +490,10 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
                                 setState(ClientRoSessionState.OPEN);
                             } else if (isProvisional(resultCode) || isFailure(resultCode)) {
                                 handleFailureMessage((RoCreditControlAnswer) answer,
-                                        (RoCreditControlRequest) localEvent.getRequest(), eventType);
+                                                     (RoCreditControlRequest) localEvent.getRequest(), eventType);
                             }
                             deliverRoAnswer((RoCreditControlRequest) localEvent.getRequest(),
-                                    (RoCreditControlAnswer) localEvent.getAnswer());
+                                            (RoCreditControlAnswer) localEvent.getAnswer());
                             break;
                         case Tx_TIMER_FIRED:
                             handleTxExpires(localEvent.getRequest().getMessage());
@@ -509,7 +522,8 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
                             // New State: PENDING_U
                             try {
                                 dispatchEvent(localEvent.getAnswer());
-                            } catch (Exception e) {
+                            }
+                            catch (Exception e) {
                                 handleSendFailure(e, eventType, localEvent.getRequest().getMessage());
                             }
                             break;
@@ -527,7 +541,8 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
                                 // New State: PENDING_T
                                 dispatchEvent(localEvent.getRequest());
                                 // No transition
-                            } catch (Exception e) {
+                            }
+                            catch (Exception e) {
                                 // This handles failure to send in PendingI state in FSM table
                                 // handleSendFailure(e, eventType);
                             }
@@ -546,7 +561,7 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
                             //FIXME: Alex broke this, setting back "true" ?
                             //setState(ClientRoSessionState.IDLE, false);
                             deliverRoAnswer((RoCreditControlRequest) localEvent.getRequest(),
-                                    (RoCreditControlAnswer) localEvent.getAnswer());
+                                            (RoCreditControlAnswer) localEvent.getAnswer());
                             setState(ClientRoSessionState.IDLE, true);
                             break;
                         default:
@@ -562,15 +577,18 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
 
             dispatch();
             return true;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new InternalException(e);
-        } finally {
+        }
+        finally {
             sendAndStateLock.unlock();
         }
     }
 
     @Override
-    public Answer processRequest(Request request) {
+    public Answer processRequest(Request request)
+    {
         RequestDelivery rd = new RequestDelivery();
         rd.session = this;
         rd.request = request;
@@ -579,30 +597,35 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
     }
 
     @Override
-    public void receivedSuccessMessage(Request request, Answer answer) {
+    public void receivedSuccessMessage(Request request, Answer answer)
+    {
         AnswerDelivery ad = new AnswerDelivery();
         ad.session = this;
         ad.request = request;
-        ad.answer = answer;
+        ad.answer  = answer;
         super.scheduler.execute(ad);
 
     }
 
     @Override
-    public void timeoutExpired(Request request) {
+    public void timeoutExpired(Request request)
+    {
         if (request.getCommandCode() == RoCreditControlAnswer.code) {
             try {
                 sendAndStateLock.lock();
                 handleSendFailure(null, null, request);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failure processing timeout message for request", e);
-            } finally {
+            }
+            finally {
                 sendAndStateLock.unlock();
             }
         }
     }
 
-    protected void startTx(RoCreditControlRequest request) {
+    protected void startTx(RoCreditControlRequest request)
+    {
         long txTimerValue = context.getDefaultTxTimerValue();
         if (txTimerValue < 0) {
             txTimerValue = TX_TIMER_DEFAULT_VALUE;
@@ -615,12 +638,14 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
             sessionData.setTxTimerRequest((Request) request.getMessage());
             sessionData.setTxTimerId(
                     this.timerFacility.schedule(this.sessionData.getSessionId(), TX_TIMER_NAME, TX_TIMER_DEFAULT_VALUE));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new IllegalArgumentException("Failed to store request.", e);
         }
     }
 
-    protected void stopTx() {
+    protected void stopTx()
+    {
         Serializable txTimerId = this.sessionData.getTxTimerId();
         if (txTimerId != null) {
             timerFacility.cancel(txTimerId);
@@ -635,7 +660,8 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
      * @see org.jdiameter.common.impl.app.AppSessionImpl#onTimer(java.lang.String)
      */
     @Override
-    public void onTimer(String timerName) {
+    public void onTimer(String timerName)
+    {
         if (timerName.equals(IDLE_SESSION_TIMER_NAME)) {
             checkIdleAppSession();
         } else if (timerName.equals(TX_TIMER_NAME)) {
@@ -645,12 +671,14 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
         }
     }
 
-    protected void setState(ClientRoSessionState newState) {
+    protected void setState(ClientRoSessionState newState)
+    {
         setState(newState, true);
     }
 
     @SuppressWarnings("unchecked")
-    protected void setState(ClientRoSessionState newState, boolean release) {
+    protected void setState(ClientRoSessionState newState, boolean release)
+    {
         try {
             IAppSessionState state = sessionData.getClientRoSessionState();
             IAppSessionState oldState = state;
@@ -665,7 +693,8 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
                 }
                 stopTx();
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             if (logger.isDebugEnabled()) {
                 logger.debug(
                         "Failure switching to state " + sessionData.getClientRoSessionState() + " (release=" + release + ")",
@@ -675,15 +704,18 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
     }
 
     @Override
-    public void release() {
+    public void release()
+    {
         if (isValid()) {
             try {
                 this.sendAndStateLock.lock();
                 this.stopTx();
                 super.release();
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failed to release session", e);
-            } finally {
+            }
+            finally {
                 this.sendAndStateLock.unlock();
             }
         } else {
@@ -691,9 +723,10 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
         }
     }
 
-    protected void handleSendFailure(Exception e, Event.Type eventType, Message request) throws Exception {
+    protected void handleSendFailure(Exception e, Event.Type eventType, Message request) throws Exception
+    {
         logger.debug("Failed to send message, type: {} message: {}, failure: {}",
-                new Object[] { eventType, request, e != null ? e.getLocalizedMessage() : "" });
+                     new Object[]{eventType, request, e != null ? e.getLocalizedMessage() : ""});
         try {
             ClientRoSessionState state = sessionData.getClientRoSessionState();
             // Event Based ----------------------------------------------------------
@@ -787,12 +820,14 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
                         break;
                 }
             }
-        } finally {
+        }
+        finally {
             dispatch();
         }
     }
 
-    protected void handleFailureMessage(RoCreditControlAnswer event, RoCreditControlRequest request, Event.Type eventType) {
+    protected void handleFailureMessage(RoCreditControlAnswer event, RoCreditControlRequest request, Event.Type eventType)
+    {
         try {
             // Event Based ----------------------------------------------------------
             long resultCode = event.getResultCodeAvp().getUnsigned32();
@@ -863,7 +898,8 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
                             } else {
                                 logger.warn(
                                         "Invalid combination for Ro Client FSM: State {}, Result-Code {}, Requested-Action {}, DDFH {}, Tx {}",
-                                        new Object[] { state, resultCode, gatheredRequestedAction, getLocalDDFH(), txTimerId });
+                                        new Object[]{state, resultCode, gatheredRequestedAction, getLocalDDFH(),
+                                                     txTimerId});
                             }
                         } else { // Failure
                             if (gatheredRequestedAction == CHECK_BALANCE || gatheredRequestedAction == PRICE_ENQUIRY) {
@@ -904,7 +940,8 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
                             } else {
                                 logger.warn(
                                         "Invalid combination for Ro Client FSM: State {}, Result-Code {}, Requested-Action {}, DDFH {}, Tx {}",
-                                        new Object[] { state, resultCode, gatheredRequestedAction, getLocalDDFH(), txTimerId });
+                                        new Object[]{state, resultCode, gatheredRequestedAction, getLocalDDFH(),
+                                                     txTimerId});
                             }
                         }
                         break;
@@ -1012,7 +1049,8 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
                         logger.warn("Wrong event type ({}) on state {}", eventType, state);
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             if (logger.isDebugEnabled()) {
                 logger.debug(
                         "Failure handling failure message for Event " + event + " (" + eventType + ") and Request " + request,
@@ -1021,7 +1059,8 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
         }
     }
 
-    protected void handleTxExpires(Message message) {
+    protected void handleTxExpires(Message message)
+    {
         // Event Based ----------------------------------------------------------
         ClientRoSessionState state = sessionData.getClientRoSessionState();
 
@@ -1126,7 +1165,8 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
     /**
      * This makes checks on queue, moves it to proper state if event there is present on Open state ;]
      */
-    protected void dispatch() {
+    protected void dispatch()
+    {
         // Event Based ----------------------------------------------------------
         if (isEventBased()) {
             // Current State: IDLE
@@ -1138,10 +1178,12 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
                 setState(ClientRoSessionState.PENDING_BUFFERED);
                 try {
                     dispatchEvent(new AppRequestEventImpl(buffer));
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     try {
                         handleSendFailure(e, Event.Type.SEND_EVENT_REQUEST, buffer);
-                    } catch (Exception e1) {
+                    }
+                    catch (Exception e1) {
                         logger.error("Failure handling buffer send failure", e1);
                     }
                 }
@@ -1152,37 +1194,43 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
             if (sessionData.getClientRoSessionState() == ClientRoSessionState.OPEN && eventQueue.size() > 0) {
                 try {
                     this.handleEvent(eventQueue.remove(0));
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     logger.error("Failure handling queued event", e);
                 }
             }
         }
     }
 
-    protected void deliverRoAnswer(RoCreditControlRequest request, RoCreditControlAnswer answer) {
+    protected void deliverRoAnswer(RoCreditControlRequest request, RoCreditControlAnswer answer)
+    {
         try {
             if (isValid()) {
                 listener.doCreditControlAnswer(this, request, answer);
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             logger.warn("Failure delivering Ro Answer", e);
         }
     }
 
-    protected void extractFHAVPs(RoCreditControlRequest request, RoCreditControlAnswer answer) throws AvpDataException {
+    protected void extractFHAVPs(RoCreditControlRequest request, RoCreditControlAnswer answer) throws AvpDataException
+    {
         if (answer != null) {
             try {
                 if (answer.isCreditControlFailureHandlingAVPPresent()) {
                     sessionData.setGatheredCCFH(answer.getCredidControlFailureHandlingAVPValue());
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failure trying to obtain Credit-Control-Failure-Handling AVP value", e);
             }
             try {
                 if (answer.isDirectDebitingFailureHandlingAVPPresent()) {
                     sessionData.setGatheredDDFH(answer.getDirectDebitingFailureHandlingAVPValue());
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failure trying to obtain Direct-Debit-Failure-Handling AVP value", e);
             }
             if (!sessionData.isRequestTypeSet()) {
@@ -1195,7 +1243,8 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
                 if (request.isRequestedActionAVPPresent()) {
                     sessionData.setGatheredRequestedAction(request.getRequestedActionAVPValue());
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failure trying to obtain Request-Action AVP value", e);
             }
 
@@ -1207,28 +1256,34 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
         }
     }
 
-    protected void deliverRAR(ReAuthRequest request) {
+    protected void deliverRAR(ReAuthRequest request)
+    {
         try {
             listener.doReAuthRequest(this, request);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             logger.debug("Failure delivering RAR", e);
         }
     }
 
     protected void dispatchEvent(AppEvent event)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         session.send(event.getMessage(), this);
     }
 
-    protected boolean isProvisional(long resultCode) {
+    protected boolean isProvisional(long resultCode)
+    {
         return resultCode >= 1000 && resultCode < 2000;
     }
 
-    protected boolean isSuccess(long resultCode) {
+    protected boolean isSuccess(long resultCode)
+    {
         return resultCode >= 2000 && resultCode < 3000;
     }
 
-    protected boolean isFailure(long code) {
+    protected boolean isFailure(long code)
+    {
         return (!isProvisional(code) && !isSuccess(code) && ((code >= 3000 && code < 6000))
                 && !temporaryErrorCodes.contains(code));
     }
@@ -1239,22 +1294,26 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
      * @see org.jdiameter.common.impl.app.AppSessionImpl#isReplicable()
      */
     @Override
-    public boolean isReplicable() {
+    public boolean isReplicable()
+    {
         return true;
     }
 
-    private class TxTimerTask implements Runnable {
+    private class TxTimerTask implements Runnable
+    {
         private ClientRoSession session = null;
         private Request request = null;
 
-        private TxTimerTask(ClientRoSession session, Request request) {
+        private TxTimerTask(ClientRoSession session, Request request)
+        {
             super();
             this.session = session;
             this.request = request;
         }
 
         @Override
-        public void run() {
+        public void run()
+        {
             try {
                 sendAndStateLock.lock();
                 logger.debug("Fired TX Timer");
@@ -1262,50 +1321,61 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
                 sessionData.setTxTimerRequest(null);
                 try {
                     context.txTimerExpired(session);
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     logger.debug("Failure handling TX Timer Expired", e);
                 }
                 RoCreditControlRequest req = factory.createCreditControlRequest(request);
                 handleEvent(new Event(Event.Type.Tx_TIMER_FIRED, req, null));
-            } catch (InternalException e) {
+            }
+            catch (InternalException e) {
                 logger.error("Internal Exception", e);
-            } catch (OverloadException e) {
+            }
+            catch (OverloadException e) {
                 logger.error("Overload Exception", e);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.error("Exception", e);
-            } finally {
+            }
+            finally {
                 sendAndStateLock.unlock();
             }
         }
     }
 
-    private Message messageFromBuffer(ByteBuffer request) throws InternalException {
+    private Message messageFromBuffer(ByteBuffer request) throws InternalException
+    {
         if (request != null) {
             Message m;
             try {
                 m = parser.createMessage(request);
                 return m;
-            } catch (AvpDataException e) {
+            }
+            catch (AvpDataException e) {
                 throw new InternalException("Failed to decode message.", e);
             }
         }
         return null;
     }
 
-    private ByteBuffer messageToBuffer(IMessage msg) throws InternalException {
+    private ByteBuffer messageToBuffer(IMessage msg) throws InternalException
+    {
         try {
             return parser.encodeMessage(msg);
-        } catch (ParseException e) {
+        }
+        catch (ParseException e) {
             throw new InternalException("Failed to encode message.", e);
         }
     }
 
-    private class RequestDelivery implements Runnable {
+    private class RequestDelivery implements Runnable
+    {
         ClientRoSession session;
         Request request;
 
         @Override
-        public void run() {
+        public void run()
+        {
             try {
                 switch (request.getCommandCode()) {
                     case ReAuthAnswer.code:
@@ -1316,19 +1386,22 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
                         listener.doOtherEvent(session, new AppRequestEventImpl(request), null);
                         break;
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failure processing request", e);
             }
         }
     }
 
-    private class AnswerDelivery implements Runnable {
+    private class AnswerDelivery implements Runnable
+    {
         ClientRoSession session;
         Answer answer;
         Request request;
 
         @Override
-        public void run() {
+        public void run()
+        {
             try {
                 switch (request.getCommandCode()) {
                     case RoCreditControlAnswer.code:
@@ -1342,7 +1415,8 @@ public class ClientRoSessionImpl extends AppRoSessionImpl
                         listener.doOtherEvent(session, new AppRequestEventImpl(request), new AppAnswerEventImpl(answer));
                         break;
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failure processing success message", e);
             }
         }

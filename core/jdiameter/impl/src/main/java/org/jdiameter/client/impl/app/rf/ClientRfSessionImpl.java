@@ -42,20 +42,7 @@
 
 package org.jdiameter.client.impl.app.rf;
 
-import static org.jdiameter.api.Avp.ACCOUNTING_REALTIME_REQUIRED;
-import static org.jdiameter.common.api.app.rf.ClientRfSessionState.*;
-
-import java.io.Serializable;
-
-import org.jdiameter.api.Answer;
-import org.jdiameter.api.ApplicationId;
-import org.jdiameter.api.Avp;
-import org.jdiameter.api.EventListener;
-import org.jdiameter.api.InternalException;
-import org.jdiameter.api.Message;
-import org.jdiameter.api.OverloadException;
-import org.jdiameter.api.Request;
-import org.jdiameter.api.RouteException;
+import org.jdiameter.api.*;
 import org.jdiameter.api.app.AppSession;
 import org.jdiameter.api.app.StateChangeListener;
 import org.jdiameter.api.app.StateEvent;
@@ -70,6 +57,11 @@ import org.jdiameter.common.impl.app.rf.AppRfSessionImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
+
+import static org.jdiameter.api.Avp.ACCOUNTING_REALTIME_REQUIRED;
+import static org.jdiameter.common.api.app.rf.ClientRfSessionState.*;
+
 /**
  * Client Accounting session implementation
  *
@@ -77,7 +69,8 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
  */
 @SuppressWarnings("all") //3rd party lib
-public class ClientRfSessionImpl extends AppRfSessionImpl implements EventListener<Request, Answer>, ClientRfSession {
+public class ClientRfSessionImpl extends AppRfSessionImpl implements EventListener<Request, Answer>, ClientRfSession
+{
 
     private static final Logger logger = LoggerFactory.getLogger(ClientRfSessionImpl.class);
 
@@ -93,20 +86,27 @@ public class ClientRfSessionImpl extends AppRfSessionImpl implements EventListen
     protected IClientRfSessionData sessionData;
 
     public ClientRfSessionImpl(IClientRfSessionData sessionData, ISessionFactory sessionFactory,
-            ClientRfSessionListener clientAccSessionListener,
-            IClientRfActionContext iClientRfActionContext, StateChangeListener<AppSession> stateChangeListener,
-            ApplicationId applicationId) {
+                               ClientRfSessionListener clientAccSessionListener,
+                               IClientRfActionContext iClientRfActionContext, StateChangeListener<AppSession> stateChangeListener,
+                               ApplicationId applicationId)
+    {
         super(sessionFactory, sessionData);
-        super.appId = applicationId;
-        this.listener = clientAccSessionListener;
-        this.context = iClientRfActionContext;
+        super.appId      = applicationId;
+        this.listener    = clientAccSessionListener;
+        this.context     = iClientRfActionContext;
         this.sessionData = sessionData;
         super.addStateChangeNotification(stateChangeListener);
     }
 
+    public void setListener(ClientRfSessionListener listener)
+    {
+        this.listener = listener;
+    }
+
     @Override
     public void sendAccountRequest(RfAccountingRequest accountRequest)
-            throws InternalException, IllegalStateException, RouteException, OverloadException {
+            throws InternalException, IllegalStateException, RouteException, OverloadException
+    {
         try {
             sendAndStateLock.lock();
             handleEvent(new Event(accountRequest));
@@ -119,27 +119,33 @@ public class ClientRfSessionImpl extends AppRfSessionImpl implements EventListen
                 if (destHostAvp != null) {
                     sessionData.setDestinationHost(destHostAvp.getDiameterIdentity());
                 }
-            } catch (Throwable t) {
+            }
+            catch (Throwable t) {
                 logger.debug("Failed to send ACR.", t);
                 handleEvent(new Event(Event.Type.FAILED_SEND_RECORD, accountRequest));
             }
-        } catch (Exception exc) {
+        }
+        catch (Exception exc) {
             throw new InternalException(exc);
-        } finally {
+        }
+        finally {
             sendAndStateLock.unlock();
         }
     }
 
-    protected synchronized void storeToBuffer(Request accountRequest) {
+    protected synchronized void storeToBuffer(Request accountRequest)
+    {
         sessionData.setBuffer(accountRequest);
     }
 
-    protected synchronized boolean checkBufferSpace() {
+    protected synchronized boolean checkBufferSpace()
+    {
         return sessionData.getBuffer() == null;
     }
 
     @SuppressWarnings("unchecked")
-    protected void setState(IAppSessionState newState) {
+    protected void setState(IAppSessionState newState)
+    {
         IAppSessionState oldState = sessionData.getClientRfSessionState();
         sessionData.setClientRfSessionState((ClientRfSessionState) newState);
         for (StateChangeListener i : stateListeners) {
@@ -148,12 +154,14 @@ public class ClientRfSessionImpl extends AppRfSessionImpl implements EventListen
     }
 
     @Override
-    public boolean isStateless() {
+    public boolean isStateless()
+    {
         return false;
     }
 
     @Override
-    public boolean handleEvent(StateEvent event) throws InternalException, OverloadException {
+    public boolean handleEvent(StateEvent event) throws InternalException, OverloadException
+    {
         final ClientRfSessionState state = this.sessionData.getClientRfSessionState();
         ClientRfSessionState oldState = state;
 
@@ -215,7 +223,8 @@ public class ClientRfSessionImpl extends AppRfSessionImpl implements EventListen
                                             context.disconnectUserOrDev(this, str);
                                             session.send(str, this);
                                         }
-                                    } finally {
+                                    }
+                                    finally {
                                         setState(IDLE);
                                     }
                                 }
@@ -251,12 +260,14 @@ public class ClientRfSessionImpl extends AppRfSessionImpl implements EventListen
                                                 context.disconnectUserOrDev(this, str);
                                                 session.send(str, this);
                                             }
-                                        } finally {
+                                        }
+                                        finally {
                                             setState(IDLE);
                                         }
                                     }
                                 }
-                            } catch (Exception e) {
+                            }
+                            catch (Exception e) {
                                 logger.debug("Can not process answer", e);
                                 setState(IDLE);
                             }
@@ -301,7 +312,7 @@ public class ClientRfSessionImpl extends AppRfSessionImpl implements EventListen
                             break;
                     }
                 }
-                    break;
+                break;
                 //FIXME: add check for abnormal
                 // PendingI ==========
                 case PENDING_INTERIM: {
@@ -344,7 +355,8 @@ public class ClientRfSessionImpl extends AppRfSessionImpl implements EventListen
                                                 context.disconnectUserOrDev(this, str);
                                                 session.send(str, this);
                                             }
-                                        } finally {
+                                        }
+                                        finally {
                                             setState(IDLE);
                                         }
                                     }
@@ -374,12 +386,14 @@ public class ClientRfSessionImpl extends AppRfSessionImpl implements EventListen
                                                 context.disconnectUserOrDev(this, str);
                                                 session.send(str, this);
                                             }
-                                        } finally {
+                                        }
+                                        finally {
                                             setState(IDLE);
                                         }
                                     }
                                 }
-                            } catch (Exception e) {
+                            }
+                            catch (Exception e) {
                                 logger.debug("Can not process received request", e);
                                 setState(IDLE);
                             }
@@ -523,7 +537,8 @@ public class ClientRfSessionImpl extends AppRfSessionImpl implements EventListen
                                     setState(PENDING_BUFFERED);
                                 }
                             }
-                        } catch (Exception e) {
+                        }
+                        catch (Exception e) {
                             logger.debug("can not send buffered message", e);
                             synchronized (this) {
                                 Request buffer = sessionData.getBuffer();
@@ -537,13 +552,15 @@ public class ClientRfSessionImpl extends AppRfSessionImpl implements EventListen
                     }
                 }
             }
-        } catch (Throwable t) {
+        }
+        catch (Throwable t) {
             throw new InternalException(t);
         }
         return true;
     }
 
-    protected void processInterimIntervalAvp(StateEvent event) throws InternalException {
+    protected void processInterimIntervalAvp(StateEvent event) throws InternalException
+    {
         //    Avp interval = ((AppEvent) event.getData()).getMessage().getAvps().getAvp(Avp.ACCT_INTERIM_INTERVAL);
         //    if (interval != null) {
         //      // create timer
@@ -588,7 +605,8 @@ public class ClientRfSessionImpl extends AppRfSessionImpl implements EventListen
      * @see org.jdiameter.common.impl.app.AppSessionImpl#onTimer(java.lang.String)
      */
     @Override
-    public void onTimer(String timerName) {
+    public void onTimer(String timerName)
+    {
         if (timerName.equals(IDLE_SESSION_TIMER_NAME)) {
             checkIdleAppSession();
         } else if (timerName.equals(TIMER_NAME_INTERIM)) {
@@ -600,9 +618,11 @@ public class ClientRfSessionImpl extends AppRfSessionImpl implements EventListen
                     session.send(interimRecord, ClientRfSessionImpl.this);
                     setState(PENDING_INTERIM);
                     sessionData.setTsTimerId(null);
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     logger.debug("Can not process Interim Interval AVP", e);
-                } finally {
+                }
+                finally {
                     sendAndStateLock.unlock();
                 }
             }
@@ -611,17 +631,20 @@ public class ClientRfSessionImpl extends AppRfSessionImpl implements EventListen
         }
     }
 
-    private void startInterimTimer(long v) {
+    private void startInterimTimer(long v)
+    {
         try {
             sendAndStateLock.lock();
             sessionData.setTsTimerId(super.timerFacility.schedule(getSessionId(), TIMER_NAME_INTERIM, v));
             return;
-        } finally {
+        }
+        finally {
             sendAndStateLock.unlock();
         }
     }
 
-    private void cancelInterimTimer() {
+    private void cancelInterimTimer()
+    {
         try {
             sendAndStateLock.lock();
             final Serializable timerId = this.sessionData.getTsTimerId();
@@ -629,68 +652,81 @@ public class ClientRfSessionImpl extends AppRfSessionImpl implements EventListen
                 super.timerFacility.cancel(timerId);
                 this.sessionData.setTsTimerId(null);
             }
-        } finally {
+        }
+        finally {
             sendAndStateLock.unlock();
         }
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <E> E getState(Class<E> eClass) {
+    public <E> E getState(Class<E> eClass)
+    {
         return eClass == ClientRfSessionState.class ? (E) this.sessionData.getClientRfSessionState() : null;
     }
 
     @Override
-    public void receivedSuccessMessage(Request request, Answer answer) {
+    public void receivedSuccessMessage(Request request, Answer answer)
+    {
         if (request.getCommandCode() == RfAccountingRequest.code) {
             // state should be changed before event listener call
             try {
                 sendAndStateLock.lock();
                 handleEvent(new Event(createAccountAnswer(answer)));
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Can not process received request", e);
-            } finally {
+            }
+            finally {
                 sendAndStateLock.unlock();
             }
             try {
                 listener.doRfAccountingAnswerEvent(this, createAccountRequest(request), createAccountAnswer(answer));
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Unable to deliver message to listener.", e);
             }
         } else {
             try {
                 listener.doOtherEvent(this, createAccountRequest(request), createAccountAnswer(answer));
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Can not process received request", e);
             }
         }
     }
 
     @Override
-    public void timeoutExpired(Request request) {
+    public void timeoutExpired(Request request)
+    {
         try {
             sendAndStateLock.lock();
             handleEvent(new Event(Event.Type.FAILED_RECEIVE_RECORD, createAccountRequest(request)));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             logger.debug("Can not handle timeout event", e);
-        } finally {
+        }
+        finally {
             sendAndStateLock.unlock();
         }
     }
 
     @Override
-    public Answer processRequest(Request request) {
+    public Answer processRequest(Request request)
+    {
         if (request.getCommandCode() == RfAccountingRequest.code) {
             try {
                 // FIXME Is this wrong?
                 listener.doRfAccountingAnswerEvent(this, createAccountRequest(request), null);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Can not process received request", e);
             }
         } else {
             try {
                 listener.doOtherEvent(this, createAccountRequest(request), null);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Can not process received request", e);
             }
         }
@@ -703,25 +739,29 @@ public class ClientRfSessionImpl extends AppRfSessionImpl implements EventListen
      * @see org.jdiameter.common.impl.app.AppSessionImpl#isReplicable()
      */
     @Override
-    public boolean isReplicable() {
+    public boolean isReplicable()
+    {
         return true;
     }
 
-    protected Request createInterimRecord() {
+    protected Request createInterimRecord()
+    {
 
         Request interimRecord = session.createRequest(RfAccountingRequest.code, appId, sessionData.getDestinationRealm(),
-                sessionData.getDestinationHost());
+                                                      sessionData.getDestinationHost());
         interimRecord.getAvps().addAvp(Avp.ACC_RECORD_TYPE, 3);
         return interimRecord;
     }
 
-    protected Request createSessionTermRequest() {
+    protected Request createSessionTermRequest()
+    {
         return session.createRequest(Message.SESSION_TERMINATION_REQUEST, appId, sessionData.getDestinationRealm(),
-                sessionData.getDestinationHost());
+                                     sessionData.getDestinationHost());
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         final int prime = 31;
         int result = super.hashCode();
         result = prime * result + ((sessionData == null) ? 0 : sessionData.hashCode());
@@ -729,7 +769,8 @@ public class ClientRfSessionImpl extends AppRfSessionImpl implements EventListen
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         if (this == obj) {
             return true;
         }
@@ -751,15 +792,18 @@ public class ClientRfSessionImpl extends AppRfSessionImpl implements EventListen
     }
 
     @Override
-    public void release() {
+    public void release()
+    {
         if (isValid()) {
             try {
                 sendAndStateLock.lock();
                 //TODO: cancel timer?
                 super.release();
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failed to release session", e);
-            } finally {
+            }
+            finally {
                 sendAndStateLock.unlock();
             }
         } else {

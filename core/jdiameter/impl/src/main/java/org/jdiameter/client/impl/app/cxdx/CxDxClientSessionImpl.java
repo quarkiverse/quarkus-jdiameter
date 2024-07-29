@@ -42,31 +42,13 @@
 
 package org.jdiameter.client.impl.app.cxdx;
 
-import org.jdiameter.api.Answer;
-import org.jdiameter.api.EventListener;
-import org.jdiameter.api.IllegalDiameterStateException;
-import org.jdiameter.api.InternalException;
-import org.jdiameter.api.NetworkReqListener;
-import org.jdiameter.api.OverloadException;
-import org.jdiameter.api.Request;
-import org.jdiameter.api.RouteException;
+import org.jdiameter.api.*;
 import org.jdiameter.api.app.AppEvent;
 import org.jdiameter.api.app.StateChangeListener;
 import org.jdiameter.api.app.StateEvent;
 import org.jdiameter.api.cxdx.ClientCxDxSession;
 import org.jdiameter.api.cxdx.ClientCxDxSessionListener;
-import org.jdiameter.api.cxdx.events.JLocationInfoAnswer;
-import org.jdiameter.api.cxdx.events.JLocationInfoRequest;
-import org.jdiameter.api.cxdx.events.JMultimediaAuthAnswer;
-import org.jdiameter.api.cxdx.events.JMultimediaAuthRequest;
-import org.jdiameter.api.cxdx.events.JPushProfileAnswer;
-import org.jdiameter.api.cxdx.events.JPushProfileRequest;
-import org.jdiameter.api.cxdx.events.JRegistrationTerminationAnswer;
-import org.jdiameter.api.cxdx.events.JRegistrationTerminationRequest;
-import org.jdiameter.api.cxdx.events.JServerAssignmentAnswer;
-import org.jdiameter.api.cxdx.events.JServerAssignmentRequest;
-import org.jdiameter.api.cxdx.events.JUserAuthorizationAnswer;
-import org.jdiameter.api.cxdx.events.JUserAuthorizationRequest;
+import org.jdiameter.api.cxdx.events.*;
 import org.jdiameter.client.api.ISessionFactory;
 import org.jdiameter.client.impl.app.cxdx.Event.Type;
 import org.jdiameter.common.api.app.cxdx.CxDxSessionState;
@@ -85,7 +67,8 @@ import org.slf4j.LoggerFactory;
  */
 @SuppressWarnings("all") //3rd party lib
 public class CxDxClientSessionImpl extends CxDxSession
-        implements ClientCxDxSession, EventListener<Request, Answer>, NetworkReqListener {
+        implements ClientCxDxSession, EventListener<Request, Answer>, NetworkReqListener
+{
 
     private static final Logger logger = LoggerFactory.getLogger(CxDxClientSessionImpl.class);
 
@@ -96,7 +79,8 @@ public class CxDxClientSessionImpl extends CxDxSession
     protected IClientCxDxSessionData sessionData;
 
     public CxDxClientSessionImpl(IClientCxDxSessionData sessionData, ICxDxMessageFactory fct, ISessionFactory sf,
-            ClientCxDxSessionListener lst) {
+                                 ClientCxDxSessionListener lst)
+    {
         super(sf, sessionData);
         if (lst == null) {
             throw new IllegalArgumentException("Listener can not be null");
@@ -105,10 +89,15 @@ public class CxDxClientSessionImpl extends CxDxSession
             throw new IllegalArgumentException("ApplicationId can not be less than zero");
         }
 
-        this.appId = fct.getApplicationId();
-        this.listener = lst;
+        this.appId           = fct.getApplicationId();
+        this.listener        = lst;
         super.messageFactory = fct;
-        this.sessionData = sessionData;
+        this.sessionData     = sessionData;
+    }
+
+    public void setListener(ClientCxDxSessionListener listener)
+    {
+        this.listener = listener;
     }
 
     /*
@@ -118,7 +107,8 @@ public class CxDxClientSessionImpl extends CxDxSession
      */
     @Override
     @SuppressWarnings("unchecked")
-    public <E> E getState(Class<E> stateType) {
+    public <E> E getState(Class<E> stateType)
+    {
         return stateType == CxDxSessionState.class ? (E) this.sessionData.getCxDxSessionState() : null;
     }
 
@@ -128,7 +118,8 @@ public class CxDxClientSessionImpl extends CxDxSession
      * @see org.jdiameter.api.NetworkReqListener#processRequest(org.jdiameter.api.Request)
      */
     @Override
-    public Answer processRequest(Request request) {
+    public Answer processRequest(Request request)
+    {
         RequestDelivery rd = new RequestDelivery();
         rd.session = this;
         rd.request = request;
@@ -144,7 +135,8 @@ public class CxDxClientSessionImpl extends CxDxSession
      */
     @Override
     public void sendLocationInformationRequest(JLocationInfoRequest request)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         send(Event.Type.SEND_MESSAGE, request, null);
     }
 
@@ -156,7 +148,8 @@ public class CxDxClientSessionImpl extends CxDxSession
      */
     @Override
     public void sendMultimediaAuthRequest(JMultimediaAuthRequest request)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         send(Event.Type.SEND_MESSAGE, request, null);
     }
 
@@ -168,7 +161,8 @@ public class CxDxClientSessionImpl extends CxDxSession
      */
     @Override
     public void sendServerAssignmentRequest(JServerAssignmentRequest request)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         send(Event.Type.SEND_MESSAGE, request, null);
     }
 
@@ -180,7 +174,8 @@ public class CxDxClientSessionImpl extends CxDxSession
      */
     @Override
     public void sendUserAuthorizationRequest(JUserAuthorizationRequest request)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         send(Event.Type.SEND_MESSAGE, request, null);
     }
 
@@ -191,7 +186,8 @@ public class CxDxClientSessionImpl extends CxDxSession
      */
     @Override
     public void sendPushProfileAnswer(JPushProfileAnswer answer)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         send(Event.Type.SEND_MESSAGE, null, answer);
     }
 
@@ -203,7 +199,8 @@ public class CxDxClientSessionImpl extends CxDxSession
      */
     @Override
     public void sendRegistrationTerminationAnswer(JRegistrationTerminationAnswer answer)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         send(Event.Type.SEND_MESSAGE, null, answer);
     }
 
@@ -213,11 +210,12 @@ public class CxDxClientSessionImpl extends CxDxSession
      * @see org.jdiameter.api.EventListener#receivedSuccessMessage(org.jdiameter.api.Message, org.jdiameter.api.Message)
      */
     @Override
-    public void receivedSuccessMessage(Request request, Answer answer) {
+    public void receivedSuccessMessage(Request request, Answer answer)
+    {
         AnswerDelivery rd = new AnswerDelivery();
         rd.session = this;
         rd.request = request;
-        rd.answer = answer;
+        rd.answer  = answer;
         super.scheduler.execute(rd);
     }
 
@@ -228,26 +226,31 @@ public class CxDxClientSessionImpl extends CxDxSession
      * org.jdiameter.api.EventListener#timeoutExpired(org.jdiameter.api.Message)
      */
     @Override
-    public void timeoutExpired(Request request) {
+    public void timeoutExpired(Request request)
+    {
         try {
             handleEvent(new Event(Event.Type.TIMEOUT_EXPIRES, new AppRequestEventImpl(request), null));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             logger.debug("Failed to process timeout message", e);
         }
     }
 
-    protected void send(Event.Type type, AppEvent request, AppEvent answer) throws InternalException {
+    protected void send(Event.Type type, AppEvent request, AppEvent answer) throws InternalException
+    {
         try {
             if (type != null) {
                 handleEvent(new Event(type, request, answer));
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new InternalException(e);
         }
     }
 
     @Override
-    public boolean handleEvent(StateEvent event) throws InternalException, OverloadException {
+    public boolean handleEvent(StateEvent event) throws InternalException, OverloadException
+    {
         try {
             sendAndStateLock.lock();
             if (!super.session.isValid()) {
@@ -287,7 +290,7 @@ public class CxDxClientSessionImpl extends CxDxSession
 
                         default:
                             logger.error("Invalid Event Type {} for Cx/Dx Client Session at state {}.", eventType,
-                                    sessionData.getCxDxSessionState());
+                                         sessionData.getCxDxSessionState());
                             break;
                     }
                     break;
@@ -353,9 +356,11 @@ public class CxDxClientSessionImpl extends CxDxSession
                     logger.error("Cx/Dx Client FSM in wrong state: {}", state);
                     break;
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new InternalException(e);
-        } finally {
+        }
+        finally {
             sendAndStateLock.unlock();
         }
 
@@ -363,7 +368,8 @@ public class CxDxClientSessionImpl extends CxDxSession
     }
 
     @SuppressWarnings("unchecked")
-    protected void setState(CxDxSessionState newState) {
+    protected void setState(CxDxSessionState newState)
+    {
         CxDxSessionState oldState = this.sessionData.getCxDxSessionState();
         this.sessionData.setCxDxSessionState(newState);
 
@@ -386,7 +392,8 @@ public class CxDxClientSessionImpl extends CxDxSession
      * @see org.jdiameter.common.impl.app.AppSessionImpl#onTimer(java.lang.String)
      */
     @Override
-    public void onTimer(String timerName) {
+    public void onTimer(String timerName)
+    {
         if (timerName.equals(IDLE_SESSION_TIMER_NAME)) {
             checkIdleAppSession();
         } else if (timerName.equals(CxDxSession.TIMER_NAME_MSG_TIMEOUT)) {
@@ -395,12 +402,14 @@ public class CxDxClientSessionImpl extends CxDxSession
                 try {
                     handleEvent(
                             new Event(Event.Type.TIMEOUT_EXPIRES, new AppRequestEventImpl(this.sessionData.getBuffer()), null));
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     logger.debug("Failure handling Timeout event.");
                 }
                 this.sessionData.setBuffer(null);
                 this.sessionData.setTsTimerId(null);
-            } finally {
+            }
+            finally {
                 sendAndStateLock.unlock();
             }
         } else {
@@ -414,7 +423,8 @@ public class CxDxClientSessionImpl extends CxDxSession
      * @see java.lang.Object#hashCode()
      */
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         final int prime = 31;
         int result = super.hashCode();
         result = prime * result + (int) (appId ^ (appId >>> 32));
@@ -427,7 +437,8 @@ public class CxDxClientSessionImpl extends CxDxSession
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         if (this == obj) {
             return true;
         }
@@ -447,14 +458,17 @@ public class CxDxClientSessionImpl extends CxDxSession
     }
 
     @Override
-    public void release() {
+    public void release()
+    {
         if (isValid()) {
             try {
                 sendAndStateLock.lock();
                 super.release();
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failed to release session", e);
-            } finally {
+            }
+            finally {
                 sendAndStateLock.unlock();
             }
         } else {
@@ -462,34 +476,39 @@ public class CxDxClientSessionImpl extends CxDxSession
         }
     }
 
-    private class RequestDelivery implements Runnable {
+    private class RequestDelivery implements Runnable
+    {
         ClientCxDxSession session;
         Request request;
 
         @Override
-        public void run() {
+        public void run()
+        {
             try {
                 if (request.getCommandCode() == JRegistrationTerminationRequest.code) {
                     handleEvent(new Event(Event.Type.RECEIVE_RTR, messageFactory.createRegistrationTerminationRequest(request),
-                            null));
+                                          null));
                 } else if (request.getCommandCode() == JPushProfileRequest.code) {
                     handleEvent(new Event(Event.Type.RECEIVE_PPR, messageFactory.createPushProfileRequest(request), null));
                 } else {
                     listener.doOtherEvent(session, new AppRequestEventImpl(request), null);
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failed to process request message", e);
             }
         }
     }
 
-    private class AnswerDelivery implements Runnable {
+    private class AnswerDelivery implements Runnable
+    {
         ClientCxDxSession session;
         Answer answer;
         Request request;
 
         @Override
-        public void run() {
+        public void run()
+        {
             try {
                 switch (answer.getCommandCode()) {
                     case JUserAuthorizationAnswer.code:
@@ -514,7 +533,8 @@ public class CxDxClientSessionImpl extends CxDxSession
                         listener.doOtherEvent(session, new AppRequestEventImpl(request), new AppAnswerEventImpl(answer));
                         break;
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failed to process success message", e);
             }
         }

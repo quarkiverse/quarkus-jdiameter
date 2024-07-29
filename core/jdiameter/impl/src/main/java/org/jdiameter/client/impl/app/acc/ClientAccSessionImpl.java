@@ -42,19 +42,7 @@
 
 package org.jdiameter.client.impl.app.acc;
 
-import static org.jdiameter.api.Avp.ACCOUNTING_REALTIME_REQUIRED;
-import static org.jdiameter.common.api.app.acc.ClientAccSessionState.*;
-
-import java.io.Serializable;
-
-import org.jdiameter.api.Answer;
-import org.jdiameter.api.Avp;
-import org.jdiameter.api.EventListener;
-import org.jdiameter.api.InternalException;
-import org.jdiameter.api.Message;
-import org.jdiameter.api.OverloadException;
-import org.jdiameter.api.Request;
-import org.jdiameter.api.RouteException;
+import org.jdiameter.api.*;
 import org.jdiameter.api.acc.ClientAccSession;
 import org.jdiameter.api.acc.ClientAccSessionListener;
 import org.jdiameter.api.acc.events.AccountAnswer;
@@ -71,6 +59,11 @@ import org.jdiameter.common.impl.app.acc.AppAccSessionImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
+
+import static org.jdiameter.api.Avp.ACCOUNTING_REALTIME_REQUIRED;
+import static org.jdiameter.common.api.app.acc.ClientAccSessionState.*;
+
 /**
  * Client Accounting session implementation
  *
@@ -79,7 +72,8 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
  */
 @SuppressWarnings("all") //3rd party lib
-public class ClientAccSessionImpl extends AppAccSessionImpl implements EventListener<Request, Answer>, ClientAccSession {
+public class ClientAccSessionImpl extends AppAccSessionImpl implements EventListener<Request, Answer>, ClientAccSession
+{
 
     private static final Logger logger = LoggerFactory.getLogger(ClientAccSessionImpl.class);
 
@@ -102,19 +96,26 @@ public class ClientAccSessionImpl extends AppAccSessionImpl implements EventList
     protected IClientAccSessionData sessionData;
 
     public ClientAccSessionImpl(IClientAccSessionData sessionData, ISessionFactory sessionFactory,
-            ClientAccSessionListener clientAccSessionListener,
-            IClientAccActionContext iClientAccActionContext, StateChangeListener<AppSession> stateChangeListener) {
+                                ClientAccSessionListener clientAccSessionListener,
+                                IClientAccActionContext iClientAccActionContext, StateChangeListener<AppSession> stateChangeListener)
+    {
         super(sessionFactory, sessionData);
         this.sessionData = sessionData;
-        this.listener = clientAccSessionListener;
-        this.context = iClientAccActionContext;
+        this.listener    = clientAccSessionListener;
+        this.context     = iClientAccActionContext;
 
         super.addStateChangeNotification(stateChangeListener);
     }
 
+    public void setListener(ClientAccSessionListener listener)
+    {
+        this.listener = listener;
+    }
+
     @Override
     public void sendAccountRequest(AccountRequest accountRequest)
-            throws InternalException, IllegalStateException, RouteException, OverloadException {
+            throws InternalException, IllegalStateException, RouteException, OverloadException
+    {
         try {
             sendAndStateLock.lock();
             handleEvent(new Event(accountRequest));
@@ -127,29 +128,35 @@ public class ClientAccSessionImpl extends AppAccSessionImpl implements EventList
                 if (destHostAvp != null) {
                     sessionData.setDestinationHost(destHostAvp.getDiameterIdentity());
                 }
-            } catch (Throwable t) {
+            }
+            catch (Throwable t) {
                 logger.debug("Failed to send ACR.", t);
                 handleEvent(new Event(Event.Type.FAILED_SEND_RECORD, accountRequest));
             }
-        } catch (Exception exc) {
+        }
+        catch (Exception exc) {
             throw new InternalException(exc);
-        } finally {
+        }
+        finally {
             sendAndStateLock.unlock();
         }
     }
 
-    protected synchronized void storeToBuffer(Request accountRequest) {
+    protected synchronized void storeToBuffer(Request accountRequest)
+    {
         sessionData.setBuffer(accountRequest);
 
     }
 
-    protected synchronized boolean checkBufferSpace() {
+    protected synchronized boolean checkBufferSpace()
+    {
         //TODO: make this different op, so it does not have to fetch data.
         return sessionData.getBuffer() == null;
     }
 
     @SuppressWarnings("unchecked")
-    protected void setState(IAppSessionState newState) {
+    protected void setState(IAppSessionState newState)
+    {
         IAppSessionState oldState = sessionData.getClientAccSessionState();
         sessionData.setClientAccSessionState((ClientAccSessionState) newState);
 
@@ -159,12 +166,14 @@ public class ClientAccSessionImpl extends AppAccSessionImpl implements EventList
     }
 
     @Override
-    public boolean isStateless() {
+    public boolean isStateless()
+    {
         return false;
     }
 
     @Override
-    public boolean handleEvent(StateEvent event) throws InternalException, OverloadException {
+    public boolean handleEvent(StateEvent event) throws InternalException, OverloadException
+    {
 
         ClientAccSessionState oldState = sessionData.getClientAccSessionState();
 
@@ -228,7 +237,8 @@ public class ClientAccSessionImpl extends AppAccSessionImpl implements EventList
                                                 context.disconnectUserOrDev(this, str);
                                                 session.send(str, this);
                                             }
-                                        } finally {
+                                        }
+                                        finally {
                                             setState(IDLE);
                                         }
                                     }
@@ -265,12 +275,14 @@ public class ClientAccSessionImpl extends AppAccSessionImpl implements EventList
                                                 context.disconnectUserOrDev(this, str);
                                                 session.send(str, this);
                                             }
-                                        } finally {
+                                        }
+                                        finally {
                                             setState(IDLE);
                                         }
                                     }
                                 }
-                            } catch (Exception e) {
+                            }
+                            catch (Exception e) {
                                 logger.debug("Can not process answer", e);
                                 setState(IDLE);
                             }
@@ -315,7 +327,7 @@ public class ClientAccSessionImpl extends AppAccSessionImpl implements EventList
                             break;
                     }
                 }
-                    break;
+                break;
                 //FIXME: add check for abnormal
                 // PendingI ==========
                 case PENDING_INTERIM: {
@@ -359,7 +371,8 @@ public class ClientAccSessionImpl extends AppAccSessionImpl implements EventList
                                                 context.disconnectUserOrDev(this, str);
                                                 session.send(str, this);
                                             }
-                                        } finally {
+                                        }
+                                        finally {
                                             setState(IDLE);
                                         }
                                     }
@@ -389,12 +402,14 @@ public class ClientAccSessionImpl extends AppAccSessionImpl implements EventList
                                                 context.disconnectUserOrDev(this, str);
                                                 session.send(str, this);
                                             }
-                                        } finally {
+                                        }
+                                        finally {
                                             setState(IDLE);
                                         }
                                     }
                                 }
-                            } catch (Exception e) {
+                            }
+                            catch (Exception e) {
                                 logger.debug("Can not process received request", e);
                                 setState(IDLE);
                             }
@@ -540,7 +555,8 @@ public class ClientAccSessionImpl extends AppAccSessionImpl implements EventList
                                     setState(PENDING_BUFFERED);
                                 }
                             }
-                        } catch (Exception e) {
+                        }
+                        catch (Exception e) {
                             logger.debug("can not send buffered message", e);
                             synchronized (this) {
                                 if (context != null && !checkBufferSpace()) {
@@ -553,13 +569,15 @@ public class ClientAccSessionImpl extends AppAccSessionImpl implements EventList
                     }
                 }
             }
-        } catch (Throwable t) {
+        }
+        catch (Throwable t) {
             throw new InternalException(t);
         }
         return true;
     }
 
-    protected void processInterimIntervalAvp(StateEvent event) throws InternalException {
+    protected void processInterimIntervalAvp(StateEvent event) throws InternalException
+    {
         //    Avp interval = ((AppEvent) event.getData()).getMessage().getAvps().getAvp(Avp.ACCT_INTERIM_INTERVAL);
         //    if (interval != null) {
         //      // create timer
@@ -604,7 +622,8 @@ public class ClientAccSessionImpl extends AppAccSessionImpl implements EventList
      * @see org.jdiameter.common.impl.app.AppSessionImpl#onTimer(java.lang.String)
      */
     @Override
-    public void onTimer(String timerName) {
+    public void onTimer(String timerName)
+    {
         if (timerName.equals(IDLE_SESSION_TIMER_NAME)) {
             checkIdleAppSession();
         } else if (timerName.equals(TIMER_NAME_INTERIM)) {
@@ -616,9 +635,11 @@ public class ClientAccSessionImpl extends AppAccSessionImpl implements EventList
                     session.send(interimRecord, ClientAccSessionImpl.this);
                     setState(PENDING_INTERIM);
                     sessionData.setInterimTimerId(null);
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     logger.debug("Can not process Interim Interval AVP", e);
-                } finally {
+                }
+                finally {
                     sendAndStateLock.unlock();
                 }
             }
@@ -627,19 +648,22 @@ public class ClientAccSessionImpl extends AppAccSessionImpl implements EventList
         }
     }
 
-    private Serializable startInterimTimer(long v) {
+    private Serializable startInterimTimer(long v)
+    {
         try {
             sendAndStateLock.lock();
             Serializable interimTimerId = super.timerFacility.schedule(sessionData.getSessionId(), TIMER_NAME_INTERIM, v);
             sessionData.setInterimTimerId(interimTimerId);
 
             return interimTimerId;
-        } finally {
+        }
+        finally {
             sendAndStateLock.unlock();
         }
     }
 
-    private void cancelInterimTimer() {
+    private void cancelInterimTimer()
+    {
         try {
             sendAndStateLock.lock();
             Serializable interimTimerId = sessionData.getInterimTimerId();
@@ -647,57 +671,68 @@ public class ClientAccSessionImpl extends AppAccSessionImpl implements EventList
                 super.timerFacility.cancel(interimTimerId);
                 sessionData.setInterimTimerId(null);
             }
-        } finally {
+        }
+        finally {
             sendAndStateLock.unlock();
         }
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <E> E getState(Class<E> eClass) {
+    public <E> E getState(Class<E> eClass)
+    {
         return eClass == ClientAccSessionState.class ? (E) sessionData.getClientAccSessionState() : null;
     }
 
     @Override
-    public void receivedSuccessMessage(Request request, Answer answer) {
+    public void receivedSuccessMessage(Request request, Answer answer)
+    {
         if (request.getCommandCode() == AccountRequest.code) {
             // state should be changed before event listener call
             try {
                 sendAndStateLock.lock();
                 handleEvent(new Event(createAccountAnswer(answer)));
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Can not process received request", e);
-            } finally {
+            }
+            finally {
                 sendAndStateLock.unlock();
             }
             try {
                 listener.doAccAnswerEvent(this, createAccountRequest(request), createAccountAnswer(answer));
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Unable to deliver message to listener.", e);
             }
         } else {
             try {
                 listener.doOtherEvent(this, createAccountRequest(request), createAccountAnswer(answer));
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Can not process received request", e);
             }
         }
     }
 
     @Override
-    public void timeoutExpired(Request request) {
+    public void timeoutExpired(Request request)
+    {
         try {
             sendAndStateLock.lock();
             handleEvent(new Event(Event.Type.FAILED_SEND_RECORD, createAccountRequest(request)));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             logger.debug("Can not handle timeout event", e);
-        } finally {
+        }
+        finally {
             sendAndStateLock.unlock();
         }
     }
 
     @Override
-    public Answer processRequest(Request request) {
+    public Answer processRequest(Request request)
+    {
         Answer a = request.createAnswer(5001);
         return a;
     }
@@ -708,26 +743,30 @@ public class ClientAccSessionImpl extends AppAccSessionImpl implements EventList
      * @see org.jdiameter.common.impl.app.AppSessionImpl#isReplicable()
      */
     @Override
-    public boolean isReplicable() {
+    public boolean isReplicable()
+    {
         return true;
     }
 
-    protected Request createInterimRecord() {
+    protected Request createInterimRecord()
+    {
         Request interimRecord = session.createRequest(AccountRequest.code, sessionData.getApplicationId(),
-                sessionData.getDestinationRealm(),
-                sessionData.getDestinationHost());
+                                                      sessionData.getDestinationRealm(),
+                                                      sessionData.getDestinationHost());
         interimRecord.getAvps().addAvp(Avp.ACC_RECORD_TYPE, 3);
         return interimRecord;
     }
 
-    protected Request createSessionTermRequest() {
+    protected Request createSessionTermRequest()
+    {
         return session.createRequest(Message.SESSION_TERMINATION_REQUEST, sessionData.getApplicationId(),
-                sessionData.getDestinationRealm(),
-                sessionData.getDestinationHost());
+                                     sessionData.getDestinationRealm(),
+                                     sessionData.getDestinationHost());
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((sessionData == null) ? 0 : sessionData.hashCode());
@@ -735,7 +774,8 @@ public class ClientAccSessionImpl extends AppAccSessionImpl implements EventList
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         if (this == obj) {
             return true;
         }
@@ -757,14 +797,17 @@ public class ClientAccSessionImpl extends AppAccSessionImpl implements EventList
     }
 
     @Override
-    public void release() {
+    public void release()
+    {
         if (isValid()) {
             try {
                 sendAndStateLock.lock();
                 super.release();
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failed to release session", e);
-            } finally {
+            }
+            finally {
                 sendAndStateLock.unlock();
             }
         } else {

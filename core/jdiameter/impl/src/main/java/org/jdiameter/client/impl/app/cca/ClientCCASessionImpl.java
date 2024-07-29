@@ -42,29 +42,8 @@
 
 package org.jdiameter.client.impl.app.cca;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import org.jdiameter.api.Answer;
-import org.jdiameter.api.AvpDataException;
-import org.jdiameter.api.EventListener;
-import org.jdiameter.api.IllegalDiameterStateException;
-import org.jdiameter.api.InternalException;
-import org.jdiameter.api.Message;
-import org.jdiameter.api.NetworkReqListener;
-import org.jdiameter.api.OverloadException;
-import org.jdiameter.api.Request;
-import org.jdiameter.api.RouteException;
-import org.jdiameter.api.app.AppAnswerEvent;
-import org.jdiameter.api.app.AppEvent;
-import org.jdiameter.api.app.AppSession;
-import org.jdiameter.api.app.StateChangeListener;
-import org.jdiameter.api.app.StateEvent;
+import org.jdiameter.api.*;
+import org.jdiameter.api.app.*;
 import org.jdiameter.api.auth.events.ReAuthAnswer;
 import org.jdiameter.api.auth.events.ReAuthRequest;
 import org.jdiameter.api.cca.ClientCCASession;
@@ -84,6 +63,14 @@ import org.jdiameter.common.impl.app.cca.AppCCASessionImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * Client Credit-Control Application session implementation
  *
@@ -92,7 +79,8 @@ import org.slf4j.LoggerFactory;
  */
 @SuppressWarnings("all") //3rd party lib
 public class ClientCCASessionImpl extends AppCCASessionImpl
-        implements ClientCCASession, NetworkReqListener, EventListener<Request, Answer> {
+        implements ClientCCASession, NetworkReqListener, EventListener<Request, Answer>
+{
 
     private static final Logger logger = LoggerFactory.getLogger(ClientCCASessionImpl.class);
 
@@ -112,7 +100,7 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
     protected static final String TX_TIMER_NAME = "CCA_CLIENT_TX_TIMER";
     protected static final long TX_TIMER_DEFAULT_VALUE = 30 * 60 * 1000; // miliseconds
 
-    protected long[] authAppIds = new long[] { 4 };
+    protected long[] authAppIds = new long[]{4};
 
     protected static final int CCFH_TERMINATE = 0;
     protected static final int CCFH_CONTINUE = 1;
@@ -148,8 +136,9 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
     }
 
     public ClientCCASessionImpl(IClientCCASessionData data, ICCAMessageFactory fct, ISessionFactory sf,
-            ClientCCASessionListener lst,
-            IClientCCASessionContext ctx, StateChangeListener<AppSession> stLst) {
+                                ClientCCASessionListener lst,
+                                IClientCCASessionContext ctx, StateChangeListener<AppSession> stLst)
+    {
         super(sf, data);
         if (lst == null) {
             throw new IllegalArgumentException("Listener can not be null");
@@ -171,48 +160,62 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
 
     }
 
-    protected int getLocalCCFH() {
+    public void setListener(ClientCCASessionListener listener)
+    {
+        this.listener = listener;
+    }
+
+    protected int getLocalCCFH()
+    {
         return sessionData.getGatheredCCFH() >= 0 ? sessionData.getGatheredCCFH() : context.getDefaultCCFHValue();
     }
 
-    protected int getLocalDDFH() {
+    protected int getLocalDDFH()
+    {
         return sessionData.getGatheredDDFH() >= 0 ? sessionData.getGatheredDDFH() : context.getDefaultDDFHValue();
     }
 
     @Override
     public void sendCreditControlRequest(JCreditControlRequest request)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         extractFHAVPs(request, null);
         this.handleEvent(new Event(true, request, null));
     }
 
     @Override
     public void sendReAuthAnswer(ReAuthAnswer answer)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         this.handleEvent(new Event(Event.Type.SEND_RAA, null, answer));
     }
 
     @Override
-    public boolean isStateless() {
+    public boolean isStateless()
+    {
         return false;
     }
 
-    public boolean isEventBased() {
+    public boolean isEventBased()
+    {
         return this.sessionData.isEventBased();
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <E> E getState(Class<E> stateType) {
+    public <E> E getState(Class<E> stateType)
+    {
         return stateType == ClientCCASessionState.class ? (E) this.sessionData.getClientCCASessionState() : null;
     }
 
     @Override
-    public boolean handleEvent(StateEvent event) throws InternalException, OverloadException {
+    public boolean handleEvent(StateEvent event) throws InternalException, OverloadException
+    {
         return this.isEventBased() ? handleEventForEventBased(event) : handleEventForSessionBased(event);
     }
 
-    protected boolean handleEventForEventBased(StateEvent event) throws InternalException, OverloadException {
+    protected boolean handleEventForEventBased(StateEvent event) throws InternalException, OverloadException
+    {
         try {
             sendAndStateLock.lock();
             final Event localEvent = (Event) event;
@@ -231,7 +234,8 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
                             setState(ClientCCASessionState.PENDING_EVENT);
                             try {
                                 dispatchEvent(localEvent.getRequest());
-                            } catch (Exception e) {
+                            }
+                            catch (Exception e) {
                                 // This handles failure to send in PendingI state in FSM table
                                 logger.debug("Failure handling send event request", e);
                                 handleSendFailure(e, eventType, localEvent.getRequest().getMessage());
@@ -257,12 +261,13 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
                                     setState(ClientCCASessionState.IDLE, false);
                                 } else if (isProvisional(resultCode) || isFailure(resultCode)) {
                                     handleFailureMessage((JCreditControlAnswer) answer,
-                                            (JCreditControlRequest) localEvent.getRequest(), eventType);
+                                                         (JCreditControlRequest) localEvent.getRequest(), eventType);
                                 }
 
                                 deliverCCAnswer((JCreditControlRequest) localEvent.getRequest(),
-                                        (JCreditControlAnswer) localEvent.getAnswer());
-                            } catch (AvpDataException e) {
+                                                (JCreditControlAnswer) localEvent.getAnswer());
+                            }
+                            catch (AvpDataException e) {
                                 logger.debug("Failure handling received answer event", e);
                                 setState(ClientCCASessionState.IDLE, false);
                             }
@@ -286,7 +291,7 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
                             setState(ClientCCASessionState.IDLE, false);
                             sessionData.setBuffer(null);
                             deliverCCAnswer((JCreditControlRequest) localEvent.getRequest(),
-                                    (JCreditControlAnswer) localEvent.getAnswer());
+                                            (JCreditControlAnswer) localEvent.getAnswer());
                             break;
                         default:
                             logger.warn("Wrong event type ({}) on state {}", eventType, state);
@@ -301,14 +306,17 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
 
             dispatch();
             return true;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new InternalException(e);
-        } finally {
+        }
+        finally {
             sendAndStateLock.unlock();
         }
     }
 
-    protected boolean handleEventForSessionBased(StateEvent event) throws InternalException, OverloadException {
+    protected boolean handleEventForSessionBased(StateEvent event) throws InternalException, OverloadException
+    {
         try {
             sendAndStateLock.lock();
             Event localEvent = (Event) event;
@@ -327,7 +335,8 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
                             setState(ClientCCASessionState.PENDING_INITIAL);
                             try {
                                 dispatchEvent(localEvent.getRequest());
-                            } catch (Exception e) {
+                            }
+                            catch (Exception e) {
                                 // This handles failure to send in PendingI state in FSM table
                                 handleSendFailure(e, eventType, localEvent.getRequest().getMessage());
                             }
@@ -352,10 +361,10 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
                                 setState(ClientCCASessionState.OPEN);
                             } else if (isProvisional(resultCode) || isFailure(resultCode)) {
                                 handleFailureMessage((JCreditControlAnswer) answer,
-                                        (JCreditControlRequest) localEvent.getRequest(), eventType);
+                                                     (JCreditControlRequest) localEvent.getRequest(), eventType);
                             }
                             deliverCCAnswer((JCreditControlRequest) localEvent.getRequest(),
-                                    (JCreditControlAnswer) localEvent.getAnswer());
+                                            (JCreditControlAnswer) localEvent.getAnswer());
                             break;
                         case Tx_TIMER_FIRED:
                             handleTxExpires(localEvent.getRequest().getMessage());
@@ -405,7 +414,8 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
                             setState(ClientCCASessionState.PENDING_UPDATE);
                             try {
                                 dispatchEvent(localEvent.getRequest());
-                            } catch (Exception e) {
+                            }
+                            catch (Exception e) {
                                 // This handles failure to send in PendingI state in FSM table
                                 handleSendFailure(e, eventType, localEvent.getRequest().getMessage());
                             }
@@ -428,7 +438,8 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
                             setState(ClientCCASessionState.PENDING_TERMINATION);
                             try {
                                 dispatchEvent(localEvent.getRequest());
-                            } catch (Exception e) {
+                            }
+                            catch (Exception e) {
                                 handleSendFailure(e, eventType, localEvent.getRequest().getMessage());
                             }
                             break;
@@ -438,7 +449,8 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
                         case SEND_RAA:
                             try {
                                 dispatchEvent(localEvent.getAnswer());
-                            } catch (Exception e) {
+                            }
+                            catch (Exception e) {
                                 handleSendFailure(e, eventType, localEvent.getRequest().getMessage());
                             }
                             break;
@@ -463,10 +475,10 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
                                 setState(ClientCCASessionState.OPEN);
                             } else if (isProvisional(resultCode) || isFailure(resultCode)) {
                                 handleFailureMessage((JCreditControlAnswer) answer,
-                                        (JCreditControlRequest) localEvent.getRequest(), eventType);
+                                                     (JCreditControlRequest) localEvent.getRequest(), eventType);
                             }
                             deliverCCAnswer((JCreditControlRequest) localEvent.getRequest(),
-                                    (JCreditControlAnswer) localEvent.getAnswer());
+                                            (JCreditControlAnswer) localEvent.getAnswer());
                             break;
                         case Tx_TIMER_FIRED:
                             handleTxExpires(localEvent.getRequest().getMessage());
@@ -495,7 +507,8 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
                             // New State: PENDING_U
                             try {
                                 dispatchEvent(localEvent.getAnswer());
-                            } catch (Exception e) {
+                            }
+                            catch (Exception e) {
                                 handleSendFailure(e, eventType, localEvent.getRequest().getMessage());
                             }
                             break;
@@ -513,7 +526,8 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
                                 // New State: PENDING_T
                                 dispatchEvent(localEvent.getRequest());
                                 // No transition
-                            } catch (Exception e) {
+                            }
+                            catch (Exception e) {
                                 // This handles failure to send in PendingI state in FSM table
                                 // handleSendFailure(e, eventType);
                             }
@@ -532,7 +546,7 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
                             //FIXME: Alex broke this, setting back "true" ?
                             //setState(ClientCCASessionState.IDLE, false);
                             deliverCCAnswer((JCreditControlRequest) localEvent.getRequest(),
-                                    (JCreditControlAnswer) localEvent.getAnswer());
+                                            (JCreditControlAnswer) localEvent.getAnswer());
                             setState(ClientCCASessionState.IDLE, true);
                             break;
                         default:
@@ -548,15 +562,18 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
 
             dispatch();
             return true;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new InternalException(e);
-        } finally {
+        }
+        finally {
             sendAndStateLock.unlock();
         }
     }
 
     @Override
-    public Answer processRequest(Request request) {
+    public Answer processRequest(Request request)
+    {
         RequestDelivery rd = new RequestDelivery();
         rd.session = this;
         rd.request = request;
@@ -565,7 +582,8 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
     }
 
     @Override
-    public void receivedSuccessMessage(Request request, Answer answer) {
+    public void receivedSuccessMessage(Request request, Answer answer)
+    {
         AnswerDelivery ad = new AnswerDelivery();
         ad.session = this;
         ad.request = request;
@@ -575,17 +593,20 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
     }
 
     @Override
-    public void timeoutExpired(Request request) {
+    public void timeoutExpired(Request request)
+    {
         if (request.getCommandCode() == JCreditControlAnswer.code) {
             try {
                 handleSendFailure(null, null, request);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failure processing timeout message for request", e);
             }
         }
     }
 
-    protected void startTx(JCreditControlRequest request) {
+    protected void startTx(JCreditControlRequest request)
+    {
         long txTimerValue = context.getDefaultTxTimerValue();
         if (txTimerValue < 0) {
             txTimerValue = TX_TIMER_DEFAULT_VALUE;
@@ -596,13 +617,15 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
         //this.txFuture = scheduler.schedule(new TxTimerTask(this, request), txTimerValue, TimeUnit.SECONDS);
         try {
             this.sessionData.setTxTimerRequest((Request) ((AppEventImpl) request).getMessage());
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new IllegalArgumentException("Failed to store request.", e);
         }
         this.sessionData.setTxTimerId(this.timerFacility.schedule(this.getSessionId(), TX_TIMER_NAME, TX_TIMER_DEFAULT_VALUE));
     }
 
-    protected void stopTx() {
+    protected void stopTx()
+    {
         Serializable txTimerId = this.sessionData.getTxTimerId();
         if (txTimerId != null) {
             this.sessionData.setTxTimerRequest(null);
@@ -617,7 +640,8 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
      * @see org.jdiameter.common.impl.app.AppSessionImpl#onTimer(java.lang.String)
      */
     @Override
-    public void onTimer(String timerName) {
+    public void onTimer(String timerName)
+    {
         if (timerName.equals(IDLE_SESSION_TIMER_NAME)) {
             checkIdleAppSession();
         } else if (timerName.equals(TX_TIMER_NAME)) {
@@ -627,12 +651,14 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
         }
     }
 
-    protected void setState(ClientCCASessionState newState) {
+    protected void setState(ClientCCASessionState newState)
+    {
         setState(newState, true);
     }
 
     @SuppressWarnings("unchecked")
-    protected void setState(ClientCCASessionState newState, boolean release) {
+    protected void setState(ClientCCASessionState newState, boolean release)
+    {
         try {
             IAppSessionState oldState = this.sessionData.getClientCCASessionState();
             this.sessionData.setClientCCASessionState(newState);
@@ -647,23 +673,27 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
                 }
                 stopTx();
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             if (logger.isDebugEnabled()) {
                 logger.debug("Failure switching to state " + this.sessionData.getClientCCASessionState() + " (release="
-                        + release + ")", e);
+                                     + release + ")", e);
             }
         }
     }
 
     @Override
-    public void release() {
+    public void release()
+    {
         if (isValid()) {
             try {
                 this.sendAndStateLock.lock();
                 super.release();
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failed to release session", e);
-            } finally {
+            }
+            finally {
                 sendAndStateLock.unlock();
             }
         } else {
@@ -671,9 +701,10 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
         }
     }
 
-    protected void handleSendFailure(Exception e, Event.Type eventType, Message request) throws Exception {
+    protected void handleSendFailure(Exception e, Event.Type eventType, Message request) throws Exception
+    {
         logger.debug("Failed to send message, type: {} message: {}, failure: {}",
-                new Object[] { eventType, request, e != null ? e.getLocalizedMessage() : "" });
+                     new Object[]{eventType, request, e != null ? e.getLocalizedMessage() : ""});
         try {
             this.sendAndStateLock.lock();
             ClientCCASessionState state = this.sessionData.getClientCCASessionState();
@@ -769,12 +800,14 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
                 }
             }
             dispatch();
-        } finally {
+        }
+        finally {
             this.sendAndStateLock.unlock();
         }
     }
 
-    protected void handleFailureMessage(JCreditControlAnswer answer, JCreditControlRequest request, Event.Type eventType) {
+    protected void handleFailureMessage(JCreditControlAnswer answer, JCreditControlRequest request, Event.Type eventType)
+    {
         try {
             // Event Based ----------------------------------------------------------
             long resultCode = answer.getResultCodeAvp().getUnsigned32();
@@ -845,7 +878,8 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
                             } else {
                                 logger.warn(
                                         "Invalid combination for CCA Client FSM: State {}, Result-Code {}, Requested-Action {}, DDFH {}, Tx {}",
-                                        new Object[] { state, resultCode, gatheredRequestedAction, getLocalDDFH(), txTimerId });
+                                        new Object[]{state, resultCode, gatheredRequestedAction, getLocalDDFH(),
+                                                     txTimerId});
                             }
                         } else { // Failure
                             if (gatheredRequestedAction == CHECK_BALANCE || gatheredRequestedAction == PRICE_ENQUIRY) {
@@ -886,7 +920,8 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
                             } else {
                                 logger.warn(
                                         "Invalid combination for CCA Client FSM: State {}, Result-Code {}, Requested-Action {}, DDFH {}, Tx {}",
-                                        new Object[] { state, resultCode, gatheredRequestedAction, getLocalDDFH(), txTimerId });
+                                        new Object[]{state, resultCode, gatheredRequestedAction, getLocalDDFH(),
+                                                     txTimerId});
                             }
                         }
                         break;
@@ -994,7 +1029,8 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
                         logger.warn("Wrong event type ({}) on state {}", eventType, state);
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             if (logger.isDebugEnabled()) {
                 logger.debug(
                         "Failure handling failure message for Event " + answer + " (" + eventType + ") and Request " + request,
@@ -1003,7 +1039,8 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
         }
     }
 
-    protected void handleTxExpires(Message message) {
+    protected void handleTxExpires(Message message)
+    {
         // Event Based ----------------------------------------------------------
         ClientCCASessionState state = this.sessionData.getClientCCASessionState();
         Serializable txTimerId = this.sessionData.getTxTimerId();
@@ -1109,7 +1146,8 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
     /**
      * This makes checks on queue, moves it to proper state if event there is present on Open state ;]
      */
-    protected void dispatch() {
+    protected void dispatch()
+    {
         // Event Based ----------------------------------------------------------
         if (isEventBased()) {
             // Current State: IDLE
@@ -1121,10 +1159,12 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
                 setState(ClientCCASessionState.PENDING_BUFFERED);
                 try {
                     dispatchEvent(new AppRequestEventImpl(buffer));
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     try {
                         handleSendFailure(e, Event.Type.SEND_EVENT_REQUEST, buffer);
-                    } catch (Exception e1) {
+                    }
+                    catch (Exception e1) {
                         logger.error("Failure handling buffer send failure", e1);
                     }
                 }
@@ -1135,35 +1175,41 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
             if (this.sessionData.getClientCCASessionState() == ClientCCASessionState.OPEN && eventQueue.size() > 0) {
                 try {
                     this.handleEvent(eventQueue.remove(0));
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     logger.error("Failure handling queued event", e);
                 }
             }
         }
     }
 
-    protected void deliverCCAnswer(JCreditControlRequest request, JCreditControlAnswer answer) {
+    protected void deliverCCAnswer(JCreditControlRequest request, JCreditControlAnswer answer)
+    {
         try {
             listener.doCreditControlAnswer(this, request, answer);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             logger.warn("Failure delivering CCA Answer", e);
         }
     }
 
-    protected void extractFHAVPs(JCreditControlRequest request, JCreditControlAnswer answer) {
+    protected void extractFHAVPs(JCreditControlRequest request, JCreditControlAnswer answer)
+    {
         if (answer != null) {
             try {
                 if (answer.isCreditControlFailureHandlingAVPPresent()) {
                     this.sessionData.setGatheredCCFH(answer.getCredidControlFailureHandlingAVPValue());
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failure trying to obtain Credit-Control-Failure-Handling AVP value", e);
             }
             try {
                 if (answer.isDirectDebitingFailureHandlingAVPPresent()) {
                     this.sessionData.setGatheredDDFH(answer.getDirectDebitingFailureHandlingAVPValue());
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failure trying to obtain Direct-Debit-Failure-Handling AVP value", e);
             }
             if (!this.sessionData.isRequestTypeSet()) {
@@ -1176,7 +1222,8 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
                 if (request.isRequestedActionAVPPresent()) {
                     this.sessionData.setGatheredRequestedAction(request.getRequestedActionAVPValue());
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failure trying to obtain Request-Action AVP value", e);
             }
 
@@ -1188,32 +1235,39 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
         }
     }
 
-    protected void deliverRAR(ReAuthRequest request) {
+    protected void deliverRAR(ReAuthRequest request)
+    {
         try {
             listener.doReAuthRequest(this, request);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             logger.debug("Failure delivering RAR", e);
         }
     }
 
     protected void dispatchEvent(AppEvent event)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         session.send(event.getMessage(), this);
     }
 
-    protected boolean isProvisional(long resultCode) {
+    protected boolean isProvisional(long resultCode)
+    {
         return resultCode >= 1000 && resultCode < 2000;
     }
 
-    protected boolean isSuccess(long resultCode) {
+    protected boolean isSuccess(long resultCode)
+    {
         return resultCode >= 2000 && resultCode < 3000;
     }
 
-    protected boolean isTransient(long resultCode) {
+    protected boolean isTransient(long resultCode)
+    {
         return resultCode >= 4000 && resultCode < 5000;
     }
 
-    protected boolean isFailure(long code) {
+    protected boolean isFailure(long code)
+    {
         return (!isProvisional(code) && !isSuccess(code) && ((code >= 3000 && code < 6000))
                 && !temporaryErrorCodes.contains(code));
     }
@@ -1224,51 +1278,62 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
      * @see org.jdiameter.common.impl.app.AppSessionImpl#isReplicable()
      */
     @Override
-    public boolean isReplicable() {
+    public boolean isReplicable()
+    {
         return true;
     }
 
-    private class TxTimerTask implements Runnable {
+    private class TxTimerTask implements Runnable
+    {
         private ClientCCASession session = null;
         private Request request = null;
 
-        private TxTimerTask(ClientCCASession session, Request request) {
+        private TxTimerTask(ClientCCASession session, Request request)
+        {
             super();
             this.session = session;
             this.request = request;
         }
 
         @Override
-        public void run() {
+        public void run()
+        {
             try {
                 sendAndStateLock.lock();
                 logger.debug("Fired TX Timer");
                 sessionData.setTxTimerId(null);
                 try {
                     context.txTimerExpired(session);
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     logger.debug("Failure handling TX Timer Expired", e);
                 }
                 JCreditControlRequest req = factory.createCreditControlRequest(request);
                 handleEvent(new Event(Event.Type.Tx_TIMER_FIRED, req, null));
-            } catch (InternalException e) {
+            }
+            catch (InternalException e) {
                 logger.error("Internal Exception", e);
-            } catch (OverloadException e) {
+            }
+            catch (OverloadException e) {
                 logger.error("Overload Exception", e);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.error("Exception", e);
-            } finally {
+            }
+            finally {
                 sendAndStateLock.unlock();
             }
         }
     }
 
-    private class RequestDelivery implements Runnable {
+    private class RequestDelivery implements Runnable
+    {
         ClientCCASession session;
         Request request;
 
         @Override
-        public void run() {
+        public void run()
+        {
             try {
                 switch (request.getCommandCode()) {
                     case ReAuthAnswer.code:
@@ -1279,19 +1344,22 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
                         listener.doOtherEvent(session, new AppRequestEventImpl(request), null);
                         break;
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failure processing request", e);
             }
         }
     }
 
-    private class AnswerDelivery implements Runnable {
+    private class AnswerDelivery implements Runnable
+    {
         ClientCCASession session;
         Answer answer;
         Request request;
 
         @Override
-        public void run() {
+        public void run()
+        {
             try {
                 switch (request.getCommandCode()) {
                     case JCreditControlAnswer.code:
@@ -1305,14 +1373,16 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
                         listener.doOtherEvent(session, new AppRequestEventImpl(request), new AppAnswerEventImpl(answer));
                         break;
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Failure processing success message", e);
             }
         }
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((sessionData == null) ? 0 : sessionData.hashCode());
@@ -1320,7 +1390,8 @@ public class ClientCCASessionImpl extends AppCCASessionImpl
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         if (this == obj) {
             return true;
         }

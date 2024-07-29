@@ -42,36 +42,10 @@
 
 package org.jdiameter.client.impl.app.gq;
 
-import static org.jdiameter.api.Message.SESSION_TERMINATION_REQUEST;
-import static org.jdiameter.common.api.app.auth.ClientAuthSessionState.*;
-
-import java.io.Serializable;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import org.jdiameter.api.Answer;
-import org.jdiameter.api.Avp;
-import org.jdiameter.api.AvpSet;
-import org.jdiameter.api.EventListener;
-import org.jdiameter.api.IllegalDiameterStateException;
-import org.jdiameter.api.InternalException;
-import org.jdiameter.api.NetworkReqListener;
-import org.jdiameter.api.OverloadException;
-import org.jdiameter.api.Request;
-import org.jdiameter.api.RouteException;
-import org.jdiameter.api.app.AppAnswerEvent;
-import org.jdiameter.api.app.AppEvent;
-import org.jdiameter.api.app.AppRequestEvent;
-import org.jdiameter.api.app.AppSession;
-import org.jdiameter.api.app.StateChangeListener;
-import org.jdiameter.api.app.StateEvent;
+import org.jdiameter.api.*;
+import org.jdiameter.api.app.*;
 import org.jdiameter.api.auth.ClientAuthSessionListener;
-import org.jdiameter.api.auth.events.AbortSessionAnswer;
-import org.jdiameter.api.auth.events.AbortSessionRequest;
-import org.jdiameter.api.auth.events.ReAuthAnswer;
-import org.jdiameter.api.auth.events.ReAuthRequest;
-import org.jdiameter.api.auth.events.SessionTermAnswer;
-import org.jdiameter.api.auth.events.SessionTermRequest;
+import org.jdiameter.api.auth.events.*;
 import org.jdiameter.api.gq.GqClientSession;
 import org.jdiameter.client.api.ISessionFactory;
 import org.jdiameter.client.impl.app.auth.IClientAuthSessionData;
@@ -81,15 +55,16 @@ import org.jdiameter.common.api.app.auth.IAuthMessageFactory;
 import org.jdiameter.common.api.app.auth.IClientAuthActionContext;
 import org.jdiameter.common.impl.app.AppAnswerEventImpl;
 import org.jdiameter.common.impl.app.AppRequestEventImpl;
-import org.jdiameter.common.impl.app.auth.AbortSessionAnswerImpl;
-import org.jdiameter.common.impl.app.auth.AbortSessionRequestImpl;
-import org.jdiameter.common.impl.app.auth.AppAuthSessionImpl;
-import org.jdiameter.common.impl.app.auth.ReAuthAnswerImpl;
-import org.jdiameter.common.impl.app.auth.ReAuthRequestImpl;
-import org.jdiameter.common.impl.app.auth.SessionTermAnswerImpl;
-import org.jdiameter.common.impl.app.auth.SessionTermRequestImpl;
+import org.jdiameter.common.impl.app.auth.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import static org.jdiameter.api.Message.SESSION_TERMINATION_REQUEST;
+import static org.jdiameter.common.api.app.auth.ClientAuthSessionState.*;
 
 /**
  * Client Gq Application session implementation
@@ -100,7 +75,8 @@ import org.slf4j.LoggerFactory;
  */
 @SuppressWarnings("all") //3rd party lib
 public class GqClientSessionImpl extends AppAuthSessionImpl
-        implements GqClientSession, EventListener<Request, Answer>, NetworkReqListener {
+        implements GqClientSession, EventListener<Request, Answer>, NetworkReqListener
+{
 
     protected static final Logger logger = LoggerFactory.getLogger(GqClientSessionImpl.class);
 
@@ -118,8 +94,9 @@ public class GqClientSessionImpl extends AppAuthSessionImpl
     // Constructors -------------------------------------------------------------
 
     public GqClientSessionImpl(IClientAuthSessionData sessionData, ISessionFactory sf, ClientAuthSessionListener lst,
-            IAuthMessageFactory fct,
-            StateChangeListener<AppSession> scListener, IClientAuthActionContext context, boolean stateless) {
+                               IAuthMessageFactory fct,
+                               StateChangeListener<AppSession> scListener, IClientAuthActionContext context, boolean stateless)
+    {
         super(sf, sessionData);
         if (lst == null) {
             throw new IllegalArgumentException("Listener can not be null");
@@ -127,42 +104,52 @@ public class GqClientSessionImpl extends AppAuthSessionImpl
         if (fct.getApplicationId() == null) {
             throw new IllegalArgumentException("ApplicationId can not be null");
         }
-        super.appId = fct.getApplicationId();
-        this.listener = lst;
-        this.factory = fct;
-        this.context = context;
+        super.appId      = fct.getApplicationId();
+        this.listener    = lst;
+        this.factory     = fct;
+        this.context     = context;
         this.sessionData = sessionData;
         this.sessionData.setStateless(stateless);
         super.addStateChangeNotification(scListener);
+    }
+
+    public void setListener(ClientAuthSessionListener listener)
+    {
+        this.listener = listener;
     }
 
     // ClientAuthSession Implementation methods ---------------------------------
 
     @Override
     public void sendAbortSessionAnswer(AbortSessionAnswer answer)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         send(Event.Type.SEND_SESSION_ABORT_ANSWER, answer);
     }
 
     @Override
     public void sendAuthRequest(AppRequestEvent request)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         send(Event.Type.SEND_AUTH_REQUEST, request);
     }
 
     @Override
     public void sendReAuthAnswer(ReAuthAnswer answer)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         send(Event.Type.SEND_AUTH_ANSWER, answer);
     }
 
     @Override
     public void sendSessionTerminationRequest(SessionTermRequest request)
-            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException {
+            throws InternalException, IllegalDiameterStateException, RouteException, OverloadException
+    {
         send(Event.Type.SEND_SESSION_TERMINATION_REQUEST, request);
     }
 
-    protected void send(Event.Type type, AppEvent event) throws InternalException {
+    protected void send(Event.Type type, AppEvent event) throws InternalException
+    {
         //This is called from app thread, it may be due to callback from our delivery thread, but we dont care
         try {
             sendAndStateLock.lock();
@@ -180,20 +167,24 @@ public class GqClientSessionImpl extends AppAuthSessionImpl
             if (destHostAvp != null) {
                 sessionData.setDestinationHost(destHostAvp.getDiameterIdentity());
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new InternalException(e);
-        } finally {
+        }
+        finally {
             sendAndStateLock.unlock();
         }
     }
 
     @Override
-    public boolean isStateless() {
+    public boolean isStateless()
+    {
         return this.sessionData.isStateless();
     }
 
     @SuppressWarnings("unchecked")
-    protected void setState(ClientAuthSessionState newState) {
+    protected void setState(ClientAuthSessionState newState)
+    {
         IAppSessionState oldState = sessionData.getClientAuthSessionState();
         sessionData.setClientAuthSessionState(newState);
         for (StateChangeListener i : stateListeners) {
@@ -203,16 +194,19 @@ public class GqClientSessionImpl extends AppAuthSessionImpl
 
     @Override
     @SuppressWarnings("unchecked")
-    public <E> E getState(Class<E> eClass) {
+    public <E> E getState(Class<E> eClass)
+    {
         return eClass == ClientAuthSessionState.class ? (E) sessionData.getClientAuthSessionState() : null;
     }
 
     @Override
-    public boolean handleEvent(StateEvent event) throws InternalException, OverloadException {
+    public boolean handleEvent(StateEvent event) throws InternalException, OverloadException
+    {
         return sessionData.isStateless() ? handleEventForStatelessSession(event) : handleEventForStatefulSession(event);
     }
 
-    public boolean handleEventForStatelessSession(StateEvent event) throws InternalException, OverloadException {
+    public boolean handleEventForStatelessSession(StateEvent event) throws InternalException, OverloadException
+    {
         try {
             ClientAuthSessionState state = sessionData.getClientAuthSessionState();
             ClientAuthSessionState oldState = state;
@@ -242,7 +236,8 @@ public class GqClientSessionImpl extends AppAuthSessionImpl
                                 // New State: OPEN
                                 listener.doAuthAnswerEvent(this, null, (AppAnswerEvent) event.getData());
                                 setState(OPEN);
-                            } catch (Exception e) {
+                            }
+                            catch (Exception e) {
                                 // Current State: PENDING
                                 // Event: Failed service-specific authorization answer received
                                 // Action: Cleanup
@@ -302,14 +297,16 @@ public class GqClientSessionImpl extends AppAuthSessionImpl
                     startTsTimer();
                 }
             }
-        } catch (Throwable t) {
+        }
+        catch (Throwable t) {
             throw new InternalException(t);
         }
 
         return true;
     }
 
-    public boolean handleEventForStatefulSession(StateEvent event) throws InternalException, OverloadException {
+    public boolean handleEventForStatefulSession(StateEvent event) throws InternalException, OverloadException
+    {
         ClientAuthSessionState state = sessionData.getClientAuthSessionState();
         ClientAuthSessionState oldState = state;
 
@@ -348,7 +345,8 @@ public class GqClientSessionImpl extends AppAuthSessionImpl
                                 // New State: OPEN
                                 listener.doAuthAnswerEvent(this, null, (AppAnswerEvent) event.getData());
                                 setState(OPEN);
-                            } catch (InternalException e) {
+                            }
+                            catch (InternalException e) {
                                 // Current State: PENDING
                                 // Event: Successful service-specific authorization answer received but service not provided
                                 // Action: Send STR
@@ -359,7 +357,8 @@ public class GqClientSessionImpl extends AppAuthSessionImpl
                                 // Action: Send STR
                                 // New State: DISCON
                                 setState(DISCONNECTED);
-                            } catch (Exception e) {
+                            }
+                            catch (Exception e) {
                                 // Current State: PENDING
                                 // Event: Failed service-specific authorization answer received
                                 // Action: Cleanup
@@ -395,7 +394,8 @@ public class GqClientSessionImpl extends AppAuthSessionImpl
                                 // Action: Provide Service
                                 // New State: OPEN
                                 listener.doAuthAnswerEvent(this, null, (AppAnswerEvent) event.getData());
-                            } catch (Exception e) {
+                            }
+                            catch (Exception e) {
                                 // Current State: OPEN
                                 // Event: ASR Received, client will comply with request to end the session
                                 // Action: Send ASA with Result-Code = SUCCESS, Send STR
@@ -482,7 +482,8 @@ public class GqClientSessionImpl extends AppAuthSessionImpl
                     startTsTimer();
                 }
             }
-        } catch (Throwable t) {
+        }
+        catch (Throwable t) {
             throw new InternalException(t);
         }
 
@@ -490,26 +491,30 @@ public class GqClientSessionImpl extends AppAuthSessionImpl
     }
 
     @Override
-    public void receivedSuccessMessage(Request request, Answer answer) {
+    public void receivedSuccessMessage(Request request, Answer answer)
+    {
         AnswerDelivery ad = new AnswerDelivery();
         ad.session = this;
         ad.request = request;
-        ad.answer = answer;
+        ad.answer  = answer;
         super.scheduler.execute(ad);
     }
 
     @Override
-    public void timeoutExpired(Request request) {
+    public void timeoutExpired(Request request)
+    {
         try {
             //FIXME: should this also be async ?
             handleEvent(new Event(Event.Type.RECEIVE_FAILED_AUTH_ANSWER, new AppRequestEventImpl(request)));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             logger.debug("Can not handle timeout event", e);
         }
     }
 
     @Override
-    public Answer processRequest(Request request) {
+    public Answer processRequest(Request request)
+    {
         RequestDelivery rd = new RequestDelivery();
         rd.session = this;
         rd.request = request;
@@ -524,21 +529,25 @@ public class GqClientSessionImpl extends AppAuthSessionImpl
      * @see org.jdiameter.common.impl.app.AppSessionImpl#isReplicable()
      */
     @Override
-    public boolean isReplicable() {
+    public boolean isReplicable()
+    {
         return true;
     }
 
-    protected void startTsTimer() throws IllegalArgumentException, InternalException {
+    protected void startTsTimer() throws IllegalArgumentException, InternalException
+    {
         try {
             sendAndStateLock.lock();
             sessionData.setTsTimerId(
                     super.timerFacility.schedule(sessionData.getSessionId(), TIMER_NAME_TS, context.getAccessTimeout()));
-        } finally {
+        }
+        finally {
             sendAndStateLock.unlock();
         }
     }
 
-    protected void cancelTsTimer() {
+    protected void cancelTsTimer()
+    {
         try {
             sendAndStateLock.lock();
             Serializable timerId = sessionData.getTsTimerId();
@@ -546,7 +555,8 @@ public class GqClientSessionImpl extends AppAuthSessionImpl
                 super.timerFacility.cancel(timerId);
                 sessionData.setTsTimerId(null);
             }
-        } finally {
+        }
+        finally {
             sendAndStateLock.unlock();
         }
     }
@@ -557,7 +567,8 @@ public class GqClientSessionImpl extends AppAuthSessionImpl
      * @see org.jdiameter.common.impl.app.AppSessionImpl#onTimer(java.lang.String)
      */
     @Override
-    public void onTimer(String timerName) {
+    public void onTimer(String timerName)
+    {
         if (timerName.equals(IDLE_SESSION_TIMER_NAME)) {
             checkIdleAppSession();
         } else if (timerName.equals(TIMER_NAME_TS)) {
@@ -567,11 +578,13 @@ public class GqClientSessionImpl extends AppAuthSessionImpl
                 if (context != null) {
                     try {
                         handleEvent(new Event(Event.Type.TIMEOUT_EXPIRES, null));
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e) {
                         logger.debug("Can not handle event", e);
                     }
                 }
-            } finally {
+            }
+            finally {
                 sendAndStateLock.unlock();
             }
         } else {
@@ -579,37 +592,45 @@ public class GqClientSessionImpl extends AppAuthSessionImpl
         }
     }
 
-    protected AbortSessionAnswer createAbortSessionAnswer(Answer answer) {
+    protected AbortSessionAnswer createAbortSessionAnswer(Answer answer)
+    {
         return new AbortSessionAnswerImpl(answer);
     }
 
-    protected AbortSessionRequest createAbortSessionRequest(Request request) {
+    protected AbortSessionRequest createAbortSessionRequest(Request request)
+    {
         return new AbortSessionRequestImpl(request);
     }
 
-    protected ReAuthAnswer createReAuthAnswer(Answer answer) {
+    protected ReAuthAnswer createReAuthAnswer(Answer answer)
+    {
         return new ReAuthAnswerImpl(answer);
     }
 
-    protected ReAuthRequest createReAuthRequest(Request request) {
+    protected ReAuthRequest createReAuthRequest(Request request)
+    {
         return new ReAuthRequestImpl(request);
     }
 
-    protected SessionTermAnswer createSessionTermAnswer(Answer answer) {
+    protected SessionTermAnswer createSessionTermAnswer(Answer answer)
+    {
         return new SessionTermAnswerImpl(answer);
     }
 
-    protected SessionTermRequest createSessionTermRequest(Request request) {
+    protected SessionTermRequest createSessionTermRequest(Request request)
+    {
         return new SessionTermRequestImpl(request);
     }
 
-    protected Request createSessionTermRequest() {
+    protected Request createSessionTermRequest()
+    {
         return session.createRequest(SESSION_TERMINATION_REQUEST, appId, sessionData.getDestinationRealm(),
-                sessionData.getDestinationHost());
+                                     sessionData.getDestinationHost());
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         final int prime = 31;
         int result = super.hashCode();
         result = prime * result + ((sessionData == null) ? 0 : sessionData.hashCode());
@@ -617,7 +638,8 @@ public class GqClientSessionImpl extends AppAuthSessionImpl
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         if (this == obj) {
             return true;
         }
@@ -638,12 +660,14 @@ public class GqClientSessionImpl extends AppAuthSessionImpl
         return true;
     }
 
-    private class RequestDelivery implements Runnable {
+    private class RequestDelivery implements Runnable
+    {
         GqClientSession session;
         Request request;
 
         @Override
-        public void run() {
+        public void run()
+        {
             try {
                 if (request.getCommandCode() == AbortSessionRequest.code) {
                     handleEvent(new Event(Event.Type.RECEIVE_ABORT_SESSION_REQUEST, createAbortSessionRequest(request)));
@@ -652,19 +676,22 @@ public class GqClientSessionImpl extends AppAuthSessionImpl
                 } else {
                     listener.doOtherEvent(session, factory.createAuthRequest(request), null);
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Can not process received request", e);
             }
         }
     }
 
-    private class AnswerDelivery implements Runnable {
+    private class AnswerDelivery implements Runnable
+    {
         GqClientSession session;
         Answer answer;
         Request request;
 
         @Override
-        public void run() {
+        public void run()
+        {
             try {
                 sendAndStateLock.lock();
                 // FIXME: baranowb: this shouldn't be like that?
@@ -675,9 +702,11 @@ public class GqClientSessionImpl extends AppAuthSessionImpl
                 } else {
                     listener.doOtherEvent(session, factory.createAuthRequest(request), new AppAnswerEventImpl(answer));
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 logger.debug("Can not process received message", e);
-            } finally {
+            }
+            finally {
                 sendAndStateLock.unlock();
             }
         }
