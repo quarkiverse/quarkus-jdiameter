@@ -93,7 +93,7 @@ class DiameterProcessor
         return new ServiceStartBuildItem("DiameterService");
     }
 
-    @BuildStep
+    //@BuildStep
     public void validateDiameterService(CombinedIndexBuildItem index, BuildProducer<ValidationPhaseBuildItem.ValidationErrorBuildItem> errors)
     {
         for (AnnotationInstance annotation : index.getIndex().getAnnotations(DOTNAME_DIAMETER_SERVICE)) {
