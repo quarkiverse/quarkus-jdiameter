@@ -111,7 +111,7 @@ ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++DIAMETER_LOCAL_PEER_REALM+++`
 endif::add-copy-button-to-env-var[]
 --|string 
-|`io.go.diameter`
+|`io.quarkiverse.diameter`
 
 
 a|icon:lock[title=Fixed at build time] [[diameter_diameter-local-peer-product-name]]`link:#diameter_diameter-local-peer-product-name[diameter.local-peer.product-name]`
@@ -692,6 +692,25 @@ endif::add-copy-button-to-env-var[]
 |
 
 
+a|icon:lock[title=Fixed at build time] [[diameter_diameter-parameter-caching-name]]`link:#diameter_diameter-parameter-caching-name[diameter.parameter.caching-name]`
+
+`link:#diameter_diameter-parameter-caching-name[diameter."named-config".parameter.caching-name]`
+
+
+[.description]
+--
+The caching name to be used if HA datasource is used
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_PARAMETER_CACHING_NAME+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_PARAMETER_CACHING_NAME+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|`diameter`
+
+
 h|[[diameter_diameter-parameter-concurrent-controls-the-thread-pool-sizes-for-different-aspects-of-the-stack]]link:#diameter_diameter-parameter-concurrent-controls-the-thread-pool-sizes-for-different-aspects-of-the-stack[Controls the thread pool sizes for different aspects of the stack]
 This configuration section is optional
 h|Type
@@ -1026,7 +1045,7 @@ ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++DIAMETER_NETWORK_REALMS_REALM_NAME+++`
 endif::add-copy-button-to-env-var[]
 --|string 
-|`io.go.diameter`
+|`io.quarkiverse.diameter`
 
 
 a|icon:lock[title=Fixed at build time] [[diameter_diameter-network-realms-peers]]`link:#diameter_diameter-network-realms-peers[diameter.network.realms.peers]`

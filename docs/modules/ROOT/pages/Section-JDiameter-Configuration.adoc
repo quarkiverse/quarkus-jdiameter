@@ -1,4 +1,3 @@
-
 [[_jdiameter_configuration]]
 = Diameter Stack Configuration
 
@@ -55,56 +54,54 @@ The available elements and attributes are listed for reference.
 
 .<LocalPeer> Elements and Attributes
 <URI>::
-  Specifies the URI for the local peer.
-  The URI has the following format: "aaa://FQDN:port".
+Specifies the URI for the local peer.
+The URI has the following format: "aaa://FQDN:port".
 
 <IPAddresses>::
-  Contains one or more child <IPAddress> element, which contain a single, valid IP address for the local peer, stored in the [parameter]`value` attribute of the IPAddress.
+Contains one or more child <IPAddress> element, which contain a single, valid IP address for the local peer, stored in the [parameter]`value` attribute of the IPAddress.
 
 <Realm>::
-  Specifies the realm of the local peer, using the [parameter]`value` attribute.
+Specifies the realm of the local peer, using the [parameter]`value` attribute.
 
 <VendorID>::
-  Specifies a numeric identifier that corresponds to the vendor ID allocated by IANA. 
+Specifies a numeric identifier that corresponds to the vendor ID allocated by IANA.
 
 <ProductName>::
-  Specifies the name of the local peer product.
+Specifies the name of the local peer product.
 
 <FirmwareRevision>::
-  Specifies the version of the firmware.
+Specifies the version of the firmware.
 
 <OverloadMonitor>::
-  Optional parent element containing child elements that specify settings relating to the Overload Monitor.
+Optional parent element containing child elements that specify settings relating to the Overload Monitor.
 
 <Entry>::
-  Supports <ApplicationID> child elements that specify the ID of the tracked application(s). It also supports the following properties: 
+Supports <ApplicationID> child elements that specify the ID of the tracked application(s).
+It also supports the following properties:
 
-index
-  Defines the index of this overload monitor, so priorities/orders can be specified.
+index Defines the index of this overload monitor, so priorities/orders can be specified.
 
-lowThreshold
-  The low threshold for activation of the overload monitor.
+lowThreshold The low threshold for activation of the overload monitor.
 
-highThreshold
-  The high threshold for activation of the overload monitor.
+highThreshold The high threshold for activation of the overload monitor.
 
 <ApplicationID>::
-  Parent element containing child elements that specify information about the application.
-  The child elements create a unique application identifier.
-  The child elements are:
+Parent element containing child elements that specify information about the application.
+The child elements create a unique application identifier.
+The child elements are:
 
-<VendorId>
-Specifies the vendor ID for application definition. It supports a single property: "value".
+<VendorId> Specifies the vendor ID for application definition.
+It supports a single property: "value".
 
-<AuthAppId>
-The Authentication Application ID for application definition. It supports a single property: "value".
+<AuthAppId> The Authentication Application ID for application definition.
+It supports a single property: "value".
 
-<AcctAplId>
-The Account Application ID for application definition. It supports a single property: "value".
+<AcctAplId> The Account Application ID for application definition.
+It supports a single property: "value".
 
 <Applications>::
-  Contains a child element <ApplicationID>, which defines the list of default supported applications.
-  It is used for the server side, when the stack is configured to accept incoming calls and there is an empty list of preconfigured peers (server is configured to accept any connection).
+Contains a child element <ApplicationID>, which defines the list of default supported applications.
+It is used for the server side, when the stack is configured to accept incoming calls and there is an empty list of preconfigured peers (server is configured to accept any connection).
 
 [source,xml]
 ----
@@ -147,95 +144,87 @@ If not specified otherwise, each tag supports a single property - "value", which
 
 .<Parameters> Elements and Attributes
 <AcceptUndefinedPeer>::
-  Specifies whether the stack will accept connections from undefined peers.
-  The default value is `false`.
+Specifies whether the stack will accept connections from undefined peers.
+The default value is `false`.
 
 <DuplicateProtection>::
-  Specifies whether duplicate message protection is enabled.
-  The default value is `false`.
+Specifies whether duplicate message protection is enabled.
+The default value is `false`.
 
 <DuplicateTimer>::
-  Specifies the time each duplicate message is valid for (in extreme cases, it can live up to 2 * DuplicateTimer - 1 milliseconds). The default, minimum value is `240000` (4 minutes in milliseconds).
+Specifies the time each duplicate message is valid for (in extreme cases, it can live up to 2 * DuplicateTimer - 1 milliseconds).
+The default, minimum value is `240000` (4 minutes in milliseconds).
 
 <DuplicateSize>::
-  Specifies the number of requests stored for duplicate protection.
-  The default value is `5000`.
+Specifies the number of requests stored for duplicate protection.
+The default value is `5000`.
 
 <UseUriAsFqdn>::
-  Determines whether the URI should be used as FQDN.
-  If it is set to `true`, the stack expects the destination/origin host to be in the format of "aaa://isdn.domain.com:3868" rather than the normal "isdn.domain.com". The default value is `false`.
+Determines whether the URI should be used as FQDN.
+If it is set to `true`, the stack expects the destination/origin host to be in the format of "aaa://isdn.domain.com:3868" rather than the normal "isdn.domain.com".
+The default value is `false`.
 
 <QueueSize>::
-  Determines how many tasks the peer state machine can have before rejecting the next task.
-  This queue contains FSM events and messaging.
+Determines how many tasks the peer state machine can have before rejecting the next task.
+This queue contains FSM events and messaging.
 
 <MessageTimeOut>::
-  Determines the timeout for messages other than protocol FSM messages.
-  The delay is in milliseconds.
+Determines the timeout for messages other than protocol FSM messages.
+The delay is in milliseconds.
 
 <StopTimeOut>::
-  Determines how long the stack waits for all resources to stop.
-  The delays are in milliseconds.
+Determines how long the stack waits for all resources to stop.
+The delays are in milliseconds.
 
 <CeaTimeOut>::
-  Determines how long it takes for CER/CEA exchanges to timeout if there is no response.
-  The delays are in milliseconds.
+Determines how long it takes for CER/CEA exchanges to timeout if there is no response.
+The delays are in milliseconds.
 
 <IacTimeOut>::
-  Determines how long the stack waits to retry the communication with a peer that has stopped answering DWR messages.
-  The delay is in milliseconds.
+Determines how long the stack waits to retry the communication with a peer that has stopped answering DWR messages.
+The delay is in milliseconds.
 
 <DwaTimeOut>::
-  Determines how long it takes for a DWR/DWA exchange to timeout if there is no response.
-  The delay is in milliseconds.
+Determines how long it takes for a DWR/DWA exchange to timeout if there is no response.
+The delay is in milliseconds.
 
 <DpaTimeOut>::
-  Determines how long it takes for a DPR/DPA exchange to timeout if there is no response.
-  The delay is in milliseconds.
+Determines how long it takes for a DPR/DPA exchange to timeout if there is no response.
+The delay is in milliseconds.
 
 <RecTimeOut>::
-  Determines how long it takes for the reconnection procedure to timeout.
-  The delay is in milliseconds.
+Determines how long it takes for the reconnection procedure to timeout.
+The delay is in milliseconds.
 
 <PeerFSMThreadCount>::
-  Determines the number of threads for handling events in the Peer FSM.
+Determines the number of threads for handling events in the Peer FSM.
 
 <Concurrent />::
-  Controls the thread pool sizes for different aspects of the stack.
-  It supports multiple [parameter]`Entity` child elements. [parameter]`Entity` elements configure thread groups.
-  These elements support the following properties:
+Controls the thread pool sizes for different aspects of the stack.
+It supports multiple [parameter]`Entity` child elements. [parameter]`Entity` elements configure thread groups.
+These elements support the following properties:
 
-name
-Specifies the name of the entity.
+name Specifies the name of the entity.
 
-size
-Specifies the thread pool size of the entity.
+size Specifies the thread pool size of the entity.
 
 The default supported entities are:
 
-ThreadGroup
-Determines the maximum thread count in other entities.
+ThreadGroup Determines the maximum thread count in other entities.
 
-ProcessingMessageTimer
-Determines the thread count for message processing tasks.
+ProcessingMessageTimer Determines the thread count for message processing tasks.
 
-DuplicationMessageTimer
-Specifies the thread pool for identifying duplicate messages.
+DuplicationMessageTimer Specifies the thread pool for identifying duplicate messages.
 
-RedirectMessageTimer
-Specifies the thread pool for redirecting messages that do not need any further processing.
+RedirectMessageTimer Specifies the thread pool for redirecting messages that do not need any further processing.
 
-PeerOverloadTimer
-Determines the thread pool for managing the overload monitor.
+PeerOverloadTimer Determines the thread pool for managing the overload monitor.
 
-ConnectionTimer
-Determines the thread pool for managing tasks regarding peer connection FSM.
+ConnectionTimer Determines the thread pool for managing tasks regarding peer connection FSM.
 
-StatisticTimer
-Determines the thread pool for statistic gathering tasks.
+StatisticTimer Determines the thread pool for statistic gathering tasks.
 
-ApplicationSession
-Determines the thread pool for managing the invocation of application session FSMs, which will invoke listeners.
+ApplicationSession Determines the thread pool for managing the invocation of application session FSMs, which will invoke listeners.
 
 [source,xml]
 ----
@@ -264,39 +253,35 @@ The available elements and attributes are listed for reference.
 
 .<Network> Elements and Attributes
 <Peers>::
-  Parent element containing the child element <Peer>, which specifies external peers and the way they connect.
-  <Peer> specifies the name of external peers, whether they should be treated as a server or client, and what rating the peer has externally.
+Parent element containing the child element <Peer>, which specifies external peers and the way they connect.
+<Peer> specifies the name of external peers, whether they should be treated as a server or client, and what rating the peer has externally.
 
 <Peer> supports the following properties:
 
-name
-Specifies the name of the peer in the form of a URI. The structure is "aaa://[fqdn|ip]:port" (for example, "aaa://192.168.1.1:3868").
+name Specifies the name of the peer in the form of a URI.
+The structure is "aaa://[fqdn|ip]:port" (for example, "aaa://192.168.1.1:3868").
 
-attempt_connect
-Determines if the stack should try to connect to this peer. This property accepts boolean values.
+attempt_connect Determines if the stack should try to connect to this peer.
+This property accepts boolean values.
 
-rating
-Specifies the rating of this peer in order to achieve peer priorities/sorting.
+rating Specifies the rating of this peer in order to achieve peer priorities/sorting.
 
 <Realms>::
-  Parent element containing the child element <Realm>, which specifies all realms that connect into the Diameter network.
-  <Realm> contains attributes and elements that describe different realms configured for the Core.
-  It supports <ApplicationID> child elements, which define the applications supported.
+Parent element containing the child element <Realm>, which specifies all realms that connect into the Diameter network.
+<Realm> contains attributes and elements that describe different realms configured for the Core.
+It supports <ApplicationID> child elements, which define the applications supported.
 
 <Realm> supports the following parameters:
 
-peers
-Comma separated list of peers. Each peer is represented by an IP Address or FQDN.
+peers Comma separated list of peers.
+Each peer is represented by an IP Address or FQDN.
 
-local_action
-Determines the action the Local Peer will play on the specified realm: Act as a LOCAL peer.
+local_action Determines the action the Local Peer will play on the specified realm: Act as a LOCAL peer.
 
-dynamic
-Specifies if this realm is dynamic. That is, peers that connect to peers with this realm name will be added to the realm peer list if not present already.
+dynamic Specifies if this realm is dynamic.
+That is, peers that connect to peers with this realm name will be added to the realm peer list if not present already.
 
-exp_time
-The time before a peer belonging to this realm is removed if no connection is available.
-
+exp_time The time before a peer belonging to this realm is removed if no connection is available.
 
 Below is an example configuration file for a server supporting the CCA, Sh and Ro Applications:
 
@@ -357,7 +342,7 @@ Below is an example configuration file for a server supporting the CCA, Sh and R
 		</Peers>
 		<Realms>
 			<!-- CCA -->
-			<Realm name="mobicents.org" peers="127.0.0.1" local_action="LOCAL" 
+			<Realm name="mobicents.org" peers="127.0.0.1" local_action="LOCAL"
 				dynamic="false" exp_time="1">
 				<ApplicationID>
 					<VendorId value="0" />
@@ -365,9 +350,9 @@ Below is an example configuration file for a server supporting the CCA, Sh and R
 					<AcctApplId value="0" />
 				</ApplicationID>
 			</Realm>
-			
+
 			<!-- Sh -->
-			<Realm name="mobicents.org" peers="127.0.0.1" local_action="LOCAL" 
+			<Realm name="mobicents.org" peers="127.0.0.1" local_action="LOCAL"
 				dynamic="false" exp_time="1">
 				<ApplicationID>
 					<VendorId value="10415" />
@@ -377,7 +362,7 @@ Below is an example configuration file for a server supporting the CCA, Sh and R
 			</Realm>
 
 			<!-- Ro -->
-			<Realm name="mobicents.org" peers="127.0.0.1" local_action="LOCAL" 
+			<Realm name="mobicents.org" peers="127.0.0.1" local_action="LOCAL"
 				dynamic="false" exp_time="1">
 				<ApplicationID>
 					<VendorId value="10415" />
@@ -398,24 +383,24 @@ Below is an example configuration file for a server supporting the CCA, Sh and R
 
 The following list defines the requirements for enabling stack cluster mode
 
-* Add the following entries to the `Parameters` section of [path]_jdiameter-config.xml_: 
+* Add the following entries to the `Parameters` section of [path]_jdiameter-config.xml_:
 +
 [source,xml]
 ----
 
-				
-<SessionDatasource>org.mobicents.diameter.impl. ha.data.ReplicatedData</SessionDatasource>
-<TimerFacility>org.mobicents.diameter.impl.ha. timer.ReplicatedTimerFacilityImpl</TimerFacility>
+
+<SessionDatasource>org.jdiameter.impl. ha.data.ReplicatedData</SessionDatasource>
+<TimerFacility>org.jdiameter.impl.ha. timer.ReplicatedTimerFacilityImpl</TimerFacility>
 ----
 
 * A proper `JBoss Cache` configuration file: [path]_jdiameter-jbc.xml_ (located in the [path]_config_ directory).
 +
-The following content is sufficient for the JBoss Cache configuration file: 
+The following content is sufficient for the JBoss Cache configuration file:
 +
 [source,xml]
 ----
 
-				
+
 <?xml version="1.0" encoding="UTF-8"?>
 
 <jbosscache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

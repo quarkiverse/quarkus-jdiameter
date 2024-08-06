@@ -333,6 +333,25 @@ endif::add-copy-button-to-env-var[]
 |
 
 
+a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-parameter_diameter-parameter-caching-name]]`link:#config-group-io-quarkiverse-diameter-runtime-config-parameter_diameter-parameter-caching-name[diameter.parameter.caching-name]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-parameter_diameter-parameter-caching-name[diameter."named-config".parameter.caching-name]`
+
+
+[.description]
+--
+The caching name to be used if HA datasource is used
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++DIAMETER_PARAMETER_CACHING_NAME+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++DIAMETER_PARAMETER_CACHING_NAME+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|`diameter`
+
+
 h|[[config-group-io-quarkiverse-diameter-runtime-config-parameter_diameter-parameter-concurrent-controls-the-thread-pool-sizes-for-different-aspects-of-the-stack]]link:#config-group-io-quarkiverse-diameter-runtime-config-parameter_diameter-parameter-concurrent-controls-the-thread-pool-sizes-for-different-aspects-of-the-stack[Controls the thread pool sizes for different aspects of the stack]
 This configuration section is optional
 h|Type

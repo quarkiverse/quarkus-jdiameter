@@ -30,7 +30,7 @@ ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++DIAMETER_NETWORK_REALMS_REALM_NAME+++`
 endif::add-copy-button-to-env-var[]
 --|string 
-|`io.go.diameter`
+|`io.quarkiverse.diameter`
 
 
 a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-realm_diameter-network-realms-peers]]`link:#config-group-io-quarkiverse-diameter-runtime-config-realm_diameter-network-realms-peers[diameter.network.realms.peers]`
