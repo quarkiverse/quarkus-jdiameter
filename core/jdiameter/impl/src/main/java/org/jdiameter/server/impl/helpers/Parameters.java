@@ -48,7 +48,8 @@ package org.jdiameter.server.impl.helpers;
  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
  */
 @SuppressWarnings("all") //3rd party lib
-public class Parameters extends org.jdiameter.client.impl.helpers.Parameters {
+public class Parameters extends org.jdiameter.client.impl.helpers.Parameters
+{
 
     private static final long serialVersionUID = 1L;
 
@@ -139,13 +140,20 @@ public class Parameters extends org.jdiameter.client.impl.helpers.Parameters {
     public static final Parameters RequestTableSize = new Parameters("RequestTableSize", Integer.class, Integer.valueOf(10240));
 
     public static final Parameters RequestTableClearSize = new Parameters("RequestTableClearSize", Integer.class,
-            Integer.valueOf(2048));
+                                                                          Integer.valueOf(2048));
+    /**
+     * HA Caching name property
+     */
+    public static final Parameters CachingName = new Parameters("CachingName", String.class, "diameter");
 
-    protected Parameters(String name, Class type) {
+
+    protected Parameters(String name, Class type)
+    {
         super(name, type);
     }
 
-    protected Parameters(String name, Class type, Object defValue) {
+    protected Parameters(String name, Class type, Object defValue)
+    {
         super(name, type, defValue);
     }
 }

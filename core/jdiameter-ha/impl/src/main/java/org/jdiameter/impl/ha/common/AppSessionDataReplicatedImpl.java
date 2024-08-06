@@ -107,7 +107,6 @@
          return true;
      }
 
-     @SuppressWarnings("unchecked")
      public <T> T getFieldValue(String fieldName)
      {
          return datasource.getFieldValue(sessionId, fieldName);

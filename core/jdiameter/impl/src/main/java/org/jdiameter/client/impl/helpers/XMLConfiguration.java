@@ -42,15 +42,8 @@
 
 package org.jdiameter.client.impl.helpers;
 
-import static org.jdiameter.client.impl.helpers.ExtensionPoint.*;
-import static org.jdiameter.client.impl.helpers.Parameters.*;
-import static org.jdiameter.server.impl.helpers.Parameters.*;
-
-import java.io.File;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
+import org.jdiameter.api.Configuration;
+import org.w3c.dom.*;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -61,13 +54,15 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
+import java.io.File;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
 
-import org.jdiameter.api.Configuration;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import static org.jdiameter.client.impl.helpers.ExtensionPoint.*;
+import static org.jdiameter.client.impl.helpers.Parameters.*;
+import static org.jdiameter.server.impl.helpers.Parameters.*;
 
 /**
  * This class provide loading and verification configuration for client from XML file
@@ -77,30 +72,31 @@ import org.w3c.dom.NodeList;
  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
  */
 @SuppressWarnings("all") //3rd party lib
-public class XMLConfiguration extends EmptyConfiguration {
+public class XMLConfiguration extends EmptyConfiguration
+{
 
     /**
      * Create instance of class and load file from defined input stream
      *
      * @param in input stream
-     *
      * @throws Exception
      */
-    public XMLConfiguration(InputStream in) throws Exception {
+    public XMLConfiguration(InputStream in) throws Exception
+    {
         this(in, null, null, false);
     }
 
     /**
      * Create instance of class and load file from defined input stream
      *
-     * @param in input stream
+     * @param in         input stream
      * @param attributes attributes for DocumentBuilderFactory
-     * @param features features for DocumentBuilderFactory
-     *
+     * @param features   features for DocumentBuilderFactory
      * @throws Exception
      */
     public XMLConfiguration(InputStream in, Hashtable<String, Object> attributes, Hashtable<String, Boolean> features)
-            throws Exception {
+            throws Exception
+    {
         this(in, attributes, features, false);
     }
 
@@ -108,29 +104,30 @@ public class XMLConfiguration extends EmptyConfiguration {
      * Create instance of class and load file from defined file name
      *
      * @param filename configuration file name
-     *
      * @throws Exception
      */
-    public XMLConfiguration(String filename) throws Exception {
+    public XMLConfiguration(String filename) throws Exception
+    {
         this(filename, null, null, false);
     }
 
     /**
      * Create instance of class and load file from defined input stream
      *
-     * @param filename configuration file name
+     * @param filename   configuration file name
      * @param attributes attributes for DocumentBuilderFactory
-     * @param features features for DocumentBuilderFactory
-     *
+     * @param features   features for DocumentBuilderFactory
      * @throws Exception
      */
     public XMLConfiguration(String filename, Hashtable<String, Object> attributes, Hashtable<String, Boolean> features)
-            throws Exception {
+            throws Exception
+    {
         this(filename, attributes, features, false);
     }
 
     protected XMLConfiguration(Object in, Hashtable<String, Object> attributes, Hashtable<String, Boolean> features,
-            boolean nop) throws Exception {
+                               boolean nop) throws Exception
+    {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         if (attributes != null) {
@@ -157,7 +154,8 @@ public class XMLConfiguration extends EmptyConfiguration {
         processing(document);
     }
 
-    protected void validate(Document document) throws Exception {
+    protected void validate(Document document) throws Exception
+    {
         SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         Source schemaFile = new StreamSource(getClass().getResourceAsStream("/META-INF/jdiameter-client.xsd"));
         Schema schema = factory.newSchema(schemaFile);
@@ -165,7 +163,8 @@ public class XMLConfiguration extends EmptyConfiguration {
         validator.validate(new DOMSource(document));
     }
 
-    protected void processing(Document document) {
+    protected void processing(Document document)
+    {
         Element element = document.getDocumentElement();
         NodeList c = element.getChildNodes();
         for (int i = 0; i < c.getLength(); i++) {
@@ -184,7 +183,8 @@ public class XMLConfiguration extends EmptyConfiguration {
         }
     }
 
-    protected void addLocalPeer(Node node) {
+    protected void addLocalPeer(Node node)
+    {
         NodeList c = node.getChildNodes();
         if (node.getAttributes().getNamedItem("security_ref") != null) {
             add(SecurityRef, node.getAttributes().getNamedItem("security_ref").getNodeValue());
@@ -214,14 +214,16 @@ public class XMLConfiguration extends EmptyConfiguration {
         }
     }
 
-    protected void addIPAddress(Node node) {
+    protected void addIPAddress(Node node)
+    {
         String nodeName = node.getNodeName();
         if (nodeName.equals("IPAddress")) {
             add(OwnIPAddress, getValue(node));
         }
     }
 
-    protected void addApplications(Node node) {
+    protected void addApplications(Node node)
+    {
         NodeList c = node.getChildNodes();
         ArrayList<Configuration> items = new ArrayList<Configuration>();
         for (int i = 0; i < c.getLength(); i++) {
@@ -233,7 +235,8 @@ public class XMLConfiguration extends EmptyConfiguration {
         add(ApplicationId, items.toArray(EMPTY_ARRAY));
     }
 
-    protected Configuration addApplication(Node node) {
+    protected Configuration addApplication(Node node)
+    {
         NodeList c = node.getChildNodes();
         AppConfiguration e = getInstance();
         for (int i = 0; i < c.getLength(); i++) {
@@ -249,12 +252,15 @@ public class XMLConfiguration extends EmptyConfiguration {
         return e;
     }
 
-    protected void addParameters(Node node) {
+    protected void addParameters(Node node)
+    {
         NodeList c = node.getChildNodes();
         for (int i = 0; i < c.getLength(); i++) {
             String nodeName = c.item(i).getNodeName();
             if (nodeName.equals("UseUriAsFqdn")) {
                 add(UseUriAsFqdn, Boolean.valueOf(getValue(c.item(i))));
+            } else if (nodeName.equals("UseVirtualThreads")) {
+                add(UseVirtualThreads, Boolean.valueOf(getValue(c.item(i))));
             } else if (nodeName.equals("QueueSize")) {
                 add(QueueSize, getIntValue(c.item(i)));
             } else if (nodeName.equals("MessageTimeOut")) {
@@ -285,7 +291,8 @@ public class XMLConfiguration extends EmptyConfiguration {
         }
     }
 
-    protected void addConcurrent(org.jdiameter.client.impl.helpers.Parameters name, Node node) {
+    protected void addConcurrent(org.jdiameter.client.impl.helpers.Parameters name, Node node)
+    {
         NodeList c = node.getChildNodes();
         List<Configuration> items = new ArrayList<Configuration>();
         for (int i = 0; i < c.getLength(); i++) {
@@ -297,7 +304,8 @@ public class XMLConfiguration extends EmptyConfiguration {
         add(name, items.toArray(new Configuration[items.size()]));
     }
 
-    protected void addConcurrentEntity(List<Configuration> items, Node node) {
+    protected void addConcurrentEntity(List<Configuration> items, Node node)
+    {
         AppConfiguration cfg = getInstance();
         String name = node.getAttributes().getNamedItem("name").getNodeValue();
         cfg.add(ConcurrentEntityName, name);
@@ -312,7 +320,8 @@ public class XMLConfiguration extends EmptyConfiguration {
         items.add(cfg);
     }
 
-    protected void addStatisticLogger(org.jdiameter.client.impl.helpers.Parameters name, Node node) {
+    protected void addStatisticLogger(org.jdiameter.client.impl.helpers.Parameters name, Node node)
+    {
         String pause = node.getAttributes().getNamedItem("pause").getNodeValue();
         String delay = node.getAttributes().getNamedItem("delay").getNodeValue();
         String enabled = node.getAttributes().getNamedItem("enabled").getNodeValue();
@@ -324,12 +333,13 @@ public class XMLConfiguration extends EmptyConfiguration {
         }
 
         add(name, getInstance().add(StatisticsLoggerPause, Long.parseLong(pause))
-                .add(StatisticsLoggerDelay, Long.parseLong(delay))
-                .add(StatisticsEnabled, Boolean.parseBoolean(enabled))
-                .add(StatisticsActiveList, active_records));
+                               .add(StatisticsLoggerDelay, Long.parseLong(delay))
+                               .add(StatisticsEnabled, Boolean.parseBoolean(enabled))
+                               .add(StatisticsActiveList, active_records));
     }
 
-    protected void addDictionary(org.jdiameter.client.impl.helpers.Parameters name, Node node) {
+    protected void addDictionary(org.jdiameter.client.impl.helpers.Parameters name, Node node)
+    {
         AppConfiguration dicConfiguration = getInstance();
 
         Node param = node.getAttributes().getNamedItem("class");
@@ -359,10 +369,12 @@ public class XMLConfiguration extends EmptyConfiguration {
         add(name, dicConfiguration);
     }
 
-    protected void appendOtherParameter(Node node) {
+    protected void appendOtherParameter(Node node)
+    {
     }
 
-    protected void addThreadPool(Node item) {
+    protected void addThreadPool(Node item)
+    {
         AppConfiguration threadPoolConfiguration = EmptyConfiguration.getInstance();
         NamedNodeMap attributes = item.getAttributes();
 
@@ -387,7 +399,8 @@ public class XMLConfiguration extends EmptyConfiguration {
         this.add(ThreadPool, threadPoolConfiguration);
     }
 
-    protected void addSecurity(Node node) {
+    protected void addSecurity(Node node)
+    {
         NodeList c = node.getChildNodes();
         List<Configuration> items = new ArrayList<Configuration>();
         for (int i = 0; i < c.getLength(); i++) {
@@ -399,12 +412,13 @@ public class XMLConfiguration extends EmptyConfiguration {
         add(Security, items.toArray(EMPTY_ARRAY));
     }
 
-    protected Configuration addSecurityData(Node node) {
+    protected Configuration addSecurityData(Node node)
+    {
         AppConfiguration sd = getInstance().add(SDName, node.getAttributes().getNamedItem("name").getNodeValue())
-                .add(SDProtocol, node.getAttributes().getNamedItem("protocol").getNodeValue())
-                .add(SDEnableSessionCreation,
-                        Boolean.valueOf(node.getAttributes().getNamedItem("enable_session_creation").getNodeValue()))
-                .add(SDUseClientMode, Boolean.valueOf(node.getAttributes().getNamedItem("use_client_mode").getNodeValue()));
+                                           .add(SDProtocol, node.getAttributes().getNamedItem("protocol").getNodeValue())
+                                           .add(SDEnableSessionCreation,
+                                                Boolean.valueOf(node.getAttributes().getNamedItem("enable_session_creation").getNodeValue()))
+                                           .add(SDUseClientMode, Boolean.valueOf(node.getAttributes().getNamedItem("use_client_mode").getNodeValue()));
 
         NodeList c = node.getChildNodes();
 
@@ -416,21 +430,22 @@ public class XMLConfiguration extends EmptyConfiguration {
             }
             if (nodeName.equals("KeyData")) {
                 sd.add(KeyData, getInstance().add(KDManager, cnode.getAttributes().getNamedItem("manager").getNodeValue())
-                        .add(KDStore, cnode.getAttributes().getNamedItem("store").getNodeValue())
-                        .add(KDFile, cnode.getAttributes().getNamedItem("file").getNodeValue())
-                        .add(KDPwd, cnode.getAttributes().getNamedItem("pwd").getNodeValue()));
+                                             .add(KDStore, cnode.getAttributes().getNamedItem("store").getNodeValue())
+                                             .add(KDFile, cnode.getAttributes().getNamedItem("file").getNodeValue())
+                                             .add(KDPwd, cnode.getAttributes().getNamedItem("pwd").getNodeValue()));
             }
             if (nodeName.equals("TrustData")) {
                 sd.add(TrustData, getInstance().add(TDManager, cnode.getAttributes().getNamedItem("manager").getNodeValue())
-                        .add(TDStore, cnode.getAttributes().getNamedItem("store").getNodeValue())
-                        .add(TDFile, cnode.getAttributes().getNamedItem("file").getNodeValue())
-                        .add(TDPwd, cnode.getAttributes().getNamedItem("pwd").getNodeValue()));
+                                               .add(TDStore, cnode.getAttributes().getNamedItem("store").getNodeValue())
+                                               .add(TDFile, cnode.getAttributes().getNamedItem("file").getNodeValue())
+                                               .add(TDPwd, cnode.getAttributes().getNamedItem("pwd").getNodeValue()));
             }
         }
         return sd;
     }
 
-    protected void addNetwork(Node node) {
+    protected void addNetwork(Node node)
+    {
         NodeList c = node.getChildNodes();
         for (int i = 0; i < c.getLength(); i++) {
             String nodeName = c.item(i).getNodeName();
@@ -442,7 +457,8 @@ public class XMLConfiguration extends EmptyConfiguration {
         }
     }
 
-    protected void addPeers(Node node) {
+    protected void addPeers(Node node)
+    {
         NodeList c = node.getChildNodes();
         ArrayList<Configuration> items = new ArrayList<Configuration>();
         for (int i = 0; i < c.getLength(); i++) {
@@ -454,7 +470,8 @@ public class XMLConfiguration extends EmptyConfiguration {
         add(PeerTable, items.toArray(EMPTY_ARRAY));
     }
 
-    protected void addRealms(Node node) {
+    protected void addRealms(Node node)
+    {
         NodeList c = node.getChildNodes();
         ArrayList<Configuration> items = new ArrayList<Configuration>();
         for (int i = 0; i < c.getLength(); i++) {
@@ -466,7 +483,8 @@ public class XMLConfiguration extends EmptyConfiguration {
         add(RealmTable, items.toArray(EMPTY_ARRAY));
     }
 
-    protected Configuration addPeer(Node node) {
+    protected Configuration addPeer(Node node)
+    {
         AppConfiguration peerConfig = getInstance()
                 .add(PeerRating, Integer.valueOf(node.getAttributes().getNamedItem("rating").getNodeValue()))
                 .add(PeerName, node.getAttributes().getNamedItem("name").getNodeValue());
@@ -483,10 +501,11 @@ public class XMLConfiguration extends EmptyConfiguration {
         return peerConfig;
     }
 
-    protected Configuration addRealm(Node node) {
+    protected Configuration addRealm(Node node)
+    {
 
         AppConfiguration realmEntry = getInstance()
-                .add(ApplicationId, new Configuration[] { addApplicationID(node.getChildNodes()) })
+                .add(ApplicationId, new Configuration[]{addApplicationID(node.getChildNodes())})
                 .add(RealmName, getAttrValue(node, "name")).add(RealmHosts, getAttrValue(node, "peers"))
                 .add(RealmLocalAction, getAttrValue(node, "local_action"))
                 .add(RealmEntryIsDynamic, Boolean.valueOf(getAttrValue(node, "dynamic")))
@@ -502,7 +521,8 @@ public class XMLConfiguration extends EmptyConfiguration {
         return getInstance().add(RealmEntry, realmEntry);
     }
 
-    protected Configuration addAgent(Node node) {
+    protected Configuration addAgent(Node node)
+    {
         AppConfiguration agentConf = getInstance();
         NodeList agentChildren = node.getChildNodes();
 
@@ -516,7 +536,8 @@ public class XMLConfiguration extends EmptyConfiguration {
         return agentConf;
     }
 
-    protected List<Configuration> getProperties(Node node) {
+    protected List<Configuration> getProperties(Node node)
+    {
         List<Configuration> props = new ArrayList<Configuration>();
         NodeList propertiesChildren = node.getChildNodes();
         for (int index = 0; index < propertiesChildren.getLength(); index++) {
@@ -532,7 +553,8 @@ public class XMLConfiguration extends EmptyConfiguration {
         return props;
     }
 
-    protected Configuration addApplicationID(NodeList node) {
+    protected Configuration addApplicationID(NodeList node)
+    {
         for (int i = 0; i < node.getLength(); i++) {
             String nodeName = node.item(i).getNodeName();
             if (nodeName.equals("ApplicationID")) {
@@ -542,7 +564,8 @@ public class XMLConfiguration extends EmptyConfiguration {
         return null;
     }
 
-    protected Configuration addApplicationID(Node node) {
+    protected Configuration addApplicationID(Node node)
+    {
         NodeList c = node.getChildNodes();
         AppConfiguration e = getInstance();
         for (int i = 0; i < c.getLength(); i++) {
@@ -558,7 +581,8 @@ public class XMLConfiguration extends EmptyConfiguration {
         return e;
     }
 
-    protected void addExtensions(Node node) {
+    protected void addExtensions(Node node)
+    {
         NodeList c = node.getChildNodes();
         for (int i = 0; i < c.getLength(); i++) {
             String nodeName = c.item(i).getNodeName();
@@ -606,29 +630,35 @@ public class XMLConfiguration extends EmptyConfiguration {
         }
     }
 
-    protected void addInternalExtension(Ordinal ep, String value) {
+    protected void addInternalExtension(Ordinal ep, String value)
+    {
         Configuration[] extensionConfs = this.getChildren(org.jdiameter.client.impl.helpers.Parameters.Extensions.ordinal());
         AppConfiguration internalExtensions = (AppConfiguration) extensionConfs[ExtensionPoint.Internal.id()];
         internalExtensions.add(ep, value);
     }
 
-    private void appendOtherExtension(Node item) {
+    private void appendOtherExtension(Node item)
+    {
         // Nothing to do here, so far...
     }
 
-    protected Long getLongValue(Node node) {
+    protected Long getLongValue(Node node)
+    {
         return Long.valueOf(getValue(node));
     }
 
-    protected Integer getIntValue(Node node) {
+    protected Integer getIntValue(Node node)
+    {
         return Integer.valueOf(getValue(node));
     }
 
-    protected String getValue(Node node) {
+    protected String getValue(Node node)
+    {
         return node.getAttributes().getNamedItem("value").getNodeValue();
     }
 
-    protected String getAttrValue(Node node, String name) {
+    protected String getAttrValue(Node node, String name)
+    {
         return node.getAttributes().getNamedItem(name).getNodeValue();
     }
 }

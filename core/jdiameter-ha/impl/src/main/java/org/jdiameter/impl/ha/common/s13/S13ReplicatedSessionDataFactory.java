@@ -35,11 +35,8 @@ import org.jdiameter.impl.ha.server.s13.ServerS13SessionDataReplicatedImpl;
 public class S13ReplicatedSessionDataFactory implements IAppSessionDataFactory<IS13SessionData>
 {
 
-    private CachedSessionDatasource cachedSessionDataSource;
-
-    /**
-     * @param replicatedSessionDataSource
-     */
+    private final CachedSessionDatasource cachedSessionDataSource;
+    
     public S13ReplicatedSessionDataFactory(CachedSessionDatasource replicatedSessionDataSource)
     { // Is this ok?
         super();

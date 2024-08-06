@@ -42,27 +42,7 @@
 
 package org.jdiameter.server.impl;
 
-import static org.jdiameter.api.PeerState.DOWN;
-import static org.jdiameter.api.PeerState.INITIAL;
-
-import java.io.IOException;
-import java.net.InetAddress;
-import java.util.Map;
-import java.util.Set;
-
-import org.jdiameter.api.ApplicationId;
-import org.jdiameter.api.Avp;
-import org.jdiameter.api.AvpDataException;
-import org.jdiameter.api.Configuration;
-import org.jdiameter.api.InternalException;
-import org.jdiameter.api.LocalAction;
-import org.jdiameter.api.Message;
-import org.jdiameter.api.NetworkReqListener;
-import org.jdiameter.api.OverloadException;
-import org.jdiameter.api.PeerState;
-import org.jdiameter.api.ResultCode;
-import org.jdiameter.api.StatisticRecord;
-import org.jdiameter.api.URI;
+import org.jdiameter.api.*;
 import org.jdiameter.client.api.IMessage;
 import org.jdiameter.client.api.IMetaData;
 import org.jdiameter.client.api.IRequest;
@@ -78,13 +58,17 @@ import org.jdiameter.common.api.concurrent.IConcurrentFactory;
 import org.jdiameter.common.api.data.ISessionDatasource;
 import org.jdiameter.common.api.statistic.IStatisticManager;
 import org.jdiameter.common.api.statistic.IStatisticRecord;
-import org.jdiameter.server.api.IFsmFactory;
-import org.jdiameter.server.api.INetwork;
-import org.jdiameter.server.api.IOverloadManager;
-import org.jdiameter.server.api.IPeer;
-import org.jdiameter.server.api.IStateMachine;
+import org.jdiameter.server.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.util.Map;
+import java.util.Set;
+
+import static org.jdiameter.api.PeerState.DOWN;
+import static org.jdiameter.api.PeerState.INITIAL;
 
 /**
  * @author erick.svenson@yahoo.com
@@ -92,7 +76,8 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
  */
 @SuppressWarnings("all") //3rd party lib
-public class PeerImpl extends org.jdiameter.client.impl.controller.PeerImpl implements IPeer {
+public class PeerImpl extends org.jdiameter.client.impl.controller.PeerImpl implements IPeer
+{
 
     private static final Logger logger = LoggerFactory.getLogger(org.jdiameter.server.impl.PeerImpl.class);
 
@@ -112,26 +97,28 @@ public class PeerImpl extends org.jdiameter.client.impl.controller.PeerImpl impl
      * Create instance of class
      */
     public PeerImpl(int rating, URI remotePeer, String ip, String portRange, boolean attCnn, IConnection connection,
-            MutablePeerTableImpl peerTable, IMetaData metaData, Configuration config, Configuration peerConfig,
-            ISessionFactory sessionFactory, IFsmFactory fsmFactory, ITransportLayerFactory trFactory,
-            IStatisticManager statisticFactory, IConcurrentFactory concurrentFactory,
-            IMessageParser parser, INetwork nWork, IOverloadManager oManager, final ISessionDatasource sessionDataSource)
-            throws InternalException, TransportException {
+                    MutablePeerTableImpl peerTable, IMetaData metaData, Configuration config, Configuration peerConfig,
+                    ISessionFactory sessionFactory, IFsmFactory fsmFactory, ITransportLayerFactory trFactory,
+                    IStatisticManager statisticFactory, IConcurrentFactory concurrentFactory,
+                    IMessageParser parser, INetwork nWork, IOverloadManager oManager, final ISessionDatasource sessionDataSource)
+            throws InternalException, TransportException
+    {
         super(peerTable, rating, remotePeer, ip, portRange, metaData, config, peerConfig, fsmFactory, trFactory, parser,
-                statisticFactory, concurrentFactory, connection, sessionDataSource);
+              statisticFactory, concurrentFactory, connection, sessionDataSource);
         // Create specific action context
-        this.peerTable = peerTable;
+        this.peerTable             = peerTable;
         this.isDuplicateProtection = this.peerTable.isDuplicateProtection();
-        this.sessionFactory = sessionFactory;
-        this.isAttemptConnection = attCnn;
-        this.incConnections = this.peerTable.getIncConnections();
-        this.predefinedPeerTable = this.peerTable.getPredefinedPeerTable();
-        this.network = nWork;
-        this.ovrManager = oManager;
+        this.sessionFactory        = sessionFactory;
+        this.isAttemptConnection   = attCnn;
+        this.incConnections        = this.peerTable.getIncConnections();
+        this.predefinedPeerTable   = this.peerTable.getPredefinedPeerTable();
+        this.network               = nWork;
+        this.ovrManager            = oManager;
     }
 
     @Override
-    protected void createPeerStatistics() {
+    protected void createPeerStatistics()
+    {
         super.createPeerStatistics();
 
         // Append fsm statistic
@@ -146,7 +133,8 @@ public class PeerImpl extends org.jdiameter.client.impl.controller.PeerImpl impl
         }
     }
 
-    protected void preProcessRequest(IMessage message) {
+    protected void preProcessRequest(IMessage message)
+    {
         // ammendonca: this is non-sense, we don't want to save requests
         //if (isDuplicateProtection && message.isRequest()) {
         //  peerTable.saveToDuplicate(message.getDuplicationKey(), message);
@@ -154,22 +142,26 @@ public class PeerImpl extends org.jdiameter.client.impl.controller.PeerImpl impl
     }
 
     @Override
-    public boolean isAttemptConnection() {
+    public boolean isAttemptConnection()
+    {
         return isAttemptConnection;
     }
 
     @Override
-    public IContext getContext() {
+    public IContext getContext()
+    {
         return new LocalActionConext();
     }
 
     @Override
-    public IConnection getConnection() {
+    public IConnection getConnection()
+    {
         return connection;
     }
 
     @Override
-    public void addIncomingConnection(IConnection conn) {
+    public void addIncomingConnection(IConnection conn)
+    {
         PeerState state = fsm.getState(PeerState.class);
         if (DOWN == state || INITIAL == state) {
             conn.addConnectionListener(connListener);
@@ -181,38 +173,45 @@ public class PeerImpl extends org.jdiameter.client.impl.controller.PeerImpl impl
             incConnections.remove(conn.getKey());
             try {
                 conn.release();
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 logger.debug("Can not close external connection", e);
-            } finally {
+            }
+            finally {
                 logger.debug("Close external connection");
             }
         }
     }
 
     @Override
-    public void setElection(boolean isElection) {
+    public void setElection(boolean isElection)
+    {
         this.isElection = isElection;
     }
 
     @Override
-    public void notifyOvrManager(IOverloadManager ovrManager) {
+    public void notifyOvrManager(IOverloadManager ovrManager)
+    {
         ovrManager.changeNotification(0, getUri(), fsm.getQueueInfo());
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         if (fsm != null) {
             return "SPeer{" + "Uri=" + uri + "; State=" + fsm.getState(PeerState.class) + "; con=" + connection + "; incCon"
-                    + incConnections + " }";
+                   + incConnections + " }";
         }
         return "SPeer{" + "Uri=" + uri + "; State=" + fsm + "; con=" + connection + "; incCon" + incConnections + " }";
     }
 
-    protected class LocalActionConext extends ActionContext {
+    protected class LocalActionConext extends ActionContext
+    {
 
         @Override
         public void sendCeaMessage(int resultCode, Message cer, String errMessage)
-                throws TransportException, OverloadException {
+                throws TransportException, OverloadException
+        {
             logger.debug("Send CEA message");
 
             IMessage message = parser.createEmptyMessage(Message.CAPABILITIES_EXCHANGE_ANSWER, 0);
@@ -240,7 +239,8 @@ public class PeerImpl extends org.jdiameter.client.impl.controller.PeerImpl impl
         }
 
         @Override
-        public int processCerMessage(String key, IMessage message) {
+        public int processCerMessage(String key, IMessage message)
+        {
             logger.debug("Processing CER");
 
             int resultCode = ResultCode.SUCCESS;
@@ -261,7 +261,7 @@ public class PeerImpl extends org.jdiameter.client.impl.controller.PeerImpl impl
                 if (newAppId.isEmpty()) {
                     if (logger.isWarnEnabled()) {
                         logger.warn("Processing CER failed, no common application. Message AppIds [{}]",
-                                message.getApplicationIdAvps());
+                                    message.getApplicationIdAvps());
                     }
                     return ResultCode.NO_COMMON_APPLICATION;
                 }
@@ -282,7 +282,8 @@ public class PeerImpl extends org.jdiameter.client.impl.controller.PeerImpl impl
                                     //    message.getAvps().getAvp(Avp.ORIGIN_HOST).getOctetString()) <= 0;
                                     isLocalWin = metaData.getLocalPeer().getUri().getFQDN().equals(
                                             message.getAvps().getAvp(Avp.ORIGIN_HOST).getOctetString());
-                                } catch (Exception exc) {
+                                }
+                                catch (Exception exc) {
                                     isLocalWin = true;
                                 }
                             }
@@ -306,7 +307,7 @@ public class PeerImpl extends org.jdiameter.client.impl.controller.PeerImpl impl
                 } else {
                     if (logger.isDebugEnabled()) {
                         logger.debug("CER received by current connection, key: [{}] PeerState: [{}] ", key,
-                                fsm.getState(PeerState.class));
+                                     fsm.getState(PeerState.class));
                     }
                     if (fsm.getState(PeerState.class).equals(INITIAL)) { // received cer by current connection
                         resultCode = 0; // NOP
@@ -319,7 +320,8 @@ public class PeerImpl extends org.jdiameter.client.impl.controller.PeerImpl impl
                     commonApplications.addAll(newAppId);
                     fillIPAddressTable(message);
                 }
-            } catch (Exception exc) {
+            }
+            catch (Exception exc) {
                 logger.debug("Can not process CER", exc);
             }
             logger.debug("CER result [{}]", resultCode);
@@ -328,17 +330,66 @@ public class PeerImpl extends org.jdiameter.client.impl.controller.PeerImpl impl
         }
 
         @Override
-        public boolean isRestoreConnection() {
+        public boolean isRestoreConnection()
+        {
             return isAttemptConnection;
         }
 
         @Override
-        public String getPeerDescription() {
+        public String getPeerDescription()
+        {
             return PeerImpl.this.toString();
         }
 
+        private boolean processMessage(IMessage message)
+        {
+            boolean isProcessed = false;
+
+            // this is for handling possible REDIRECT, destRealm != local.realm
+            LocalAction action = null;
+            IRealm matched = null;
+
+            IRealmTable realmTable = router.getRealmTable();
+            matched = (IRealm) realmTable.matchRealm(message);
+            if (matched != null) {
+                action = matched.getLocalAction();
+            } else {
+                // We don't support it locally, its not defined as remote, so send no such realm answer.
+                sendErrorAnswer(message, null, ResultCode.APPLICATION_UNSUPPORTED);
+                // or REALM_NOT_SERVED ?
+                return true;
+            }
+
+            switch (action) {
+                case LOCAL: // always call listener - this covers realms
+                    // configured as localy processed and
+                    // LocalPeer.realm
+                    isProcessed = consumeMessage(message);
+                    break;
+                case PROXY:
+                    //TODO: change this its almost the same as above, make it sync, so no router code involved
+                    if (handleByAgent(message, isProcessed, message, matched)) {
+                        isProcessed = true;
+                    }
+                    break;
+                case RELAY: // might be complicated, lets make it listener
+                    // now
+                    isProcessed = consumeMessage(message); //if its not redirected its
+                    break;
+                case REDIRECT:
+                    //TODO: change this its almost the same as above, make it sync, so no router code involved
+                    if (handleByAgent(message, isProcessed, message, matched)) {
+                        isProcessed = true;
+                    }
+                    break;
+            }
+
+            return isProcessed;
+        }
+
         @Override
-        public boolean receiveMessage(IMessage message) {
+        public boolean receiveMessage(IMessage message)
+        {
             logger.debug("Receiving message in server.");
             boolean isProcessed = false;
 
@@ -356,9 +407,10 @@ public class PeerImpl extends org.jdiameter.client.impl.controller.PeerImpl impl
                 } else {
                     try {
                         destRealm = destRealmAvp.getDiameterIdentity();
-                    } catch (AvpDataException ade) {
+                    }
+                    catch (AvpDataException ade) {
                         sendErrorAnswer(message, "Failed to parse Destination-Realm AVP", ResultCode.INVALID_AVP_VALUE,
-                                destRealmAvp);
+                                        destRealmAvp);
                         return true;
                     }
                 }
@@ -392,110 +444,33 @@ public class PeerImpl extends org.jdiameter.client.impl.controller.PeerImpl impl
                 //     the Diameter application is locally supported, or
                 //  -  Both the Destination-Host and the Destination-Realm are not
                 //     present.
-                if (destHostAvp != null) {
-                    try {
-                        String destHost = destHostAvp.getDiameterIdentity();
-                        //FIXME: add check with DNS/names to check 127 vs localhost
-                        if (destHost.equals(metaData.getLocalPeer().getUri().getFQDN())) {
-
-                            // this is for handling possible REDIRECT, destRealm != local.realm
-                            LocalAction action = null;
-                            IRealm matched = null;
-
-                            matched = (IRealm) realmTable.matchRealm(req);
-                            if (matched != null) {
-                                action = matched.getLocalAction();
-                            } else {
-                                // We don't support it locally, its not defined as remote, so send no such realm answer.
-                                sendErrorAnswer(message, null, ResultCode.APPLICATION_UNSUPPORTED);
-                                // or REALM_NOT_SERVED ?
-                                return true;
-                            }
-
-                            switch (action) {
-                                case LOCAL: // always call listener - this covers realms
-                                    // configured as localy processed and
-                                    // LocalPeer.realm
-                                    isProcessed = consumeMessage(message);
-                                    break;
-                                case PROXY:
-                                    //TODO: change this its almost the same as above, make it sync, so no router code involved
-                                    if (handleByAgent(message, isProcessed, req, matched)) {
-                                        isProcessed = true;
-                                    }
-                                    break;
-                                case RELAY: // might be complicated, lets make it listener
-                                    // now
-                                    isProcessed = consumeMessage(message); //if its not redirected its
-                                    break;
-                                case REDIRECT:
-                                    //TODO: change this its almost the same as above, make it sync, so no router code involved
-                                    if (handleByAgent(message, isProcessed, req, matched)) {
-                                        isProcessed = true;
-                                    }
-                                    break;
-                            }
+                try {
+                    isProcessed = processMessage(message);
+                    if (!isProcessed) {
+                        String destHost = (destHostAvp == null ? null : destHostAvp.getDiameterIdentity());
+                        //NOTE: this check should be improved, it checks if there is connection to peer, otherwise we cant serve it.
+                        //possibly also match realm.
+                        IPeer p = (IPeer) peerTable.getPeer(destHost);
+                        if (p != null && p.hasValidConnection()) {
+                            isProcessed = consumeMessage(message);
                         } else {
-                            //NOTE: this check should be improved, it checks if there is connection to peer, otherwise we cant serve it.
-                            //possibly also match realm.
-                            IPeer p = (IPeer) peerTable.getPeer(destHost);
-                            if (p != null && p.hasValidConnection()) {
-                                isProcessed = consumeMessage(message);
-                            } else {
-                                // RFC 3588 // 6.1
-                                //   4. If none of the above is successful, an answer is returned with the
-                                //   Result-Code set to DIAMETER_UNABLE_TO_DELIVER, with the E-bit set.
-                                logger.warn(
-                                        "Received message for unknown peer [{}]. Answering with 3002 (UNABLE_TO_DELIVER) Result-Code.",
-                                        destHost);
-                                sendErrorAnswer(req, "No connection to peer", ResultCode.UNABLE_TO_DELIVER);
-                                isProcessed = true;
-                            }
+                            // RFC 3588 // 6.1
+                            //   4. If none of the above is successful, an answer is returned with the
+                            //   Result-Code set to DIAMETER_UNABLE_TO_DELIVER, with the E-bit set.
+                            logger.warn(
+                                    "Received message for unknown peer [{}]. Answering with 3002 (UNABLE_TO_DELIVER) Result-Code.",
+                                    destHost);
+                            sendErrorAnswer(req, "No connection to peer", ResultCode.UNABLE_TO_DELIVER);
+                            isProcessed = true;
                         }
-                    } catch (AvpDataException ade) {
-                        logger.warn(
-                                "Received message with present but unparsable Destination-Host. Answering with 5004 (INVALID_AVP_VALUE) Result-Code.");
-                        sendErrorAnswer(message, "Failed to parse Destination-Host AVP", ResultCode.INVALID_AVP_VALUE,
-                                destHostAvp);
-                        return true;
                     }
-                } else {
-                    // we have to match realms :) this MUST include local realm
-                    LocalAction action = null;
-                    IRealm matched = null;
-
-                    matched = (IRealm) realmTable.matchRealm(req);
-                    if (matched != null) {
-                        action = matched.getLocalAction();
-                    } else {
-                        // We don't support it locally, its not defined as remote, so send no such realm answer.
-                        sendErrorAnswer(message, null, ResultCode.APPLICATION_UNSUPPORTED);
-                        // or REALM_NOT_SERVED ?
-                        return true;
-                    }
-
-                    switch (action) {
-                        case LOCAL: // always call listener - this covers realms
-                            // configured as locally processed and LocalPeer.realm
-                            isProcessed = consumeMessage(message);
-                            break;
-                        case PROXY:
-                            //TODO: change this its almost the same as above, make it sync, so no router code involved
-                            if (handleByAgent(message, isProcessed, req, matched)) {
-                                isProcessed = true;
-                            }
-                            break;
-                        case RELAY: // might be complicated, lets make it listener
-                            // now
-                            isProcessed = consumeMessage(message);
-                            break;
-                        case REDIRECT:
-                            //TODO: change this its almost the same as above, make it sync, so no router code involved
-                            if (handleByAgent(message, isProcessed, req, matched)) {
-                                isProcessed = true;
-                            }
-                            break;
-                    }
+                }
+                catch (AvpDataException ade) {
+                    logger.warn(
+                            "Received message with present but unparsable Destination-Host. Answering with 5004 (INVALID_AVP_VALUE) Result-Code.");
+                    sendErrorAnswer(message, "Failed to parse Destination-Host AVP", ResultCode.INVALID_AVP_VALUE,
+                                    destHostAvp);
+                    return true;
                 }
             } else {
                 // answer, let client do its work
@@ -510,10 +485,10 @@ public class PeerImpl extends org.jdiameter.client.impl.controller.PeerImpl impl
          * @param isProcessed
          * @param req
          * @param matched
-         *
          * @return
          */
-        private boolean handleByAgent(IMessage message, boolean isProcessed, IRequest req, IRealm matched) {
+        private boolean handleByAgent(IMessage message, boolean isProcessed, IRequest req, IRealm matched)
+        {
             if (ovrManager != null && ovrManager.isParenAppOverload(message.getSingleApplicationId())) {
                 logger.debug("Request [{}] skipped, because server application is overloaded", message);
                 sendErrorAnswer(message, "Overloaded", ResultCode.TOO_BUSY);
@@ -532,7 +507,8 @@ public class PeerImpl extends org.jdiameter.client.impl.controller.PeerImpl impl
                     if (statistic.isEnabled()) {
                         statistic.getRecordByName(IStatisticRecord.Counters.SysGenResponse.name()).inc();
                     }
-                } catch (Exception exc) {
+                }
+                catch (Exception exc) {
                     // TODO: check this!!
                     logger.warn("Error during processing message by " + matched.getAgent().getClass(), exc);
                     sendErrorAnswer(message, "Unable to process", ResultCode.UNABLE_TO_COMPLY);
@@ -550,10 +526,10 @@ public class PeerImpl extends org.jdiameter.client.impl.controller.PeerImpl impl
 
         /**
          * @param message
-         *
          * @return
          */
-        private boolean consumeMessage(IMessage message) {
+        private boolean consumeMessage(IMessage message)
+        {
             // now its safe to call stupid client code....
             logger.debug("In Server consumeMessage. Going to call parents class receiveMessage");
             boolean isProcessed = super.receiveMessage(message);
@@ -570,7 +546,7 @@ public class PeerImpl extends org.jdiameter.client.impl.controller.PeerImpl impl
                 if (listener != null) {
                     if (logger.isDebugEnabled()) {
                         logger.debug("We have found an application that is a listener for this message. It is [{}]",
-                                listener.getClass().getName());
+                                     listener.getClass().getName());
                     }
                     if (isDuplicateProtection) {
                         logger.debug("Checking if it's a duplicate, since duplicate protection is ENABLED.");
@@ -591,7 +567,8 @@ public class PeerImpl extends org.jdiameter.client.impl.controller.PeerImpl impl
                             if (statistic.isEnabled()) {
                                 statistic.getRecordByName(IStatisticRecord.Counters.SysGenResponse.name()).inc();
                             }
-                        } catch (Exception e) {
+                        }
+                        catch (Exception e) {
                             // TODO: check this!!
                             logger.warn("Error during processing message by duplicate protection", e);
                             sendErrorAnswer(message, "Unable to process", ResultCode.UNABLE_TO_COMPLY);
@@ -618,7 +595,8 @@ public class PeerImpl extends org.jdiameter.client.impl.controller.PeerImpl impl
                                 if (statistic.isEnabled()) {
                                     statistic.getRecordByName(IStatisticRecord.Counters.AppGenResponse.name()).inc();
                                 }
-                            } catch (Exception exc) {
+                            }
+                            catch (Exception exc) {
                                 // TODO: check this!!
                                 logger.warn("Error during processing message by listener", exc);
                                 sendErrorAnswer(message, "Unable to process", ResultCode.UNABLE_TO_COMPLY);
@@ -644,11 +622,12 @@ public class PeerImpl extends org.jdiameter.client.impl.controller.PeerImpl impl
         }
 
         @Override
-        public String toString() {
+        public String toString()
+        {
             return new StringBuffer("LocalActionConext [isRestoreConnection()=").append(isRestoreConnection())
-                    .append(", getPeerDescription()=").append(getPeerDescription()).append(", isConnected()=")
-                    .append(isConnected()).append(", LocalPeer=").append(metaData.getLocalPeer().getUri()).append(" ]")
-                    .toString();
+                                                                                .append(", getPeerDescription()=").append(getPeerDescription()).append(", isConnected()=")
+                                                                                .append(isConnected()).append(", LocalPeer=").append(metaData.getLocalPeer().getUri()).append(" ]")
+                                                                                .toString();
         }
 
     }

@@ -109,9 +109,8 @@
      private final RemoteCache<String, String> dataSessions;
      private final ObjectMapper mapper;
 
-     private ConcurrentHashMap<String, Map<String, Object>> sessionData = new ConcurrentHashMap<>();
+     private final ConcurrentHashMap<String, Map<String, Object>> sessionData = new ConcurrentHashMap<>();
      ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
-     private String cachingName = "diameter";
 
      // provided by impl, no way to change that, no conf! :)
      protected HashMap<Class<? extends IAppSessionData>, IAppSessionDataFactory<? extends IAppSessionData>> appSessionDataFactories =
@@ -122,7 +121,7 @@
      {
          this.localDataSource = new LocalDataSource(container);
 
-         cachingName = container.getConfiguration().getStringValue(CachingName.ordinal(), (String) CachingName.defValue());
+         String cachingName = container.getConfiguration().getStringValue(CachingName.ordinal(), (String) CachingName.defValue());
 
          InstanceHandle<RemoteCacheManager> vInstanceHandle = Arc.container().instance(RemoteCacheManager.class);
          if (!vInstanceHandle.isAvailable()) {
@@ -149,11 +148,6 @@
          appSessionDataFactories.put(IRxSessionData.class, new RxReplicatedSessionDataFactory(this));
          appSessionDataFactories.put(IS13SessionData.class, new S13ReplicatedSessionDataFactory(this));
 
-     }
-
-     public RemoteCache<String, String> getCache()
-     {
-         return dataSessions;
      }
 
      @Override
@@ -314,7 +308,6 @@
              IAppSessionFactory fct = ((ISessionFactory) this.container.getSessionFactory()).getAppSessionFactory(appSessionInterfaceClass);
              if (fct == null) {
                  logger.warn("Session with id:{}, is in replicated data source, but no Application Session Factory for:{}.", sessionId, appSessionInterfaceClass);
-                 return;
              } else {
                  //Get the local cache to refresh
                  sessionData.remove(sessionId);
@@ -323,7 +316,6 @@
                  this.localDataSource.addSession(session);
                  // hmmm
                  this.localDataSource.setSessionListener(sessionId, (NetworkReqListener) session);
-                 return;
              }
          }
          catch (IllegalDiameterStateException | ClassNotFoundException e) {
