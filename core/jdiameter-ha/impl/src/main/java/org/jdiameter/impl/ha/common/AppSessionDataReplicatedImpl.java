@@ -110,7 +110,7 @@
      @SuppressWarnings("unchecked")
      public <T> T getFieldValue(String fieldName)
      {
-         return (T) datasource.getFieldValue(sessionId, fieldName);
+         return datasource.getFieldValue(sessionId, fieldName);
      }//getFieldValue
 
      public byte[] getByteFieldValue(String fieldName)

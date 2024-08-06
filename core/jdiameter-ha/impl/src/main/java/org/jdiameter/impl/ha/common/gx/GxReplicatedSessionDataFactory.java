@@ -58,11 +58,8 @@
  public class GxReplicatedSessionDataFactory implements IAppSessionDataFactory<IGxSessionData>
  {
 
-     private CachedSessionDatasource cachedSessionDataSource;
-
-     /**
-      * @param replicatedSessionDataSource
-      */
+     private final CachedSessionDatasource cachedSessionDataSource;
+     
      public GxReplicatedSessionDataFactory(CachedSessionDatasource replicatedSessionDataSource)
      { // Is this ok?
          super();

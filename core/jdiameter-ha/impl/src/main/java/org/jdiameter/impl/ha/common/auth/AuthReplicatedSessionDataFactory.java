@@ -57,11 +57,8 @@
   */
  public class AuthReplicatedSessionDataFactory implements IAppSessionDataFactory<IAuthSessionData>
  {
-     private CachedSessionDatasource cachedSessionDataSource;
+     private final CachedSessionDatasource cachedSessionDataSource;
 
-     /**
-      * @param replicatedSessionDataSource
-      */
      public AuthReplicatedSessionDataFactory(CachedSessionDatasource replicatedSessionDataSource)
      { // Is this ok?
          super();

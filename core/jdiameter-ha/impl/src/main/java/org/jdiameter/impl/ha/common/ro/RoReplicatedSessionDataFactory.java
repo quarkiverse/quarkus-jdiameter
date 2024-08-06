@@ -58,11 +58,8 @@
  public class RoReplicatedSessionDataFactory implements IAppSessionDataFactory<IRoSessionData>
  {
 
-     private CachedSessionDatasource cachedSessionDataSource;
-
-     /**
-      * @param replicatedSessionDataSource
-      */
+     private final CachedSessionDatasource cachedSessionDataSource;
+     
      public RoReplicatedSessionDataFactory(CachedSessionDatasource replicatedSessionDataSource)
      { // Is this ok?
          super();

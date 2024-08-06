@@ -47,8 +47,6 @@
  import org.jdiameter.impl.ha.common.AppSessionDataReplicatedImpl;
  import org.jdiameter.impl.ha.data.CachedSessionDatasource;
  import org.jdiameter.server.impl.app.cca.IServerCCASessionData;
- import org.slf4j.Logger;
- import org.slf4j.LoggerFactory;
 
  import java.io.Serializable;
 
@@ -62,7 +60,6 @@
      private static final String TCCID = "TCCID";
      private static final String STATELESS = "STATELESS";
      private static final String STATE = "STATE";
-     private static final Logger log = LoggerFactory.getLogger(ServerCCASessionDataReplicatedImpl.class);
 
      public ServerCCASessionDataReplicatedImpl(String sessionId, CachedSessionDatasource datasource)
      {

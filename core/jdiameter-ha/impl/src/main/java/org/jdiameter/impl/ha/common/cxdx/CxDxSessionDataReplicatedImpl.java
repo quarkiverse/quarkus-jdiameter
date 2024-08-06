@@ -70,7 +70,7 @@
      private static final String BUFFER = "BUFFER";
      private static final String TS_TIMERID = "TS_TIMERID";
 
-     private IMessageParser messageParser;
+     private final IMessageParser messageParser;
 
      public CxDxSessionDataReplicatedImpl(String sessionId, CachedSessionDatasource datasource)
      {

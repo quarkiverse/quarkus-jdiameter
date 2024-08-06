@@ -58,11 +58,8 @@
  public class ShReplicatedSessionDataFactory implements IAppSessionDataFactory<IShSessionData>
  {
 
-     private CachedSessionDatasource cachedSessionDataSource;
+     private final CachedSessionDatasource cachedSessionDataSource;
 
-     /**
-      * @param replicatedSessionDataSource
-      */
      public ShReplicatedSessionDataFactory(CachedSessionDatasource replicatedSessionDataSource)
      { // Is this ok?
          super();

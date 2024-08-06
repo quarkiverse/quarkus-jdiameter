@@ -58,11 +58,8 @@
  public class CCAReplicatedSessionDataFactory implements IAppSessionDataFactory<ICCASessionData>
  {
 
-     private CachedSessionDatasource cachedSessionDataSource;
+     private final CachedSessionDatasource cachedSessionDataSource;
 
-     /**
-      * @param replicatedSessionDataSource
-      */
      public CCAReplicatedSessionDataFactory(CachedSessionDatasource replicatedSessionDataSource)
      { // Is this ok?
          super();

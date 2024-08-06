@@ -58,11 +58,8 @@
  public class CxDxReplicatedSessionDataFactory implements IAppSessionDataFactory<ICxDxSessionData>
  {
 
-     private CachedSessionDatasource cachedSessionDataSource;
-
-     /**
-      * @param replicatedSessionDataSource
-      */
+     private final CachedSessionDatasource cachedSessionDataSource;
+     
      public CxDxReplicatedSessionDataFactory(CachedSessionDatasource replicatedSessionDataSource)
      { // Is this ok?
          super();

@@ -73,7 +73,7 @@
      private static final String DESTINATION_HOST = "DESTINATION_HOST";
      private static final String DESTINATION_REALM = "DESTINATION_REALM";
 
-     private IMessageParser messageParser;
+     private final IMessageParser messageParser;
 
      public ClientRfSessionDataReplicatedImpl(String sessionId, CachedSessionDatasource datasource)
      {

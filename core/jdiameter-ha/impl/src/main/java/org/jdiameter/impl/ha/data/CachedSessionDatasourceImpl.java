@@ -174,7 +174,7 @@
          this.localDataSource.addSession(session);
 
          //Clear the local cache so that it can be refreshed
-         //sessionData.remove(session.getSessionId());
+         sessionData.remove(session.getSessionId());
      }
 
      /*

@@ -77,7 +77,7 @@
      private static final String GDDFH = "GDDFH";
      private static final String GCCFH = "GCCFH";
 
-     private IMessageParser messageParser;
+     private final IMessageParser messageParser;
 
      public ClientCCASessionDataReplicatedImpl(String sessionId, CachedSessionDatasource datasource)
      {
