@@ -55,7 +55,7 @@
                             <deployment>${project.groupId}:${project.artifactId}-deployment:${project.version}
                             </deployment>
                             <capabilities>
-                                <provides>io.go.diameter</provides>
+                                <provides>io.quarkiverse.diameter</provides>
                             </capabilities>
                         </configuration>
                     </execution>

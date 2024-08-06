@@ -184,17 +184,36 @@ public class DiameterServiceInterceptor
 
                 ISessionFactory sessionFactory = (ISessionFactory) stack.getSessionFactory();
 
-                switch (context.getTarget()) {
-                    case ClientCCASessionListener listener -> setupClientCAAFactory(sessionFactory, configProfile, listener);
-                    case ServerCCASessionListener listener -> setupServerCAAFactory(stack, sessionFactory, configProfile, listener);
-                    case ClientRxSessionListener listener -> clientSetupRxFactory(sessionFactory, configProfile, listener);
-                    case ServerRxSessionListener listener -> serverSetupRxFactory(stack, sessionFactory, configProfile, listener);
-                    case ClientS6aSessionListener listener -> clientSetupS6aFactory(sessionFactory, configProfile, listener);
-                    case ServerS6aSessionListener listener -> serverSetupS6aFactory(stack, sessionFactory, configProfile, listener);
-                    case ClientGqSessionListener listener -> clientSetupGqFactory(sessionFactory, configProfile, listener);
-                    case ServerGqSessionListener listener -> serverSetupGqFactory(stack, sessionFactory, configProfile, listener);
-                    default -> LOG.warn("No Session Listener implemented");
+                if (context.getTarget() instanceof ClientCCASessionListener listener) {
+                    setupClientCAAFactory(sessionFactory, configProfile, listener);
+                }
 
+                if (context.getTarget() instanceof ServerCCASessionListener listener) {
+                    setupServerCAAFactory(stack, sessionFactory, configProfile, listener);
+                }
+
+                if (context.getTarget() instanceof ClientRxSessionListener listener) {
+                    clientSetupRxFactory(sessionFactory, configProfile, listener);
+                }
+
+                if (context.getTarget() instanceof ServerRxSessionListener listener) {
+                    serverSetupRxFactory(stack, sessionFactory, configProfile, listener);
+                }
+
+                if (context.getTarget() instanceof ClientS6aSessionListener listener) {
+                    clientSetupS6aFactory(sessionFactory, configProfile, listener);
+                }
+
+                if (context.getTarget() instanceof ServerS6aSessionListener listener) {
+                    serverSetupS6aFactory(stack, sessionFactory, configProfile, listener);
+                }
+
+                if (context.getTarget() instanceof ClientGqSessionListener listener) {
+                    clientSetupGqFactory(sessionFactory, configProfile, listener);
+                }
+
+                if (context.getTarget() instanceof ServerGqSessionListener listener) {
+                    serverSetupGqFactory(stack, sessionFactory, configProfile, listener);
                 }
 
                 if (!stack.isActive()) {
