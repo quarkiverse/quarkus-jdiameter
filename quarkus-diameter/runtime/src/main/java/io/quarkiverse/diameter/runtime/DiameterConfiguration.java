@@ -113,6 +113,8 @@ public class DiameterConfiguration extends EmptyConfiguration
 
         add(UseVirtualThreads, parametersConfig.useVirtualThreads());
 
+        add(CachingName, parametersConfig.cachingName());
+        
         if (parametersConfig.queueSize().isPresent()) {
             add(QueueSize, parametersConfig.queueSize().get());
         }
