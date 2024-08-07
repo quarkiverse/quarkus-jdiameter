@@ -23,9 +23,6 @@ public class DiameterRecorder
     {
         return context -> {
             LOG.info("Building Diameter configuration for profile '{}'", configName);
-            //SmallRyeConfig config = ConfigProvider.getConfig().unwrap(SmallRyeConfig.class);
-            //DiameterRunTimeConfig client = config.getConfigMapping(DiameterRunTimeConfig.class);
-
             DiameterDetailConfig diameterConfig = runtimeConfig.getDiameterConfig(configName);
             if (diameterConfig == null) {
                 throw new IllegalArgumentException("No Diameter configuration found for profile '" + configName + "'");
@@ -42,9 +39,6 @@ public class DiameterRecorder
                 DictionaryImpl.INSTANCE.setEnabled(true);
 
                 LOG.info("Building Diameter Stack for configuration profile '{}'", configName);
-//                SmallRyeConfig config = ConfigProvider.getConfig().unwrap(SmallRyeConfig.class);
-//                DiameterRunTimeConfig client = config.getConfigMapping(DiameterRunTimeConfig.class);
-
                 DiameterDetailConfig diameterConfig = runtimeConfig.getDiameterConfig(configName);
                 if (diameterConfig == null) {
                     throw new IllegalArgumentException("No Diameter configuration found for profile '" + configName + "'");
