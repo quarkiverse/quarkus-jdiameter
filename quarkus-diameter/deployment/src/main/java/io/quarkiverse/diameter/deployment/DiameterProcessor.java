@@ -43,17 +43,6 @@ class DiameterProcessor
     private static final DotName DOTNAME_DIAMETER_CONFIG = DotName.createSimple("io.quarkiverse.diameter.DiameterConfig");
     private static final DotName DOTNAME_DIAMETER_SERVICE_INTERCEPTOR = DotName.createSimple("io.quarkiverse.diameter.DiameterServiceInterceptor");
 
-    private static final DotName DOTNAME_CLIENT_CAA_SESSION_LISTENER = DotName.createSimple("org.jdiameter.api.cca.ClientCCASessionListener");
-    private static final DotName DOTNAME_SERVER_CAA_SESSION_LISTENER = DotName.createSimple("org.jdiameter.api.cca.ServerCCASessionListener");
-    private static final DotName DOTNAME_CLIENT_GQ_SESSION_LISTENER = DotName.createSimple("org.jdiameter.api.gq.ClientGqSessionListener");
-    private static final DotName DOTNAME_SERVER_GQ_SESSION_LISTENER = DotName.createSimple("org.jdiameter.api.gq.ServerGqSessionListener");
-    private static final DotName DOTNAME_CLIENT_RX_SESSION_LISTENER = DotName.createSimple("org.jdiameter.api.rx.ClientRxSessionListener");
-    private static final DotName DOTNAME_SERVER_RX_SESSION_LISTENER = DotName.createSimple("org.jdiameter.api.rx.ServerRxSessionListener");
-    private static final DotName DOTNAME_CLIENT_S6A_SESSION_LISTENER = DotName.createSimple("org.jdiameter.api.s6a.ClientS6aSessionListener");
-    private static final DotName DOTNAME_SERVER_S6A_SESSION_LISTENER = DotName.createSimple("org.jdiameter.api.s6a.ServerS6aSessionListener");
-
-    private static final List<DotName> DIAMETER_SESSION_LISTENERS = List.of(DOTNAME_CLIENT_CAA_SESSION_LISTENER, DOTNAME_SERVER_CAA_SESSION_LISTENER, DOTNAME_CLIENT_GQ_SESSION_LISTENER, DOTNAME_SERVER_GQ_SESSION_LISTENER, DOTNAME_CLIENT_RX_SESSION_LISTENER, DOTNAME_SERVER_RX_SESSION_LISTENER, DOTNAME_CLIENT_S6A_SESSION_LISTENER, DOTNAME_SERVER_S6A_SESSION_LISTENER);
-
     @BuildStep
     public FeatureBuildItem feature()
     {
@@ -106,7 +95,7 @@ class DiameterProcessor
                     createSyntheticBean(profile.getProfileName(),
                                         Configuration.class,
                                         DOTNAME_CONFIGURATION,
-                                        profile.equals(DiameterConfig.DEFAULT_CONFIG_NAME))
+                                        profile.getProfileName().equals(DiameterConfig.DEFAULT_CONFIG_NAME))
                             .createWith(recorder.diameterConfiguration(tlsRegistryBuildItem.registry(), diameterRunTimeConfig, profile.getProfileName()))
                             .done());
 
@@ -114,7 +103,7 @@ class DiameterProcessor
                     createSyntheticBean(profile.getProfileName(),
                                         Stack.class,
                                         DOTNAME_STACK,
-                                        profile.equals(DiameterConfig.DEFAULT_CONFIG_NAME))
+                                        profile.getProfileName().equals(DiameterConfig.DEFAULT_CONFIG_NAME))
                             .createWith(recorder.diameterStack(shutdownContextBuildItem, tlsRegistryBuildItem.registry(), diameterRunTimeConfig, profile.getProfileName()))
                             .done());
         });
