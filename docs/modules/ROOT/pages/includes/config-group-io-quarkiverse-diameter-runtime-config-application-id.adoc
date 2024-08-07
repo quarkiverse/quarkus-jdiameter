@@ -10,82 +10,13 @@ h|[[config-group-io-quarkiverse-diameter-runtime-config-application-id_configura
 h|Type
 h|Default
 
-a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-local-peer-applications-vendor-id]]`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-local-peer-applications-vendor-id[diameter.local-peer.applications.vendor-id]`
+a| [[config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-local-peer-applications-vendor-id]]`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-local-peer-applications-vendor-id[quarkus.diameter.local-peer.applications.vendor-id]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-local-peer-applications-vendor-id[diameter.local-peer.applications."applications".vendor-id]`
+`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-local-peer-applications-vendor-id[quarkus.diameter.local-peer.applications."applications".vendor-id]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-local-peer-applications-vendor-id[diameter."named-config".local-peer.applications."applications".vendor-id]`
+`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-local-peer-applications-vendor-id[quarkus.diameter."named-config".local-peer.applications."applications".vendor-id]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-local-peer-applications-vendor-id[diameter."named-config".local-peer.applications.vendor-id]`
-
-
-[.description]
---
-Specifies the vendor ID for application definition.
-
-ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++DIAMETER_LOCAL_PEER_APPLICATIONS_VENDOR_ID+++[]
-endif::add-copy-button-to-env-var[]
-ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++DIAMETER_LOCAL_PEER_APPLICATIONS_VENDOR_ID+++`
-endif::add-copy-button-to-env-var[]
---|long 
-|`0`
-
-
-a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-local-peer-applications-auth-appl-id]]`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-local-peer-applications-auth-appl-id[diameter.local-peer.applications.auth-appl-id]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-local-peer-applications-auth-appl-id[diameter.local-peer.applications."applications".auth-appl-id]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-local-peer-applications-auth-appl-id[diameter."named-config".local-peer.applications."applications".auth-appl-id]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-local-peer-applications-auth-appl-id[diameter."named-config".local-peer.applications.auth-appl-id]`
-
-
-[.description]
---
-The Authentication Application ID for application definition.
-
-ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++DIAMETER_LOCAL_PEER_APPLICATIONS_AUTH_APPL_ID+++[]
-endif::add-copy-button-to-env-var[]
-ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++DIAMETER_LOCAL_PEER_APPLICATIONS_AUTH_APPL_ID+++`
-endif::add-copy-button-to-env-var[]
---|long 
-|`0`
-
-
-a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-local-peer-applications-acct-appl-id]]`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-local-peer-applications-acct-appl-id[diameter.local-peer.applications.acct-appl-id]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-local-peer-applications-acct-appl-id[diameter.local-peer.applications."applications".acct-appl-id]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-local-peer-applications-acct-appl-id[diameter."named-config".local-peer.applications."applications".acct-appl-id]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-local-peer-applications-acct-appl-id[diameter."named-config".local-peer.applications.acct-appl-id]`
-
-
-[.description]
---
-The Account Application ID for application definition.
-
-ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++DIAMETER_LOCAL_PEER_APPLICATIONS_ACCT_APPL_ID+++[]
-endif::add-copy-button-to-env-var[]
-ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++DIAMETER_LOCAL_PEER_APPLICATIONS_ACCT_APPL_ID+++`
-endif::add-copy-button-to-env-var[]
---|long 
-|`0`
-
-
-a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-network-realms-application-id-vendor-id]]`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-network-realms-application-id-vendor-id[diameter.network.realms.application-id.vendor-id]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-network-realms-application-id-vendor-id[diameter.network.realms."realms".application-id.vendor-id]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-network-realms-application-id-vendor-id[diameter."named-config".network.realms."realms".application-id.vendor-id]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-network-realms-application-id-vendor-id[diameter."named-config".network.realms.application-id.vendor-id]`
+`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-local-peer-applications-vendor-id[quarkus.diameter."named-config".local-peer.applications.vendor-id]`
 
 
 [.description]
@@ -93,22 +24,22 @@ a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-ru
 Specifies the vendor ID for application definition.
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_REALMS_APPLICATION_ID_VENDOR_ID+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_LOCAL_PEER_APPLICATIONS_VENDOR_ID+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++DIAMETER_NETWORK_REALMS_APPLICATION_ID_VENDOR_ID+++`
+Environment variable: `+++QUARKUS_DIAMETER_LOCAL_PEER_APPLICATIONS_VENDOR_ID+++`
 endif::add-copy-button-to-env-var[]
 --|long 
 |`0`
 
 
-a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-network-realms-application-id-auth-appl-id]]`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-network-realms-application-id-auth-appl-id[diameter.network.realms.application-id.auth-appl-id]`
+a| [[config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-local-peer-applications-auth-appl-id]]`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-local-peer-applications-auth-appl-id[quarkus.diameter.local-peer.applications.auth-appl-id]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-network-realms-application-id-auth-appl-id[diameter.network.realms."realms".application-id.auth-appl-id]`
+`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-local-peer-applications-auth-appl-id[quarkus.diameter.local-peer.applications."applications".auth-appl-id]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-network-realms-application-id-auth-appl-id[diameter."named-config".network.realms."realms".application-id.auth-appl-id]`
+`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-local-peer-applications-auth-appl-id[quarkus.diameter."named-config".local-peer.applications."applications".auth-appl-id]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-network-realms-application-id-auth-appl-id[diameter."named-config".network.realms.application-id.auth-appl-id]`
+`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-local-peer-applications-auth-appl-id[quarkus.diameter."named-config".local-peer.applications.auth-appl-id]`
 
 
 [.description]
@@ -116,22 +47,22 @@ a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-ru
 The Authentication Application ID for application definition.
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_REALMS_APPLICATION_ID_AUTH_APPL_ID+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_LOCAL_PEER_APPLICATIONS_AUTH_APPL_ID+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++DIAMETER_NETWORK_REALMS_APPLICATION_ID_AUTH_APPL_ID+++`
+Environment variable: `+++QUARKUS_DIAMETER_LOCAL_PEER_APPLICATIONS_AUTH_APPL_ID+++`
 endif::add-copy-button-to-env-var[]
 --|long 
 |`0`
 
 
-a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-network-realms-application-id-acct-appl-id]]`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-network-realms-application-id-acct-appl-id[diameter.network.realms.application-id.acct-appl-id]`
+a| [[config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-local-peer-applications-acct-appl-id]]`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-local-peer-applications-acct-appl-id[quarkus.diameter.local-peer.applications.acct-appl-id]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-network-realms-application-id-acct-appl-id[diameter.network.realms."realms".application-id.acct-appl-id]`
+`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-local-peer-applications-acct-appl-id[quarkus.diameter.local-peer.applications."applications".acct-appl-id]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-network-realms-application-id-acct-appl-id[diameter."named-config".network.realms."realms".application-id.acct-appl-id]`
+`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-local-peer-applications-acct-appl-id[quarkus.diameter."named-config".local-peer.applications."applications".acct-appl-id]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_diameter-network-realms-application-id-acct-appl-id[diameter."named-config".network.realms.application-id.acct-appl-id]`
+`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-local-peer-applications-acct-appl-id[quarkus.diameter."named-config".local-peer.applications.acct-appl-id]`
 
 
 [.description]
@@ -139,10 +70,79 @@ a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-ru
 The Account Application ID for application definition.
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_REALMS_APPLICATION_ID_ACCT_APPL_ID+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_LOCAL_PEER_APPLICATIONS_ACCT_APPL_ID+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++DIAMETER_NETWORK_REALMS_APPLICATION_ID_ACCT_APPL_ID+++`
+Environment variable: `+++QUARKUS_DIAMETER_LOCAL_PEER_APPLICATIONS_ACCT_APPL_ID+++`
+endif::add-copy-button-to-env-var[]
+--|long 
+|`0`
+
+
+a| [[config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-network-realms-application-id-vendor-id]]`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-network-realms-application-id-vendor-id[quarkus.diameter.network.realms.application-id.vendor-id]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-network-realms-application-id-vendor-id[quarkus.diameter.network.realms."realms".application-id.vendor-id]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-network-realms-application-id-vendor-id[quarkus.diameter."named-config".network.realms."realms".application-id.vendor-id]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-network-realms-application-id-vendor-id[quarkus.diameter."named-config".network.realms.application-id.vendor-id]`
+
+
+[.description]
+--
+Specifies the vendor ID for application definition.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS_APPLICATION_ID_VENDOR_ID+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS_APPLICATION_ID_VENDOR_ID+++`
+endif::add-copy-button-to-env-var[]
+--|long 
+|`0`
+
+
+a| [[config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-network-realms-application-id-auth-appl-id]]`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-network-realms-application-id-auth-appl-id[quarkus.diameter.network.realms.application-id.auth-appl-id]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-network-realms-application-id-auth-appl-id[quarkus.diameter.network.realms."realms".application-id.auth-appl-id]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-network-realms-application-id-auth-appl-id[quarkus.diameter."named-config".network.realms."realms".application-id.auth-appl-id]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-network-realms-application-id-auth-appl-id[quarkus.diameter."named-config".network.realms.application-id.auth-appl-id]`
+
+
+[.description]
+--
+The Authentication Application ID for application definition.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS_APPLICATION_ID_AUTH_APPL_ID+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS_APPLICATION_ID_AUTH_APPL_ID+++`
+endif::add-copy-button-to-env-var[]
+--|long 
+|`0`
+
+
+a| [[config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-network-realms-application-id-acct-appl-id]]`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-network-realms-application-id-acct-appl-id[quarkus.diameter.network.realms.application-id.acct-appl-id]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-network-realms-application-id-acct-appl-id[quarkus.diameter.network.realms."realms".application-id.acct-appl-id]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-network-realms-application-id-acct-appl-id[quarkus.diameter."named-config".network.realms."realms".application-id.acct-appl-id]`
+
+`link:#config-group-io-quarkiverse-diameter-runtime-config-application-id_quarkus-diameter-network-realms-application-id-acct-appl-id[quarkus.diameter."named-config".network.realms.application-id.acct-appl-id]`
+
+
+[.description]
+--
+The Account Application ID for application definition.
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS_APPLICATION_ID_ACCT_APPL_ID+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS_APPLICATION_ID_ACCT_APPL_ID+++`
 endif::add-copy-button-to-env-var[]
 --|long 
 |`0`

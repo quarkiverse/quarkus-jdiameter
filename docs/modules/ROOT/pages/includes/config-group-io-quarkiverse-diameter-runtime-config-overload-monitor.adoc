@@ -10,9 +10,9 @@ h|[[config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_configu
 h|Type
 h|Default
 
-a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-index]]`link:#config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-index[diameter.local-peer.overload-monitors."overload-monitors".index]`
+a| [[config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_quarkus-diameter-local-peer-overload-monitors-overload-monitors-index]]`link:#config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_quarkus-diameter-local-peer-overload-monitors-overload-monitors-index[quarkus.diameter.local-peer.overload-monitors."overload-monitors".index]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-index[diameter."named-config".local-peer.overload-monitors."overload-monitors".index]`
+`link:#config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_quarkus-diameter-local-peer-overload-monitors-overload-monitors-index[quarkus.diameter."named-config".local-peer.overload-monitors."overload-monitors".index]`
 
 
 [.description]
@@ -20,18 +20,18 @@ a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-ru
 Defines the index of this overload monitor, so priorities/orders can be specified.
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__INDEX+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__INDEX+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__INDEX+++`
+Environment variable: `+++QUARKUS_DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__INDEX+++`
 endif::add-copy-button-to-env-var[]
 --|int 
 |`0`
 
 
-a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-low-threshold]]`link:#config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-low-threshold[diameter.local-peer.overload-monitors."overload-monitors".low-threshold]`
+a| [[config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_quarkus-diameter-local-peer-overload-monitors-overload-monitors-low-threshold]]`link:#config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_quarkus-diameter-local-peer-overload-monitors-overload-monitors-low-threshold[quarkus.diameter.local-peer.overload-monitors."overload-monitors".low-threshold]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-low-threshold[diameter."named-config".local-peer.overload-monitors."overload-monitors".low-threshold]`
+`link:#config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_quarkus-diameter-local-peer-overload-monitors-overload-monitors-low-threshold[quarkus.diameter."named-config".local-peer.overload-monitors."overload-monitors".low-threshold]`
 
 
 [.description]
@@ -39,18 +39,18 @@ a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-ru
 The low threshold for activation of the overload monitor.
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__LOW_THRESHOLD+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__LOW_THRESHOLD+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__LOW_THRESHOLD+++`
+Environment variable: `+++QUARKUS_DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__LOW_THRESHOLD+++`
 endif::add-copy-button-to-env-var[]
 --|double 
 |`0d`
 
 
-a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-high-threshold]]`link:#config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-high-threshold[diameter.local-peer.overload-monitors."overload-monitors".high-threshold]`
+a| [[config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_quarkus-diameter-local-peer-overload-monitors-overload-monitors-high-threshold]]`link:#config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_quarkus-diameter-local-peer-overload-monitors-overload-monitors-high-threshold[quarkus.diameter.local-peer.overload-monitors."overload-monitors".high-threshold]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-high-threshold[diameter."named-config".local-peer.overload-monitors."overload-monitors".high-threshold]`
+`link:#config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_quarkus-diameter-local-peer-overload-monitors-overload-monitors-high-threshold[quarkus.diameter."named-config".local-peer.overload-monitors."overload-monitors".high-threshold]`
 
 
 [.description]
@@ -58,18 +58,18 @@ a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-ru
 The high threshold for activation of the overload monitor.
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__HIGH_THRESHOLD+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__HIGH_THRESHOLD+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__HIGH_THRESHOLD+++`
+Environment variable: `+++QUARKUS_DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__HIGH_THRESHOLD+++`
 endif::add-copy-button-to-env-var[]
 --|double 
 |`0d`
 
 
-a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-application-id-vendor-id]]`link:#config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-application-id-vendor-id[diameter.local-peer.overload-monitors."overload-monitors".application-id.vendor-id]`
+a| [[config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_quarkus-diameter-local-peer-overload-monitors-overload-monitors-application-id-vendor-id]]`link:#config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_quarkus-diameter-local-peer-overload-monitors-overload-monitors-application-id-vendor-id[quarkus.diameter.local-peer.overload-monitors."overload-monitors".application-id.vendor-id]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-application-id-vendor-id[diameter."named-config".local-peer.overload-monitors."overload-monitors".application-id.vendor-id]`
+`link:#config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_quarkus-diameter-local-peer-overload-monitors-overload-monitors-application-id-vendor-id[quarkus.diameter."named-config".local-peer.overload-monitors."overload-monitors".application-id.vendor-id]`
 
 
 [.description]
@@ -77,18 +77,18 @@ a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-ru
 Specifies the vendor ID for application definition.
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__APPLICATION_ID_VENDOR_ID+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__APPLICATION_ID_VENDOR_ID+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__APPLICATION_ID_VENDOR_ID+++`
+Environment variable: `+++QUARKUS_DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__APPLICATION_ID_VENDOR_ID+++`
 endif::add-copy-button-to-env-var[]
 --|long 
 |`0`
 
 
-a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-application-id-auth-appl-id]]`link:#config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-application-id-auth-appl-id[diameter.local-peer.overload-monitors."overload-monitors".application-id.auth-appl-id]`
+a| [[config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_quarkus-diameter-local-peer-overload-monitors-overload-monitors-application-id-auth-appl-id]]`link:#config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_quarkus-diameter-local-peer-overload-monitors-overload-monitors-application-id-auth-appl-id[quarkus.diameter.local-peer.overload-monitors."overload-monitors".application-id.auth-appl-id]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-application-id-auth-appl-id[diameter."named-config".local-peer.overload-monitors."overload-monitors".application-id.auth-appl-id]`
+`link:#config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_quarkus-diameter-local-peer-overload-monitors-overload-monitors-application-id-auth-appl-id[quarkus.diameter."named-config".local-peer.overload-monitors."overload-monitors".application-id.auth-appl-id]`
 
 
 [.description]
@@ -96,18 +96,18 @@ a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-ru
 The Authentication Application ID for application definition.
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__APPLICATION_ID_AUTH_APPL_ID+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__APPLICATION_ID_AUTH_APPL_ID+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__APPLICATION_ID_AUTH_APPL_ID+++`
+Environment variable: `+++QUARKUS_DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__APPLICATION_ID_AUTH_APPL_ID+++`
 endif::add-copy-button-to-env-var[]
 --|long 
 |`0`
 
 
-a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-application-id-acct-appl-id]]`link:#config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-application-id-acct-appl-id[diameter.local-peer.overload-monitors."overload-monitors".application-id.acct-appl-id]`
+a| [[config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_quarkus-diameter-local-peer-overload-monitors-overload-monitors-application-id-acct-appl-id]]`link:#config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_quarkus-diameter-local-peer-overload-monitors-overload-monitors-application-id-acct-appl-id[quarkus.diameter.local-peer.overload-monitors."overload-monitors".application-id.acct-appl-id]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_diameter-local-peer-overload-monitors-overload-monitors-application-id-acct-appl-id[diameter."named-config".local-peer.overload-monitors."overload-monitors".application-id.acct-appl-id]`
+`link:#config-group-io-quarkiverse-diameter-runtime-config-overload-monitor_quarkus-diameter-local-peer-overload-monitors-overload-monitors-application-id-acct-appl-id[quarkus.diameter."named-config".local-peer.overload-monitors."overload-monitors".application-id.acct-appl-id]`
 
 
 [.description]
@@ -115,10 +115,10 @@ a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-ru
 The Account Application ID for application definition.
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__APPLICATION_ID_ACCT_APPL_ID+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__APPLICATION_ID_ACCT_APPL_ID+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__APPLICATION_ID_ACCT_APPL_ID+++`
+Environment variable: `+++QUARKUS_DIAMETER_LOCAL_PEER_OVERLOAD_MONITORS__OVERLOAD_MONITORS__APPLICATION_ID_ACCT_APPL_ID+++`
 endif::add-copy-button-to-env-var[]
 --|long 
 |`0`

@@ -132,4 +132,4 @@ diameter.test1.network.realms.application-id.auth-appl-id=4
 TIP:For more information about the extension configuration please refer to the <<configuration-reference,Configuration Reference>>.
 
 [[configuration-reference]]
-include::../includes/diameter.adoc[leveloffset=+1]
+include::../includes/quarkus-diameter.adoc[leveloffset=+1]

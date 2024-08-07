@@ -10,13 +10,13 @@ h|[[config-group-io-quarkiverse-diameter-runtime-config-agent_configuration]]lin
 h|Type
 h|Default
 
-a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-runtime-config-agent_diameter-network-realms-agent-properties]]`link:#config-group-io-quarkiverse-diameter-runtime-config-agent_diameter-network-realms-agent-properties[diameter.network.realms.agent."properties"]`
+a| [[config-group-io-quarkiverse-diameter-runtime-config-agent_quarkus-diameter-network-realms-agent-properties]]`link:#config-group-io-quarkiverse-diameter-runtime-config-agent_quarkus-diameter-network-realms-agent-properties[quarkus.diameter.network.realms.agent."properties"]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-config-agent_diameter-network-realms-agent-properties[diameter.network.realms."realms".agent."properties"]`
+`link:#config-group-io-quarkiverse-diameter-runtime-config-agent_quarkus-diameter-network-realms-agent-properties[quarkus.diameter.network.realms."realms".agent."properties"]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-config-agent_diameter-network-realms-agent-properties[diameter."named-config".network.realms."realms".agent."properties"]`
+`link:#config-group-io-quarkiverse-diameter-runtime-config-agent_quarkus-diameter-network-realms-agent-properties[quarkus.diameter."named-config".network.realms."realms".agent."properties"]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-config-agent_diameter-network-realms-agent-properties[diameter."named-config".network.realms.agent."properties"]`
+`link:#config-group-io-quarkiverse-diameter-runtime-config-agent_quarkus-diameter-network-realms-agent-properties[quarkus.diameter."named-config".network.realms.agent."properties"]`
 
 
 [.description]
@@ -24,10 +24,10 @@ a|icon:lock[title=Fixed at build time] [[config-group-io-quarkiverse-diameter-ru
 Retrieves the properties of the agent configuration.
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++DIAMETER_NETWORK_REALMS_AGENT__PROPERTIES_+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS_AGENT__PROPERTIES_+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++DIAMETER_NETWORK_REALMS_AGENT__PROPERTIES_+++`
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS_AGENT__PROPERTIES_+++`
 endif::add-copy-button-to-env-var[]
 --|link:https://docs.oracle.com/javase/8/docs/api/java/lang/String.html[String]
  
