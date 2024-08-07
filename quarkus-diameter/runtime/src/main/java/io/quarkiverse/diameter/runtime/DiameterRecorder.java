@@ -4,8 +4,6 @@ import io.quarkus.arc.SyntheticCreationalContext;
 import io.quarkus.runtime.ShutdownContext;
 import io.quarkus.runtime.annotations.Recorder;
 import io.quarkus.tls.TlsConfigurationRegistry;
-import io.smallrye.config.SmallRyeConfig;
-import org.eclipse.microprofile.config.ConfigProvider;
 import org.jdiameter.api.*;
 import org.jdiameter.common.impl.validation.DictionaryImpl;
 import org.jdiameter.server.impl.StackImpl;
@@ -21,14 +19,14 @@ public class DiameterRecorder
 {
     private static final Logger LOG = LoggerFactory.getLogger(DiameterRecorder.class);
 
-    public Function<SyntheticCreationalContext<Configuration>, Configuration> diameterConfiguration(Supplier<TlsConfigurationRegistry> registrySupplier, String configName)
+    public Function<SyntheticCreationalContext<Configuration>, Configuration> diameterConfiguration(Supplier<TlsConfigurationRegistry> registrySupplier, DiameterRunTimeConfig runtimeConfig, String configName)
     {
         return context -> {
             LOG.info("Building Diameter configuration for profile '{}'", configName);
-            SmallRyeConfig config = ConfigProvider.getConfig().unwrap(SmallRyeConfig.class);
-            DiameterConfigs client = config.getConfigMapping(DiameterConfigs.class);
+            //SmallRyeConfig config = ConfigProvider.getConfig().unwrap(SmallRyeConfig.class);
+            //DiameterRunTimeConfig client = config.getConfigMapping(DiameterRunTimeConfig.class);
 
-            DiameterDetailConfig diameterConfig = client.getDiameterConfig(configName);
+            DiameterDetailConfig diameterConfig = runtimeConfig.getDiameterConfig(configName);
             if (diameterConfig == null) {
                 throw new IllegalArgumentException("No Diameter configuration found for profile '" + configName + "'");
             }
@@ -37,17 +35,17 @@ public class DiameterRecorder
         };
     }
 
-    public Function<SyntheticCreationalContext<Stack>, Stack> diameterStack(ShutdownContext shutdownContext, Supplier<TlsConfigurationRegistry> registrySupplier, String configName)
+    public Function<SyntheticCreationalContext<Stack>, Stack> diameterStack(ShutdownContext shutdownContext, Supplier<TlsConfigurationRegistry> registrySupplier, DiameterRunTimeConfig runtimeConfig, String configName)
     {
         return context -> {
             try {
                 DictionaryImpl.INSTANCE.setEnabled(true);
-				
-                LOG.info("Building Diameter Stack for configuration profile '{}'", configName);
-                SmallRyeConfig config = ConfigProvider.getConfig().unwrap(SmallRyeConfig.class);
-                DiameterConfigs client = config.getConfigMapping(DiameterConfigs.class);
 
-                DiameterDetailConfig diameterConfig = client.getDiameterConfig(configName);
+                LOG.info("Building Diameter Stack for configuration profile '{}'", configName);
+//                SmallRyeConfig config = ConfigProvider.getConfig().unwrap(SmallRyeConfig.class);
+//                DiameterRunTimeConfig client = config.getConfigMapping(DiameterRunTimeConfig.class);
+
+                DiameterDetailConfig diameterConfig = runtimeConfig.getDiameterConfig(configName);
                 if (diameterConfig == null) {
                     throw new IllegalArgumentException("No Diameter configuration found for profile '" + configName + "'");
                 }

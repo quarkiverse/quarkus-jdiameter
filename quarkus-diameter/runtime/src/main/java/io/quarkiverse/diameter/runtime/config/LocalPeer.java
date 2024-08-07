@@ -1,6 +1,7 @@
 package io.quarkiverse.diameter.runtime.config;
 
 import io.quarkus.runtime.annotations.ConfigDocSection;
+import io.quarkus.runtime.annotations.ConfigGroup;
 import io.smallrye.config.WithDefault;
 import io.smallrye.config.WithName;
 import io.smallrye.config.WithUnnamedKey;
@@ -9,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+@ConfigGroup
 public interface LocalPeer
 {
     /**

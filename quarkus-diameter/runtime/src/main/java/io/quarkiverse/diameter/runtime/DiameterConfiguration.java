@@ -8,6 +8,8 @@ import org.jdiameter.api.Configuration;
 import org.jdiameter.client.impl.helpers.AppConfiguration;
 import org.jdiameter.client.impl.helpers.Ordinal;
 import org.jdiameter.server.impl.helpers.EmptyConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -16,6 +18,7 @@ import static org.jdiameter.server.impl.helpers.Parameters.*;
 
 public class DiameterConfiguration extends EmptyConfiguration
 {
+    private static final Logger LOG = LoggerFactory.getLogger(DiameterConfiguration.class);
     private final TlsConfigurationRegistry tlsRegistry;
     private final List<Configuration> securityItems;
 
@@ -40,6 +43,7 @@ public class DiameterConfiguration extends EmptyConfiguration
 
     protected void addLocalPeer(LocalPeer peerConfig)
     {
+        LOG.warn("Adding local peer '{}'.", peerConfig.uri());
         add(OwnDiameterURI, peerConfig.uri());
         add(OwnRealm, peerConfig.realm());
         add(OwnVendorID, peerConfig.vendorId());
@@ -114,7 +118,7 @@ public class DiameterConfiguration extends EmptyConfiguration
         add(UseVirtualThreads, parametersConfig.useVirtualThreads());
 
         add(CachingName, parametersConfig.cachingName());
-        
+
         if (parametersConfig.queueSize().isPresent()) {
             add(QueueSize, parametersConfig.queueSize().get());
         }
