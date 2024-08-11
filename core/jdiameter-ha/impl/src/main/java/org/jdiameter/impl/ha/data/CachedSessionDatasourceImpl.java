@@ -90,8 +90,6 @@
  import java.util.HashMap;
  import java.util.Map;
  import java.util.concurrent.ConcurrentHashMap;
- import java.util.concurrent.ExecutorService;
- import java.util.concurrent.Executors;
  import java.util.concurrent.TimeUnit;
 
  import static org.jdiameter.server.impl.helpers.Parameters.CachingName;
@@ -111,7 +109,6 @@
      private final ObjectMapper mapper;
 
      private final ConcurrentHashMap<String, Map<String, Object>> sessionData = new ConcurrentHashMap<>();
-     ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
 
      // provided by impl, no way to change that, no conf! :)
      protected HashMap<Class<? extends IAppSessionData>, IAppSessionDataFactory<? extends IAppSessionData>> appSessionDataFactories =
