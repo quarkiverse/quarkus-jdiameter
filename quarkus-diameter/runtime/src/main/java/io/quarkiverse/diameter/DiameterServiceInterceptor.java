@@ -51,7 +51,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 @DiameterService
 @Interceptor
@@ -217,8 +216,12 @@ public class DiameterServiceInterceptor
                 }
 
                 if (!stack.isActive()) {
-                    stack.start(Mode.ALL_PEERS, 30000, TimeUnit.MILLISECONDS);
                     LOG.debug("Starting the Diameter Stack [{}].", configProfile);
+                    if (options != null && options.timeOut() > 0) {
+                        stack.start(Mode.ALL_PEERS, options.timeOut(), options.timeUnit());
+                    } else {
+                        stack.start();
+                    }
                 } else {
                     LOG.debug("The Diameter Stack is already started [{}].", configProfile);
                 }
