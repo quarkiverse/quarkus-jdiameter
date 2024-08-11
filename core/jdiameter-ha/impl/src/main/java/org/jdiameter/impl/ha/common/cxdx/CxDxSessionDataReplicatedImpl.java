@@ -86,7 +86,9 @@
      @Override
      public void setCxDxSessionState(CxDxSessionState state)
      {
-         setFieldValue(STATE, state.name());
+         if (getFieldValue(STATE) == null) {
+             setFieldValue(STATE, state.name());
+         }
      }
 
      /*
@@ -97,7 +99,7 @@
      @Override
      public CxDxSessionState getCxDxSessionState()
      {
-         return CxDxSessionState.valueOf(getFieldValue(STATE));
+         return CxDxSessionState.valueOf(getFieldValue(STATE, "IDLE"));
      }
 
      /*

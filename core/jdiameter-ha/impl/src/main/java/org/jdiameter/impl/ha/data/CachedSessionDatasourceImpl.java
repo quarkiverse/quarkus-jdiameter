@@ -48,6 +48,7 @@
  import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
  import io.quarkus.arc.Arc;
  import io.quarkus.arc.InstanceHandle;
+ import io.quarkus.infinispan.client.runtime.InfinispanClientProducer;
  import org.infinispan.client.hotrod.RemoteCache;
  import org.infinispan.client.hotrod.RemoteCacheManager;
  import org.jdiameter.api.BaseSession;
@@ -123,13 +124,17 @@
 
          String cachingName = container.getConfiguration().getStringValue(CachingName.ordinal(), (String) CachingName.defValue());
 
-         InstanceHandle<RemoteCacheManager> vInstanceHandle = Arc.container().instance(RemoteCacheManager.class);
-         if (!vInstanceHandle.isAvailable()) {
-             throw new RuntimeException("Infinispan is not loaded");
+         RemoteCacheManager remoteCacheManager = null;
+         InstanceHandle<InfinispanClientProducer> infinispanClientProducer = Arc.container().instance(InfinispanClientProducer.class);
+         if (infinispanClientProducer.isAvailable()) {
+             remoteCacheManager = infinispanClientProducer.get().getNamedRemoteCacheManager("<default>");
          }//if
 
-         RemoteCacheManager vRemoteCacheManager = vInstanceHandle.get();
-         dataSessions = vRemoteCacheManager.getCache(cachingName);
+         if (remoteCacheManager == null || !remoteCacheManager.isStarted()) {
+             throw new RuntimeException("Error loading cache provider");
+         }//if
+
+         dataSessions = remoteCacheManager.getCache(cachingName);
 
          mapper = new ObjectMapper();
          mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -151,6 +156,12 @@
      }
 
      @Override
+     public RemoteCache<String, String> getDataCache()
+     {
+         return dataSessions;
+     }
+
+     @Override
      public boolean exists(String sessionId)
      {
          return this.localDataSource.exists(sessionId) || this.existReplicated(sessionId);
@@ -169,6 +180,8 @@
 
          //Clear the local cache so that it can be refreshed
          sessionData.remove(session.getSessionId());
+
+         logger.debug("{}: Added session. Flushed local cache", session.getSessionId());
      }
 
      /*
@@ -339,7 +352,7 @@
          try {
              Map<String, Object> values = sessionData.get(sessionId);
              if (values == null) {
-                 logger.warn("{}: Not in local cache, checking remote cache", sessionId);
+                 logger.debug("{}: Not in local cache, checking remote cache", sessionId);
                  String jsonValues = dataSessions.get(sessionId);
                  if (jsonValues == null) {
                      values = new HashMap<>();
@@ -363,14 +376,16 @@
 
          sessionData.put(sessionId, fieldValues);
 
-         executorService.submit(() -> {
-             try {
-                 dataSessions.put(sessionId, mapper.writeValueAsString(fieldValues));
-             }
-             catch (JsonProcessingException e) {
-                 throw new CachingException("Error setting field values", e);
-             }
-         });
+         try {
+             final String valueStr = mapper.writeValueAsString(fieldValues);
+             //  executorService.submit(() -> {
+             dataSessions.put(sessionId, valueStr, -1, TimeUnit.SECONDS, 1, TimeUnit.DAYS);
+             logger.debug("{}: Saving the field values (to cache): {}", sessionId, valueStr);
+             //});
+         }
+         catch (JsonProcessingException e) {
+             throw new CachingException("Error setting field values", e);
+         }
      }//setFieldValues
 
      @Override
@@ -391,13 +406,4 @@
 
          setFieldValues(sessionId, values);
      }//setFieldValue
-
-     @Override
-     public void setExpiryTime(String sessionId, long expiryTime)
-     {
-         String value = dataSessions.get(sessionId);
-         if (value != null) {
-             dataSessions.replaceAsync(sessionId, value, -1, TimeUnit.SECONDS, expiryTime, TimeUnit.MILLISECONDS);
-         }
-     }
  }

@@ -67,7 +67,6 @@
          super(sessionId, datasource);
 
          setAppSessionIface(ServerAuthSession.class);
-         setServerAuthSessionState(ServerAuthSessionState.IDLE);
      }
 
      /*
@@ -100,7 +99,7 @@
      @Override
      public ServerAuthSessionState getServerAuthSessionState()
      {
-         return ServerAuthSessionState.valueOf(getFieldValue(STATE));
+         return ServerAuthSessionState.valueOf(getFieldValue(STATE, "IDLE"));
      }
 
      /*
@@ -112,7 +111,9 @@
      @Override
      public void setServerAuthSessionState(ServerAuthSessionState state)
      {
-         setFieldValue(STATE, state.name());
+         if (getFieldValue(STATE) == null) {
+             setFieldValue(STATE, state.name());
+         }
      }
 
      @Override

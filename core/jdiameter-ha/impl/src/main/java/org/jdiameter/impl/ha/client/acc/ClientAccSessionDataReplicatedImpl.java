@@ -80,7 +80,6 @@
          super(sessionId, datasource);
 
          setAppSessionIface(ClientAccSession.class);
-         setClientAccSessionState(ClientAccSessionState.IDLE);
 
          this.messageParser = datasource.getContainer().getAssemblerFacility().getComponentInstance(IMessageParser.class);
      }
@@ -94,7 +93,9 @@
      @Override
      public void setClientAccSessionState(ClientAccSessionState state)
      {
-         setFieldValue(STATE, state);
+         if (getFieldValue(STATE) == null) {
+             setFieldValue(STATE, state.name());
+         }
      }
 
      /*
@@ -105,7 +106,7 @@
      @Override
      public ClientAccSessionState getClientAccSessionState()
      {
-         return getFieldValue(STATE);
+         return ClientAccSessionState.valueOf(getFieldValue(STATE, "IDLE"));
      }
 
      /*

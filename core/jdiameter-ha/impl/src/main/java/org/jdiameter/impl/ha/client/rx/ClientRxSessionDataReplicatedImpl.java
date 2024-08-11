@@ -64,7 +64,6 @@
          super(sessionId, datasource);
 
          setAppSessionIface(ClientRxSession.class);
-         setClientRxSessionState(ClientRxSessionState.IDLE);
      }
 
      @Override
@@ -94,12 +93,14 @@
      @Override
      public ClientRxSessionState getClientRxSessionState()
      {
-         return ClientRxSessionState.valueOf(getFieldValue(STATE));
+         return ClientRxSessionState.valueOf(getFieldValue(STATE, "IDLE"));
      }
 
      @Override
      public void setClientRxSessionState(ClientRxSessionState state)
      {
-         setFieldValue(STATE, state.name());
+         if (getFieldValue(STATE) == null) {
+             setFieldValue(STATE, state.name());
+         }
      }
  }

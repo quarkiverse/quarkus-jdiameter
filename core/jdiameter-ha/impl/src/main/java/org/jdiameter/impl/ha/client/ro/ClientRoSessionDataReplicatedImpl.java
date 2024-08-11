@@ -84,7 +84,6 @@
          super(sessionId, datasource);
 
          setAppSessionIface(ClientRoSession.class);
-         setClientRoSessionState(ClientRoSessionState.IDLE);
 
          this.messageParser = datasource.getContainer().getAssemblerFacility().getComponentInstance(IMessageParser.class);
      }
@@ -116,13 +115,15 @@
      @Override
      public ClientRoSessionState getClientRoSessionState()
      {
-         return ClientRoSessionState.valueOf(getFieldValue(STATE));
+         return ClientRoSessionState.valueOf(getFieldValue(STATE, "IDLE"));
      }
 
      @Override
      public void setClientRoSessionState(ClientRoSessionState state)
      {
-         setFieldValue(STATE, state.name());
+         if (getFieldValue(STATE) == null) {
+             setFieldValue(STATE, state.name());
+         }
      }
 
      @Override

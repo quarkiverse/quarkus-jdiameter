@@ -42,14 +42,22 @@
 
  package org.jdiameter.impl.ha.timer;
 
+ import org.infinispan.client.hotrod.RemoteCache;
+ import org.infinispan.client.hotrod.annotation.ClientCacheEntryExpired;
+ import org.infinispan.client.hotrod.annotation.ClientListener;
+ import org.infinispan.client.hotrod.event.ClientCacheEntryExpiredEvent;
+ import org.jdiameter.api.BaseSession;
  import org.jdiameter.client.api.IContainer;
+ import org.jdiameter.client.impl.BaseSessionImpl;
  import org.jdiameter.common.api.data.ISessionDatasource;
  import org.jdiameter.common.api.timer.ITimerFacility;
- import org.jdiameter.impl.ha.data.CachedSessionDatasource;
+ import org.jdiameter.common.impl.app.AppSessionImpl;
+ import org.jdiameter.impl.ha.data.CachedSessionDatasourceImpl;
  import org.slf4j.Logger;
  import org.slf4j.LoggerFactory;
 
  import java.io.Serializable;
+ import java.util.concurrent.TimeUnit;
 
  /**
   * Replicated implementation of {@link ITimerFacility}
@@ -57,19 +65,25 @@
   * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
   * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
   */
+ @ClientListener
  public class ReplicatedTimerFacilityImpl implements ITimerFacility
  {
 
      private static final Logger logger = LoggerFactory.getLogger(ReplicatedTimerFacilityImpl.class);
 
-     private final CachedSessionDatasource sessionDataSource;
+     private final CachedSessionDatasourceImpl sessionDataSource;
+     private final RemoteCache<String, String> timers;
 
      public ReplicatedTimerFacilityImpl(IContainer container)
      {
          super();
          ISessionDatasource datasource = container.getAssemblerFacility().getComponentInstance(ISessionDatasource.class);
-         if (datasource instanceof CachedSessionDatasource cachedSessionDatasource) {
+         if (datasource instanceof CachedSessionDatasourceImpl cachedSessionDatasource) {
              this.sessionDataSource = cachedSessionDatasource;
+
+             timers = this.sessionDataSource.getDataCache();
+             timers.addClientListener(this);
+
          } else {
              throw new IllegalArgumentException("ReplicatedTimerFacilityImpl expects an ISessionDatasource of type 'CachedSessionDatasource' and is not compatible with " + datasource.getClass().getName());
          }
@@ -83,8 +97,10 @@
      @Override
      public void cancel(Serializable id)
      {
-         logger.debug("Cancelling timer with id {}", id);
-         //Nothing to do here?? Maybe we should just clear the expiry time. For now we leave it
+         if (id instanceof String timerId) {
+             logger.debug("Cancelling timer with id {}", timerId);
+             timers.remove(timerId);
+         }
      }
 
      /*
@@ -95,10 +111,34 @@
      @Override
      public Serializable schedule(String sessionId, String timerName, long milliseconds) throws IllegalArgumentException
      {
-         logger.debug("Scheduling timer with sessionId {}", sessionId);
+         String timerId = sessionId + "/" + timerName;
+         logger.debug("Scheduling timer for sessionId {} and timer name {}", sessionId, timerName);
+         timers.put(timerId, sessionId, -1, TimeUnit.SECONDS, milliseconds, TimeUnit.MILLISECONDS);
+         return timerId;
+     }
 
-         sessionDataSource.setExpiryTime(sessionId, milliseconds);
-
-         return sessionId;
+     @ClientCacheEntryExpired
+     public void entryExpired(ClientCacheEntryExpiredEvent<String> event)
+     {
+         String sessionId = timers.get(event.getKey());
+         if (sessionId != null) {
+             BaseSession session = sessionDataSource.getSession(sessionId);
+             if (session != null) {
+                 String timerName = event.getKey().substring(0, event.getKey().indexOf("/"));
+                 logger.debug("Scheduled timer for sessionId {} and timer name {} expired", sessionId, timerName);
+                 try {
+                     if (!session.isAppSession()) {
+                         BaseSessionImpl impl = (BaseSessionImpl) session;
+                         impl.onTimer(event.getKey());
+                     } else {
+                         AppSessionImpl impl = (AppSessionImpl) session;
+                         impl.onTimer(event.getKey());
+                     }
+                 }
+                 catch (Exception e) {
+                     logger.error("Caught exception from session object!", e);
+                 }
+             }
+         }
      }
  }

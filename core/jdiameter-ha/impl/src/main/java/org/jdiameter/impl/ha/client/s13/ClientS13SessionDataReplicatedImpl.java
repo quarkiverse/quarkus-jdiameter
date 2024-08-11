@@ -21,7 +21,6 @@ package org.jdiameter.impl.ha.client.s13;
 
 import org.jdiameter.api.s13.ClientS13Session;
 import org.jdiameter.client.impl.app.s13.IClientS13SessionData;
-import org.jdiameter.common.api.app.s13.S13SessionState;
 import org.jdiameter.impl.ha.common.s13.S13SessionDataReplicatedImpl;
 import org.jdiameter.impl.ha.data.CachedSessionDatasource;
 
@@ -37,6 +36,5 @@ public class ClientS13SessionDataReplicatedImpl extends S13SessionDataReplicated
         super(sessionId, datasource);
 
         setAppSessionIface(ClientS13Session.class);
-        setS13SessionState(S13SessionState.IDLE);
     }
 }

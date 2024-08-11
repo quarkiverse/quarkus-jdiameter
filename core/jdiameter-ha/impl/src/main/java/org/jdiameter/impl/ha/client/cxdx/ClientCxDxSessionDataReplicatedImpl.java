@@ -44,7 +44,6 @@
 
  import org.jdiameter.api.cxdx.ClientCxDxSession;
  import org.jdiameter.client.impl.app.cxdx.IClientCxDxSessionData;
- import org.jdiameter.common.api.app.cxdx.CxDxSessionState;
  import org.jdiameter.impl.ha.common.cxdx.CxDxSessionDataReplicatedImpl;
  import org.jdiameter.impl.ha.data.CachedSessionDatasource;
 
@@ -60,6 +59,5 @@
          super(sessionId, datasource);
 
          setAppSessionIface(ClientCxDxSession.class);
-         setCxDxSessionState(CxDxSessionState.IDLE);
      }
  }

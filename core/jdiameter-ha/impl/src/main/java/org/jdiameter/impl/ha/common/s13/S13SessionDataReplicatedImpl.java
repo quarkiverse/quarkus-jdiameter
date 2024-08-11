@@ -63,7 +63,9 @@ public abstract class S13SessionDataReplicatedImpl extends AppSessionDataReplica
     @Override
     public void setS13SessionState(S13SessionState state)
     {
-        setFieldValue(STATE, state);
+        if (getFieldValue(STATE) == null) {
+            setFieldValue(STATE, state.name());
+        }
     }
 
     /*
@@ -74,7 +76,7 @@ public abstract class S13SessionDataReplicatedImpl extends AppSessionDataReplica
     @Override
     public S13SessionState getS13SessionState()
     {
-        return S13SessionState.valueOf(getFieldValue(STATE));
+        return S13SessionState.valueOf(getFieldValue(STATE, "IDLE"));
     }
 
     /*

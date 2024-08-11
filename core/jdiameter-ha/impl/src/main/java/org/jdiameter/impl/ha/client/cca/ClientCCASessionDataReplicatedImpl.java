@@ -84,7 +84,6 @@
          super(sessionId, datasource);
 
          setAppSessionIface(ClientCCASession.class);
-         setClientCCASessionState(ClientCCASessionState.IDLE);
 
          this.messageParser = datasource.getContainer().getAssemblerFacility().getComponentInstance(IMessageParser.class);
      }
@@ -117,13 +116,15 @@
      @Override
      public ClientCCASessionState getClientCCASessionState()
      {
-         return ClientCCASessionState.valueOf(getFieldValue(STATE));
+         return ClientCCASessionState.valueOf(getFieldValue(STATE, "IDLE"));
      }
 
      @Override
      public void setClientCCASessionState(ClientCCASessionState state)
      {
-         setFieldValue(STATE, state.name());
+         if (!state.name().equals(getFieldValue(STATE))) {
+             setFieldValue(STATE, state.name());
+         }
      }
 
      @Override

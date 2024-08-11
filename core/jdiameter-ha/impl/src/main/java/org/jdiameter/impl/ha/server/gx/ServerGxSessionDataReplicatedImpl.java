@@ -66,7 +66,6 @@
          super(sessionId, datasource);
 
          setAppSessionIface(ServerGxSession.class);
-         setServerGxSessionState(ServerGxSessionState.IDLE);
      }
 
      /*
@@ -99,7 +98,7 @@
      @Override
      public ServerGxSessionState getServerGxSessionState()
      {
-         return ServerGxSessionState.valueOf(getFieldValue(STATE));
+         return ServerGxSessionState.valueOf(getFieldValue(STATE, "IDLE"));
      }
 
      /*
@@ -111,7 +110,9 @@
      @Override
      public void setServerGxSessionState(ServerGxSessionState state)
      {
-         setFieldValue(STATE, state.name());
+         if (getFieldValue(STATE) == null) {
+             setFieldValue(STATE, state.name());
+         }
      }
 
      /*

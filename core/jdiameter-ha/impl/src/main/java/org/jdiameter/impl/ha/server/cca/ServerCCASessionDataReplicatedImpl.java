@@ -66,7 +66,6 @@
          super(sessionId, datasource);
 
          setAppSessionIface(ServerCCASession.class);
-         setServerCCASessionState(ServerCCASessionState.IDLE);
      }
 
      /*
@@ -99,7 +98,7 @@
      @Override
      public ServerCCASessionState getServerCCASessionState()
      {
-         String state = getFieldValue(STATE);
+         String state = getFieldValue(STATE, "IDLE");
          return ServerCCASessionState.valueOf(state);
      }
 
@@ -112,7 +111,9 @@
      @Override
      public void setServerCCASessionState(ServerCCASessionState state)
      {
-         setFieldValue(STATE, state.name());
+         if (!state.name().equals(getFieldValue(STATE))) {
+             setFieldValue(STATE, state.name());
+         }
      }
 
      /*

@@ -85,7 +85,6 @@
          super(sessionId, datasource);
 
          setAppSessionIface(ClientGxSession.class);
-         setClientGxSessionState(ClientGxSessionState.IDLE);
 
          this.messageParser = datasource.getContainer().getAssemblerFacility().getComponentInstance(IMessageParser.class);
      }
@@ -117,13 +116,15 @@
      @Override
      public ClientGxSessionState getClientGxSessionState()
      {
-         return ClientGxSessionState.valueOf(getFieldValue(STATE));
+         return ClientGxSessionState.valueOf(getFieldValue(STATE, "IDLE"));
      }
 
      @Override
      public void setClientGxSessionState(ClientGxSessionState state)
      {
-         setFieldValue(STATE, state.name());
+         if (getFieldValue(STATE) == null) {
+             setFieldValue(STATE, state.name());
+         }
      }
 
      @Override

@@ -70,7 +70,9 @@
 
      public void setAppSessionIface(Class<? extends AppSession> iface)
      {
-         datasource.setFieldValue(sessionId, SIFACE, iface.getCanonicalName());
+         if (datasource.getFieldValue(sessionId, SIFACE) == null) {
+             datasource.setFieldValue(sessionId, SIFACE, iface.getCanonicalName());
+         }
      }
 
      @Override
@@ -88,7 +90,13 @@
      @Override
      public ApplicationId getApplicationId()
      {
-         String[] app = ((String) datasource.getFieldValue(sessionId, APID)).split(":");
+         String appIdStr = datasource.getFieldValue(sessionId, APID);
+
+         if (appIdStr == null) {
+             throw new IllegalArgumentException("The ApplicationId field is unexpectedly NULL");
+         }
+
+         String[] app = appIdStr.split(":");
          long venId = Long.parseLong(app[0]);
          long authId = Long.parseLong(app[1]);
          long acctId = Long.parseLong(app[2]);
@@ -106,6 +114,15 @@
          datasource.removeSession(sessionId);
          return true;
      }
+
+     public <T> T getFieldValue(String fieldName, T defaultValue)
+     {
+         T val = datasource.getFieldValue(sessionId, fieldName);
+         if (val == null) {
+             return defaultValue;
+         }
+         return val;
+     }//getFieldValue
 
      public <T> T getFieldValue(String fieldName)
      {
