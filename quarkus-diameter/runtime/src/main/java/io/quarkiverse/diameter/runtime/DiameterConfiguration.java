@@ -211,7 +211,7 @@ public class DiameterConfiguration extends EmptyConfiguration
     protected void addNetwork(Network network)
     {
         addPeers(network.peers().values());
-        addRealms(network.realms().values());
+        addRealms(network.realms());
     }
 
     protected void addPeers(Collection<Peer> peers)
@@ -245,10 +245,10 @@ public class DiameterConfiguration extends EmptyConfiguration
         return peerConfig;
     }
 
-    protected void addRealms(Collection<Realm> realms)
+    protected void addRealms(Map<String, Realm> realms)
     {
         ArrayList<Configuration> items = new ArrayList<>();
-        realms.forEach(realm -> items.add(addRealm(realm)));
+        realms.forEach((name, realm) -> items.add(addRealm(name, realm)));
         add(RealmTable, items.toArray(EMPTY_ARRAY));
     }
 
@@ -268,10 +268,10 @@ public class DiameterConfiguration extends EmptyConfiguration
         return agentConf;
     }
 
-    protected AppConfiguration buildRealm(Realm realm)
+    protected AppConfiguration buildRealm(String name, Realm realm)
     {
         AppConfiguration realmEntry = EmptyConfiguration.getInstance()
-                                                        .add(RealmName, realm.realmName())
+                                                        .add(RealmName, name)
                                                         .add(RealmHosts, realm.peers())
                                                         .add(RealmLocalAction, realm.localAction().name())
                                                         .add(RealmEntryIsDynamic, realm.dynamic())
@@ -287,9 +287,9 @@ public class DiameterConfiguration extends EmptyConfiguration
         return realmEntry;
     }
 
-    protected Configuration addRealm(Realm realm)
+    protected Configuration addRealm(String name, Realm realm)
     {
-        return EmptyConfiguration.getInstance().add(RealmEntry, buildRealm(realm));
+        return EmptyConfiguration.getInstance().add(RealmEntry, buildRealm(name, realm));
     }
 
     protected void addInternalExtension(Ordinal ep, String value)

@@ -14,13 +14,6 @@ import java.util.Optional;
 public interface Realm
 {
     /**
-     * Contains attributes and elements that describe different realms configured for the Core.
-     */
-    @WithName("realm-name")
-    @WithDefault("io.quarkiverse.diameter")
-    String realmName();
-
-    /**
      * Comma separated list of peers. Each peer is represented by an IP Address or FQDN.
      */
     @WithName("peers")

@@ -10,13 +10,9 @@ h|[[config-group-io-quarkiverse-diameter-runtime-config-peer_configuration]]link
 h|Type
 h|Default
 
-a| [[config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-peer-uri]]`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-peer-uri[quarkus.diameter.network.peers.peer-uri]`
+a| [[config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-peers-peer-uri]]`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-peers-peer-uri[quarkus.diameter.network.peers."peers".peer-uri]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-peer-uri[quarkus.diameter.network.peers."peers".peer-uri]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-peer-uri[quarkus.diameter."named-config".network.peers."peers".peer-uri]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-peer-uri[quarkus.diameter."named-config".network.peers.peer-uri]`
+`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-peers-peer-uri[quarkus.diameter."named-config".network.peers."peers".peer-uri]`
 
 
 [.description]
@@ -24,22 +20,18 @@ a| [[config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-n
 Specifies the name of the peer in the form of a URI. The structure is "aaa://++[++fqdn++\|++ip++]++:port" (for example, "aaa://192.168.1.1:3868").
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_PEERS_PEER_URI+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_PEERS__PEERS__PEER_URI+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_DIAMETER_NETWORK_PEERS_PEER_URI+++`
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_PEERS__PEERS__PEER_URI+++`
 endif::add-copy-button-to-env-var[]
 --|string 
 |`aaa://localhost:3868`
 
 
-a| [[config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-rating]]`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-rating[quarkus.diameter.network.peers.rating]`
+a| [[config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-peers-rating]]`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-peers-rating[quarkus.diameter.network.peers."peers".rating]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-rating[quarkus.diameter.network.peers."peers".rating]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-rating[quarkus.diameter."named-config".network.peers."peers".rating]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-rating[quarkus.diameter."named-config".network.peers.rating]`
+`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-peers-rating[quarkus.diameter."named-config".network.peers."peers".rating]`
 
 
 [.description]
@@ -47,22 +39,18 @@ a| [[config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-n
 Specifies the rating of this peer in order to achieve peer priorities/sorting.
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_PEERS_RATING+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_PEERS__PEERS__RATING+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_DIAMETER_NETWORK_PEERS_RATING+++`
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_PEERS__PEERS__RATING+++`
 endif::add-copy-button-to-env-var[]
 --|int 
 |`1`
 
 
-a| [[config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-ip]]`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-ip[quarkus.diameter.network.peers.ip]`
+a| [[config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-peers-ip]]`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-peers-ip[quarkus.diameter.network.peers."peers".ip]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-ip[quarkus.diameter.network.peers."peers".ip]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-ip[quarkus.diameter."named-config".network.peers."peers".ip]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-ip[quarkus.diameter."named-config".network.peers.ip]`
+`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-peers-ip[quarkus.diameter."named-config".network.peers."peers".ip]`
 
 
 [.description]
@@ -70,22 +58,18 @@ a| [[config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-n
 Specifies the actual ip for the peer-uri, for example 192.168.1.1
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_PEERS_IP+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_PEERS__PEERS__IP+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_DIAMETER_NETWORK_PEERS_IP+++`
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_PEERS__PEERS__IP+++`
 endif::add-copy-button-to-env-var[]
 --|string 
 |
 
 
-a| [[config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-port-range]]`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-port-range[quarkus.diameter.network.peers.port-range]`
+a| [[config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-peers-port-range]]`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-peers-port-range[quarkus.diameter.network.peers."peers".port-range]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-port-range[quarkus.diameter.network.peers."peers".port-range]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-port-range[quarkus.diameter."named-config".network.peers."peers".port-range]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-port-range[quarkus.diameter."named-config".network.peers.port-range]`
+`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-peers-port-range[quarkus.diameter."named-config".network.peers."peers".port-range]`
 
 
 [.description]
@@ -93,22 +77,18 @@ a| [[config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-n
 Specifies a port range to accept connection override the port number in peer-uri
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_PEERS_PORT_RANGE+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_PEERS__PEERS__PORT_RANGE+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_DIAMETER_NETWORK_PEERS_PORT_RANGE+++`
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_PEERS__PEERS__PORT_RANGE+++`
 endif::add-copy-button-to-env-var[]
 --|string 
 |
 
 
-a| [[config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-attempt-connect]]`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-attempt-connect[quarkus.diameter.network.peers.attempt-connect]`
+a| [[config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-peers-attempt-connect]]`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-peers-attempt-connect[quarkus.diameter.network.peers."peers".attempt-connect]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-attempt-connect[quarkus.diameter.network.peers."peers".attempt-connect]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-attempt-connect[quarkus.diameter."named-config".network.peers."peers".attempt-connect]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-attempt-connect[quarkus.diameter."named-config".network.peers.attempt-connect]`
+`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-peers-attempt-connect[quarkus.diameter."named-config".network.peers."peers".attempt-connect]`
 
 
 [.description]
@@ -116,22 +96,18 @@ a| [[config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-n
 Determines if the stack should try to connect to this peer.
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_PEERS_ATTEMPT_CONNECT+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_PEERS__PEERS__ATTEMPT_CONNECT+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_DIAMETER_NETWORK_PEERS_ATTEMPT_CONNECT+++`
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_PEERS__PEERS__ATTEMPT_CONNECT+++`
 endif::add-copy-button-to-env-var[]
 --|boolean 
 |`false`
 
 
-a| [[config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-tls-configuration-name]]`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-tls-configuration-name[quarkus.diameter.network.peers.tls-configuration-name]`
+a| [[config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-peers-tls-configuration-name]]`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-peers-tls-configuration-name[quarkus.diameter.network.peers."peers".tls-configuration-name]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-tls-configuration-name[quarkus.diameter.network.peers."peers".tls-configuration-name]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-tls-configuration-name[quarkus.diameter."named-config".network.peers."peers".tls-configuration-name]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-tls-configuration-name[quarkus.diameter."named-config".network.peers.tls-configuration-name]`
+`link:#config-group-io-quarkiverse-diameter-runtime-config-peer_quarkus-diameter-network-peers-peers-tls-configuration-name[quarkus.diameter."named-config".network.peers."peers".tls-configuration-name]`
 
 
 [.description]
@@ -143,10 +119,10 @@ If not set and the default TLS configuration is configured (`quarkus.tls.++*++`)
 If no TLS configuration is set, and `quarkus.tls.++*++` is not configured, then, no security will be used
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_PEERS_TLS_CONFIGURATION_NAME+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_PEERS__PEERS__TLS_CONFIGURATION_NAME+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_DIAMETER_NETWORK_PEERS_TLS_CONFIGURATION_NAME+++`
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_PEERS__PEERS__TLS_CONFIGURATION_NAME+++`
 endif::add-copy-button-to-env-var[]
 --|string 
 |

@@ -854,13 +854,9 @@ h|[[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-
 h|Type
 h|Default
 
-a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-peer-uri]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-peer-uri[quarkus.diameter.network.peers.peer-uri]`
+a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-peers-peer-uri]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-peers-peer-uri[quarkus.diameter.network.peers."peers".peer-uri]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-peer-uri[quarkus.diameter.network.peers."peers".peer-uri]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-peer-uri[quarkus.diameter."named-config".network.peers."peers".peer-uri]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-peer-uri[quarkus.diameter."named-config".network.peers.peer-uri]`
+`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-peers-peer-uri[quarkus.diameter."named-config".network.peers."peers".peer-uri]`
 
 
 [.description]
@@ -868,22 +864,18 @@ a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus
 Specifies the name of the peer in the form of a URI. The structure is "aaa://++[++fqdn++\|++ip++]++:port" (for example, "aaa://192.168.1.1:3868").
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_PEERS_PEER_URI+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_PEERS__PEERS__PEER_URI+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_DIAMETER_NETWORK_PEERS_PEER_URI+++`
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_PEERS__PEERS__PEER_URI+++`
 endif::add-copy-button-to-env-var[]
 --|string 
 |`aaa://localhost:3868`
 
 
-a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-rating]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-rating[quarkus.diameter.network.peers.rating]`
+a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-peers-rating]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-peers-rating[quarkus.diameter.network.peers."peers".rating]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-rating[quarkus.diameter.network.peers."peers".rating]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-rating[quarkus.diameter."named-config".network.peers."peers".rating]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-rating[quarkus.diameter."named-config".network.peers.rating]`
+`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-peers-rating[quarkus.diameter."named-config".network.peers."peers".rating]`
 
 
 [.description]
@@ -891,22 +883,18 @@ a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus
 Specifies the rating of this peer in order to achieve peer priorities/sorting.
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_PEERS_RATING+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_PEERS__PEERS__RATING+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_DIAMETER_NETWORK_PEERS_RATING+++`
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_PEERS__PEERS__RATING+++`
 endif::add-copy-button-to-env-var[]
 --|int 
 |`1`
 
 
-a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-ip]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-ip[quarkus.diameter.network.peers.ip]`
+a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-peers-ip]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-peers-ip[quarkus.diameter.network.peers."peers".ip]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-ip[quarkus.diameter.network.peers."peers".ip]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-ip[quarkus.diameter."named-config".network.peers."peers".ip]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-ip[quarkus.diameter."named-config".network.peers.ip]`
+`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-peers-ip[quarkus.diameter."named-config".network.peers."peers".ip]`
 
 
 [.description]
@@ -914,22 +902,18 @@ a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus
 Specifies the actual ip for the peer-uri, for example 192.168.1.1
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_PEERS_IP+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_PEERS__PEERS__IP+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_DIAMETER_NETWORK_PEERS_IP+++`
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_PEERS__PEERS__IP+++`
 endif::add-copy-button-to-env-var[]
 --|string 
 |
 
 
-a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-port-range]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-port-range[quarkus.diameter.network.peers.port-range]`
+a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-peers-port-range]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-peers-port-range[quarkus.diameter.network.peers."peers".port-range]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-port-range[quarkus.diameter.network.peers."peers".port-range]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-port-range[quarkus.diameter."named-config".network.peers."peers".port-range]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-port-range[quarkus.diameter."named-config".network.peers.port-range]`
+`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-peers-port-range[quarkus.diameter."named-config".network.peers."peers".port-range]`
 
 
 [.description]
@@ -937,22 +921,18 @@ a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus
 Specifies a port range to accept connection override the port number in peer-uri
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_PEERS_PORT_RANGE+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_PEERS__PEERS__PORT_RANGE+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_DIAMETER_NETWORK_PEERS_PORT_RANGE+++`
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_PEERS__PEERS__PORT_RANGE+++`
 endif::add-copy-button-to-env-var[]
 --|string 
 |
 
 
-a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-attempt-connect]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-attempt-connect[quarkus.diameter.network.peers.attempt-connect]`
+a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-peers-attempt-connect]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-peers-attempt-connect[quarkus.diameter.network.peers."peers".attempt-connect]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-attempt-connect[quarkus.diameter.network.peers."peers".attempt-connect]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-attempt-connect[quarkus.diameter."named-config".network.peers."peers".attempt-connect]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-attempt-connect[quarkus.diameter."named-config".network.peers.attempt-connect]`
+`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-peers-attempt-connect[quarkus.diameter."named-config".network.peers."peers".attempt-connect]`
 
 
 [.description]
@@ -960,22 +940,18 @@ a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus
 Determines if the stack should try to connect to this peer.
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_PEERS_ATTEMPT_CONNECT+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_PEERS__PEERS__ATTEMPT_CONNECT+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_DIAMETER_NETWORK_PEERS_ATTEMPT_CONNECT+++`
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_PEERS__PEERS__ATTEMPT_CONNECT+++`
 endif::add-copy-button-to-env-var[]
 --|boolean 
 |`false`
 
 
-a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-tls-configuration-name]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-tls-configuration-name[quarkus.diameter.network.peers.tls-configuration-name]`
+a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-peers-tls-configuration-name]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-peers-tls-configuration-name[quarkus.diameter.network.peers."peers".tls-configuration-name]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-tls-configuration-name[quarkus.diameter.network.peers."peers".tls-configuration-name]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-tls-configuration-name[quarkus.diameter."named-config".network.peers."peers".tls-configuration-name]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-tls-configuration-name[quarkus.diameter."named-config".network.peers.tls-configuration-name]`
+`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-peers-peers-tls-configuration-name[quarkus.diameter."named-config".network.peers."peers".tls-configuration-name]`
 
 
 [.description]
@@ -987,10 +963,10 @@ If not set and the default TLS configuration is configured (`quarkus.tls.++*++`)
 If no TLS configuration is set, and `quarkus.tls.++*++` is not configured, then, no security will be used
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_PEERS_TLS_CONFIGURATION_NAME+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_PEERS__PEERS__TLS_CONFIGURATION_NAME+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_DIAMETER_NETWORK_PEERS_TLS_CONFIGURATION_NAME+++`
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_PEERS__PEERS__TLS_CONFIGURATION_NAME+++`
 endif::add-copy-button-to-env-var[]
 --|string 
 |
@@ -1001,36 +977,9 @@ h|[[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-
 h|Type
 h|Default
 
-a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realm-name]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realm-name[quarkus.diameter.network.realms.realm-name]`
+a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-peers]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-peers[quarkus.diameter.network.realms."realms".peers]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realm-name[quarkus.diameter.network.realms."realms".realm-name]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realm-name[quarkus.diameter."named-config".network.realms."realms".realm-name]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realm-name[quarkus.diameter."named-config".network.realms.realm-name]`
-
-
-[.description]
---
-Contains attributes and elements that describe different realms configured for the Core.
-
-ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS_REALM_NAME+++[]
-endif::add-copy-button-to-env-var[]
-ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS_REALM_NAME+++`
-endif::add-copy-button-to-env-var[]
---|string 
-|`io.quarkiverse.diameter`
-
-
-a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-peers]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-peers[quarkus.diameter.network.realms.peers]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-peers[quarkus.diameter.network.realms."realms".peers]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-peers[quarkus.diameter."named-config".network.realms."realms".peers]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-peers[quarkus.diameter."named-config".network.realms.peers]`
+`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-peers[quarkus.diameter."named-config".network.realms."realms".peers]`
 
 
 [.description]
@@ -1038,22 +987,18 @@ a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus
 Comma separated list of peers. Each peer is represented by an IP Address or FQDN.
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS_PEERS+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__PEERS+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS_PEERS+++`
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__PEERS+++`
 endif::add-copy-button-to-env-var[]
 --|string 
 |`localhost`
 
 
-a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-local-action]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-local-action[quarkus.diameter.network.realms.local-action]`
+a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-local-action]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-local-action[quarkus.diameter.network.realms."realms".local-action]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-local-action[quarkus.diameter.network.realms."realms".local-action]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-local-action[quarkus.diameter."named-config".network.realms."realms".local-action]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-local-action[quarkus.diameter."named-config".network.realms.local-action]`
+`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-local-action[quarkus.diameter."named-config".network.realms."realms".local-action]`
 
 
 [.description]
@@ -1061,23 +1006,19 @@ a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus
 Determines the action the Local Peer will play on the specified realm: Act as a LOCAL peer.
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS_LOCAL_ACTION+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__LOCAL_ACTION+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS_LOCAL_ACTION+++`
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__LOCAL_ACTION+++`
 endif::add-copy-button-to-env-var[]
 -- a|
 `local`, `relay`, `proxy`, `redirect` 
 |`local`
 
 
-a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-dynamic]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-dynamic[quarkus.diameter.network.realms.dynamic]`
+a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-dynamic]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-dynamic[quarkus.diameter.network.realms."realms".dynamic]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-dynamic[quarkus.diameter.network.realms."realms".dynamic]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-dynamic[quarkus.diameter."named-config".network.realms."realms".dynamic]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-dynamic[quarkus.diameter."named-config".network.realms.dynamic]`
+`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-dynamic[quarkus.diameter."named-config".network.realms."realms".dynamic]`
 
 
 [.description]
@@ -1085,22 +1026,18 @@ a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus
 Specifies if this realm is dynamic. That is, peers that connect to peers with this realm name will be added to the realm peer list if not present already.
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS_DYNAMIC+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__DYNAMIC+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS_DYNAMIC+++`
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__DYNAMIC+++`
 endif::add-copy-button-to-env-var[]
 --|boolean 
 |`false`
 
 
-a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-exp-time]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-exp-time[quarkus.diameter.network.realms.exp-time]`
+a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-exp-time]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-exp-time[quarkus.diameter.network.realms."realms".exp-time]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-exp-time[quarkus.diameter.network.realms."realms".exp-time]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-exp-time[quarkus.diameter."named-config".network.realms."realms".exp-time]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-exp-time[quarkus.diameter."named-config".network.realms.exp-time]`
+`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-exp-time[quarkus.diameter."named-config".network.realms."realms".exp-time]`
 
 
 [.description]
@@ -1108,27 +1045,23 @@ a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus
 The time before a peer belonging to this realm is removed if no connection is available. The time is in seconds.
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS_EXP_TIME+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__EXP_TIME+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS_EXP_TIME+++`
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__EXP_TIME+++`
 endif::add-copy-button-to-env-var[]
 --|long 
 |`1`
 
 
-h|[[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-application-id-the-applications-supported]]link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-application-id-the-applications-supported[The applications supported]
+h|[[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-application-id-the-applications-supported]]link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-application-id-the-applications-supported[The applications supported]
 This configuration section is optional
 h|Type
 h|Default
 
-a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-application-id-vendor-id]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-application-id-vendor-id[quarkus.diameter.network.realms.application-id.vendor-id]`
+a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-application-id-vendor-id]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-application-id-vendor-id[quarkus.diameter.network.realms."realms".application-id.vendor-id]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-application-id-vendor-id[quarkus.diameter.network.realms."realms".application-id.vendor-id]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-application-id-vendor-id[quarkus.diameter."named-config".network.realms."realms".application-id.vendor-id]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-application-id-vendor-id[quarkus.diameter."named-config".network.realms.application-id.vendor-id]`
+`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-application-id-vendor-id[quarkus.diameter."named-config".network.realms."realms".application-id.vendor-id]`
 
 
 [.description]
@@ -1136,22 +1069,18 @@ a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus
 Specifies the vendor ID for application definition.
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS_APPLICATION_ID_VENDOR_ID+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__APPLICATION_ID_VENDOR_ID+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS_APPLICATION_ID_VENDOR_ID+++`
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__APPLICATION_ID_VENDOR_ID+++`
 endif::add-copy-button-to-env-var[]
 --|long 
 |`0`
 
 
-a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-application-id-auth-appl-id]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-application-id-auth-appl-id[quarkus.diameter.network.realms.application-id.auth-appl-id]`
+a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-application-id-auth-appl-id]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-application-id-auth-appl-id[quarkus.diameter.network.realms."realms".application-id.auth-appl-id]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-application-id-auth-appl-id[quarkus.diameter.network.realms."realms".application-id.auth-appl-id]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-application-id-auth-appl-id[quarkus.diameter."named-config".network.realms."realms".application-id.auth-appl-id]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-application-id-auth-appl-id[quarkus.diameter."named-config".network.realms.application-id.auth-appl-id]`
+`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-application-id-auth-appl-id[quarkus.diameter."named-config".network.realms."realms".application-id.auth-appl-id]`
 
 
 [.description]
@@ -1159,22 +1088,18 @@ a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus
 The Authentication Application ID for application definition.
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS_APPLICATION_ID_AUTH_APPL_ID+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__APPLICATION_ID_AUTH_APPL_ID+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS_APPLICATION_ID_AUTH_APPL_ID+++`
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__APPLICATION_ID_AUTH_APPL_ID+++`
 endif::add-copy-button-to-env-var[]
 --|long 
 |`0`
 
 
-a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-application-id-acct-appl-id]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-application-id-acct-appl-id[quarkus.diameter.network.realms.application-id.acct-appl-id]`
+a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-application-id-acct-appl-id]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-application-id-acct-appl-id[quarkus.diameter.network.realms."realms".application-id.acct-appl-id]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-application-id-acct-appl-id[quarkus.diameter.network.realms."realms".application-id.acct-appl-id]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-application-id-acct-appl-id[quarkus.diameter."named-config".network.realms."realms".application-id.acct-appl-id]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-application-id-acct-appl-id[quarkus.diameter."named-config".network.realms.application-id.acct-appl-id]`
+`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-application-id-acct-appl-id[quarkus.diameter."named-config".network.realms."realms".application-id.acct-appl-id]`
 
 
 [.description]
@@ -1182,27 +1107,23 @@ a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus
 The Account Application ID for application definition.
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS_APPLICATION_ID_ACCT_APPL_ID+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__APPLICATION_ID_ACCT_APPL_ID+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS_APPLICATION_ID_ACCT_APPL_ID+++`
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__APPLICATION_ID_ACCT_APPL_ID+++`
 endif::add-copy-button-to-env-var[]
 --|long 
 |`0`
 
 
-h|[[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-agent-the-agent-configuration]]link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-agent-the-agent-configuration[The Agent configuration]
+h|[[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-agent-the-agent-configuration]]link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-agent-the-agent-configuration[The Agent configuration]
 This configuration section is optional
 h|Type
 h|Default
 
-a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-agent-properties]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-agent-properties[quarkus.diameter.network.realms.agent."properties"]`
+a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-agent-properties]]`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-agent-properties[quarkus.diameter.network.realms."realms".agent."properties"]`
 
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-agent-properties[quarkus.diameter.network.realms."realms".agent."properties"]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-agent-properties[quarkus.diameter."named-config".network.realms."realms".agent."properties"]`
-
-`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-agent-properties[quarkus.diameter."named-config".network.realms.agent."properties"]`
+`link:#config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus-diameter-network-realms-realms-agent-properties[quarkus.diameter."named-config".network.realms."realms".agent."properties"]`
 
 
 [.description]
@@ -1210,10 +1131,10 @@ a| [[config-group-io-quarkiverse-diameter-runtime-diameter-detail-config_quarkus
 Retrieves the properties of the agent configuration.
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS_AGENT__PROPERTIES_+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__AGENT__PROPERTIES_+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS_AGENT__PROPERTIES_+++`
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__AGENT__PROPERTIES_+++`
 endif::add-copy-button-to-env-var[]
 --|link:https://docs.oracle.com/javase/8/docs/api/java/lang/String.html[String]
  

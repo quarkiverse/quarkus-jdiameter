@@ -16,6 +16,7 @@
     <properties>
         <quicklyDocs>true</quicklyDocs>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>io.quarkus</groupId>

@@ -14,6 +14,8 @@ import io.quarkus.deployment.builditem.CombinedIndexBuildItem;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
 import io.quarkus.deployment.builditem.ServiceStartBuildItem;
 import io.quarkus.deployment.builditem.ShutdownContextBuildItem;
+import io.quarkus.deployment.builditem.nativeimage.NativeImageResourceBuildItem;
+import io.quarkus.deployment.builditem.nativeimage.ReflectiveClassBuildItem;
 import io.quarkus.tls.TlsRegistryBuildItem;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Default;
@@ -22,6 +24,27 @@ import org.jboss.jandex.AnnotationInstance;
 import org.jboss.jandex.DotName;
 import org.jdiameter.api.Configuration;
 import org.jdiameter.api.Stack;
+import org.jdiameter.client.impl.SessionFactoryImpl;
+import org.jdiameter.client.impl.controller.RealmTableImpl;
+import org.jdiameter.client.impl.helpers.AssemblerImpl;
+import org.jdiameter.client.impl.parser.MessageParser;
+import org.jdiameter.client.impl.router.WeightedLeastConnectionsRouter;
+import org.jdiameter.client.impl.router.WeightedRoundRobinRouter;
+import org.jdiameter.client.impl.transport.tcp.TCPClientConnection;
+import org.jdiameter.common.impl.concurrent.ConcurrentEntityFactory;
+import org.jdiameter.common.impl.concurrent.ConcurrentFactory;
+import org.jdiameter.common.impl.data.LocalDataSource;
+import org.jdiameter.common.impl.statistic.StatisticManagerImpl;
+import org.jdiameter.common.impl.statistic.StatisticProcessorImpl;
+import org.jdiameter.common.impl.timer.LocalTimerFacilityImpl;
+import org.jdiameter.common.impl.validation.DictionaryImpl;
+import org.jdiameter.server.impl.*;
+import org.jdiameter.server.impl.agent.AgentConfigurationImpl;
+import org.jdiameter.server.impl.agent.ProxyAgentImpl;
+import org.jdiameter.server.impl.agent.RedirectAgentImpl;
+import org.jdiameter.server.impl.fsm.FsmFactoryImpl;
+import org.jdiameter.server.impl.io.TransportLayerFactory;
+import org.jdiameter.server.impl.io.tcp.NetworkGuard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +70,53 @@ class DiameterProcessor
     public FeatureBuildItem feature()
     {
         return new FeatureBuildItem(FEATURE);
+    }
+
+    @BuildStep
+    NativeImageResourceBuildItem nativeImageResourceBuildItem()
+    {
+        return new NativeImageResourceBuildItem("META-INF/jdiameter-client.xsd",
+                                                "META-INF/jdiameter-server.xsd",
+                                                "META-INF/version.properties",
+                                                "META-INF/dictionary.xml");
+    }
+
+    @BuildStep
+    ReflectiveClassBuildItem reflection()
+    {
+        return ReflectiveClassBuildItem.builder(ConcurrentEntityFactory.class,
+                                                DictionaryImpl.class,
+                                                StatisticProcessorImpl.class,
+                                                ConcurrentFactory.class,
+                                                LocalTimerFacilityImpl.class,
+                                                LocalDataSource.class,
+                                                ProxyAgentImpl.class,
+                                                AgentConfigurationImpl.class,
+                                                RedirectAgentImpl.class,
+                                                MutablePeerTableImpl.class,
+                                                RealmTableImpl.class,
+                                                StatisticManagerImpl.class,
+                                                SessionFactoryImpl.class,
+                                                NetworkGuard.class,
+                                                TCPClientConnection.class,
+                                                TCPClientConnection.class,
+                                                OverloadManagerImpl.class,
+                                                NetworkImpl.class,
+                                                RouterImpl.class,
+                                                org.jdiameter.client.impl.router.RouterImpl.class,
+                                                FsmFactoryImpl.class,
+                                                org.jdiameter.client.impl.fsm.FsmFactoryImpl.class,
+                                                TransportLayerFactory.class,
+                                                org.jdiameter.client.impl.transport.TransportLayerFactory.class,
+                                                MetaDataImpl.class,
+                                                org.jdiameter.client.impl.MetaDataImpl.class,
+                                                AssemblerImpl.class,
+                                                MessageParser.class,
+                                                WeightedRoundRobinRouter.class,
+                                                WeightedLeastConnectionsRouter.class
+                                               )
+                                       .methods().fields().constructors()
+                                       .build();
     }
 
     @BuildStep

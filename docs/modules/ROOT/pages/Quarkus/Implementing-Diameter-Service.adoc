@@ -1,44 +1,96 @@
 include::../includes/attributes.adoc[]
-= Implementing a Diameter Service
-Diameter implementations are exposed as CDI beans are automatically registered and started
+= {product-name}
 
-To implement a service a class needs to be defined and annotated with `@DiameterService` and `@DiameterServiceOptions`.
-If `@DiameterServiceOption` is not specified the default config profile will be used.
-Only one Diameter service combination of application type and mode can be defined at any given time.
-For example only one CAA / Server service can be defined and a `DiameterConfigException` will be generated if additional one is defined.
-It is however allowed to define additional Diameter Services for other Application Type and mode combination on the same Diameter stack, but not in the same service.
+The Diameter protocol is a computer networking protocol for Authentication, Authorization and Accounting, as defined in link:https://datatracker.ietf.org/doc/html/rfc6733[RFC6733].
+It is extensively used in the 3GPP telecommunication industry.
 
-TIP: For clarity, it is perfectly legal to to have two Diameter Services, one for CAA / Client and another for CAA / Server, or any other combination of application type and mode as long as there is only one per service per diameter stack.
+JDiameter is an existing Java Diameter stack that supports the protocol.
+The origional RestComm implementation (https://github.com/RestComm/jdiameter) is quite old, and active support for it has stopped.
 
-The DiameterService interceptor will initialise all the configured applications and *start* the Diameter stack (if not already started).
-In addition to registering the session factories it will also register a Network Listener for each
+The Quarkus Diameter extension has updated the JDiameter implementation so that it can be used in both a Quarkus JVM and a Native application.
 
-== Example
+== Installation
+
+If you want to use this extension, you need to add the io.quarkiverse.jdiameter:quarkus-diameter extension first to your build file.
+
+For instance, with Maven, add the following dependency to your POM file:
+
+[source,xml]
+----
+<properties>
+    <quarkus.jdiameter.version>2.0.0</quarkus.jdiameter.version>
+</properties>
+
+<dependency>
+    <groupId>io.quarkiverse.jdiameter</groupId>
+    <artifactId>quarkus-diameter</artifactId>
+    <version>${quarkus.jdiameter.version}</version>
+</dependency>
+----
+
+== Implementing a Diameter Service
+
+To implement a Diameter service, a class needs to be defined and annotated with `@DiameterService` and optionally `@DiameterServiceOptions`.
+
+The `@DiameterServiceOption` annotation is used, among other, to specific the Diameter configuration profile to use for the service, and if it is not specified the service will use the default configuration profile.
+
+The type of Diameter service is determined by the xref:_application_session_types[Diameter Application Session Listener] interfaces implemented by the service.
+
+The DiameterService interceptor will initialise all the configured services and *start* the Diameter stack (if not already started).
+
+=== Example
 
 [source,java]
 ----
-@DiameterService <1>
-@DiameterServiceOption(config = "client1") <2>
-public class MyDiameterService implements ClientCCASessionListener <3>
+
+@DiameterService <1> @DiameterServiceOption(config = "client1") <2> public class MyDiameterService implements ClientCCASessionListener <3>
 {
-	@Override
-	public void doCreditControlAnswer(ClientCCASession session, JCreditControlRequest request, JCreditControlAnswer answer) throws InternalException
-	{
-	    //...
-	}
-}
+@Override public void doCreditControlAnswer(ClientCCASession session, JCreditControlRequest request, JCreditControlAnswer answer) throws InternalException
+{
+//...
+} }
+
 ----
 
 <1> Marking the class as a diameter service
 <2> The optional configuration option to apply to the diameter service.
 If not define the <default> configuration will be used.
 <3> Implements the the SessionListener associated with the `Session Type`.
-(See List below)
+(See xref:_application_session_types[List] below)
+
+== Application Session Types
+
+The session listener determines the Diameter service session type it implements.
+The list below contains all the session types currently supported by the Diameter Service implementation.
+
+.Supported Application Session type.
+[options="header"]
+|===
+| Session Type | Server Session Interface | Client Session Interface | Application | Reference
+| Acc | ServerAccSessionListener | ClientAccSessionListener | AccountingId[0:3] | link:https://datatracker.ietf.org/doc/html/rfc6733[RFC6733]
+| Auth | ServerAuthSessionListener | ClientAuthSessionListener | Internal | link:https://datatracker.ietf.org/doc/html/rfc6733[RFC6733]
+| CCA | ServerCCASessionListener | ClientCCASessionListener | AuthId[0:4] | link:https://datatracker.ietf.org/doc/html/rfc4006[RFC4006]
+| Gx | ServerGxSessionListener | ClientGxSessionListener | - | -
+| Rx |  ClientRxSessionListener | ClientRxSessionListener | - | -
+| S6a |  ServerS6aSessionListener | ClientS6aSessionListener | - | -
+| Gq | ServerGqSessionListener | ClientGqSessionListener | - | -
+| Sh | ServerShSessionListener | ClientShSessionListener | - | -
+| CxDx | ServerCxDxSessionListener | ClientCxDxSessionListener | AuthId[13019:16777216] AuthId[10415:16777216] | TS.29228
+| S13 | ServerS13SessionListener | ClientS13SessionListener | - | -
+| Ro | ServerRoSessionListener | ClientRoSessionListener | AuthId[10415:4] | TS.32240
+| Rf | ServerRfSessionListener | ClientRfSessionListener | AccountingId[10415:3] | TS.32240
+|===
+
+IMPORTANT: Only *one* implementation of a session listener per diameter stack is allowed per application.
+If the build phase detected that the same session listener is implemented more than once for the *same* diameter stack a `DiameterConfigException` exception will be generated.
+
+TIP: A Diameter service may implement more than one session listener.
 
 == Diameter Server mode
 
-When the diameter stack is started in SERVER mode, the Diameter Service interceptor automatically creates a network listener for defined Diameter Service.
-The interceptor will skip creating a listener if it detects that the Diameter Service has implemented the `NetworkListener` interface.
+If a Diameter service implements any of the ServerXXXSessionListeners the Diameter Service interceptor automatically creates a network listener for that Diameter service.
+
+NOTE: The interceptor will skip creating a listener if it detects that the Diameter Service has implemented the `NetworkListener` interface.
 
 TIP: In most cases you do not need to implement your own `NetworkListener` and you can let the interceptor create one for you!
 
@@ -55,8 +107,7 @@ TIP: The stack will only be active if there is a defined DiameterService for the
 
 @ApplicationScoped public class Demo
 {
-    @DiameterConfig <1>
-    Stack stack;
+@DiameterConfig <1> Stack stack;
 
     @DiameterConfig("test2") <2>
     Configuration test2Config;
@@ -68,18 +119,46 @@ TIP: The stack will only be active if there is a defined DiameterService for the
 <1> Injecting the Diameter stack associated with the "<default>" configuration.
 <2> Injecting the Diameter configuration for the "test2" configuration.
 
-== Application Session Types
+== Using {product-name} in an high availability environment
 
-.Supported Application Session type.
-|===
-| *Session Type* | *Server Session Interface* | *Client Session Interface*
-| Credit Control Application (CCA) | ServerCCASessionListener | ClientCCASessionListener
-| Rx |  ClientRxSessionListener | ClientRxSessionListener
-| S6a |  ServerS6aSessionListener | ClientS6aSessionListener
-| Gq | ServerAuthSessionListener | ClientAuthSessionListener
-|===
+The {product-name} keeps track of each active session by storing the session information for each session. {product-name} also sets various timers linked to these session.
+In a standalone mode the session state is stored locally and the timers are defined in the local JVM.
+To use the diameter stack in a high availability (HA) mode where two or more nodes are used in a load balance or failover mode the sessions cannot be store in local ram.
 
-== Using TLS
+To use {product-name} in an HA environment the HA extensions must be loaded.
+The HA extensions stores the session state in an Infinispan Cache and makes use of the Infinispan timers to implement the diameter timers.
+The HA extensions stores the session information in a remote cache called `diameter`.
+
+TIP: The cache used can be changed by setting the `quarkus.diameter.parameter.caching-name` property
+
+The extension are not automatically included by the Quarkus extension and the following maven dependencies needs to be added to application pom file to use the extensions.
+
+[source,xml]
+----
+<dependency>
+    <groupId>io.quarkiverse.diameter</groupId>
+    <artifactId>jdiameter-ha-api</artifactId>
+    <version>${quarkus.jdiameter.version}</version>
+</dependency>
+<dependency>
+    <groupId>io.quarkiverse.diameter</groupId>
+    <artifactId>jdiameter-ha-impl</artifactId>
+    <version>${quarkus.jdiameter.version}</version>
+</dependency>
+----
+
+To use the HA components the configuration needs to be updated as follows:
+
+[source,properties]
+----
+quarkus.diameter.parameter.caching-name=drasessions  <1>
+meter.extensions.session-datasource=org.jdiameter.impl.ha.data.CachedSessionDatasourceImpl
+quarkus.diameter.extensions.timer-facility=org.jdiameter.impl.ha.timer.ReplicatedTimerFacilityImpl
+----
+
+<1> This option change the caching name from the default `diameter` to drasessions.
+
+NOTE: The HA implementation dependents on the Quarkus Infinispan client
 
 == Example Configuration
 
@@ -88,48 +167,50 @@ One is the default config and the other is named config called 'test1'.
 
 [source,properties]
 ----
-diameter.local-peer.uri=aaa://ocsclient:1812
-diameter.local-peer.ip-addresses=0.0.0.0, 127.0.0.1
-diameter.local-peer.realm=server.test.com
-diameter.local-peer.product-name=Diameter Test Client
-diameter.local-peer.firmware-revision=1
-diameter.local-peer.applications.0.auth-appl-id=4
-diameter.local-peer.applications.1.auth-appl-id=4
-diameter.local-peer.applications.1.vendor-id=10415
-diameter.parameter.use-virtual-threads=true
-diameter.network.peers.peer-uri=aaa://ocs.test.org:3868
-diameter.network.peers.ip=127.0.0.1
-diameter.network.peers.attempt-connect=true
-diameter.network.peers.rating=0
-diameter.network.realms.realm-name=server.test.com
-diameter.network.realms.peers=192.168.241.1,localhost
-diameter.network.realms.local-action=local
-diameter.network.realms.dynamic=false
-diameter.network.realms.exp-time=1
-diameter.network.realms.application-id.auth-appl-id=4
+quarkus.diameter.local-peer.uri=aaa://ocsclient:1812
+quarkus.diameter.local-peer.ip-addresses=0.0.0.0, 127.0.0.1
+quarkus.diameter.local-peer.realm=server.test.com
+quarkus.diameter.local-peer.product-name=Diameter Test Client
+quarkus.diameter.local-peer.firmware-revision=1
+quarkus.diameter.local-peer.applications.0.auth-appl-id=4
+quarkus.diameter.local-peer.applications.1.auth-appl-id=4
+quarkus.diameter.local-peer.applications.1.vendor-id=10415
 
-diameter.test1.local-peer.uri=aaa://ocsclient:1813
-diameter.test1.local-peer.ip-addresses[0]=0.0.0.0, 127.0.0.1
-diameter.test1.local-peer.realm=server.test.com
-diameter.test1.local-peer.product-name=Diameter Test Client
-diameter.test1.local-peer.firmware-revision=1
-diameter.test1.local-peer.applications.0.auth-appl-id=4
-diameter.test1.local-peer.applications.1.auth-appl-id=4
-diameter.test1.local-peer.applications.1.vendor-id=10415
-diameter.test1.parameter.use-virtual-threads=true
-diameter.test1.network.peers.peer-uri=aaa://ocs.test.org:3868
-diameter.test1.network.peers.ip=127.0.0.1
-diameter.test1.network.peers.attempt-connect=true
-diameter.test1.network.peers.rating=0
-diameter.test1.network.realms.realm-name=server.test.com
-diameter.test1.network.realms.peers=192.168.241.1,localhost
-diameter.test1.network.realms.local-action=local
-diameter.test1.network.realms.dynamic=false
-diameter.test1.network.realms.exp-time=1
-diameter.test1.network.realms.application-id.auth-appl-id=4
+quarkus.diameter.parameter.use-virtual-threads=true
+
+quarkus.diameter.network.peers.peer-uri=aaa://ocs.test.org:3868
+quarkus.diameter.network.peers.ip=127.0.0.1
+quarkus.diameter.network.peers.attempt-connect=true
+quarkus.diameter.network.peers.rating=0
+
+quarkus.diameter.network.realms."server.test.com".peers=192.168.241.1,localhost
+quarkus.diameter.network.realms."server.test.com".local-action=local
+quarkus.diameter.network.realms."server.test.com".dynamic=false
+quarkus.diameter.network.realms."server.test.com".exp-time=1
+quarkus.diameter.network.realms."server.test.com".application-id.auth-appl-id=4
+
+quarkus.diameter.test1.local-peer.uri=aaa://ocsclient:1813
+quarkus.diameter.test1.local-peer.ip-addresses[0]=0.0.0.0, 127.0.0.1
+quarkus.diameter.test1.local-peer.realm=server.test.com
+quarkus.diameter.test1.local-peer.product-name=Diameter Test Client
+quarkus.diameter.test1.local-peer.firmware-revision=1
+quarkus.diameter.test1.local-peer.applications.0.auth-appl-id=4
+
+quarkus.diameter.test1.parameter.use-virtual-threads=true
+
+quarkus.diameter.test1.network.peers.peer-uri=aaa://ocs.test.org:3868
+quarkus.diameter.test1.network.peers.ip=127.0.0.1
+quarkus.diameter.test1.network.peers.attempt-connect=true
+quarkus.diameter.test1.network.peers.rating=0
+
+quarkus.diameter.test1.network.realms."server.test.com".peers=192.168.241.1,localhost
+quarkus.diameter.test1.network.realms."server.test.com".local-action=local
+quarkus.diameter.test1.network.realms."server.test.com".dynamic=false
+quarkus.diameter.test1.network.realms."server.test.com".exp-time=1
+quarkus.diameter.test1.network.realms."server.test.com".application-id.auth-appl-id=4
 ----
 
-TIP:For more information about the extension configuration please refer to the <<configuration-reference,Configuration Reference>>.
+TIP: For more information about the extension configuration please refer to the <<configuration-reference,Configuration Reference>>.
 
 [[configuration-reference]]
 include::../includes/quarkus-diameter.adoc[leveloffset=+1]

@@ -283,13 +283,13 @@ In the table below, you can find session factories provided by current implement
 [cols="1,1,1,1",frame="all",options="header"]
 |===
 | Factory class | Application type & id | Application | Reference
-| org.jdiameter.common.impl.app.acc.AccSessionFactoryImpl | AccountingId[0:3] | Acc | FC3588
+| org.jdiameter.common.impl.app.acc.AccSessionFactoryImpl | AccountingId[0:3] | Acc | RFC3588
 | org.jdiameter.common.impl.app.auth.AuthSessionFactoryImpl | Specific | Auth | RFC3588
 | org.jdiameter.common.impl.app.cca.CCASessionFactoryImpl | AuthId[0:4] | CCA | RFC4006
 | org.jdiameter.common.impl.app.sh.ShSessionFactoryImpl | AuthId[10415:16777217] | Sh | TS.29328, TS.29329
 | org.jdiameter.common.impl.app.cxdx.CxDxSessionFactoryImpl | AuthId[13019:16777216] | Cx | TS.29228, TS.29229
 | org.jdiameter.common.impl.app.cxdx.CxDxSessionFactoryImpl | AuthId[10415:16777216] | Dx | TS.29228, TS.29229
-| org.jdiameter.common.impl.app.acc.AccSessionFactoryImpl | AccountingId[10415:3] | Rf | S.32240
+| org.jdiameter.common.impl.app.acc.AccSessionFactoryImpl | AccountingId[10415:3] | Rf | TS.32240
 | org.jdiameter.common.impl.app.cca.CCASessionFactoryImpl | AuthId[10415:4] | Ro | TS.32240
 |===
 
