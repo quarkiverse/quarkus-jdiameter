@@ -70,212 +70,212 @@ import static org.jdiameter.client.impl.helpers.Parameters.Extensions;
 @SuppressWarnings("all") //3rd party lib
 public class AssemblerImpl implements IAssembler
 {
-	private static final Logger logger = LoggerFactory.getLogger(AssemblerImpl.class);
-	private final Map<Class<?>, Object> instances = new ConcurrentHashMap<>();
+    private static final Logger logger = LoggerFactory.getLogger(AssemblerImpl.class);
+    private final Map<Class<?>, Object> instances = new ConcurrentHashMap<>();
 
-	AssemblerImpl parent;
-	final AssemblerImpl[] childs = new AssemblerImpl[ExtensionPoint.COUNT];
+    AssemblerImpl parent;
+    final AssemblerImpl[] childs = new AssemblerImpl[ExtensionPoint.COUNT];
 
-	static private class LazyInstance extends Object
-	{
+    static private class LazyInstance extends Object
+    {
 
-	}
+    }
 
-	/**
-	 * Create instance of class with predefined configuration
-	 *
-	 * @param config configuration of stack
-	 * @throws Exception if generated internal exception
-	 */
-	public AssemblerImpl(Configuration config) throws Exception
-	{
-		Configuration[] ext = config.getChildren(Extensions.ordinal());
-		for (Configuration e : ext) {
-			String extName = e.getStringValue(ExtensionName.ordinal(), "");
+    /**
+     * Create instance of class with predefined configuration
+     *
+     * @param config configuration of stack
+     * @throws Exception if generated internal exception
+     */
+    public AssemblerImpl(Configuration config) throws Exception
+    {
+        Configuration[] ext = config.getChildren(Extensions.ordinal());
+        for (Configuration e : ext) {
+            String extName = e.getStringValue(ExtensionName.ordinal(), "");
 
-			// Create structure of containers
-			if (extName.equals(ExtensionPoint.Internal.name())) {
-				fill(ExtensionPoint.Internal.getExtensionPoints(), e, true);
-			}
-			else if (extName.equals(ExtensionPoint.StackLayer.name())) {
-				updateContainer(config, StackLayer, InternalMetaData, InternalSessionFactory, InternalMessageParser, InternalElementParser);
-			}
-			else if (extName.equals(ExtensionPoint.ControllerLayer.name())) {
-				updateContainer(config, ControllerLayer, InternalPeerController, InternalPeerFsmFactory, InternalRouterEngine);
-			}
-			else if (extName.equals(ExtensionPoint.TransportLayer.name())) {
-				updateContainer(config, TransportLayer, InternalTransportFactory);
-			}
-		}
-	}
+            // Create structure of containers
+            if (extName.equals(ExtensionPoint.Internal.name())) {
+                fill(ExtensionPoint.Internal.getExtensionPoints(), e, true);
+            } else if (extName.equals(ExtensionPoint.StackLayer.name())) {
+                updateContainer(config, StackLayer, InternalMetaData, InternalSessionFactory, InternalMessageParser, InternalElementParser);
+            } else if (extName.equals(ExtensionPoint.ControllerLayer.name())) {
+                updateContainer(config, ControllerLayer, InternalPeerController, InternalPeerFsmFactory, InternalRouterEngine);
+            } else if (extName.equals(ExtensionPoint.TransportLayer.name())) {
+                updateContainer(config, TransportLayer, InternalTransportFactory);
+            }
+        }
+    }
 
-	private void updateContainer(Configuration config, ExtensionPoint pointType, ExtensionPoint... updEntries) throws ClassNotFoundException
-	{
-		for (ExtensionPoint e : updEntries) {
-			Configuration[] internalConf = config.getChildren(Extensions.ordinal());
-			String oldValue = internalConf[Internal.id()].getStringValue(e.ordinal(), null);
-			String newValue = internalConf[pointType.id()].getStringValue(e.ordinal(), null);
-			if (oldValue != null && newValue != null) {
-				unregister(loadClass(oldValue));
-				registerComponentImplementation(loadClass(newValue));
-			}
-		}
-	}
+    private void updateContainer(Configuration config, ExtensionPoint pointType, ExtensionPoint... updEntries) throws ClassNotFoundException
+    {
+        for (ExtensionPoint e : updEntries) {
+            Configuration[] internalConf = config.getChildren(Extensions.ordinal());
+            String oldValue = internalConf[Internal.id()].getStringValue(e.ordinal(), null);
+            String newValue = internalConf[pointType.id()].getStringValue(e.ordinal(), null);
+            if (oldValue != null && newValue != null) {
+                unregister(loadClass(oldValue));
+                registerComponentImplementation(loadClass(newValue));
+            }
+        }
+    }
 
-	/**
-	 * Create child Assembler
-	 *
-	 * @param parent parent assembler
-	 * @param e      child configuration
-	 * @param p      extension poit
-	 * @throws Exception
-	 */
-	protected AssemblerImpl(AssemblerImpl parent, Configuration e, ExtensionPoint p) throws Exception
-	{
-		this.parent = parent;
-		fill(p.getExtensionPoints(), e, false);
-	}
+    /**
+     * Create child Assembler
+     *
+     * @param parent parent assembler
+     * @param e      child configuration
+     * @param p      extension poit
+     * @throws Exception
+     */
+    protected AssemblerImpl(AssemblerImpl parent, Configuration e, ExtensionPoint p) throws Exception
+    {
+        this.parent = parent;
+        fill(p.getExtensionPoints(), e, false);
+    }
 
-	private Class<?> loadClass(String className) throws ClassNotFoundException
-	{
-		return Thread.currentThread().getContextClassLoader().loadClass(className);
-	}
+    private Class<?> loadClass(String className) throws ClassNotFoundException
+    {
+        return Thread.currentThread().getContextClassLoader().loadClass(className);
+    }
 
-	private void fill(ExtensionPoint[] codes, Configuration e, boolean check) throws Exception
-	{
-		//NOTE: this installs components, but no instances created!
-		for (ExtensionPoint c : codes) {
-			String value = e.getStringValue(c.ordinal(), c.defValue());
-			if (!check && (value == null || value.trim().length() == 0)) {
-				return;
-			}
+    private void fill(ExtensionPoint[] codes, Configuration e, boolean check) throws Exception
+    {
+        //NOTE: this installs components, but no instances created!
+        for (ExtensionPoint c : codes) {
+            String value = e.getStringValue(c.ordinal(), c.defValue());
+            if (!check && (value == null || value.trim().length() == 0)) {
+                return;
+            }
 
-			try {
-				registerComponentImplementation(loadClass(value));
-			}
-			catch (NoClassDefFoundError exc) {
-				throw new Exception(exc);
-			}
-		}
-	}
+            try {
+                registerComponentImplementation(loadClass(value));
+            }
+            catch (NoClassDefFoundError exc) {
+                throw new Exception(exc);
+            }
+        }
+    }
 
-	private Object[] buildArgs(Parameter[] parameters)
-	{
-		List<Object> params = new ArrayList<>();
-		for (Parameter parameter : parameters) {
-			Object arg = getComponentInstance(parameter.getType());
-			if (arg == null) {
-				return null;
-			}
-			params.add(arg);
-		}
-		return params.toArray();
-	}
+    private Object[] buildArgs(Parameter[] parameters)
+    {
+        List<Object> params = new ArrayList<>();
+        for (Parameter parameter : parameters) {
+            Object arg = getComponentInstance(parameter.getType());
+            if (arg == null) {
+                return null;
+            }
+            params.add(arg);
+        }
+        return params.toArray();
+    }
 
-	private <T> T newInstance(Class<T> aClass)
-	{
-		List<Constructor> constructors = Arrays.asList(aClass.getConstructors());
-		constructors.sort((t1, t2) -> Integer.compare(t2.getParameters().length, t1.getParameters().length));
-		for (Constructor<?> constructor : constructors) {
-			Object[] args = buildArgs(constructor.getParameters());
-			if (args != null) {
-				try {
-					T instance = (T) constructor.newInstance(args);
-					instances.put(aClass, instance);
-					return instance;
-				}
-				catch (InvocationTargetException | InstantiationException | IllegalAccessException ex) {
-					logger.debug("Error instantiating {}", aClass, ex);
-				}
-			} //if
-		}
+    private <T> T newInstance(Class<T> aClass)
+    {
+        List<Constructor> constructors = Arrays.asList(aClass.getConstructors());
+        constructors.sort((t1, t2) -> Integer.compare(t2.getParameters().length, t1.getParameters().length));
+        for (Constructor<?> constructor : constructors) {
+            Object[] args = buildArgs(constructor.getParameters());
+            if (args != null) {
+                try {
+                    T instance = (T) constructor.newInstance(args);
+                    instances.put(aClass, instance);
+                    return instance;
+                }
+                catch (InvocationTargetException | InstantiationException | IllegalAccessException ex) {
+                    logger.error("Error instantiating {}", aClass, ex);
+                }
+            } //if
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	private <T> T getInstance(Class<T> aClass)
-	{
-		T instance = (T) instances.get(aClass);
-		if (instance instanceof LazyInstance) {
-			instance = newInstance(aClass);
-			instances.put(aClass, instance);
-		}
-		return instance;
-	}
+    private <T> T getInstance(Class<T> aClass)
+    {
+        T instance = (T) instances.get(aClass);
+        if (instance instanceof LazyInstance) {
+            instance = newInstance(aClass);
+            if (instance == null) {
+                throw new IllegalArgumentException("Error creating a new instance of " + aClass);
+            }
+            instances.put(aClass, instance);
+        }
+        return instance;
+    }
 
-	/**
-	 * @see org.picocontainer.MutablePicoContainer
-	 */
-	@Override
-	public <T> T getComponentInstance(Class<T> aClass)
-	{
-		if (aClass.isInterface()) {
-			for (Class<?> regClass : instances.keySet()) {
-				if (aClass.isAssignableFrom(regClass)) {
-					return (T) getInstance(regClass);
-				}
-			}
-		}
+    /**
+     * @see org.picocontainer.MutablePicoContainer
+     */
+    @Override
+    public <T> T getComponentInstance(Class<T> aClass)
+    {
+        if (aClass.isInterface()) {
+            for (Class<?> regClass : instances.keySet()) {
+                if (aClass.isAssignableFrom(regClass)) {
+                    return (T) getInstance(regClass);
+                }
+            }
+        }
 
-		if (!instances.containsKey(aClass)) {
-			logger.debug("No component instance found for {}", aClass);
-			return null;
-		}
+        if (!instances.containsKey(aClass)) {
+            logger.debug("No component instance found for {}", aClass);
+            return null;
+        }
 
-		return getInstance(aClass);
-	}
+        return getInstance(aClass);
+    }
 
-	/**
-	 * @see org.picocontainer.MutablePicoContainer
-	 */
-	@Override
-	public void registerComponentInstance(Object object)
-	{
-		instances.put(object.getClass(), object);
-	}
+    /**
+     * @see org.picocontainer.MutablePicoContainer
+     */
+    @Override
+    public void registerComponentInstance(Object object)
+    {
+        instances.put(object.getClass(), object);
+    }
 
-	public void registerComponentImplementation(Class aClass)
-	{
-		instances.put(aClass, new LazyInstance());
-	}
+    public void registerComponentImplementation(Class aClass)
+    {
+        instances.put(aClass, new LazyInstance());
+    }
 
-	/**
-	 * @see org.picocontainer.MutablePicoContainer
-	 */
-	@Override
-	public void registerComponentImplementation(Class<?> aClass, Object object)
-	{
-		instances.putIfAbsent(aClass, object);
-	}
+    /**
+     * @see org.picocontainer.MutablePicoContainer
+     */
+    @Override
+    public void registerComponentImplementation(Class<?> aClass, Object object)
+    {
+        instances.putIfAbsent(aClass, object);
+    }
 
-	public void unregister(Class aClass)
-	{
-		instances.remove(aClass);
-	}
+    public void unregister(Class aClass)
+    {
+        instances.remove(aClass);
+    }
 
-	@Override
-	public void destroy()
-	{
-		instances.clear();
-	}
+    @Override
+    public void destroy()
+    {
+        instances.clear();
+    }
 
-	/**
-	 * return parent IOC
-	 */
-	@Override
-	public IAssembler getParent()
-	{
-		return parent;
-	}
+    /**
+     * return parent IOC
+     */
+    @Override
+    public IAssembler getParent()
+    {
+        return parent;
+    }
 
-	/**
-	 * Get childs IOCs
-	 *
-	 * @return childs IOCs
-	 */
-	@Override
-	public IAssembler[] getChilds()
-	{
-		return childs;
-	}
+    /**
+     * Get childs IOCs
+     *
+     * @return childs IOCs
+     */
+    @Override
+    public IAssembler[] getChilds()
+    {
+        return childs;
+    }
 }
