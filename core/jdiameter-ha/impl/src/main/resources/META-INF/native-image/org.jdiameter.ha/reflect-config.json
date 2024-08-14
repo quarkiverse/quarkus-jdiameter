@@ -1,20 +1,26 @@
 [
   {
-    "name": "org.jdiameter.impl.ha.data.CachedSessionDatasourceImpl.class",
+    "name": "org.jdiameter.impl.ha.data.CachedSessionDatasourceImpl",
     "queryAllDeclaredConstructors": true,
     "queryAllPublicConstructors": true,
     "queryAllDeclaredMethods": true,
     "queryAllPublicMethods": true,
     "allDeclaredClasses": true,
-    "allPublicClasses": true
+    "allPublicClasses": true,
+    "allPublicMethods": true,
+    "allPublicFields": true,
+    "allPublicConstructors": true
   },
   {
-    "name": "org.jdiameter.impl.ha.timer.class",
+    "name": "org.jdiameter.impl.ha.timer.ReplicatedTimerFacilityImpl",
     "queryAllDeclaredConstructors": true,
     "queryAllPublicConstructors": true,
     "queryAllDeclaredMethods": true,
     "queryAllPublicMethods": true,
     "allDeclaredClasses": true,
-    "allPublicClasses": true
+    "allPublicClasses": true,
+    "allPublicMethods": true,
+    "allPublicFields": true,
+    "allPublicConstructors": true
   }
 ]
