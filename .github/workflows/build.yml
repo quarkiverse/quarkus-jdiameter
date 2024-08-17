@@ -52,12 +52,6 @@ jobs:
           distribution: temurin
           java-version: 21
           cache: 'maven'
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE
-
-      - name: Display gpg info
-        run: |
-          gpg --list-secret-keys --keyid-format LONG
 
       - name: Display settings.xml
         run: |
@@ -70,7 +64,3 @@ jobs:
 
       - name: Build with Maven
         run: mvn -B clean install -Dno-format
-        env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
