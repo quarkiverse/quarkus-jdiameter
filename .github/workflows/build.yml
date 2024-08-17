@@ -62,18 +62,11 @@ jobs:
         run: |
           cat /home/runner/.m2/settings.xml
 
-      #      - name: Configure GPG Key
-      #        env:
-      #          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-      #        run: |
-      #          echo -n "$GPG_PRIVATE_KEY"
-      #          echo -n "$GPG_PRIVATE_KEY" | base64 --decode | gpg --import
-
       - name: Set up Maven 3.9.6
         uses: stCarolas/setup-maven@v5
         with:
           maven-version: 3.9.6
-          
+
       - name: Display Maven Version
         run: mvn -v
 
