@@ -4,57 +4,40 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>io.quarkiverse.diameter</groupId>
-        <artifactId>diameter-parent</artifactId>
+        <groupId>io.quarkiverse.jdiameter</groupId>
+        <artifactId>quarkus-jdiameter-parent</artifactId>
         <version>2.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>quarkus-diameter-parent</artifactId>
+    <artifactId>quarkus-jdiameter-extension-parent</artifactId>
     <packaging>pom</packaging>
-    <name>Quarkus :: Quarkus Diameter Extension :: Parent</name>
+    <name>Quarkus :: JDiameter Extension :: Parent</name>
 
     <modules>
         <module>deployment</module>
         <module>runtime</module>
     </modules>
 
-    <properties>
-        <compiler-plugin.version>3.13.0</compiler-plugin.version>
-        <failsafe-plugin.version>${surefire-plugin.version}</failsafe-plugin.version>
-        <maven.compiler.release>21</maven.compiler.release>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <surefire-plugin.version>3.2.5</surefire-plugin.version>
-        <maven-jandex-plugin.version>3.1.1</maven-jandex-plugin.version>
-    </properties>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>io.quarkus</groupId>
-                <artifactId>quarkus-bom</artifactId>
-                <version>${quarkus.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>io.quarkiverse.diameter</groupId>
+                <groupId>io.quarkiverse.jdiameter</groupId>
                 <artifactId>jdiameter-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.quarkiverse.diameter</groupId>
+                <groupId>io.quarkiverse.jdiameter</groupId>
                 <artifactId>jdiameter-impl</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.quarkiverse.diameter</groupId>
+                <groupId>io.quarkiverse.jdiameter</groupId>
                 <artifactId>jdiameter-ha-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.quarkiverse.diameter</groupId>
+                <groupId>io.quarkiverse.jdiameter</groupId>
                 <artifactId>jdiameter-ha-impl</artifactId>
                 <version>${project.version}</version>
             </dependency>

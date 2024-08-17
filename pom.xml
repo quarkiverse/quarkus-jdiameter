@@ -11,19 +11,18 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>io.quarkiverse.diameter</groupId>
-    <artifactId>diameter-parent</artifactId>
+    <groupId>io.quarkiverse.jdiameter</groupId>
+    <artifactId>quarkus-jdiameter-parent</artifactId>
     <version>2.0.0</version>
     <packaging>pom</packaging>
 
-    <name>Quarkus :: Diameter :: ${project.artifactId}</name>
-    <description>Quarkus Diameter</description>
-    <url>https://github.com/eddiecarpenter/quarkus-jdiameter</url>
+    <name>Quarkus :: JDiameter :: ${project.artifactId}</name>
+    <description>Quarkus JDiameter Parent</description>
 
     <scm>
-        <connection>scm:git:git@github.com:eddiecarpenter/quarkus-jdiameter.git</connection>
-        <developerConnection>scm:git:https://github.com/eddiecarpenter/quarkus-jdiameter.git</developerConnection>
-        <url>https://github.com/eddiecarpenter/quarkus-jdiameter</url>
+        <connection>scm:git:git@github.com:quarkiverse/quarkus-jdiameter.git</connection>
+        <developerConnection>scm:git:git@github.com:quarkiverse/quarkus-jdiameter.git</developerConnection>
+        <url>https://github.com/quarkiverse/quarkus-jdiameter</url>
     </scm>
 
     <issueManagement>
@@ -55,14 +54,12 @@
         <module>core</module>
         <module>quarkus-diameter</module>
         <module>docs</module>
+        <module>integration-tests</module>
     </modules>
 
     <properties>
         <maven.compiler.parameters>true</maven.compiler.parameters>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <maven.compiler.release>21</maven.compiler.release>
         <format.skip>true</format.skip>
         <commons-pool.version>1.6</commons-pool.version>
         <junit.version>5.10.3</junit.version>
@@ -72,11 +69,21 @@
         <surefire.version>3.2.5</surefire.version>
         <jandex.version>3.1.2</jandex.version>
         <lombok.version>1.18.32</lombok.version>
-        <quarkus.version>3.12.3</quarkus.version>
 
-        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
-        <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
-        <maven-clean-plugin.version>3.2.0</maven-clean-plugin.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.release>21</maven.compiler.release>
+
+        <compiler-plugin.version>3.13.0</compiler-plugin.version>
+        <maven.compiler.release>21</maven.compiler.release>
+        <maven.gpg.version>1.6</maven.gpg.version>
+        <maven.enforcer.version>3.5.0</maven.enforcer.version>
+        <maven-jandex-plugin.version>3.1.1</maven-jandex-plugin.version>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <quarkus.version>3.13.2</quarkus.version>
+
 
         <!-- maven-enforcer-plugin -->
         <maven.min.version>3.9.6</maven.min.version>
@@ -98,22 +105,29 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>io.quarkus</groupId>
+                <artifactId>quarkus-bom</artifactId>
+                <version>${quarkus.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.quarkiverse.diameter</groupId>
-                <artifactId>quarkus-diameter</artifactId>
+                <groupId>io.quarkiverse.jdiameter</groupId>
+                <artifactId>quarkus-jdiameter</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.quarkiverse.diameter</groupId>
+                <groupId>io.quarkiverse.jdiameter</groupId>
                 <artifactId>jdiameter-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.quarkiverse.diameter</groupId>
+                <groupId>io.quarkiverse.jdiameter</groupId>
                 <artifactId>jdiameter-impl</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -125,7 +139,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>${maven.enforcer.version}</version>
                 <executions>
                     <execution>
                         <id>enforce-java-version</id>
@@ -174,7 +188,13 @@
                     </execution>
                 </executions>
             </plugin>
-
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${compiler-plugin.version}</version>
+                <configuration>
+                    <parameters>true</parameters>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -187,7 +207,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
+                <version>${maven.gpg.version}</version>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>
@@ -197,6 +217,12 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <gpgArguments>
+                        <arg>--pinentry-mode</arg>
+                        <arg>loopback</arg>
+                    </gpgArguments>
+                </configuration>
             </plugin>
 
 
@@ -222,25 +248,16 @@
 
     <profiles>
         <profile>
-            <id>tradeswitch</id>
-
-            <distributionManagement>
-                <repository>
-                    <id>tradeswitch-common</id>
-                    <name>Internal TradeSwitch Common Release Repository</name>
-                    <url>https://nexus.frei.dev/repository/tradeswitch.common</url>
-                </repository>
-            </distributionManagement>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-deploy-plugin</artifactId>
-                        <version>3.1.2</version>
-                    </plugin>
-                </plugins>
-            </build>
+            <id>it</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>!true</value>
+                </property>
+            </activation>
+            <modules>
+                <module>integration-tests</module>
+            </modules>
         </profile>
 
         <profile>

@@ -1,4 +1,4 @@
-include::../includes/attributes.adoc[]
+include::includes/attributes.adoc[]
 = {product-name}
 
 The Diameter protocol is a computer networking protocol for Authentication, Authorization and Accounting, as defined in link:https://datatracker.ietf.org/doc/html/rfc6733[RFC6733].
@@ -43,12 +43,15 @@ The DiameterService interceptor will initialise all the configured services and 
 [source,java]
 ----
 
-@DiameterService <1> @DiameterServiceOption(config = "client1") <2> public class MyDiameterService implements ClientCCASessionListener <3>
+@DiameterService <1>
+@DiameterServiceOption(config = "client1") <2>
+public class MyDiameterService implements ClientCCASessionListener <3>
 {
-@Override public void doCreditControlAnswer(ClientCCASession session, JCreditControlRequest request, JCreditControlAnswer answer) throws InternalException
-{
-//...
-} }
+    @Override public void doCreditControlAnswer(ClientCCASession session, JCreditControlRequest request, JCreditControlAnswer answer) throws InternalException
+    {
+    //...
+    }
+}
 
 ----
 
@@ -105,9 +108,10 @@ TIP: The stack will only be active if there is a defined DiameterService for the
 [source,java]
 ----
 
-@ApplicationScoped public class Demo
-{
-@DiameterConfig <1> Stack stack;
+@ApplicationScoped
+public class Demo {
+    @DiameterConfig <1>
+    Stack stack;
 
     @DiameterConfig("test2") <2>
     Configuration test2Config;
@@ -213,4 +217,4 @@ quarkus.diameter.test1.network.realms."server.test.com".application-id.auth-appl
 TIP: For more information about the extension configuration please refer to the <<configuration-reference,Configuration Reference>>.
 
 [[configuration-reference]]
-include::../includes/quarkus-diameter.adoc[leveloffset=+1]
+include::includes/quarkus-jdiameter.adoc[leveloffset=+1]

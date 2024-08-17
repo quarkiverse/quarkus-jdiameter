@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>io.quarkiverse.diameter</groupId>
+        <groupId>io.quarkiverse.jdiameter</groupId>
         <artifactId>jdiameter-ha-parent</artifactId>
         <version>2.0.0</version>
         <relativePath>../pom.xml</relativePath>
@@ -12,11 +12,11 @@
 
     <artifactId>jdiameter-ha-api</artifactId>
 
-    <name>Quarkus :: Diameter Stack HA :: ${project.artifactId}</name>
+    <name>Quarkus :: JDiameter Stack HA :: Api</name>
 
     <dependencies>
         <dependency>
-            <groupId>io.quarkiverse.diameter</groupId>
+            <groupId>io.quarkiverse.jdiameter</groupId>
             <artifactId>jdiameter-api</artifactId>
         </dependency>
     </dependencies>
