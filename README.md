@@ -2,9 +2,9 @@
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-) <!-- ALL-CONTRIBUTORS-BADGE:END -->
-[![Build](https://github.com/eddiecarpenter/go-jdiameter/actions/workflows/build.yml/badge.svg)](https://github.com/eddiecarpenter/go-jdiameter/actions/workflows/build.yml)
-[![Maven Central](https://img.shields.io/maven-central/v/io.quarkiverse.quarkus-zookeeper/quarkus-zookeeper.svg?label=Maven%20Central&style=flat-square)](https://search.maven.org/artifact/io.quarkiverse.quarkus-zookeeper/quarkus-zookeeper)
-![License](https://img.shields.io/github/license/eddiecarpenter/go-jdiameter)
+[![Build](https://github.com/quarkiverse/quarkus-jdiameter/actions/workflows/build.yml/badge.svg?style=for-the-badge)](https://github.com/quarkiverse/quarkus-jdiameter/actions/workflows/build.yml)
+[![Maven Central](https://img.shields.io/maven-central/v/io.quarkiverse.jdiameter/quarkus-jdiameter.svg?label=Maven%20Central&style=flat-square)](https://search.maven.org/artifact/io.quarkiverse.jdiameter/quarkus-jdiameter)
+[![GitHub](https://img.shields.io/github/license/quarkiverse/quarkus-jdiameter?color=blue&style=flat-square)](https://github.com/quarkiverse/quarkus-jdiameter/blob/main/LICENSE)
 
 This is a fork of the RestComm jDiameter Stack with a couple of enhancements done:
 
