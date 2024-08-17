@@ -52,6 +52,8 @@ jobs:
           distribution: temurin
           java-version: 21
           cache: 'maven'
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Display settings.xml
         run: |
@@ -62,8 +64,12 @@ jobs:
         with:
           maven-version: 3.9.6
 
-      - name: Display Maven Version
-        run: mvn -v
+      - name: Install gpg secret key
+        run: |
+          # Install gpg secret key
+          cat <(echo -e "${{ secrets.GPG_PRIVATE_KEY }}") | gpg --batch --import
+          # Verify gpg secret key
+          gpg --list-secret-keys --keyid-format LONG
 
       - name: Build with Maven
         run: mvn -B clean install -Dno-format
