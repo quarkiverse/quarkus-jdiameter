@@ -42,11 +42,15 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
+      - name: Display gpg info
+        run: |
+          gpg --list-secret-keys --keyid-format LONG
+
       - name: Set up Maven 3.9.6
         uses: stCarolas/setup-maven@v5
         with:
           maven-version: 3.9.6
-          
+
       - name: Configure Git author
         run: |
           git config --local user.email "action@github.com"
