@@ -37,7 +37,7 @@ jobs:
       fail-fast: false
       matrix:
         #        os: [windows-latest, macos-latest, ubuntu-latest]
-        os: [ubuntu-latest]
+        os: [ ubuntu-latest ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Prepare git
@@ -53,28 +53,30 @@ jobs:
           java-version: 21
           maven-version: 3.9.6
           cache: 'maven'
+          server-id: ossrh
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Display settings.xml
         run: |
           cat /home/runner/.m2/settings.xml
 
-      - name: Configure GPG Key
-        env:
-          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-        run: |
-          echo -n "$GPG_PRIVATE_KEY"
-          echo -n "$GPG_PRIVATE_KEY" | base64 --decode | gpg --import
+      #      - name: Configure GPG Key
+      #        env:
+      #          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+      #        run: |
+      #          echo -n "$GPG_PRIVATE_KEY"
+      #          echo -n "$GPG_PRIVATE_KEY" | base64 --decode | gpg --import
 
       - name: Set up Maven 3.9.6
         uses: stCarolas/setup-maven@v5
         with:
           maven-version: 3.9.6
 
-      - name: Display Maven Version    
+      - name: Display Maven Version
         run: mvn -v
 
       - name: Build with Maven
         run: mvn -B clean install -Dno-format
-
-      - name: Build with Maven (Native)
-        run: mvn -B install -Dnative -Dquarkus.native.container-build -Dnative.surefire.skip
