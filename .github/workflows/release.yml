@@ -43,11 +43,6 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
-      - name: Display GPG Info
-        run: |
-          echo "Current GPG Info"
-          gpg --list-secret-keys --keyid-format LONG
-
       - name: Set up Maven 3.9.6
         uses: stCarolas/setup-maven@v5
         with:
