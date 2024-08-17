@@ -43,7 +43,7 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
-      - name: Display gpg info
+      - name: Display GPG Info
         run: |
           echo "Current GPG Info"
           gpg --list-secret-keys --keyid-format LONG
