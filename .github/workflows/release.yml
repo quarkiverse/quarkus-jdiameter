@@ -5,6 +5,7 @@ on:
     types: [ closed ]
     paths:
       - '.github/project.yml'
+      - '.github/workflows/release.yml'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
