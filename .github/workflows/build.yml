@@ -67,6 +67,15 @@ jobs:
         with:
           maven-version: 3.9.6
 
+      - name: Configure GPG Key
+        run: |
+          echo -n "GPG_PRIVATE_KEY" | base64 --decode | gpg --import
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+
+      - name: Display pgp key
+        run: gpg --list-keys
+
       - name: Display Maven Version
         run: mvn -v
 
