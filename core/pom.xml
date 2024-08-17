@@ -4,8 +4,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>io.quarkiverse.diameter</groupId>
-        <artifactId>diameter-parent</artifactId>
+        <groupId>io.quarkiverse.jdiameter</groupId>
+        <artifactId>quarkus-jdiameter-parent</artifactId>
         <version>2.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -14,40 +14,7 @@
 
     <artifactId>diameter-core-parent</artifactId>
 
-    <name>Quarkus :: Diameter Core :: ${project.artifactId}</name>
-
-    <developers>
-        <developer>
-            <id>ammendonca</id>
-            <name>Alexandre Mendonça</name>
-            <email>brainslog@gmail.com</email>
-            <organization>TeleStax</organization>
-            <organizationUrl>http://www.telestax.com/</organizationUrl>
-            <roles>
-                <role>Project Lead</role>
-            </roles>
-            <timezone>0</timezone>
-        </developer>
-        <developer>
-            <id>baranowb</id>
-            <name>Bartosz Baranowski</name>
-            <email>baranowb@gmail.com</email>
-            <organization>TeleStax</organization>
-            <organizationUrl>http://www.telestax.com/</organizationUrl>
-            <roles>
-                <role>Developer</role>
-            </roles>
-            <timezone>+1</timezone>
-        </developer>
-    </developers>
-
-    <licenses>
-        <license>
-            <name>GNU Affero General Public License</name>
-            <url>https://www.gnu.org/licenses/agpl-3.0.html</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+    <name>Quarkus :: JDiameter Core :: Parent</name>
 
     <modules>
         <module>jdiameter</module>
