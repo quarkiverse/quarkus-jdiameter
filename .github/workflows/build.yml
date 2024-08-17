@@ -51,7 +51,6 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-          maven-version: 3.9.6
           cache: 'maven'
           server-id: ossrh
           server-username: MAVEN_USERNAME
@@ -75,6 +74,9 @@ jobs:
         with:
           maven-version: 3.9.6
 
+      - name: List m2 dir
+        run: ls -l /home/runner/.m2/
+        
       - name: Display Maven Version
         run: mvn -v
 
