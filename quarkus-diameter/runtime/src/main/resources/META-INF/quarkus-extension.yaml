@@ -1,5 +1,9 @@
-name: Quarkus Diameter
+name: Quarkus JDiameter
 description: Quarkus Diameter Extension
 metadata:
   config:
-    - "diameter."
+    - "quarkus.diameter."
+#  guide: https://quarkiverse.github.io/quarkiverse-docs/jdiameter/dev/ # To create and publish this guide, see https://github.com/quarkiverse/quarkiverse/wiki#documenting-your-extension
+#  categories:
+#    - "miscellaneous"
+#  status: "preview"

@@ -4,14 +4,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>io.quarkiverse.diameter</groupId>
-        <artifactId>quarkus-diameter-parent</artifactId>
+        <groupId>io.quarkiverse.jdiameter</groupId>
+        <artifactId>quarkus-jdiameter-extension-parent</artifactId>
         <version>2.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>quarkus-diameter</artifactId>
-    <name>Quarkus :: Quarkus Diameter Extension :: Runtime</name>
+    <artifactId>quarkus-jdiameter</artifactId>
+    <name>Quarkus :: JDiameter Extension :: Runtime</name>
 
     <properties>
         <quicklyDocs>true</quicklyDocs>
@@ -31,11 +31,11 @@
             <artifactId>lombok</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.quarkiverse.diameter</groupId>
+            <groupId>io.quarkiverse.jdiameter</groupId>
             <artifactId>jdiameter-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.quarkiverse.diameter</groupId>
+            <groupId>io.quarkiverse.jdiameter</groupId>
             <artifactId>jdiameter-impl</artifactId>
         </dependency>
     </dependencies>
@@ -56,7 +56,7 @@
                             <deployment>${project.groupId}:${project.artifactId}-deployment:${project.version}
                             </deployment>
                             <capabilities>
-                                <provides>io.quarkiverse.diameter</provides>
+                                <provides>io.quarkiverse.jdiameter</provides>
                             </capabilities>
                         </configuration>
                     </execution>
