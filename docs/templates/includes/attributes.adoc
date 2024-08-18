@@ -1,3 +1,13 @@
 :project-version: ${release.current-version}
-
 :examples-dir: ./../examples/
+:authors: Eddie Carpenter <eddie.carpenter@icloud.com>
+:copyright: Apache2
+:product-name: Quarkus JDiameter
+:description: {product-name} documentation
+:favicon: favicon.svg
+:email: eddie.carpenter@icloud.com
+:jee-platform: JBoss Application Server
+:jee-version: 1.8
+
+:this-issue-tracker-url: https://github.com/quarkisverse/quarkus-jdiameter/issues
+:this-trunk-source-code-url: https://github.com/quarkisverse/quarkus-jdiameter

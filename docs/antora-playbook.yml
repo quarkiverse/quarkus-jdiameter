@@ -1,6 +1,6 @@
 site:
   title: Offline Diameter Docs
-  start_page: goDiameter::index.adoc
+  start_page: quarkus-jdiameter::index.adoc
 
 output:
   clean: true
