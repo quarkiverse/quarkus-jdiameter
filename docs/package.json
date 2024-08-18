@@ -1,6 +1,6 @@
 {
-  "name": "goDiameter",
-  "description": "Go Diameter Documentation",
+  "name": "quarkus-jdiameter",
+  "description": "Quarkus JDiameter Documentation",
   "homepage": "http://localhost:8080",
   "private": true,
   "scripts": {
