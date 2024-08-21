@@ -176,6 +176,25 @@ class DiameterProcessor
                                         profile.getProfileName().equals(DiameterConfig.DEFAULT_CONFIG_NAME))
                             .createWith(recorder.diameterStack(shutdownContextBuildItem, tlsRegistryBuildItem.registry(), diameterRunTimeConfig, profile.getProfileName()))
                             .done());
+
+            //Handle the case where the default name is explicitly injected.
+            if (profile.getProfileName().equals(DiameterConfig.DEFAULT_CONFIG_NAME)) {
+                syntheticBeanBuildItemBuildProducer.produce(
+                        createSyntheticBean(profile.getProfileName(),
+                                            Configuration.class,
+                                            DOTNAME_CONFIGURATION,
+                                            false)
+                                .createWith(recorder.diameterConfiguration(tlsRegistryBuildItem.registry(), diameterRunTimeConfig, profile.getProfileName()))
+                                .done());
+
+                syntheticBeanBuildItemBuildProducer.produce(
+                        createSyntheticBean(profile.getProfileName(),
+                                            Stack.class,
+                                            DOTNAME_STACK,
+                                            false)
+                                .createWith(recorder.diameterStack(shutdownContextBuildItem, tlsRegistryBuildItem.registry(), diameterRunTimeConfig, profile.getProfileName()))
+                                .done());
+            }
         });
 
         return new ServiceStartBuildItem("DiameterService");
@@ -201,7 +220,12 @@ class DiameterProcessor
     private static <T> SyntheticBeanBuildItem.ExtendedBeanConfigurator createSyntheticBean(String clientName, Class<T> type, DotName exposedType, boolean isDefaultConfig)
     {
         LOG.info("Creating Synthetic Bean to {} for @DiameterClient(\"{}\")", type.getSimpleName(), clientName);
-        SyntheticBeanBuildItem.ExtendedBeanConfigurator configurator = SyntheticBeanBuildItem.configure(type).scope(ApplicationScoped.class).unremovable().setRuntimeInit().addType(exposedType);
+        SyntheticBeanBuildItem.ExtendedBeanConfigurator configurator = SyntheticBeanBuildItem
+                .configure(type)
+                .scope(ApplicationScoped.class)
+                .unremovable()
+                .setRuntimeInit()
+                .addType(exposedType);
 
         if (isDefaultConfig) {
             configurator.defaultBean();
