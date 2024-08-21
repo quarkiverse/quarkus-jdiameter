@@ -58,16 +58,15 @@
                 </executions>
             </plugin>
 
-            <!-- Not available in Qaurkus 3.13.2 -->
-            <!--            <plugin>-->
-            <!--                <groupId>io.quarkus</groupId>-->
-            <!--                <artifactId>quarkus-config-doc-maven-plugin</artifactId>-->
-            <!--                <version>${quarkus.version}</version>-->
-            <!--                <extensions>true</extensions>-->
-            <!--                <configuration>-->
-            <!--                    <targetDirectory>${project.basedir}/modules/ROOT/pages/includes/</targetDirectory>-->
-            <!--                </configuration>-->
-            <!--            </plugin>-->
+            <plugin>
+                <groupId>io.quarkus</groupId>
+                <artifactId>quarkus-config-doc-maven-plugin</artifactId>
+                <version>${quarkus.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <targetDirectory>${project.basedir}/modules/ROOT/pages/includes/</targetDirectory>
+                </configuration>
+            </plugin>
 
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
