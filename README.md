@@ -16,7 +16,7 @@ This is a fork of the RestComm jDiameter Stack with a couple of enhancements don
 - Removed support for SCTP protocol (Not used and deprecated for 5G)
 - Reworked the jdiameter-ha component to use Infinispan as the caching provider
 
-**NOTE**: This is an unofficial community extension, and it is not directly related nor supported by RestComm Ltd.
+**NOTE**: This is a community extension, and it is not related nor supported by RestComm Ltd.
 
 ## Virtual Threading
 
