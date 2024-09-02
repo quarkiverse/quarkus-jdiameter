@@ -1,5 +1,5 @@
 name: quarkus-jdiameter
 title: JDiameter
-version: 2.0.0
+version: dev
 nav:
   - modules/ROOT/nav.adoc
