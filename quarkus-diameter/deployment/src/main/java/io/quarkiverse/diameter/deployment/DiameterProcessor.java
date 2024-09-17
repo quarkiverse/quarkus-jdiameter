@@ -99,7 +99,6 @@ class DiameterProcessor
                                                 SessionFactoryImpl.class,
                                                 NetworkGuard.class,
                                                 TCPClientConnection.class,
-                                                TCPClientConnection.class,
                                                 OverloadManagerImpl.class,
                                                 NetworkImpl.class,
                                                 RouterImpl.class,
