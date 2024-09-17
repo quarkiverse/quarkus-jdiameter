@@ -1,13 +1,13 @@
 include::includes/attributes.adoc[]
 = {product-name}
 
-The Diameter protocol is a computer networking protocol for Authentication, Authorization and Accounting, as defined in link:https://datatracker.ietf.org/doc/html/rfc6733[RFC6733].
+The Diameter protocol is a computer networking protocol for Authentication, Authorisation and Accounting, as defined in link:https://datatracker.ietf.org/doc/html/rfc6733[RFC6733].
 It is extensively used in the 3GPP telecommunication industry.
 
 JDiameter is an existing Java Diameter stack that supports the protocol.
-The origional RestComm implementation (https://github.com/RestComm/jdiameter) is quite old, and active support for it has stopped.
+The original RestComm implementation (https://github.com/RestComm/jdiameter) is quite old, and its active support has stopped.
 
-The Quarkus Diameter extension has updated the JDiameter implementation so that it can be used in both a Quarkus JVM and a Native application.
+The Quarkus Diameter extension has updated the JDiameter implementation for both a Quarkus JVM and a Native application.
 
 == Installation
 
@@ -18,7 +18,7 @@ For instance, with Maven, add the following dependency to your POM file:
 [source,xml]
 ----
 <properties>
-    <quarkus.jdiameter.version>2.0.4</quarkus.jdiameter.version>
+    <quarkus.jdiameter.version>2.0.x</quarkus.jdiameter.version> <!-- Set to the latest version of Quarkus JDiamter -->
 </properties>
 
 <dependency>
@@ -30,13 +30,13 @@ For instance, with Maven, add the following dependency to your POM file:
 
 == Implementing a Diameter Service
 
-To implement a Diameter service, a class needs to be defined and annotated with `@DiameterService` and optionally `@DiameterServiceOptions`.
+To implement a Diameter service, a class must be defined and annotated with `@DiameterService` and optionally `@DiameterServiceOptions`.
 
-The `@DiameterServiceOption` annotation is used, among other, to specific the Diameter configuration profile to use for the service, and if it is not specified the service will use the default configuration profile.
+The `@DiameterServiceOption` annotation is used, among other things, to specify the Diameter configuration profile to use for the service. If it is not specified, the service will use the default configuration profile.
 
 The type of Diameter service is determined by the xref:_application_session_types[Diameter Application Session Listener] interfaces implemented by the service.
 
-The DiameterService interceptor will initialise all the configured services and *start* the Diameter stack (if not already started).
+The DiameterService interceptor will initialise all the configured services and start the Diameter stack (if it hasn't already started).
 
 === Example
 
@@ -57,8 +57,8 @@ public class MyDiameterService implements ClientCCASessionListener <3>
 
 <1> Marking the class as a diameter service
 <2> The optional configuration option to apply to the diameter service.
-If not define the <default> configuration will be used.
-<3> Implements the the SessionListener associated with the `Session Type`.
+If not defined, the <default> configuration will be used.
+<3> Implements the SessionListener associated with the `Session Type`.
 (See xref:_application_session_types[List] below)
 
 == Application Session Types
@@ -91,7 +91,7 @@ TIP: A Diameter service may implement more than one session listener.
 
 == Diameter Server mode
 
-If a Diameter service implements any of the ServerXXXSessionListeners the Diameter Service interceptor automatically creates a network listener for that Diameter service.
+If a Diameter service implements any of the ServerXXXSessionListeners, the Diameter Service interceptor automatically creates a network listener for that Diameter service.
 
 NOTE: The interceptor will skip creating a listener if it detects that the Diameter Service has implemented the `NetworkListener` interface.
 
@@ -125,17 +125,17 @@ public class Demo {
 
 == Using {product-name} in an high availability environment
 
-The {product-name} keeps track of each active session by storing the session information for each session. {product-name} also sets various timers linked to these session.
-In a standalone mode the session state is stored locally and the timers are defined in the local JVM.
-To use the diameter stack in a high availability (HA) mode where two or more nodes are used in a load balance or failover mode the sessions cannot be store in local ram.
+The {product-name} keeps track of each active session by storing the session information for each session. {product-name} also sets various timers linked to these sessions.
+In a standalone mode, the session state is stored locally, and the timers are defined in the local JVM.
+To use the diameter stack in a high availability (HA) mode, where two or more nodes are used in a load balance or failover mode, the sessions cannot be stored in local RAM.
 
 To use {product-name} in an HA environment the HA extensions must be loaded.
-The HA extensions stores the session state in an Infinispan Cache and makes use of the Infinispan timers to implement the diameter timers.
-The HA extensions stores the session information in a remote cache called `diameter`.
+The HA extensions store the session state in an Infinispan Cache and use Infinispan timers to implement the diameter timers.
+The HA extensions store the session information in a remote cache called `diameter`.
 
 TIP: The cache used can be changed by setting the `quarkus.diameter.parameter.caching-name` property
 
-The extension are not automatically included by the Quarkus extension and the following maven dependencies needs to be added to application pom file to use the extensions.
+The Quarkus extension does not automatically include the HA extensions, and to use them, the following maven dependencies need to be added to the application pom file.
 
 [source,xml]
 ----
@@ -151,7 +151,7 @@ The extension are not automatically included by the Quarkus extension and the fo
 </dependency>
 ----
 
-To use the HA components the configuration needs to be updated as follows:
+To use the HA components, the configuration needs to be updated as follows:
 
 [source,properties]
 ----
@@ -160,14 +160,14 @@ meter.extensions.session-datasource=org.jdiameter.impl.ha.data.CachedSessionData
 quarkus.diameter.extensions.timer-facility=org.jdiameter.impl.ha.timer.ReplicatedTimerFacilityImpl
 ----
 
-<1> This option change the caching name from the default `diameter` to drasessions.
+<1> This option changes the caching name from the default `diameter` to 'drasessions'.
 
-NOTE: The HA implementation dependents on the Quarkus Infinispan client
+NOTE: The HA implementation depends on the Quarkus Infinispan client
 
 == Example Configuration
 
 The example configuration defines two sets of client diameter config.
-One is the default config and the other is named config called 'test1'.
+One is the default config, and the other is named config and is called 'test1'.
 
 [source,properties]
 ----
@@ -214,7 +214,7 @@ quarkus.diameter.test1.network.realms."server.test.com".exp-time=1
 quarkus.diameter.test1.network.realms."server.test.com".application-id.auth-appl-id=4
 ----
 
-TIP: For more information about the extension configuration please refer to the <<configuration-reference,Configuration Reference>>.
+TIP: For more information about the extension configuration, please refer to the <<configuration-reference,Configuration Reference>>.
 
 [[configuration-reference]]
 include::includes/quarkus-jdiameter.adoc[leveloffset=+1]
