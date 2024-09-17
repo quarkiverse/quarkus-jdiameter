@@ -18,12 +18,12 @@ For instance, with Maven, add the following dependency to your POM file:
 [source,xml]
 ----
 <properties>
-    <quarkus.jdiameter.version>2.0.0</quarkus.jdiameter.version>
+    <quarkus.jdiameter.version>2.0.4</quarkus.jdiameter.version>
 </properties>
 
 <dependency>
     <groupId>io.quarkiverse.jdiameter</groupId>
-    <artifactId>quarkus-diameter</artifactId>
+    <artifactId>quarkus-jdiameter</artifactId>
     <version>${quarkus.jdiameter.version}</version>
 </dependency>
 ----
