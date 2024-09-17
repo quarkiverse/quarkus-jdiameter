@@ -24,6 +24,7 @@ import org.jdiameter.api.AvpSet;
 import org.jdiameter.api.Message;
 import org.jdiameter.api.validation.AvpRepresentation;
 import org.jdiameter.api.validation.Dictionary;
+import org.jdiameter.common.impl.validation.AvpRepresentationImpl;
 import org.jdiameter.common.impl.validation.DictionaryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,14 +72,18 @@ public class DiameterUtilities {
         for (Avp avp : avps) {
             AvpRepresentation avpRep = AVP_DICTIONARY.getAvp(avp.getCode(), avp.getVendorId());
             if (avpRep == null) {
-                continue;
-            } //if
+                avpRep =  new AvpRepresentationImpl("Unknown AVP "+avp.getCode(), "Unknown AVP",
+                                                    avp.getCode(), false, null, null, null,
+                                                    avp.getVendorId(),
+                                                    AvpRepresentation.Type.UTF8String.toString(),
+                                                    AvpRepresentation.Type.UTF8String.toString());
+            }
 
             Object avpValue;
             boolean isGrouped = false;
 
             try {
-                String avpType = AVP_DICTIONARY.getAvp(avp.getCode(), avp.getVendorId()).getType();
+                String avpType = avpRep.getType();
 
                 if (null == avpType) {
                     avpValue = avp.getUTF8String().replace("\r", "").replace("\n", "");
@@ -136,7 +141,7 @@ public class DiameterUtilities {
                 LOG.debug(avpLine.toString());
             } //if
 
-            stringBuilder.append(avpLine.toString()).append('\n');
+            stringBuilder.append(avpLine).append('\n');
 
             if (isGrouped) {
                 try {
