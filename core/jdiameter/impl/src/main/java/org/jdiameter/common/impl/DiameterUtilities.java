@@ -73,9 +73,10 @@ public class DiameterUtilities {
             AvpRepresentation avpRep = AVP_DICTIONARY.getAvp(avp.getCode(), avp.getVendorId());
             if (avpRep == null) {
                 avpRep =  new AvpRepresentationImpl("Unknown AVP "+avp.getCode(), "Unknown AVP",
-                                      avp.getCode(), false, null, null, null,
-                                      avp.getVendorId(),
-                                      null,null);
+                                                    avp.getCode(), false, null, null, null,
+                                                    avp.getVendorId(),
+                                                    AvpRepresentation.Type.UTF8String.toString(),
+                                                    AvpRepresentation.Type.UTF8String.toString());
             }
 
             Object avpValue;
