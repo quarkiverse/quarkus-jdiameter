@@ -44,7 +44,7 @@ The DiameterService interceptor will initialise all the configured services and 
 ----
 
 @DiameterService <1>
-@DiameterServiceOption(config = "client1") <2>
+@DiameterServiceOption("client1") <2>
 public class MyDiameterService implements ClientCCASessionListener <3>
 {
     @Override public void doCreditControlAnswer(ClientCCASession session, JCreditControlRequest request, JCreditControlAnswer answer) throws InternalException
