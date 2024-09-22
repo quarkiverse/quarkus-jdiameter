@@ -2507,6 +2507,12 @@
         <type type-name="IPAddress"/>
     </avpdefn>
 
+    <avpdefn name="Number-Portability-Routing" code="2024" vendor-id="TGPP" mandatory="may" protected="mustnot"
+             may-encrypt="no" vendor-bit="must">
+        <type type-name="UTF8String"/>
+    </avpdefn>
+
+
     <avpdefn name="IMS-Information" code="876" vendor-id="TGPP" mandatory="must" protected="mustnot" may-encrypt="no"
              vendor-bit="must">
         <grouped>
