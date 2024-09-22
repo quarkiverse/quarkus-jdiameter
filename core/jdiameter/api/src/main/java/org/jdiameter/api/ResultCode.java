@@ -148,6 +148,11 @@ public interface ResultCode {
     int ELECTION_LOST = 4003;
 
     /**
+     * Request denied because the end user's account could not cover the requested service
+     */
+    int CREDIT_CONTROL_LIMIT_REACHED = 4012;
+
+    /**
      * The peer received a message that contained an AVP that is not recognized or supported and was marked with the
      * Mandatory bit. A Diameter message with this error MUST contain one or more Failed- AVP AVP containing the AVPs
      * that caused the failure.
