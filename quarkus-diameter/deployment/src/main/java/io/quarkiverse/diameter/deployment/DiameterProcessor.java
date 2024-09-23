@@ -5,6 +5,7 @@ import io.quarkiverse.diameter.DiameterService;
 import io.quarkiverse.diameter.runtime.DiameterRecorder;
 import io.quarkiverse.diameter.runtime.DiameterRunTimeConfig;
 import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
+import io.quarkus.arc.deployment.AnnotationsTransformerBuildItem;
 import io.quarkus.arc.deployment.SyntheticBeanBuildItem;
 import io.quarkus.arc.processor.DotNames;
 import io.quarkus.deployment.annotations.BuildProducer;
@@ -16,11 +17,13 @@ import io.quarkus.deployment.builditem.ServiceStartBuildItem;
 import io.quarkus.deployment.builditem.ShutdownContextBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.NativeImageResourceBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.ReflectiveClassBuildItem;
+import io.quarkus.runtime.Startup;
 import io.quarkus.tls.TlsRegistryBuildItem;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Default;
 import jakarta.interceptor.Interceptor;
 import org.jboss.jandex.AnnotationInstance;
+import org.jboss.jandex.AnnotationTransformation;
 import org.jboss.jandex.DotName;
 import org.jdiameter.api.Configuration;
 import org.jdiameter.api.Stack;
@@ -78,7 +81,7 @@ class DiameterProcessor
         return new NativeImageResourceBuildItem("META-INF/jdiameter-client.xsd",
                                                 "META-INF/jdiameter-server.xsd",
                                                 "META-INF/version.properties",
-                                                "META-INF/dictionary.xml");
+                                                "dictionary.xml");
     }
 
     @BuildStep
@@ -200,20 +203,26 @@ class DiameterProcessor
     }
 
     @BuildStep
-    public void declareDiameterServicesAsBean(CombinedIndexBuildItem index, BuildProducer<AdditionalBeanBuildItem> additionalBeans)
+    public void declareDiameterServicesAsBean(CombinedIndexBuildItem index,
+                                              BuildProducer<AdditionalBeanBuildItem> additionalBeans,
+                                              BuildProducer<AnnotationsTransformerBuildItem> transformer)
     {
         List<String> diameterServices = index.getIndex()
                                              .getKnownClasses()
-                                             .stream()
-                                             .filter(ci -> ci.hasAnnotation(DiameterService.class) && !ci.hasAnnotation(Interceptor.class))
-                                             .map(ci -> ci.name().toString())
-                                             .collect(Collectors.toList());
+                .stream()
+                .filter(ci -> ci.hasAnnotation(DiameterService.class) && !ci.hasAnnotation(Interceptor.class))
+                .map(ci -> ci.name().toString())
+                .collect(Collectors.toList());
 
         additionalBeans.produce(new AdditionalBeanBuildItem.Builder()
                                         .addBeanClasses(diameterServices)
                                         .setUnremovable()
                                         .setDefaultScope(DotNames.SINGLETON)
                                         .build());
+
+        transformer.produce( new AnnotationsTransformerBuildItem(AnnotationTransformation.forClasses()
+                                                                                         .whenClass(c -> diameterServices.contains(c.name().toString()))
+                                                                                         .transform(c -> c.add(AnnotationInstance.builder(Startup.class).build()))));
     }
 
     private static <T> SyntheticBeanBuildItem.ExtendedBeanConfigurator createSyntheticBean(String clientName, Class<T> type, DotName exposedType, boolean isDefaultConfig)
