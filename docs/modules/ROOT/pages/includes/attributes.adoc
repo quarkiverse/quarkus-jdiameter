@@ -1,4 +1,4 @@
-:project-version: 2.0.5
+:project-version: 2.1.0
 :examples-dir: ./../examples/
 :authors: Eddie Carpenter <eddie.carpenter@icloud.com>
 :copyright: Apache2
