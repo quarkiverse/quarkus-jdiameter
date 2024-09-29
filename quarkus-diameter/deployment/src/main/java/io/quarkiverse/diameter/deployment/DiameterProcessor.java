@@ -134,34 +134,25 @@ class DiameterProcessor
 	                                    BuildProducer<DiameterBuildItem> diameterStacks)
 	{
 		Set<String> profileNames = new HashSet<>();
-		for (AnnotationInstance annotation : index.getIndex()
-		                                          .getAnnotations(DOTNAME_DIAMETER_CONFIG)) {
+		for (AnnotationInstance annotation : index.getIndex().getAnnotations(DOTNAME_DIAMETER_CONFIG)) {
 			if (annotation.value() == null) {
 				profileNames.add(DiameterConfig.DEFAULT_CONFIG_NAME);
 			} else {
-				profileNames.add((String) annotation.value()
-				                                    .value());
+				profileNames.add((String) annotation.value().value());
 			}
 		}
 
-		for (AnnotationInstance annotation : index.getIndex()
-		                                          .getAnnotations(DOTNAME_DIAMETER_SERVICE_OPTIONS)) {
+		for (AnnotationInstance annotation : index.getIndex().getAnnotations(DOTNAME_DIAMETER_SERVICE_OPTIONS)) {
 			if (annotation.value() == null) {
 				profileNames.add(DiameterConfig.DEFAULT_CONFIG_NAME);
 			} else {
-				profileNames.add((String) annotation.value()
-				                                    .value());
+				profileNames.add((String) annotation.value().value());
 			}
 		}
 
-		for (AnnotationInstance annotation : index.getIndex()
-		                                          .getAnnotations(DOTNAME_DIAMETER_SERVICE)) {
-			if (!annotation.target()
-			               .asClass()
-			               .name()
-			               .equals(DOTNAME_DIAMETER_SERVICE_INTERCEPTOR) &&
-			    annotation.target()
-			              .annotation(DOTNAME_DIAMETER_SERVICE_OPTIONS) == null) {
+		for (AnnotationInstance annotation : index.getIndex().getAnnotations(DOTNAME_DIAMETER_SERVICE)) {
+			if (!annotation.target().asClass().name().equals(DOTNAME_DIAMETER_SERVICE_INTERCEPTOR) &&
+			    annotation.target().annotation(DOTNAME_DIAMETER_SERVICE_OPTIONS) == null) {
 				profileNames.add(DiameterConfig.DEFAULT_CONFIG_NAME);
 			}
 
@@ -191,8 +182,7 @@ class DiameterProcessor
 					createSyntheticBean(stack.getName(),
 							Stack.class,
 							DOTNAME_STACK,
-							stack.getName()
-							     .equals(DiameterConfig.DEFAULT_CONFIG_NAME))
+							stack.getName().equals(DiameterConfig.DEFAULT_CONFIG_NAME))
 							.runtimeValue(stack.getStack())
 							.done());
 
