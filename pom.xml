@@ -82,7 +82,7 @@
 
 
         <!-- maven-enforcer-plugin -->
-        <maven.min.version>3.9.6</maven.min.version>
+        <maven.min.version>3.5.0</maven.min.version>
         <jdk.min.version>${maven.compiler.source}</jdk.min.version>
         <insecure.repositories>ERROR</insecure.repositories>
     </properties>
