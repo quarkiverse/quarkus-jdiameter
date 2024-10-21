@@ -57,10 +57,5 @@ jobs:
         run: |
           cat /home/runner/.m2/settings.xml
 
-      - name: Set up Maven 3.9.6
-        uses: stCarolas/setup-maven@v5
-        with:
-          maven-version: 3.9.6
-
       - name: Build with Maven
         run: mvn -B clean install -Dno-format
