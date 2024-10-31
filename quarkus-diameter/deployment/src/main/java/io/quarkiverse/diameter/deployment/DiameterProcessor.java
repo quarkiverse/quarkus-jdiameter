@@ -42,6 +42,8 @@ import org.jdiameter.common.impl.statistic.StatisticManagerImpl;
 import org.jdiameter.common.impl.statistic.StatisticProcessorImpl;
 import org.jdiameter.common.impl.timer.LocalTimerFacilityImpl;
 import org.jdiameter.common.impl.validation.DictionaryImpl;
+import org.jdiameter.impl.ha.data.CachedSessionDatasourceImpl;
+import org.jdiameter.impl.ha.timer.ReplicatedTimerFacilityImpl;
 import org.jdiameter.server.impl.*;
 import org.jdiameter.server.impl.agent.AgentConfigurationImpl;
 import org.jdiameter.server.impl.agent.ProxyAgentImpl;
@@ -116,7 +118,9 @@ class DiameterProcessor
 				                               AssemblerImpl.class,
 				                               MessageParser.class,
 				                               WeightedRoundRobinRouter.class,
-				                               WeightedLeastConnectionsRouter.class
+				                               WeightedLeastConnectionsRouter.class,
+				                               CachedSessionDatasourceImpl.class,
+				                               ReplicatedTimerFacilityImpl.class
 		                                       )
 		                               .methods()
 		                               .fields()
