@@ -53,9 +53,5 @@ jobs:
           java-version: 21
           cache: 'maven'
 
-      - name: Display settings.xml
-        run: |
-          cat /home/runner/.m2/settings.xml
-
       - name: Build with Maven
         run: mvn -B clean install -Dno-format
