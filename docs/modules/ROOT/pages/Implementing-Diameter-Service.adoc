@@ -32,7 +32,8 @@ For instance, with Maven, add the following dependency to your POM file:
 
 To implement a Diameter service, a class must be defined and annotated with `@DiameterService` and optionally `@DiameterServiceOptions`.
 
-The `@DiameterServiceOption` annotation is used, among other things, to specify the Diameter configuration profile to use for the service. If it is not specified, the service will use the default configuration profile.
+The `@DiameterServiceOption` annotation is used, among other things, to specify the Diameter configuration profile to use for the service.
+If it is not specified, the service will use the default configuration profile.
 
 The type of Diameter service is determined by the xref:_application_session_types[Diameter Application Session Listener] interfaces implemented by the service.
 
@@ -135,23 +136,8 @@ The HA extensions store the session information in a remote cache called `diamet
 
 TIP: The cache used can be changed by setting the `quarkus.diameter.parameter.caching-name` property
 
-The Quarkus extension does not automatically include the HA extensions, and to use them, the following maven dependencies need to be added to the application pom file.
-
-[source,xml]
-----
-<dependency>
-    <groupId>io.quarkiverse.diameter</groupId>
-    <artifactId>jdiameter-ha-api</artifactId>
-    <version>${quarkus.jdiameter.version}</version>
-</dependency>
-<dependency>
-    <groupId>io.quarkiverse.diameter</groupId>
-    <artifactId>jdiameter-ha-impl</artifactId>
-    <version>${quarkus.jdiameter.version}</version>
-</dependency>
-----
-
-To use the HA components, the configuration needs to be updated as follows:
+The Quarkus extension automatically include the HA extensions.
+To use the HA components, the following configuration needs to be added:
 
 [source,properties]
 ----
@@ -162,7 +148,8 @@ quarkus.diameter.extensions.timer-facility=org.jdiameter.impl.ha.timer.Replicate
 
 <1> This option changes the caching name from the default `diameter` to 'drasessions'.
 
-NOTE: The HA implementation depends on the Quarkus Infinispan client
+NOTE: The HA implementation depends on the Quarkus Infinispan client.
+You also need to provide the https://quarkus.io/guides/infinispan-client-reference#configuring-the-connection[Infinispan configuration] to make this all work.
 
 == Example Configuration
 
