@@ -1,4 +1,3 @@
-:summaryTableId: quarkus-jdiameter_quarkus-diameter
 [.configuration-legend]
 icon:lock[title=Fixed at build time] Configuration property fixed at build time - All other configuration properties are overridable at runtime
 [.configuration-reference.searchable, cols="80,.^10,.^10"]
@@ -223,7 +222,7 @@ endif::add-copy-button-to-env-var[]
 |`0`
 
 
-h|[[quarkus-jdiameter_section_quarkus-diameter-local-peer-overload-monitors]] [.section-name.section-level1]##link:#quarkus-jdiameter_section_quarkus-diameter-local-peer-overload-monitors[Optional parent element containing child elements that specify settings relating to the Overload Monitor]##
+h|[[quarkus-jdiameter_section_quarkus-diameter-local-peer-overload-monitors]] [.section-name.section-level1]##link:#quarkus-jdiameter_section_quarkus-diameter-local-peer-overload-monitors[Optional parent element containing child elements that specify settings]##
 h|Type
 h|Default
 
@@ -1008,7 +1007,7 @@ ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__LOCAL_ACTION+++`
 endif::add-copy-button-to-env-var[]
 --
-a|LocalAction
+a|`local`, `relay`, `proxy`, `redirect`
 |`local`
 
 a| [[quarkus-jdiameter_quarkus-diameter-network-realms-realms-dynamic]] [.property-path]##link:#quarkus-jdiameter_quarkus-diameter-network-realms-realms-dynamic[`quarkus.diameter.network.realms."realms".dynamic`]##
@@ -1552,5 +1551,3 @@ endif::add-copy-button-to-env-var[]
 
 |===
 
-
-:!summaryTableId:
