@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - '.github/project.yml'
+      - '.github/workflows/pre-release.yml'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -14,3 +15,10 @@ jobs:
     name: Pre-Release
     uses: quarkiverse/.github/.github/workflows/pre-release.yml@main
     secrets: inherit
+    steps:
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: 'maven'
