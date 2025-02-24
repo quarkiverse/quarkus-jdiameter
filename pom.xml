@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>io.quarkiverse</groupId>
@@ -20,8 +21,8 @@
         <connection>scm:git:git@github.com:quarkiverse/quarkus-jdiameter.git</connection>
         <developerConnection>scm:git:git@github.com:quarkiverse/quarkus-jdiameter.git</developerConnection>
         <url>https://github.com/quarkiverse/quarkus-jdiameter</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <issueManagement>
         <system>GitHub</system>
@@ -78,7 +79,7 @@
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <quarkus.version>3.19.0</quarkus.version>
+        <quarkus.version>3.18.3</quarkus.version>
 
 
         <!-- maven-enforcer-plugin -->
@@ -147,7 +148,8 @@
                                 <bannedRepositories>
                                     <message>To build this project, don't use maven repositories over HTTP. Please use
                                         HTTPS in your settings.xml or run the build with property
-                                        insecure.repositories=WARN</message>
+                                        insecure.repositories=WARN
+                                    </message>
                                     <level>${insecure.repositories}</level>
                                     <bannedRepositories>
                                         <bannedRepository>http://*</bannedRepository>
@@ -158,7 +160,8 @@
                                 </bannedRepositories>
                                 <requireJavaVersion>
                                     <message>To build this project JDK ${jdk.min.version} (or greater) is required.
-                                        Please install it.</message>
+                                        Please install it.
+                                    </message>
                                     <version>${jdk.min.version}</version>
                                 </requireJavaVersion>
                             </rules>
@@ -173,7 +176,8 @@
                             <rules>
                                 <requireMavenVersion>
                                     <message>To build this project Maven ${maven.min.version} (or greater) is required.
-                                        Please install it.</message>
+                                        Please install it.
+                                    </message>
                                     <version>${maven.min.version}</version>
                                 </requireMavenVersion>
                             </rules>

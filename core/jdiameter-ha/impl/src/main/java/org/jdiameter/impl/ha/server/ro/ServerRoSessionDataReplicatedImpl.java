@@ -57,84 +57,84 @@
  public class ServerRoSessionDataReplicatedImpl extends AppSessionDataReplicatedImpl implements IServerRoSessionData
  {
 
-     private static final String TCCID = "TCCID";
-     private static final String STATELESS = "STATELESS";
-     private static final String STATE = "STATE";
+	 private static final String TCCID = "TXTIMER_ID";
+	 private static final String STATELESS = "STATELESS";
+	 private static final String STATE = "STATE";
 
-     public ServerRoSessionDataReplicatedImpl(String sessionId, CachedSessionDatasource datasource)
-     {
-         super(sessionId, datasource);
+	 public ServerRoSessionDataReplicatedImpl(String sessionId, CachedSessionDatasource datasource)
+	 {
+		 super(sessionId, datasource);
 
-         setAppSessionIface(ServerRoSession.class);
-     }
+		 setAppSessionIface(ServerRoSession.class);
+	 }
 
-     /*
-      * (non-Javadoc)
-      *
-      * @see org.jdiameter.server.impl.app.cca.IServerCCASessionData#isStateless()
-      */
-     @Override
-     public boolean isStateless()
-     {
-         return toPrimitive(getFieldValue(STATELESS), true);
-     }
+	 /*
+	  * (non-Javadoc)
+	  *
+	  * @see org.jdiameter.server.impl.app.cca.IServerCCASessionData#isStateless()
+	  */
+	 @Override
+	 public boolean isStateless()
+	 {
+		 return toPrimitive(getFieldValue(STATELESS), true);
+	 }
 
-     /*
-      * (non-Javadoc)
-      *
-      * @see org.jdiameter.server.impl.app.cca.IServerCCASessionData#setStateless( boolean)
-      */
-     @Override
-     public void setStateless(boolean stateless)
-     {
-         setFieldValue(STATELESS, stateless);
-     }
+	 /*
+	  * (non-Javadoc)
+	  *
+	  * @see org.jdiameter.server.impl.app.cca.IServerCCASessionData#setStateless( boolean)
+	  */
+	 @Override
+	 public void setStateless(boolean stateless)
+	 {
+		 setFieldValue(STATELESS, stateless);
+	 }
 
-     /*
-      * (non-Javadoc)
-      *
-      * @see org.jdiameter.server.impl.app.cca.IServerCCASessionData# getServerCCASessionState()
-      */
-     @Override
-     public ServerRoSessionState getServerRoSessionState()
-     {
-         return ServerRoSessionState.valueOf(getFieldValue(STATE, "IDLE"));
-     }
+	 /*
+	  * (non-Javadoc)
+	  *
+	  * @see org.jdiameter.server.impl.app.cca.IServerCCASessionData# getServerCCASessionState()
+	  */
+	 @Override
+	 public ServerRoSessionState getServerRoSessionState()
+	 {
+		 return ServerRoSessionState.valueOf(getFieldValue(STATE, "IDLE"));
+	 }
 
-     /*
-      * (non-Javadoc)
-      *
-      * @see org.jdiameter.server.impl.app.cca.IServerCCASessionData# setServerCCASessionState
-      * (org.jdiameter.common.api.app.cca.ServerCCASessionState)
-      */
-     @Override
-     public void setServerRoSessionState(ServerRoSessionState state)
-     {
-         if (getFieldValue(STATE) == null) {
-             setFieldValue(STATE, state.name());
-         }
-     }
+	 /*
+	  * (non-Javadoc)
+	  *
+	  * @see org.jdiameter.server.impl.app.cca.IServerCCASessionData# setServerCCASessionState
+	  * (org.jdiameter.common.api.app.cca.ServerCCASessionState)
+	  */
+	 @Override
+	 public void setServerRoSessionState(ServerRoSessionState state)
+	 {
+		 if (getFieldValue(STATE) == null) {
+			 setFieldValue(STATE, state.name());
+		 }
+	 }
 
-     /*
-      * (non-Javadoc)
-      *
-      * @see org.jdiameter.server.impl.app.cca.IServerCCASessionData#setTccTimerId (java.io.Serializable)
-      */
-     @Override
-     public void setTccTimerId(Serializable tccTimerId)
-     {
-         setFieldValue(TCCID, tccTimerId);
-     }
+	 /*
+	  * (non-Javadoc)
+	  *
+	  * @see org.jdiameter.server.impl.app.cca.IServerCCASessionData#setTccTimerId (java.io.Serializable)
+	  */
+	 @Override
+	 public void setTccTimerId(Serializable tccTimerId)
+	 {
+		 setFieldValue(TCCID, tccTimerId);
+	 }
 
-     /*
-      * (non-Javadoc)
-      *
-      * @see org.jdiameter.server.impl.app.cca.IServerCCASessionData#getTccTimerId()
-      */
-     @Override
-     public Serializable getTccTimerId()
-     {
-         return getFieldValue(TCCID);
-     }
+	 /*
+	  * (non-Javadoc)
+	  *
+	  * @see org.jdiameter.server.impl.app.cca.IServerCCASessionData#getTccTimerId()
+	  */
+	 @Override
+	 public Serializable getTccTimerId()
+	 {
+		 return getFieldValue(TCCID);
+	 }
 
  }

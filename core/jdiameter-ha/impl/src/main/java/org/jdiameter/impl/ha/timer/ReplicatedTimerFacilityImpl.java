@@ -1,144 +1,129 @@
- /*
-  * TeleStax, Open Source Cloud Communications
-  * Copyright 2011-2016, TeleStax Inc. and individual contributors
-  * by the @authors tag.
-  *
-  * This program is free software: you can redistribute it and/or modify
-  * under the terms of the GNU Affero General Public License as
-  * published by the Free Software Foundation; either version 3 of
-  * the License, or (at your option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful,
-  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  * GNU Affero General Public License for more details.
-  *
-  * You should have received a copy of the GNU Affero General Public License
-  * along with this program.  If not, see <http://www.gnu.org/licenses/>
-  *
-  * This file incorporates work covered by the following copyright and
-  * permission notice:
-  *
-  *   JBoss, Home of Professional Open Source
-  *   Copyright 2007-2011, Red Hat, Inc. and individual contributors
-  *   by the @authors tag. See the copyright.txt in the distribution for a
-  *   full listing of individual contributors.
-  *
-  *   This is free software; you can redistribute it and/or modify it
-  *   under the terms of the GNU Lesser General Public License as
-  *   published by the Free Software Foundation; either version 2.1 of
-  *   the License, or (at your option) any later version.
-  *
-  *   This software is distributed in the hope that it will be useful,
-  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
-  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-  *   Lesser General Public License for more details.
-  *
-  *   You should have received a copy of the GNU Lesser General Public
-  *   License along with this software; if not, write to the Free
-  *   Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-  *   02110-1301 USA, or see the FSF site: http://www.fsf.org.
-  */
+package org.jdiameter.impl.ha.timer;
 
- package org.jdiameter.impl.ha.timer;
+import org.infinispan.client.hotrod.annotation.ClientListener;
+import org.jdiameter.api.BaseSession;
+import org.jdiameter.client.api.IContainer;
+import org.jdiameter.client.impl.BaseSessionImpl;
+import org.jdiameter.common.api.data.ISessionDatasource;
+import org.jdiameter.common.api.timer.ITimerFacility;
+import org.jdiameter.common.impl.app.AppSessionImpl;
+import org.jdiameter.impl.ha.data.CachedSessionDatasourceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
- import org.infinispan.client.hotrod.RemoteCache;
- import org.infinispan.client.hotrod.annotation.ClientCacheEntryExpired;
- import org.infinispan.client.hotrod.annotation.ClientListener;
- import org.infinispan.client.hotrod.event.ClientCacheEntryExpiredEvent;
- import org.jdiameter.api.BaseSession;
- import org.jdiameter.client.api.IContainer;
- import org.jdiameter.client.impl.BaseSessionImpl;
- import org.jdiameter.common.api.data.ISessionDatasource;
- import org.jdiameter.common.api.timer.ITimerFacility;
- import org.jdiameter.common.impl.app.AppSessionImpl;
- import org.jdiameter.impl.ha.data.CachedSessionDatasourceImpl;
- import org.slf4j.Logger;
- import org.slf4j.LoggerFactory;
+import java.io.Serializable;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
- import java.io.Serializable;
- import java.util.concurrent.TimeUnit;
+/**
+ * Replicated implementation of {@link ITimerFacility}
+ */
+@ClientListener
+public class ReplicatedTimerFacilityImpl implements ITimerFacility
+{
+	private static final Logger logger = LoggerFactory.getLogger(ReplicatedTimerFacilityImpl.class);
+	public static final String TXTIMER_ID = "TXTIMER_ID";
 
- /**
-  * Replicated implementation of {@link ITimerFacility}
-  *
-  * @author <a href="mailto:baranowb@gmail.com"> Bartosz Baranowski </a>
-  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
-  */
- @ClientListener
- public class ReplicatedTimerFacilityImpl implements ITimerFacility
- {
+	private final CachedSessionDatasourceImpl sessionDataSource;
+	private final Map<String, TimerTask> timerMap = new ConcurrentHashMap<>();
+	private final Timer timer = new Timer();
 
-     private static final Logger logger = LoggerFactory.getLogger(ReplicatedTimerFacilityImpl.class);
+	public ReplicatedTimerFacilityImpl(IContainer container)
+	{
+		super();
+		ISessionDatasource datasource = container.getAssemblerFacility().getComponentInstance(ISessionDatasource.class);
+		if (datasource instanceof CachedSessionDatasourceImpl cachedSessionDatasource) {
+			this.sessionDataSource = cachedSessionDatasource;
+		} else {
+			throw new IllegalArgumentException("ReplicatedTimerFacilityImpl expects an ISessionDatasource of type 'CachedSessionDatasource' and is not compatible with " + datasource.getClass().getName());
+		}
+	}
 
-     private final CachedSessionDatasourceImpl sessionDataSource;
-     private final RemoteCache<String, String> timers;
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.jdiameter.common.api.timer.ITimerFacility#cancel(java.io.Serializable)
+	 */
+	@Override
+	public void cancel(Serializable id)
+	{
+		if (id instanceof String timerId) {
+			TimerTask task = timerMap.remove(timerId);
+			if (task != null) {
+				task.cancel();
+				logger.debug("Cancelling timer with id {}", timerId);
+			}//if
+		}
+	}
 
-     public ReplicatedTimerFacilityImpl(IContainer container)
-     {
-         super();
-         ISessionDatasource datasource = container.getAssemblerFacility().getComponentInstance(ISessionDatasource.class);
-         if (datasource instanceof CachedSessionDatasourceImpl cachedSessionDatasource) {
-             this.sessionDataSource = cachedSessionDatasource;
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.jdiameter.common.api.timer.ITimerFacility#schedule(java.lang.String, java.lang.String, long)
+	 */
+	@Override
+	public Serializable schedule(String sessionId, String timerName, long milliseconds) throws IllegalArgumentException
+	{
+		TimerTaskRunner runner = new TimerTaskRunner(sessionId, timerName, milliseconds);
+		timerMap.put(runner.getTimerId(), runner);
+		logger.debug("Scheduling timer for sessionId {} and timer name {}", sessionId, timerName);
+		timer.schedule(runner, milliseconds);
 
-             timers = this.sessionDataSource.getDataCache();
-             timers.addClientListener(this);
+		return runner.getTimerId();
+	}
 
-         } else {
-             throw new IllegalArgumentException("ReplicatedTimerFacilityImpl expects an ISessionDatasource of type 'CachedSessionDatasource' and is not compatible with " + datasource.getClass().getName());
-         }
-     }
+	/**
+	 * TimerTaskRunner is a private internal class that extends TimerTask.
+	 * It is designed to handle the execution of scheduled timers associated with a session.
+	 * Each instance of TimerTaskRunner is uniquely identified by a generated UUID.
+	 */
+	private class TimerTaskRunner extends TimerTask
+	{
+		private final String sessionId;
+		private final String timerName;
+		private final long milliseconds;
+		private final String timerId = UUID.randomUUID().toString();
 
-     /*
-      * (non-Javadoc)
-      *
-      * @see org.jdiameter.common.api.timer.ITimerFacility#cancel(java.io.Serializable)
-      */
-     @Override
-     public void cancel(Serializable id)
-     {
-         if (id instanceof String timerId) {
-             logger.debug("Cancelling timer with id {}", timerId);
-             timers.remove(timerId);
-         }
-     }
+		public TimerTaskRunner(String sessionId, String timerName, long milliseconds)
+		{
+			this.sessionId    = sessionId;
+			this.timerName    = timerName;
+			this.milliseconds = milliseconds;
+		}
 
-     /*
-      * (non-Javadoc)
-      *
-      * @see org.jdiameter.common.api.timer.ITimerFacility#schedule(java.lang.String, java.lang.String, long)
-      */
-     @Override
-     public Serializable schedule(String sessionId, String timerName, long milliseconds) throws IllegalArgumentException
-     {
-         String timerId = sessionId + "/" + timerName;
-         logger.debug("Scheduling timer for sessionId {} and timer name {}", sessionId, timerName);
-         timers.put(timerId, sessionId, -1, TimeUnit.SECONDS, milliseconds, TimeUnit.MILLISECONDS);
-         return timerId;
-     }
+		public String getTimerId()
+		{
+			return timerId;
+		}
 
-     @ClientCacheEntryExpired
-     public void entryExpired(ClientCacheEntryExpiredEvent<String> event)
-     {
-         String sessionId = timers.get(event.getKey());
-         if (sessionId != null) {
-             BaseSession session = sessionDataSource.getSession(sessionId);
-             if (session != null) {
-                 String timerName = event.getKey().substring(0, event.getKey().indexOf("/"));
-                 logger.debug("Scheduled timer for sessionId {} and timer name {} expired", sessionId, timerName);
-                 try {
-                     if (!session.isAppSession()) {
-                         BaseSessionImpl impl = (BaseSessionImpl) session;
-                         impl.onTimer(event.getKey());
-                     } else {
-                         AppSessionImpl impl = (AppSessionImpl) session;
-                         impl.onTimer(event.getKey());
-                     }
-                 }
-                 catch (Exception e) {
-                     logger.error("Caught exception from session object!", e);
-                 }
-             }
-         }
-     }
- }
+		@Override
+		public void run()
+		{
+			timerMap.remove(timerId);
+
+			String sessionTimerId = sessionDataSource.getFieldValue(sessionId, TXTIMER_ID);
+			if (timerId.equals(sessionTimerId)) {
+				BaseSession session = sessionDataSource.getSession(sessionId);
+				if (session != null) {
+
+					logger.debug("Scheduled timer for sessionId {} and timer name {} expired after {}ms", sessionId, timerName, milliseconds);
+					try {
+						if (!session.isAppSession()) {
+							BaseSessionImpl impl = (BaseSessionImpl) session;
+							impl.onTimer(timerName);
+						} else {
+							AppSessionImpl impl = (AppSessionImpl) session;
+							impl.onTimer(timerName);
+						}
+					}
+					catch (Exception e) {
+						logger.error("Caught exception from session object!", e);
+					}
+				}
+			}
+		}
+	}
+}
