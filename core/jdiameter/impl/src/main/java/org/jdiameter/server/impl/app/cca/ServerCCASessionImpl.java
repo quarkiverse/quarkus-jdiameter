@@ -385,6 +385,7 @@ public class ServerCCASessionImpl extends AppCCASessionImpl
 				tccTimeout = 2 * context.getDefaultValidityTime();
 			}
 		} else {
+			logger.debug("No Validity-Time AVP found, using default validity time {}.", context.getDefaultValidityTime());
 			tccTimeout = 2 * context.getDefaultValidityTime();
 		}
 
