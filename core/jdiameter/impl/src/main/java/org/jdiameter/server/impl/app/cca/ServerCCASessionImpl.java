@@ -67,6 +67,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static org.jdiameter.common.api.app.cca.ServerCCASessionState.IDLE;
+import static org.jdiameter.common.api.app.cca.ServerCCASessionState.OPEN;
 
 /**
  * Credit Control Application Server session implementation
@@ -200,14 +201,14 @@ public class ServerCCASessionImpl extends AppCCASessionImpl
 								// New State: OPEN
 								if (isSuccess(resultCode)) {
 									startTcc(answer.getValidityTimeAvp());
-									newState = ServerCCASessionState.OPEN;
+									newState = OPEN;
 								}
 								// Current State: IDLE
 								// Event: CC initial request received but not successfully processed
 								// Action: Send CC initial answer with Result-Code != SUCCESS
 								// New State: IDLE
 								else {
-									newState = IDLE;
+									newState = OPEN;
 								}
 								dispatchEvent(localEvent.getAnswer());
 								setState(newState);

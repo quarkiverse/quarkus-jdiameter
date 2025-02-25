@@ -377,7 +377,6 @@
 		 logger.debug("{}: Loading field values", sessionId);
 		 try {
 			 Map<String, Object> values;
-			 logger.debug("{}: Not in local cache, checking remote cache", sessionId);
 			 String jsonValues = dataSessions.get(sessionId);
 			 if (jsonValues == null) {
 				 values = new HashMap<>();

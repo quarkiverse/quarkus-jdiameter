@@ -51,10 +51,10 @@ public class ReplicatedTimerFacilityImpl implements ITimerFacility
 	public void cancel(Serializable id)
 	{
 		if (id instanceof String timerId) {
+			logger.debug("Cancelling timer with id {}", timerId);
 			TimerTask task = timerMap.remove(timerId);
 			if (task != null) {
 				task.cancel();
-				logger.debug("Cancelling timer with id {}", timerId);
 			}//if
 		}
 	}
@@ -69,7 +69,7 @@ public class ReplicatedTimerFacilityImpl implements ITimerFacility
 	{
 		TimerTaskRunner runner = new TimerTaskRunner(sessionId, timerName, milliseconds);
 		timerMap.put(runner.getTimerId(), runner);
-		logger.debug("Scheduling timer for sessionId {} and timer name {}", sessionId, timerName);
+		logger.debug("Scheduling timer for sessionId {} and timer id {}", sessionId, runner.getTimerId());
 		timer.schedule(runner, milliseconds);
 
 		return runner.getTimerId();
@@ -102,27 +102,31 @@ public class ReplicatedTimerFacilityImpl implements ITimerFacility
 		@Override
 		public void run()
 		{
-			timerMap.remove(timerId);
+			if (timerMap.remove(timerId) != null) {
+				String sessionTimerId = sessionDataSource.getFieldValue(sessionId, TXTIMER_ID);
+				if (timerId.equals(sessionTimerId)) {
+					BaseSession session = sessionDataSource.getSession(sessionId);
+					if (session != null) {
 
-			String sessionTimerId = sessionDataSource.getFieldValue(sessionId, TXTIMER_ID);
-			if (timerId.equals(sessionTimerId)) {
-				BaseSession session = sessionDataSource.getSession(sessionId);
-				if (session != null) {
-
-					logger.debug("Scheduled timer for sessionId {} and timer name {} expired after {}ms", sessionId, timerName, milliseconds);
-					try {
-						if (!session.isAppSession()) {
-							BaseSessionImpl impl = (BaseSessionImpl) session;
-							impl.onTimer(timerName);
-						} else {
-							AppSessionImpl impl = (AppSessionImpl) session;
-							impl.onTimer(timerName);
+						logger.debug("Scheduled timer for sessionId {} and timer id {} expired after {}ms", sessionId, timerId, milliseconds);
+						try {
+							if (!session.isAppSession()) {
+								BaseSessionImpl impl = (BaseSessionImpl) session;
+								impl.onTimer(timerName);
+							} else {
+								AppSessionImpl impl = (AppSessionImpl) session;
+								impl.onTimer(timerName);
+							}
+						}
+						catch (Exception e) {
+							logger.error("Caught exception from session object!", e);
 						}
 					}
-					catch (Exception e) {
-						logger.error("Caught exception from session object!", e);
-					}
+				} else {
+					logger.debug("Timer with id {} is not associated with session {}", timerId, sessionId);
 				}
+			} else {
+				logger.debug("Timer with id {} has been cancelled for session {}", timerId, sessionId);
 			}
 		}
 	}
