@@ -68,7 +68,7 @@ public class ReplicatedTimerFacilityImpl implements ITimerFacility
 	{
 		TimerTaskRunner runner = new TimerTaskRunner(sessionId, timerName, milliseconds);
 		timerMap.put(runner.getTimerId(), runner);
-		logger.debug("Scheduling timer for sessionId {} and timer id {}", sessionId, runner.getTimerId());
+		logger.debug("Scheduling {}ms timer for sessionId {} and timer id {}", milliseconds, sessionId, runner.getTimerId());
 		timer.schedule(runner, milliseconds);
 
 		return runner.getTimerId();
