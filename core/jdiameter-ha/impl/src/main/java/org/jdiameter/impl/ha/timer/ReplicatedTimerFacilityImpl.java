@@ -50,13 +50,12 @@ public class ReplicatedTimerFacilityImpl implements ITimerFacility
 	@Override
 	public void cancel(Serializable id)
 	{
-		if (id instanceof String timerId) {
-			logger.debug("Cancelling timer with id {}", timerId);
-			TimerTask task = timerMap.remove(timerId);
-			if (task != null) {
-				task.cancel();
-			}//if
-		}
+		String timerId = id.toString();
+		logger.debug("Cancelling timer with id {}", timerId);
+		TimerTask task = timerMap.remove(timerId);
+		if (task != null) {
+			task.cancel();
+		}//if
 	}
 
 	/*
@@ -85,13 +84,14 @@ public class ReplicatedTimerFacilityImpl implements ITimerFacility
 		private final String sessionId;
 		private final String timerName;
 		private final long milliseconds;
-		private final String timerId = UUID.randomUUID().toString();
+		private final String timerId;
 
 		public TimerTaskRunner(String sessionId, String timerName, long milliseconds)
 		{
 			this.sessionId    = sessionId;
 			this.timerName    = timerName;
 			this.milliseconds = milliseconds;
+			this.timerId      = sessionId + "-" + UUID.randomUUID();
 		}
 
 		public String getTimerId()
