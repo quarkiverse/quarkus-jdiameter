@@ -72,7 +72,6 @@
  import org.jdiameter.common.api.app.s13.IS13SessionData;
  import org.jdiameter.common.api.app.sh.IShSessionData;
  import org.jdiameter.common.api.data.ISessionDatasource;
- import org.jdiameter.common.impl.data.LocalDataSource;
  import org.jdiameter.impl.ha.common.AppSessionDataReplicatedImpl;
  import org.jdiameter.impl.ha.common.acc.AccReplicatedSessionDataFactory;
  import org.jdiameter.impl.ha.common.auth.AuthReplicatedSessionDataFactory;
@@ -102,305 +101,327 @@
   */
  public class CachedSessionDatasourceImpl implements ISessionDatasource, CachedSessionDatasource
  {
-     private static final Logger logger = LoggerFactory.getLogger(CachedSessionDatasourceImpl.class);
-     private final IContainer container;
-     private final ISessionDatasource localDataSource;
-     private final RemoteCache<String, String> dataSessions;
-     private final ObjectMapper mapper;
+	 private static class SessionEntry
+	 {
+		 private final BaseSession session;
+		 private NetworkReqListener listener;
 
-     private final ConcurrentHashMap<String, Map<String, Object>> sessionData = new ConcurrentHashMap<>();
+		 public SessionEntry(BaseSession session)
+		 {
+			 this.session = session;
+			 listener     = null;
+		 }
 
-     // provided by impl, no way to change that, no conf! :)
-     protected HashMap<Class<? extends IAppSessionData>, IAppSessionDataFactory<? extends IAppSessionData>> appSessionDataFactories =
-             new HashMap<>();
+		 public SessionEntry(BaseSession session, NetworkReqListener listener)
+		 {
+			 this.session  = session;
+			 this.listener = listener;
+		 }
 
+		 public NetworkReqListener getListener()
+		 {
+			 return listener;
+		 }
 
-     public CachedSessionDatasourceImpl(IContainer container)
-     {
-         this.localDataSource = new LocalDataSource(container);
+		 public NetworkReqListener setListener(NetworkReqListener listener)
+		 {
+			 NetworkReqListener prev = this.listener;
+			 this.listener = listener;
+			 return prev;
+		 }
 
-         String cachingName = container.getConfiguration().getStringValue(CachingName.ordinal(), (String) CachingName.defValue());
+		 public BaseSession getSession()
+		 {
+			 return session;
+		 }
 
-         RemoteCacheManager remoteCacheManager = null;
-         InstanceHandle<InfinispanClientProducer> infinispanClientProducer = Arc.container().instance(InfinispanClientProducer.class);
-         if (infinispanClientProducer.isAvailable()) {
-             remoteCacheManager = infinispanClientProducer.get().getNamedRemoteCacheManager("<default>");
-         }//if
+		 @Override
+		 public String toString()
+		 {
+			 return "SessionEntry [session=" + session + ", listener=" + listener + "]";
+		 }
+	 }
 
-         if (remoteCacheManager == null || !remoteCacheManager.isStarted()) {
-             throw new RuntimeException("Error loading cache provider");
-         }//if
+	 private static final Logger logger = LoggerFactory.getLogger(CachedSessionDatasourceImpl.class);
+	 private final IContainer container;
+	 private final Map<String, SessionEntry> sessions = new ConcurrentHashMap<>();
 
-         dataSessions = remoteCacheManager.getCache(cachingName);
+	 private final RemoteCache<String, String> dataSessions;
+	 private final ObjectMapper mapper;
 
-         mapper = new ObjectMapper();
-         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-         mapper.registerModule(new JavaTimeModule());
-
-         this.container = container;
-         // this is coded, its tied to specific impl of SessionDatasource
-         appSessionDataFactories.put(IAuthSessionData.class, new AuthReplicatedSessionDataFactory(this));
-         appSessionDataFactories.put(IAccSessionData.class, new AccReplicatedSessionDataFactory(this));
-         appSessionDataFactories.put(ICCASessionData.class, new CCAReplicatedSessionDataFactory(this));
-         appSessionDataFactories.put(IRoSessionData.class, new RoReplicatedSessionDataFactory(this));
-         appSessionDataFactories.put(IRfSessionData.class, new RfReplicatedSessionDataFactory(this));
-         appSessionDataFactories.put(IShSessionData.class, new ShReplicatedSessionDataFactory(this));
-         appSessionDataFactories.put(ICxDxSessionData.class, new CxDxReplicatedSessionDataFactory(this));
-         appSessionDataFactories.put(IGxSessionData.class, new GxReplicatedSessionDataFactory(this));
-         appSessionDataFactories.put(IRxSessionData.class, new RxReplicatedSessionDataFactory(this));
-         appSessionDataFactories.put(IS13SessionData.class, new S13ReplicatedSessionDataFactory(this));
-
-     }
-
-     @Override
-     public RemoteCache<String, String> getDataCache()
-     {
-         return dataSessions;
-     }
-
-     @Override
-     public boolean exists(String sessionId)
-     {
-         return this.localDataSource.exists(sessionId) || this.existReplicated(sessionId);
-     }
-
-     /*
-      * (non-Javadoc)
-      *
-      * @see org.jdiameter.common.api.ha.ISessionDatasource#addSession(org.jdiameter .api.BaseSession)
-      */
-     @Override
-     public void addSession(BaseSession session)
-     {
-         // Simple as is, if its replicated, it will be already there :)
-         this.localDataSource.addSession(session);
-
-         //Clear the local cache so that it can be refreshed
-         sessionData.remove(session.getSessionId());
-
-         logger.debug("{}: Added session. Flushed local cache", session.getSessionId());
-     }
-
-     /*
-      * (non-Javadoc)
-      *
-      * @see org.jdiameter.common.api.ha.ISessionDatasource#getSession(java.lang.String )
-      */
-     @Override
-     public BaseSession getSession(String sessionId)
-     {
-         if (this.localDataSource.exists(sessionId)) {
-             return this.localDataSource.getSession(sessionId);
-         } else if (this.existReplicated(sessionId)) {
-             this.makeLocal(sessionId);
-             return this.localDataSource.getSession(sessionId);
-         }
-
-         return null;
-     }
-
-     /*
-      * (non-Javadoc)
-      *
-      * @see org.jdiameter.common.api.ha.ISessionDatasource#getSessionListener(java .lang.String)
-      */
-     @Override
-     public NetworkReqListener getSessionListener(String sessionId)
-     {
-         if (this.localDataSource.exists(sessionId)) {
-             return this.localDataSource.getSessionListener(sessionId);
-         } else if (this.existReplicated(sessionId)) {
-             this.makeLocal(sessionId);
-             return this.localDataSource.getSessionListener(sessionId);
-         }
-
-         return null;
-     }
-
-     /*
-      * (non-Javadoc)
-      *
-      * @see org.jdiameter.common.api.ha.ISessionDatasource#removeSession(java.lang .String)
-      */
-     @Override
-     public void removeSession(String sessionId)
-     {
-         logger.debug("removeSession({}) in Local DataSource", sessionId);
-
-         if (this.localDataSource.exists(sessionId)) {
-             this.localDataSource.removeSession(sessionId);
-         }
-
-         if (this.existReplicated(sessionId)) {
-             dataSessions.remove(sessionId);
-             sessionData.remove(sessionId);
-         }
-     }
-
-     /*
-      * (non-Javadoc)
-      *
-      * @see org.jdiameter.common.api.ha.ISessionDatasource#removeSessionListener( java.lang.String)
-      */
-     @Override
-     public NetworkReqListener removeSessionListener(String sessionId)
-     {
-         if (this.localDataSource.exists(sessionId)) {
-             return this.localDataSource.removeSessionListener(sessionId);
-         }
-         return null;
-     }
-
-     /*
-      * (non-Javadoc)
-      *
-      * @see org.jdiameter.common.api.ha.ISessionDatasource#setSessionListener(java .lang.String, org.jdiameter.api.NetworkReqListener)
-      */
-     @Override
-     public void setSessionListener(String sessionId, NetworkReqListener data)
-     {
-         if (this.localDataSource.exists(sessionId)) {
-             this.localDataSource.setSessionListener(sessionId, data);
-         } else if (this.existReplicated(sessionId)) {
-             this.makeLocal(sessionId);
-             this.localDataSource.setSessionListener(sessionId, data);
-         }
-     }
-
-     @Override
-     public void start()
-     {
-         //NOOP
-     }
-
-     @Override
-     public void stop()
-     {
-         //NOOP
-     }
-
-     /*
-      * (non-Javadoc)
-      *
-      * @see org.jdiameter.common.api.data.ISessionDatasource#isClustered()
-      */
-     @Override
-     public boolean isClustered()
-     {
-         return true;
-     }
-
-     /*
-      * (non-Javadoc)
-      *
-      * @see org.jdiameter.common.api.data.ISessionDatasource#getDataFactory(java. lang.Class)
-      */
-     @Override
-     public IAppSessionDataFactory<? extends IAppSessionData> getDataFactory(Class<? extends IAppSessionData> x)
-     {
-         return this.appSessionDataFactories.get(x);
-     }
-
-     private boolean existReplicated(String sessionId)
-     {
-         return sessionData.get(sessionId) != null;
-     }
-
-     @SuppressWarnings("unchecked")
-     private void makeLocal(String sessionId)
-     {
-         try {
-             // this is APP session, always
-             String className = getFieldValue(sessionId, AppSessionDataReplicatedImpl.SIFACE);
-             Class<? extends AppSession> appSessionInterfaceClass = (Class<? extends AppSession>) Thread.currentThread().getContextClassLoader().loadClass(className);
-
-             // get factory;
-             IAppSessionFactory fct = ((ISessionFactory) this.container.getSessionFactory()).getAppSessionFactory(appSessionInterfaceClass);
-             if (fct == null) {
-                 logger.warn("Session with id:{}, is in replicated data source, but no Application Session Factory for:{}.", sessionId, appSessionInterfaceClass);
-             } else {
-                 //Get the local cache to refresh
-                 sessionData.remove(sessionId);
-
-                 BaseSession session = fct.getSession(sessionId, appSessionInterfaceClass);
-                 this.localDataSource.addSession(session);
-                 // hmmm
-                 this.localDataSource.setSessionListener(sessionId, (NetworkReqListener) session);
-             }
-         }
-         catch (IllegalDiameterStateException | ClassNotFoundException e) {
-             if (logger.isErrorEnabled()) {
-                 logger.error("Failed to obtain factory from stack...");
-             }
-         }
-     }
-
-     @Override
-     public IContainer getContainer()
-     {
-         return this.container;
-     }
+	 // provided by impl, no way to change that, no conf! :)
+	 protected HashMap<Class<? extends IAppSessionData>, IAppSessionDataFactory<? extends IAppSessionData>> appSessionDataFactories =
+		 new HashMap<>();
 
 
-     @SuppressWarnings("unchecked")
-     private Map<String, Object> getFieldValues(String sessionId)
-     {
-         logger.debug("{}: Loading field values", sessionId);
-         try {
-             Map<String, Object> values = sessionData.get(sessionId);
-             if (values == null) {
-                 logger.debug("{}: Not in local cache, checking remote cache", sessionId);
-                 String jsonValues = dataSessions.get(sessionId);
-                 if (jsonValues == null) {
-                     values = new HashMap<>();
-                 } else {
-                     values = mapper.readValue(jsonValues, Map.class);
-                 }
+	 public CachedSessionDatasourceImpl(IContainer container)
+	 {
+		 String cachingName = container.getConfiguration().getStringValue(CachingName.ordinal(), (String) CachingName.defValue());
 
-                 sessionData.put(sessionId, values);
-             }
-             logger.debug("{}: Loaded field values: {}", sessionId, values);
-             return values;
-         }
-         catch (JsonProcessingException e) {
-             throw new CachingException("Error setting field values", e);
-         }
-     }//getFieldValues
+		 RemoteCacheManager remoteCacheManager = null;
+		 InstanceHandle<InfinispanClientProducer> infinispanClientProducer = Arc.container().instance(InfinispanClientProducer.class);
+		 if (infinispanClientProducer.isAvailable()) {
+			 remoteCacheManager = infinispanClientProducer.get().getNamedRemoteCacheManager("<default>");
+		 }//if
 
-     private void setFieldValues(String sessionId, Map<String, Object> fieldValues)
-     {
-         logger.debug("{}: Saving the field values (to map): {}", sessionId, fieldValues);
+		 if (remoteCacheManager == null || !remoteCacheManager.isStarted()) {
+			 throw new RuntimeException("Error loading cache provider");
+		 }//if
 
-         sessionData.put(sessionId, fieldValues);
+		 dataSessions = remoteCacheManager.getCache(cachingName);
 
-         try {
-             final String valueStr = mapper.writeValueAsString(fieldValues);
-             //  executorService.submit(() -> {
-             dataSessions.put(sessionId, valueStr, -1, TimeUnit.SECONDS, 1, TimeUnit.DAYS);
-             logger.debug("{}: Saving the field values (to cache): {}", sessionId, valueStr);
-             //});
-         }
-         catch (JsonProcessingException e) {
-             throw new CachingException("Error setting field values", e);
-         }
-     }//setFieldValues
+		 mapper = new ObjectMapper();
+		 mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		 mapper.registerModule(new JavaTimeModule());
 
-     @Override
-     @SuppressWarnings("unchecked")
-     public <T> T getFieldValue(String sessionId, String fieldName)
-     {
-         return (T) getFieldValues(sessionId).get(fieldName);
-     }//getFieldValue
+		 this.container = container;
+		 // this is coded, its tied to specific impl of SessionDatasource
+		 appSessionDataFactories.put(IAuthSessionData.class, new AuthReplicatedSessionDataFactory(this));
+		 appSessionDataFactories.put(IAccSessionData.class, new AccReplicatedSessionDataFactory(this));
+		 appSessionDataFactories.put(ICCASessionData.class, new CCAReplicatedSessionDataFactory(this));
+		 appSessionDataFactories.put(IRoSessionData.class, new RoReplicatedSessionDataFactory(this));
+		 appSessionDataFactories.put(IRfSessionData.class, new RfReplicatedSessionDataFactory(this));
+		 appSessionDataFactories.put(IShSessionData.class, new ShReplicatedSessionDataFactory(this));
+		 appSessionDataFactories.put(ICxDxSessionData.class, new CxDxReplicatedSessionDataFactory(this));
+		 appSessionDataFactories.put(IGxSessionData.class, new GxReplicatedSessionDataFactory(this));
+		 appSessionDataFactories.put(IRxSessionData.class, new RxReplicatedSessionDataFactory(this));
+		 appSessionDataFactories.put(IS13SessionData.class, new S13ReplicatedSessionDataFactory(this));
+
+	 }
+
+	 @Override
+	 public RemoteCache<String, String> getDataCache()
+	 {
+		 return dataSessions;
+	 }
+
+	 @Override
+	 public boolean exists(String sessionId)
+	 {
+		 return sessions.get(sessionId) != null || dataSessions.get(sessionId) != null;
+	 }
+
+	 /*
+	  * (non-Javadoc)
+	  *
+	  * @see org.jdiameter.common.api.ha.ISessionDatasource#addSession(org.jdiameter .api.BaseSession)
+	  */
+	 @Override
+	 public void addSession(BaseSession session)
+	 {
+		 // Simple as is, if its replicated, it will be already there :-)
+		 sessions.put(session.getSessionId(), new SessionEntry(session));
+
+		 logger.debug("{}: Added session. Flushed local cache", session.getSessionId());
+	 }
+
+	 /*
+	  * (non-Javadoc)
+	  *
+	  * @see org.jdiameter.common.api.ha.ISessionDatasource#getSession(java.lang.String )
+	  */
+	 @Override
+	 public BaseSession getSession(String sessionId)
+	 {
+		 SessionEntry session = sessions.get(sessionId);
+		 if (session == null && dataSessions.get(sessionId) != null) {
+			 session = this.loadCachedSession(sessionId);
+		 }
+
+		 if (session != null) {
+			 return session.getSession();
+		 }
+
+		 return null;
+	 }
+
+	 /*
+	  * (non-Javadoc)
+	  *
+	  * @see org.jdiameter.common.api.ha.ISessionDatasource#getSessionListener(java .lang.String)
+	  */
+	 @Override
+	 public NetworkReqListener getSessionListener(String sessionId)
+	 {
+		 SessionEntry session = sessions.get(sessionId);
+		 if (session != null) {
+			 return session.getListener();
+		 }
+
+		 return null;
+	 }
+
+	 /*
+	  * (non-Javadoc)
+	  *
+	  * @see org.jdiameter.common.api.ha.ISessionDatasource#removeSession(java.lang .String)
+	  */
+	 @Override
+	 public void removeSession(String sessionId)
+	 {
+		 logger.debug("removeSession({}) from the cache", sessionId);
+
+		 sessions.remove(sessionId);
+		 dataSessions.remove(sessionId);
+	 }
+
+	 /*
+	  * (non-Javadoc)
+	  *
+	  * @see org.jdiameter.common.api.ha.ISessionDatasource#removeSessionListener( java.lang.String)
+	  */
+	 @Override
+	 public NetworkReqListener removeSessionListener(String sessionId)
+	 {
+		 SessionEntry session = sessions.get(sessionId);
+		 if (session != null) {
+			 return session.setListener(null);
+		 }
+
+		 return null;
+	 }
+
+	 /*
+	  * (non-Javadoc)
+	  *
+	  * @see org.jdiameter.common.api.ha.ISessionDatasource#setSessionListener(java .lang.String, org.jdiameter.api.NetworkReqListener)
+	  */
+	 @Override
+	 public void setSessionListener(String sessionId, NetworkReqListener listener)
+	 {
+		 SessionEntry session = sessions.get(sessionId);
+		 if (session == null && dataSessions.get(sessionId) != null) {
+			 session = this.loadCachedSession(sessionId);
+		 }
+
+		 if (session != null) {
+			 session.setListener(listener);
+		 }
+	 }
+
+	 @Override
+	 public void start()
+	 {
+		 //NOOP
+	 }
+
+	 @Override
+	 public void stop()
+	 {
+		 //NOOP
+	 }
+
+	 /*
+	  * (non-Javadoc)
+	  *
+	  * @see org.jdiameter.common.api.data.ISessionDatasource#isClustered()
+	  */
+	 @Override
+	 public boolean isClustered()
+	 {
+		 return true;
+	 }
+
+	 /*
+	  * (non-Javadoc)
+	  *
+	  * @see org.jdiameter.common.api.data.ISessionDatasource#getDataFactory(java. lang.Class)
+	  */
+	 @Override
+	 public IAppSessionDataFactory<? extends IAppSessionData> getDataFactory(Class<? extends IAppSessionData> x)
+	 {
+		 return this.appSessionDataFactories.get(x);
+	 }
+
+	 @SuppressWarnings("unchecked")
+	 private SessionEntry loadCachedSession(String sessionId)
+	 {
+		 try {
+			 String className = getFieldValue(sessionId, AppSessionDataReplicatedImpl.SIFACE);
+			 if (className != null) {
+				 Class<? extends AppSession> appSessionInterfaceClass = (Class<? extends AppSession>) Thread.currentThread().getContextClassLoader().loadClass(className);
+
+				 // get factory;
+				 IAppSessionFactory fct = ((ISessionFactory) this.container.getSessionFactory()).getAppSessionFactory(appSessionInterfaceClass);
+				 if (fct == null) {
+					 logger.warn("Session with id:{}, is in replicated data source, but no Application Session Factory for:{}.", sessionId, appSessionInterfaceClass);
+				 } else {
+					 //Get the local cache to refresh
+					 BaseSession session = fct.getSession(sessionId, appSessionInterfaceClass);
+					 SessionEntry sessionEntry = new SessionEntry(session, (NetworkReqListener) session);
+					 sessions.put(sessionId, sessionEntry);
+					 return sessionEntry;
+				 }
+			 } else {
+				 logger.warn("Session with id:{}, is in replicated data source, but no session interface.", sessionId);
+			 }
+		 }
+		 catch (IllegalDiameterStateException | ClassNotFoundException e) {
+			 if (logger.isErrorEnabled()) {
+				 logger.error("Failed to obtain factory from stack...");
+			 }
+		 }
+		 return null;
+	 }
+
+	 @Override
+	 public IContainer getContainer()
+	 {
+		 return this.container;
+	 }
 
 
-     @Override
-     public void setFieldValue(String sessionId, String fieldName, Object value)
-     {
-         logger.debug("{}: Setting field {} = {}", sessionId, fieldName, value);
+	 @SuppressWarnings("unchecked")
+	 private Map<String, Object> getFieldValues(String sessionId)
+	 {
+		 logger.debug("{}: Loading field values", sessionId);
+		 try {
+			 Map<String, Object> values;
+			 logger.debug("{}: Not in local cache, checking remote cache", sessionId);
+			 String jsonValues = dataSessions.get(sessionId);
+			 if (jsonValues == null) {
+				 values = new HashMap<>();
+			 } else {
+				 values = mapper.readValue(jsonValues, Map.class);
+			 }
+			 logger.debug("{}: Loaded field values: {}", sessionId, values);
+			 return values;
+		 }
+		 catch (JsonProcessingException e) {
+			 throw new CachingException("Error setting field values", e);
+		 }
+	 }//getFieldValues
 
-         Map<String, Object> values = getFieldValues(sessionId);
-         values.put(fieldName, value);
+	 private void setFieldValues(String sessionId, Map<String, Object> fieldValues)
+	 {
+		 logger.debug("{}: Saving the field values (to map): {}", sessionId, fieldValues);
 
-         setFieldValues(sessionId, values);
-     }//setFieldValue
+		 try {
+			 final String valueStr = mapper.writeValueAsString(fieldValues);
+			 dataSessions.put(sessionId, valueStr, -1, TimeUnit.SECONDS, 1, TimeUnit.DAYS);
+			 logger.debug("{}: Saving the field values (to cache): {}", sessionId, valueStr);
+		 }
+		 catch (JsonProcessingException e) {
+			 throw new CachingException("Error setting field values", e);
+		 }
+	 }//setFieldValues
+
+	 @Override
+	 @SuppressWarnings("unchecked")
+	 public <T> T getFieldValue(String sessionId, String fieldName)
+	 {
+		 return (T) getFieldValues(sessionId).get(fieldName);
+	 }//getFieldValue
+
+
+	 @Override
+	 public void setFieldValue(String sessionId, String fieldName, Object value)
+	 {
+		 logger.trace("{}: Setting field {} = {}", sessionId, fieldName, value);
+
+		 Map<String, Object> values = getFieldValues(sessionId);
+		 values.put(fieldName, value);
+
+		 setFieldValues(sessionId, values);
+	 }//setFieldValue
  }
