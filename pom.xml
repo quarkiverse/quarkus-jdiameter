@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.quarkiverse.jdiameter</groupId>
     <artifactId>quarkus-jdiameter-parent</artifactId>
-    <version>2.1.8-SNAPSHOT</version>
+    <version>2.2.0</version>
     <packaging>pom</packaging>
 
     <name>Quarkus :: JDiameter :: ${project.artifactId}</name>
@@ -20,7 +20,7 @@
         <connection>scm:git:git@github.com:quarkiverse/quarkus-jdiameter.git</connection>
         <developerConnection>scm:git:git@github.com:quarkiverse/quarkus-jdiameter.git</developerConnection>
         <url>https://github.com/quarkiverse/quarkus-jdiameter</url>
-        <tag>HEAD</tag>
+        <tag>2.2.0</tag>
     </scm>
 
     <issueManagement>
