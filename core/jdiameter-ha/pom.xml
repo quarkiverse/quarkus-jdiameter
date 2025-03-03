@@ -21,7 +21,7 @@
     </modules>
 
     <properties>
-        <jackson.version>2.18.2</jackson.version>
+        <jackson.version>2.18.3</jackson.version>
     </properties>
 
     <dependencyManagement>
