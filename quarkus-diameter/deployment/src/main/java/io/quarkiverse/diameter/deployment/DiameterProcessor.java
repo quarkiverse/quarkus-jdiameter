@@ -19,7 +19,7 @@ import io.quarkus.deployment.builditem.nativeimage.NativeImageResourceBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.ReflectiveClassBuildItem;
 import io.quarkus.runtime.RuntimeValue;
 import io.quarkus.runtime.Startup;
-import io.quarkus.tls.TlsRegistryBuildItem;
+import io.quarkus.tls.deployment.spi.TlsRegistryBuildItem;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Default;
 import jakarta.interceptor.Interceptor;
@@ -57,7 +57,6 @@ import org.slf4j.LoggerFactory;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static io.quarkus.deployment.annotations.ExecutionTime.RUNTIME_INIT;
 
@@ -82,45 +81,45 @@ class DiameterProcessor
 	NativeImageResourceBuildItem nativeImageResourceBuildItem()
 	{
 		return new NativeImageResourceBuildItem("META-INF/jdiameter-client.xsd",
-				"META-INF/jdiameter-server.xsd",
-				"META-INF/version.properties",
-				"dictionary.xml");
+			"META-INF/jdiameter-server.xsd",
+			"META-INF/version.properties",
+			"dictionary.xml");
 	}
 
 	@BuildStep
 	ReflectiveClassBuildItem reflection()
 	{
 		return ReflectiveClassBuildItem.builder(ConcurrentEntityFactory.class,
-				                               DictionaryImpl.class,
-				                               StatisticProcessorImpl.class,
-				                               ConcurrentFactory.class,
-				                               LocalTimerFacilityImpl.class,
-				                               LocalDataSource.class,
-				                               ProxyAgentImpl.class,
-				                               AgentConfigurationImpl.class,
-				                               RedirectAgentImpl.class,
-				                               MutablePeerTableImpl.class,
-				                               RealmTableImpl.class,
-				                               StatisticManagerImpl.class,
-				                               SessionFactoryImpl.class,
-				                               NetworkGuard.class,
-				                               TCPClientConnection.class,
-				                               OverloadManagerImpl.class,
-				                               NetworkImpl.class,
-				                               RouterImpl.class,
-				                               org.jdiameter.client.impl.router.RouterImpl.class,
-				                               FsmFactoryImpl.class,
-				                               org.jdiameter.client.impl.fsm.FsmFactoryImpl.class,
-				                               TransportLayerFactory.class,
-				                               org.jdiameter.client.impl.transport.TransportLayerFactory.class,
-				                               MetaDataImpl.class,
-				                               org.jdiameter.client.impl.MetaDataImpl.class,
-				                               AssemblerImpl.class,
-				                               MessageParser.class,
-				                               WeightedRoundRobinRouter.class,
-				                               WeightedLeastConnectionsRouter.class,
-				                               CachedSessionDatasourceImpl.class,
-				                               ReplicatedTimerFacilityImpl.class
+			                               DictionaryImpl.class,
+			                               StatisticProcessorImpl.class,
+			                               ConcurrentFactory.class,
+			                               LocalTimerFacilityImpl.class,
+			                               LocalDataSource.class,
+			                               ProxyAgentImpl.class,
+			                               AgentConfigurationImpl.class,
+			                               RedirectAgentImpl.class,
+			                               MutablePeerTableImpl.class,
+			                               RealmTableImpl.class,
+			                               StatisticManagerImpl.class,
+			                               SessionFactoryImpl.class,
+			                               NetworkGuard.class,
+			                               TCPClientConnection.class,
+			                               OverloadManagerImpl.class,
+			                               NetworkImpl.class,
+			                               RouterImpl.class,
+			                               org.jdiameter.client.impl.router.RouterImpl.class,
+			                               FsmFactoryImpl.class,
+			                               org.jdiameter.client.impl.fsm.FsmFactoryImpl.class,
+			                               TransportLayerFactory.class,
+			                               org.jdiameter.client.impl.transport.TransportLayerFactory.class,
+			                               MetaDataImpl.class,
+			                               org.jdiameter.client.impl.MetaDataImpl.class,
+			                               AssemblerImpl.class,
+			                               MessageParser.class,
+			                               WeightedRoundRobinRouter.class,
+			                               WeightedLeastConnectionsRouter.class,
+			                               CachedSessionDatasourceImpl.class,
+			                               ReplicatedTimerFacilityImpl.class
 		                                       )
 		                               .methods()
 		                               .fields()
@@ -175,38 +174,38 @@ class DiameterProcessor
 	{
 		stacks.forEach(stack -> {
 			syntheticBeanBuildItemBuildProducer.produce(
-					createSyntheticBean(stack.getName(),
-							Configuration.class,
-							DOTNAME_CONFIGURATION,
-							stack.getName().equals(DiameterConfig.DEFAULT_CONFIG_NAME))
-							.runtimeValue(stack.getConfiguration())
-							.done());
+				createSyntheticBean(stack.getName(),
+					Configuration.class,
+					DOTNAME_CONFIGURATION,
+					stack.getName().equals(DiameterConfig.DEFAULT_CONFIG_NAME))
+					.runtimeValue(stack.getConfiguration())
+					.done());
 
 			syntheticBeanBuildItemBuildProducer.produce(
-					createSyntheticBean(stack.getName(),
-							Stack.class,
-							DOTNAME_STACK,
-							stack.getName().equals(DiameterConfig.DEFAULT_CONFIG_NAME))
-							.runtimeValue(stack.getStack())
-							.done());
+				createSyntheticBean(stack.getName(),
+					Stack.class,
+					DOTNAME_STACK,
+					stack.getName().equals(DiameterConfig.DEFAULT_CONFIG_NAME))
+					.runtimeValue(stack.getStack())
+					.done());
 
 			//Handle the case where the default name is explicitly injected.
 			if (stack.getName().equals(DiameterConfig.DEFAULT_CONFIG_NAME)) {
 				syntheticBeanBuildItemBuildProducer.produce(
-						createSyntheticBean(stack.getName(),
-								Configuration.class,
-								DOTNAME_CONFIGURATION,
-								false)
-								.runtimeValue(stack.getConfiguration())
-								.done());
+					createSyntheticBean(stack.getName(),
+						Configuration.class,
+						DOTNAME_CONFIGURATION,
+						false)
+						.runtimeValue(stack.getConfiguration())
+						.done());
 
 				syntheticBeanBuildItemBuildProducer.produce(
-						createSyntheticBean(stack.getName(),
-								Stack.class,
-								DOTNAME_STACK,
-								false)
-								.runtimeValue(stack.getStack())
-								.done());
+					createSyntheticBean(stack.getName(),
+						Stack.class,
+						DOTNAME_STACK,
+						false)
+						.runtimeValue(stack.getStack())
+						.done());
 			}
 		});
 
@@ -220,16 +219,16 @@ class DiameterProcessor
 	{
 		List<String> diameterServices = index.getIndex()
 		                                     .getKnownClasses()
-				.stream()
-				.filter(ci -> ci.hasAnnotation(DiameterService.class) && !ci.hasAnnotation(Interceptor.class))
-				.map(ci -> ci.name().toString())
-				.collect(Collectors.toList());
+			.stream()
+			.filter(ci -> ci.hasAnnotation(DiameterService.class) && !ci.hasAnnotation(Interceptor.class))
+			.map(ci -> ci.name().toString())
+			.toList();
 
 		additionalBeans.produce(new AdditionalBeanBuildItem.Builder()
-				.addBeanClasses(diameterServices)
-				.setUnremovable()
-				.setDefaultScope(DotNames.SINGLETON)
-				.build());
+			.addBeanClasses(diameterServices)
+			.setUnremovable()
+			.setDefaultScope(DotNames.SINGLETON)
+			.build());
 
 		transformer.produce(new AnnotationsTransformerBuildItem(AnnotationTransformation.forClasses()
 		                                                                                .whenClass(c -> diameterServices.contains(c.name().toString()))
@@ -240,11 +239,11 @@ class DiameterProcessor
 	{
 		LOG.info("Creating Synthetic Bean to {} for @DiameterClient(\"{}\")", type.getSimpleName(), clientName);
 		SyntheticBeanBuildItem.ExtendedBeanConfigurator configurator = SyntheticBeanBuildItem
-				.configure(type)
-				.scope(ApplicationScoped.class)
-				.unremovable()
-				.setRuntimeInit()
-				.addType(exposedType);
+			.configure(type)
+			.scope(ApplicationScoped.class)
+			.unremovable()
+			.setRuntimeInit()
+			.addType(exposedType);
 
 		if (isDefaultConfig) {
 			configurator.defaultBean();
