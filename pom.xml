@@ -73,7 +73,7 @@
         <compiler-plugin.version>3.14.1</compiler-plugin.version>
         <maven.compiler.release>21</maven.compiler.release>
         <maven.gpg.version>3.2.5</maven.gpg.version>
-        <maven.enforcer.version>3.5.0</maven.enforcer.version>
+        <maven.enforcer.version>3.6.2</maven.enforcer.version>
         <maven-jandex-plugin.version>3.5.1</maven-jandex-plugin.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
