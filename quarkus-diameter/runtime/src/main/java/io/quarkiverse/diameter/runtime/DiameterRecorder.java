@@ -18,11 +18,18 @@ public class DiameterRecorder
 {
 	private static final Logger LOG = LoggerFactory.getLogger(DiameterRecorder.class);
 
+	private final RuntimeValue<DiameterRunTimeConfig> diameterRunTimeConfig;
+
+	public DiameterRecorder(RuntimeValue<DiameterRunTimeConfig> diameterRunTimeConfig)
+	{
+		this.diameterRunTimeConfig = diameterRunTimeConfig;
+	}
+
 	public RuntimeValue<Configuration> loadDiameterConfiguration(Supplier<TlsConfigurationRegistry> registrySupplier,
-	                                                             DiameterRunTimeConfig runtimeConfig,
 	                                                             String configName)
 	{
 		LOG.info("Building Diameter configuration for profile '{}'", configName);
+		DiameterRunTimeConfig runtimeConfig = this.diameterRunTimeConfig.getValue();
 		DiameterDetailConfig diameterConfig = runtimeConfig.getDiameterConfig(configName);
 		if (diameterConfig == null) {
 			throw new IllegalArgumentException("No Diameter configuration found for profile '" + configName + "'");

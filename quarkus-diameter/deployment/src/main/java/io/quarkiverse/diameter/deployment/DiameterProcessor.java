@@ -3,7 +3,6 @@ package io.quarkiverse.diameter.deployment;
 import io.quarkiverse.diameter.DiameterConfig;
 import io.quarkiverse.diameter.DiameterService;
 import io.quarkiverse.diameter.runtime.DiameterRecorder;
-import io.quarkiverse.diameter.runtime.DiameterRunTimeConfig;
 import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
 import io.quarkus.arc.deployment.AnnotationsTransformerBuildItem;
 import io.quarkus.arc.deployment.SyntheticBeanBuildItem;
@@ -132,7 +131,6 @@ class DiameterProcessor
 	public void discoverInjectedClients(DiameterRecorder recorder,
 	                                    CombinedIndexBuildItem index,
 	                                    TlsRegistryBuildItem tlsRegistryBuildItem,
-	                                    DiameterRunTimeConfig diameterRunTimeConfig,
 	                                    ShutdownContextBuildItem shutdownContextBuildItem,
 	                                    BuildProducer<DiameterBuildItem> diameterStacks)
 	{
@@ -162,7 +160,7 @@ class DiameterProcessor
 		}
 
 		profileNames.forEach(n -> {
-			RuntimeValue<Configuration> configuration = recorder.loadDiameterConfiguration(tlsRegistryBuildItem.registry(), diameterRunTimeConfig, n);
+			RuntimeValue<Configuration> configuration = recorder.loadDiameterConfiguration(tlsRegistryBuildItem.registry(), n);
 			RuntimeValue<Stack> stack = recorder.loadDiameterStack(shutdownContextBuildItem, configuration, n);
 			diameterStacks.produce(new DiameterBuildItem(n, stack, configuration));
 		});
