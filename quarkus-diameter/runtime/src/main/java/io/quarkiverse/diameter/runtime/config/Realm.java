@@ -5,6 +5,7 @@ import io.smallrye.config.WithDefault;
 import io.smallrye.config.WithName;
 import org.jdiameter.api.LocalAction;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -48,7 +49,7 @@ public interface Realm
      * The applications supported.
      */
     @WithName("application-id")
-    Optional<ApplicationId> applicationId();
+    Optional<List<ApplicationId>> applicationId();
 
     /**
      * The Agent configuration
