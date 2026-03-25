@@ -281,7 +281,7 @@ public class DiameterConfiguration extends EmptyConfiguration
 			for (ApplicationId appId : realm.applicationId().get()) {
 				appIds.add(addApplicationID(appId));
 			}
-			realmEntry.add(ApplicationId, appIds);
+			realmEntry.add(ApplicationId, appIds.toArray(new Configuration[0]));
 		}
 
 		if (realm.agent().isPresent()) {
