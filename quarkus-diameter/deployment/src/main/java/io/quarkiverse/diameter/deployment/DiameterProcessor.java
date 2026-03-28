@@ -3,6 +3,7 @@ package io.quarkiverse.diameter.deployment;
 import io.quarkiverse.diameter.DiameterConfig;
 import io.quarkiverse.diameter.DiameterService;
 import io.quarkiverse.diameter.runtime.DiameterRecorder;
+import io.quarkiverse.diameter.runtime.JDiameterVersionRecorder;
 import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
 import io.quarkus.arc.deployment.AnnotationsTransformerBuildItem;
 import io.quarkus.arc.deployment.SyntheticBeanBuildItem;
@@ -74,6 +75,12 @@ class DiameterProcessor
 	public FeatureBuildItem feature()
 	{
 		return new FeatureBuildItem(FEATURE);
+	}
+
+	@Record(RUNTIME_INIT)
+	@BuildStep
+	void logVersion(JDiameterVersionRecorder recorder) {
+		recorder.logVersion();
 	}
 
 	@BuildStep
