@@ -49,7 +49,7 @@ public interface Realm
      * The applications supported.
      */
     @WithName("application-id")
-    List<ApplicationId> applicationId();
+    Optional<List<ApplicationId>> applicationId();
 
     /**
      * The Agent configuration

@@ -278,11 +278,13 @@ public class DiameterConfiguration extends EmptyConfiguration
 		                                                .add(RealmEntryExpTime, realm.expTime());
 
 		List<Configuration> appIds = new ArrayList<>();
-		for (ApplicationId appId : realm.applicationId()) {
-			appIds.add(addApplicationID(appId));
-		}
-		if (!appIds.isEmpty()) {
-			realmEntry.add(ApplicationId, appIds.toArray(new Configuration[0]));
+		if (realm.applicationId().isPresent()) {
+			for (ApplicationId appId : realm.applicationId().get()) {
+				appIds.add(addApplicationID(appId));
+			}
+			if (!appIds.isEmpty()) {
+				realmEntry.add(ApplicationId, appIds.toArray(new Configuration[0]));
+			}
 		}
 
 
