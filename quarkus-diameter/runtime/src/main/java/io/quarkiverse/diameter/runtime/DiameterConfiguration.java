@@ -91,7 +91,10 @@ public class DiameterConfiguration extends EmptyConfiguration
 
 	protected Configuration addApplicationID(io.quarkiverse.diameter.runtime.config.ApplicationId applicationId)
 	{
-		return EmptyConfiguration.getInstance().add(VendorId, applicationId.vendorId()).add(AuthApplId, applicationId.authApplId()).add(AcctApplId, applicationId.acctApplId());
+		return EmptyConfiguration.getInstance()
+		                         .add(VendorId, applicationId.vendorId())
+		                         .add(AuthApplId, applicationId.authApplId())
+		                         .add(AcctApplId, applicationId.acctApplId());
 	}
 
 	protected void addApplications(Collection<ApplicationId> applications)
@@ -279,12 +282,7 @@ public class DiameterConfiguration extends EmptyConfiguration
 
 		List<Configuration> appIds = new ArrayList<>();
 		if (realm.applicationId().isPresent()) {
-			for (ApplicationId appId : realm.applicationId().get()) {
-				appIds.add(addApplicationID(appId));
-			}
-			if (!appIds.isEmpty()) {
-				realmEntry.add(ApplicationId, appIds.toArray(new Configuration[0]));
-			}
+			realmEntry.add(ApplicationId, new Configuration[] {addApplicationID(realm.applicationId().get())});
 		}
 
 
