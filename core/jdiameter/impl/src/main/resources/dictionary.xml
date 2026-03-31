@@ -8700,6 +8700,49 @@
         <type type-name="Unsigned32"/>
     </avpdefn>
 
+    <avpdefn name="PSS-Balance" code="30821" vendor-id="Huawei" mandatory="must" protected="may" may-encrypt="no"
+             vendor-bit="must">
+        <type type-name="Integer64"/>
+    </avpdefn>
+
+    <avpdefn name="POS-Balance" code="30822" vendor-id="Huawei" mandatory="must" protected="may" may-encrypt="no"
+             vendor-bit="must">
+        <type type-name="Integer64"/>
+    </avpdefn>
+
+    <avpdefn name="Pay-Type" code="30813" vendor-id="Huawei" mandatory="must" protected="may" may-encrypt="no"
+             vendor-bit="must">
+        <type type-name="Unsigned32Enumerated">
+            <enum code="2" name="Hybrid"/>
+            <enum code="3" name="Postpaid"/>
+            <enum code="4" name="Prepaid"/>
+        </type>
+    </avpdefn>
+
+    <avpdefn name="State" code="30814" vendor-id="Huawei" mandatory="must" protected="may" may-encrypt="no"
+             vendor-bit="must">
+        <type type-name="Unsigned32Enumerated">
+            <enum code="1" name="Idle"/>
+            <enum code="2" name="Active"/>
+            <enum code="3" name="Barring"/>
+            <enum code="4" name="Suspend"/>
+            <enum code="8" name="Pre-deactivation"/>
+            <enum code="9" name="Deactivation"/>
+        </type>
+    </avpdefn>
+
+    <avpdefn name="Active-Period" code="20733" vendor-id="Huawei" mandatory="must" protected="may"
+             may-encrypt="no" vendor-bit="must">
+        <type type-name="OctetString"/>
+    </avpdefn>
+
+    <avpdefn name="Service-Info" code="873" vendor-id="Huawei" mandatory="must" protected="may" may-encrypt="no"
+             vendor-bit="must">
+        <grouped>
+            <avp name="IN-Information"/>
+        </grouped>
+    </avpdefn>
+
     <avpdefn name="IN-Information" code="20300" vendor-id="Huawei" mandatory="must" protected="may" may-encrypt="no"
              vendor-bit="must">
         <grouped>
@@ -8723,6 +8766,11 @@
             <avp name="SSP-Time"/>
             <avp name="Call-Forward-Indicator"/>
             <avp name="Time-Zone"/>
+            <avp name="Active-Period"/>
+            <avp name="State"/>
+            <avp name="Pay-Type"/>
+            <avp name="PSS-Balance"/>
+            <avp name="POS-Balance"/>
         </grouped>
     </avpdefn>
 
