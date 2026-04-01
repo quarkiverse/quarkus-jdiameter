@@ -8743,6 +8743,92 @@
         </grouped>
     </avpdefn>
 
+    <avpdefn name= "New-SSP-Time" code= "22992" mandatory="may" vendor-id="Huawei">
+        <type type-name="Time"/>
+    </avpdefn>
+
+    <avpdefn name= "Huawei-Experiment-60046" code= "60046" mandatory="may" vendor-id="Huawei">
+        <type type-name="Time"/>
+    </avpdefn>
+
+    <avpdefn name= "Huawei-Experiment-60047" code= "60047" mandatory="may" vendor-id="Huawei">
+        <type type-name="Time"/>
+    </avpdefn>
+
+    <avpdefn name= "Huawei-Experiment-30453" code= "30453" mandatory="may" vendor-id="Huawei">
+        <type type-name="Time"/>
+    </avpdefn>
+
+    <avpdefn name= "Access-Network-Type" code= "20804" mandatory="may" vendor-id="Huawei">
+        <type type-name="Integer32"/>
+    </avpdefn>
+
+    <avpdefn name= "Service-Key" code= "20806" mandatory="may" vendor-id="Huawei">
+        <type type-name="Unsigned32"/>
+    </avpdefn>
+
+
+    <avpdefn name= "Address-Of-Restricted-Indicator" code= "21121" mandatory="may" vendor-id="Huawei">
+        <type type-name="Unsigned32"/>
+    </avpdefn>
+
+    <avpdefn name= "[ Calling-Party-Address-Nature ]" code= "21162" mandatory="may" >
+        <type type-name="Unsigned32"/>
+    </avpdefn>
+
+    <avpdefn name= "[ Called-Party-Address-Nature ]" code= "21163" mandatory="may" vendor-id="Huawei">
+        <type type-name="Unsigned32"/>
+    </avpdefn>
+
+    <avpdefn name= "called-Party-BCDNumber" code= "21164" mandatory="may" vendor-id="Huawei">
+        <type type-name="OctetString"/>
+    </avpdefn>
+
+    <avpdefn name= "called-Party-BCDNumber-Nature" code= "21165" mandatory="may" vendor-id="Huawei">
+        <type type-name="Unsigned32"/>
+    </avpdefn>
+
+    <avpdefn name= "[ Original-Called-Party-Id-Nature ]" code= "21166" mandatory="may" vendor-id="Huawei">
+        <type type-name="Unsigned32"/>
+    </avpdefn>
+
+    <avpdefn name= "[ Redirecting-Party-Id-Nature ]" code= "21167" mandatory="may" vendor-id="Huawei">
+        <type type-name="Unsigned32"/>
+    </avpdefn>
+
+    <avpdefn name= "Reroute-Called-Number" code= "21168" mandatory="may" vendor-id="Huawei">
+        <type type-name="OctetString"/>
+    </avpdefn>
+
+    <avpdefn name= "[ Calling-Msc-Address ]" code= "21169" mandatory="may" vendor-id="Huawei">
+        <type type-name="OctetString"/>
+    </avpdefn>
+
+    <avpdefn name= "[ Calling-Location-Number ]" code= "21170" mandatory="may" vendor-id="Huawei">
+        <type type-name="OctetString"/>
+    </avpdefn>
+
+    <avpdefn name= "[ Calling-Location-Number-Nature ]" code= "21171" mandatory="may" vendor-id="Huawei">
+        <type type-name="Unsigned32"/>
+    </avpdefn>
+
+    <avpdefn name= "[ Called-Msc-Address ]" code= "21172" mandatory="may" vendor-id="Huawei">
+        <type type-name="OctetString"/>
+    </avpdefn>
+
+    <avpdefn name= "[ Called-Location-Number ]" code= "21173" mandatory="may" vendor-id="Huawei">
+        <type type-name="OctetString"/>
+    </avpdefn>
+
+    <avpdefn name= "[ Called-Location-Number-Nature ]" code= "21174" mandatory="may" vendor-id="Huawei">
+        <type type-name="Unsigned32"/>
+    </avpdefn>
+
+    <avpdefn name= "BC-UserInfoLayer1Protocol" code= "21175" mandatory="may" vendor-id="Huawei">
+        <type type-name="OctetString"/>
+    </avpdefn>
+
+
     <avpdefn name="IN-Information" code="20300" vendor-id="Huawei" mandatory="must" protected="may" may-encrypt="no"
              vendor-bit="must">
         <grouped>
