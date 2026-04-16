@@ -1430,9 +1430,9 @@ endif::add-copy-button-to-env-var[]
 |long
 |`+++1+++`
 
-a| [[quarkus-jdiameter_quarkus-diameter-network-realms-realms-application-id-vendor-id]] [.property-path]##link:#quarkus-jdiameter_quarkus-diameter-network-realms-realms-application-id-vendor-id[`+++quarkus.diameter.network.realms."realms".application-id.vendor-id+++`]##
+a| [[quarkus-jdiameter_quarkus-diameter-network-realms-realms-application-id-i-vendor-id]] [.property-path]##link:#quarkus-jdiameter_quarkus-diameter-network-realms-realms-application-id-i-vendor-id[`+++quarkus.diameter.network.realms."realms".application-id[i].vendor-id+++`]##
 ifdef::add-copy-button-to-config-props[]
-config_property_copy_button:+++quarkus.diameter.network.realms."realms".application-id.vendor-id+++[]
+config_property_copy_button:+++quarkus.diameter.network.realms."realms".application-id[i].vendor-id+++[]
 endif::add-copy-button-to-config-props[]
 
 
@@ -1447,18 +1447,18 @@ Specifies the vendor ID for application definition.
 
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__APPLICATION_ID_VENDOR_ID+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__APPLICATION_ID_I__VENDOR_ID+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__APPLICATION_ID_VENDOR_ID+++`
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__APPLICATION_ID_I__VENDOR_ID+++`
 endif::add-copy-button-to-env-var[]
 --
 |long
 |`+++0+++`
 
-a| [[quarkus-jdiameter_quarkus-diameter-network-realms-realms-application-id-auth-appl-id]] [.property-path]##link:#quarkus-jdiameter_quarkus-diameter-network-realms-realms-application-id-auth-appl-id[`+++quarkus.diameter.network.realms."realms".application-id.auth-appl-id+++`]##
+a| [[quarkus-jdiameter_quarkus-diameter-network-realms-realms-application-id-i-auth-appl-id]] [.property-path]##link:#quarkus-jdiameter_quarkus-diameter-network-realms-realms-application-id-i-auth-appl-id[`+++quarkus.diameter.network.realms."realms".application-id[i].auth-appl-id+++`]##
 ifdef::add-copy-button-to-config-props[]
-config_property_copy_button:+++quarkus.diameter.network.realms."realms".application-id.auth-appl-id+++[]
+config_property_copy_button:+++quarkus.diameter.network.realms."realms".application-id[i].auth-appl-id+++[]
 endif::add-copy-button-to-config-props[]
 
 
@@ -1473,18 +1473,18 @@ The Authentication Application ID for application definition.
 
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__APPLICATION_ID_AUTH_APPL_ID+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__APPLICATION_ID_I__AUTH_APPL_ID+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__APPLICATION_ID_AUTH_APPL_ID+++`
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__APPLICATION_ID_I__AUTH_APPL_ID+++`
 endif::add-copy-button-to-env-var[]
 --
 |long
 |`+++0+++`
 
-a| [[quarkus-jdiameter_quarkus-diameter-network-realms-realms-application-id-acct-appl-id]] [.property-path]##link:#quarkus-jdiameter_quarkus-diameter-network-realms-realms-application-id-acct-appl-id[`+++quarkus.diameter.network.realms."realms".application-id.acct-appl-id+++`]##
+a| [[quarkus-jdiameter_quarkus-diameter-network-realms-realms-application-id-i-acct-appl-id]] [.property-path]##link:#quarkus-jdiameter_quarkus-diameter-network-realms-realms-application-id-i-acct-appl-id[`+++quarkus.diameter.network.realms."realms".application-id[i].acct-appl-id+++`]##
 ifdef::add-copy-button-to-config-props[]
-config_property_copy_button:+++quarkus.diameter.network.realms."realms".application-id.acct-appl-id+++[]
+config_property_copy_button:+++quarkus.diameter.network.realms."realms".application-id[i].acct-appl-id+++[]
 endif::add-copy-button-to-config-props[]
 
 
@@ -1499,10 +1499,10 @@ The Account Application ID for application definition.
 
 
 ifdef::add-copy-button-to-env-var[]
-Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__APPLICATION_ID_ACCT_APPL_ID+++[]
+Environment variable: env_var_with_copy_button:+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__APPLICATION_ID_I__ACCT_APPL_ID+++[]
 endif::add-copy-button-to-env-var[]
 ifndef::add-copy-button-to-env-var[]
-Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__APPLICATION_ID_ACCT_APPL_ID+++`
+Environment variable: `+++QUARKUS_DIAMETER_NETWORK_REALMS__REALMS__APPLICATION_ID_I__ACCT_APPL_ID+++`
 endif::add-copy-button-to-env-var[]
 --
 |long

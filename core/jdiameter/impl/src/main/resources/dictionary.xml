@@ -3510,7 +3510,7 @@
     <avpdefn name="Remaining-Balance" code="2021" vendor-id="TGPP" mandatory="must" protected="may" may-encrypt="no"
              vendor-bit="must">
         <grouped>
-            <avp name="Unit-Value"/>
+            <avp name="Unit-Value" multiplicity="1"/>
             <avp name="Currency-Code"/>
         </grouped>
     </avpdefn>
@@ -6114,11 +6114,6 @@
 
     <avpdefn name="Rx-Request-Type" code="533" mandatory="mustnot" may-encrypt="yes" protected="may" vendor-bit="must"
              vendor-id="TGPP">
-        <type type-name="UTF8String"/>
-    </avpdefn>
-
-    <avpdefn name="Application-Service-Provider-Identity" code="534" mandatory="must" may-encrypt="yes" protected="may"
-             vendor-bit="must" vendor-id="TGPP">
         <type type-name="UTF8String"/>
     </avpdefn>
 
