@@ -371,7 +371,7 @@ public class DictionaryImpl implements Dictionary
 
             AvpRepresentation oldAvp = avpByNameMap.put(avp.getName(), avp);
 
-            if (oldAvp != null) {
+            if (oldAvp != null && avp.weak) {
                 logger.debug("[WARN] Overwrited definition of AVP with the same name: Old: {}, New: {}",
                              new Object[]{oldAvp, avp});
             }

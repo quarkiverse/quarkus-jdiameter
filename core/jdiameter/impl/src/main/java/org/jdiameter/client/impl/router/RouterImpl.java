@@ -176,31 +176,7 @@ public class RouterImpl implements IRouter
                         try {
                             String name = c.getStringValue(RealmName.ordinal(), "");
                             logger.debug("Getting config for realm [{}]", name);
-                            ApplicationId appId = null;
-                            {
-                                Configuration[] apps = c.getChildren(ApplicationId.ordinal());
-                                if (apps != null) {
-                                    for (Configuration a : apps) {
-                                        if (a != null) {
-                                            long vnd = a.getLongValue(VendorId.ordinal(), 0);
-                                            long auth = a.getLongValue(AuthApplId.ordinal(), 0);
-                                            long acc = a.getLongValue(AcctApplId.ordinal(), 0);
-                                            if (auth != 0) {
-                                                appId = org.jdiameter.api.ApplicationId.createByAuthAppId(vnd, auth);
-                                            } else {
-                                                appId = org.jdiameter.api.ApplicationId.createByAccAppId(vnd, acc);
-                                            }
-                                            if (logger.isDebugEnabled()) {
-                                                logger.debug("Realm [{}] has application Acct [{}] Auth [{}] Vendor [{}]",
-                                                             new Object[]{name, appId.getAcctAppId(),
-                                                                          appId.getAuthAppId(),
-                                                                          appId.getVendorId()});
-                                            }
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
+
                             //Trim leading and trailing white spaces
                             String[] hosts = Arrays.stream(c.getStringValue(RealmHosts.ordinal(), (String) RealmHosts.defValue()).split(","))
                                                    .map(String::trim)
@@ -221,7 +197,34 @@ public class RouterImpl implements IRouter
                                     agentConfImpl = agentConfImpl.parse(agentConfiguration);
                                 }
                             }
-                            this.realmTable.addRealm(name, appId, locAction, agentConfImpl, isDynamic, expirationTime, hosts);
+
+                            Configuration[] apps = c.getChildren(ApplicationId.ordinal());
+                            if (apps != null) {
+                                for (Configuration a : apps) {
+                                    ApplicationId appId = null;
+
+                                    if (a != null) {
+                                        long vnd = a.getLongValue(VendorId.ordinal(), 0);
+                                        long auth = a.getLongValue(AuthApplId.ordinal(), 0);
+                                        long acc = a.getLongValue(AcctApplId.ordinal(), 0);
+                                        if (auth != 0) {
+                                            appId = org.jdiameter.api.ApplicationId.createByAuthAppId(vnd, auth);
+                                        } else {
+                                            appId = org.jdiameter.api.ApplicationId.createByAccAppId(vnd, acc);
+                                        }
+                                        if (logger.isDebugEnabled()) {
+                                            logger.debug("Realm [{}] has application Acct [{}] Auth [{}] Vendor [{}]",
+                                                         new Object[]{name, appId.getAcctAppId(),
+                                                                      appId.getAuthAppId(),
+                                                                      appId.getVendorId()});
+                                        }
+                                    }
+                                    this.realmTable.addRealm(name, appId, locAction, agentConfImpl, isDynamic, expirationTime, hosts);
+                                }
+                            }
+                            else {
+                                this.realmTable.addRealm(name, null, locAction, agentConfImpl, isDynamic, expirationTime, hosts);
+                            }
                         }
                         catch (Exception e) {
                             logger.warn("Unable to append realm entry", e);
