@@ -53,6 +53,8 @@ import org.jdiameter.client.impl.helpers.Parameters;
 import org.jdiameter.common.api.statistic.IStatistic;
 import org.jdiameter.common.api.statistic.IStatisticManager;
 import org.jdiameter.common.api.statistic.IStatisticRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:brainslog@gmail.com"> Alexandre Mendonca </a>
@@ -61,6 +63,7 @@ import org.jdiameter.common.api.statistic.IStatisticRecord;
 @SuppressWarnings("all") //3rd party lib
 public class StatisticManagerImpl implements IStatisticManager {
 
+    private static final Logger log = LoggerFactory.getLogger(StatisticManagerImpl.class);
     //TODO: remove CopyOnWrite....
     private List<IStatistic> allStatistic = new CopyOnWriteArrayList<IStatistic>();
     private List<IStatisticRecord> allPSStatisticRecord = new CopyOnWriteArrayList<IStatisticRecord>();
@@ -156,8 +159,10 @@ public class StatisticManagerImpl implements IStatisticManager {
         IStatistic statistic = new StatisticImpl(name, group, group.getDescription(), rec);
         statistic.enable(this.isEnabled(statistic.getName()));
         if (allStatistic.contains(statistic)) {
-            throw new IllegalArgumentException("Statistic already defined: " + statistic);
+            log.warn("Statistic already defined: {}", statistic);
+            return statistic;
         }
+
         allStatistic.add(statistic);
         return statistic;
     }
