@@ -51,6 +51,7 @@
     <modules>
         <module>core</module>
         <module>quarkus-diameter</module>
+        <module>docs-rag</module>
     </modules>
 
     <properties>
