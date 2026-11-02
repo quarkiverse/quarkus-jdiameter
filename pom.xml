@@ -65,7 +65,7 @@
         <jakarta.version>4.0.1</jakarta.version>
         <surefire.version>3.5.6</surefire.version>
         <jandex.version>3.1.2</jandex.version>
-        <lombok.version>1.18.46</lombok.version>
+        <lombok.version>1.18.48</lombok.version>
 
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
