@@ -1,7 +1,7 @@
 package io.quarkiverse.diameter.deployment;
 
 import io.quarkiverse.diameter.DiameterConfig;
-import io.quarkus.test.QuarkusUnitTest;
+import io.quarkus.test.QuarkusExtensionTest;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jdiameter.api.Stack;
@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class DiameterStackTest
 {
 	@RegisterExtension
-	static final QuarkusUnitTest config = new QuarkusUnitTest().setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class)).withConfigurationResource("application.properties");
+	static final QuarkusExtensionTest config = new QuarkusExtensionTest().setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class)).withConfigurationResource("application.properties");
 
 	@DiameterConfig
 	Stack defaultStack;

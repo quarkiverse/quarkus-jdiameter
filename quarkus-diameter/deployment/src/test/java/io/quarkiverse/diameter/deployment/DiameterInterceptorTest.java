@@ -2,7 +2,7 @@ package io.quarkiverse.diameter.deployment;
 
 import io.quarkiverse.diameter.DiameterService;
 import io.quarkiverse.diameter.DiameterServiceOptions;
-import io.quarkus.test.QuarkusUnitTest;
+import io.quarkus.test.QuarkusExtensionTest;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jdiameter.api.IllegalDiameterStateException;
@@ -19,7 +19,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 public class DiameterInterceptorTest
 {
 	@RegisterExtension
-	static final QuarkusUnitTest config = new QuarkusUnitTest().setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class).addClasses(DiameterServiceTest.class)).withConfigurationResource("application.properties");
+	static final QuarkusExtensionTest config = new QuarkusExtensionTest().setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class).addClasses(DiameterServiceTest.class)).withConfigurationResource("application.properties");
 
 
 	@Test
